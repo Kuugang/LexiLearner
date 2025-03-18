@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using LexiLearn.Models;
+using LexiLearner.Models;
 
-namespace LexiLearn.Data
+namespace LexiLearner.Data
 {
     public class DataContext : IdentityDbContext<User>
     //should use custom Identity User

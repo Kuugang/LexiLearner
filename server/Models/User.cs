@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Identity;
 
-namespace LexiLearn.Models
+namespace LexiLearner.Models
 {
 	public class User : IdentityUser
 	{

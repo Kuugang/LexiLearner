@@ -11,15 +11,15 @@ using Microsoft.Extensions.Caching.Distributed;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-using LexiLearn.Interfaces;
-using LexiLearn.Models;
-using LexiLearn.Middlewares;
-using LexiLearn.Models.DTO;
-using LexiLearn.Exceptions;
-using LexiLearn.Repository;
+using LexiLearner.Interfaces;
+using LexiLearner.Models;
+using LexiLearner.Middlewares;
+using LexiLearner.Models.DTO;
+using LexiLearner.Exceptions;
+using LexiLearner.Repository;
 
 
-namespace LexiLearn.Services
+namespace LexiLearner.Services
 {
     public class AuthService : IAuthService
     {

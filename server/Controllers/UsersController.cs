@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-using LexiLearn.Models.DTO;
-using LexiLearn.Interfaces;
+using LexiLearner.Models.DTO;
+using LexiLearner.Interfaces;
 
 [ApiController]
 [Route("api/users")]

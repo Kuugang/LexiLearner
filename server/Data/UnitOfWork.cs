@@ -1,5 +1,5 @@
-using LexiLearn.Data;
-using LexiLearn.Interfaces;
+using LexiLearner.Data;
+using LexiLearner.Interfaces;
 
 public class UnitOfWork : IUnitOfWork
 {

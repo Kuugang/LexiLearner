@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace LexiLearn.Models.DTO
+namespace LexiLearner.Models.DTO
 {
 
     public enum Role

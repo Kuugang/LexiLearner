@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using LexiLearn.Exceptions;
-using LexiLearn.Models.DTO;
+using LexiLearner.Exceptions;
+using LexiLearner.Models.DTO;
 
 public class GlobalExceptionFilter : IExceptionFilter
 {

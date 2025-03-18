@@ -1,9 +1,9 @@
 using System.Security.Claims;
 
-using LexiLearn.Models;
-using LexiLearn.Models.DTO;
+using LexiLearner.Models;
+using LexiLearner.Models.DTO;
 
-namespace LexiLearn.Interfaces{
+namespace LexiLearner.Interfaces{
 	public interface IUserService
 	{
         Task<string> GetRole(User user);

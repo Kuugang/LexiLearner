@@ -4,7 +4,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace LexiLearn.Migrations
+namespace LexiLearner.Migrations
 {
     /// <inheritdoc />
     public partial class initial : Migration

@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.AspNetCore.Identity;
 
-namespace LexiLearn.Models
+namespace LexiLearner.Models
 {
 	public class Teacher
 	{

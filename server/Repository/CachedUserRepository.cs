@@ -2,11 +2,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Caching.Distributed;
 using System.Text.Json;
-using LexiLearn.Models;
-using LexiLearn.Interfaces;
-using LexiLearn.Exceptions;
+using LexiLearner.Models;
+using LexiLearner.Interfaces;
+using LexiLearner.Exceptions;
 
-namespace LexiLearn.Repository
+namespace LexiLearner.Repository
 {
     public class CachedUserRepository : IUserRepository
     {

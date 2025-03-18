@@ -1,6 +1,6 @@
 using System.Security.Claims;
 
-namespace LexiLearn.Interfaces
+namespace LexiLearner.Interfaces
 {
     public interface IJWTService
     {

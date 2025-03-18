@@ -13,16 +13,16 @@ using Microsoft.Extensions.FileProviders;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Caching.StackExchangeRedis;
 
-using LexiLearn.Data;
-using LexiLearn.Models;
-using LexiLearn.Middlewares;
-using LexiLearn.Middlewares.Filters;
-using LexiLearn.Interfaces;
-using LexiLearn.Services;
-using LexiLearn.Repository;
+using LexiLearner.Data;
+using LexiLearner.Models;
+using LexiLearner.Middlewares;
+using LexiLearner.Middlewares.Filters;
+using LexiLearner.Interfaces;
+using LexiLearner.Services;
+using LexiLearner.Repository;
 
 
-namespace LexiLearn
+namespace LexiLearner
 {
     public class Startup
     {
@@ -173,7 +173,7 @@ namespace LexiLearn
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "LexiLearn v1"));
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "LexiLearner v1"));
             }
 
             // Register JwtAuthenticationService as middleware

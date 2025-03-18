@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace LexiLearn.Models
+namespace LexiLearner.Models
 {
     public abstract class UserProfile
     {

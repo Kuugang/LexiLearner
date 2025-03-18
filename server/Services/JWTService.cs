@@ -4,9 +4,9 @@ using System.IdentityModel.Tokens.Jwt;
 
 using Microsoft.IdentityModel.Tokens;
 
-using LexiLearn.Interfaces;
+using LexiLearner.Interfaces;
 
-namespace LexiLearn
+namespace LexiLearner
 {
     public class JWTService : IJWTService
     {

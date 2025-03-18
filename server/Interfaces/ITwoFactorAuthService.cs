@@ -1,7 +1,7 @@
-using LexiLearn.Models;
+using LexiLearner.Models;
 
 
-namespace LexiLearn.Interfaces
+namespace LexiLearner.Interfaces
 {
     public interface ITwoFactorAuthService
     {

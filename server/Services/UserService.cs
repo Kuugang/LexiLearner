@@ -2,15 +2,15 @@ using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
 
 
-using LexiLearn.Models;
-using LexiLearn.Models.DTO;
-using LexiLearn.Interfaces;
-using LexiLearn.Middlewares;
-using LexiLearn.Exceptions;
-using LexiLearn.Repository;
+using LexiLearner.Models;
+using LexiLearner.Models.DTO;
+using LexiLearner.Interfaces;
+using LexiLearner.Middlewares;
+using LexiLearner.Exceptions;
+using LexiLearner.Repository;
 
 
-namespace LexiLearn.Services
+namespace LexiLearner.Services
 {
     public class UserService : IUserService
     {

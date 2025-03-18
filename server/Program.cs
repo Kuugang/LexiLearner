@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Identity;
-using LexiLearn.Models;
+using LexiLearner.Models;
 
-namespace LexiLearn
+namespace LexiLearner
 {
     public class Program
     {

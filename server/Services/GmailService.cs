@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using System.Net.Mail;
 using System.Net.Mime;
 
-namespace LexiLearn
+namespace LexiLearner
 {
     public class EmailService
     {

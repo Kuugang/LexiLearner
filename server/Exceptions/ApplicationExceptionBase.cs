@@ -1,4 +1,4 @@
-namespace LexiLearn.Exceptions
+namespace LexiLearner.Exceptions
 {
 
     public class ApplicationExceptionBase : Exception

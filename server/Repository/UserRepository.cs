@@ -1,12 +1,12 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 
-using LexiLearn.Models;
-using LexiLearn.Data;
-using LexiLearn.Interfaces;
-using LexiLearn.Exceptions;
+using LexiLearner.Models;
+using LexiLearner.Data;
+using LexiLearner.Interfaces;
+using LexiLearner.Exceptions;
 
-namespace LexiLearn.Repository
+namespace LexiLearner.Repository
 {
 	public class UserRepository : IUserRepository
 	{

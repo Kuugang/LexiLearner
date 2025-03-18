@@ -4,11 +4,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
-using LexiLearn.Data;
+using LexiLearner.Data;
 
 #nullable disable
 
-namespace LexiLearn.Migrations
+namespace LexiLearner.Migrations
 {
     [DbContext(typeof(DataContext))]
     partial class DataContextModelSnapshot : ModelSnapshot
@@ -154,7 +154,7 @@ namespace LexiLearn.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("LexiLearn.Models.Pupil", b =>
+            modelBuilder.Entity("LexiLearner.Models.Pupil", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -180,7 +180,7 @@ namespace LexiLearn.Migrations
                     b.ToTable("Pupil");
                 });
 
-            modelBuilder.Entity("LexiLearn.Models.Teacher", b =>
+            modelBuilder.Entity("LexiLearner.Models.Teacher", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -197,7 +197,7 @@ namespace LexiLearn.Migrations
                     b.ToTable("Teacher");
                 });
 
-            modelBuilder.Entity("LexiLearn.Models.User", b =>
+            modelBuilder.Entity("LexiLearner.Models.User", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("text");
@@ -280,7 +280,7 @@ namespace LexiLearn.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("LexiLearn.Models.User", null)
+                    b.HasOne("LexiLearner.Models.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -289,7 +289,7 @@ namespace LexiLearn.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("LexiLearn.Models.User", null)
+                    b.HasOne("LexiLearner.Models.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -304,7 +304,7 @@ namespace LexiLearn.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("LexiLearn.Models.User", null)
+                    b.HasOne("LexiLearner.Models.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -313,16 +313,16 @@ namespace LexiLearn.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("LexiLearn.Models.User", null)
+                    b.HasOne("LexiLearner.Models.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("LexiLearn.Models.Pupil", b =>
+            modelBuilder.Entity("LexiLearner.Models.Pupil", b =>
                 {
-                    b.HasOne("LexiLearn.Models.User", "User")
+                    b.HasOne("LexiLearner.Models.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -331,9 +331,9 @@ namespace LexiLearn.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("LexiLearn.Models.Teacher", b =>
+            modelBuilder.Entity("LexiLearner.Models.Teacher", b =>
                 {
-                    b.HasOne("LexiLearn.Models.User", "User")
+                    b.HasOne("LexiLearner.Models.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)

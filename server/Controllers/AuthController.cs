@@ -5,8 +5,8 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
 
-using LexiLearn.Models.DTO;
-using LexiLearn.Interfaces;
+using LexiLearner.Models.DTO;
+using LexiLearner.Interfaces;
 
 
 [ApiController]

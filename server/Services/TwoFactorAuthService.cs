@@ -1,12 +1,12 @@
 using System;
 using System.Threading.Tasks;
-using LexiLearn.Interfaces;
+using LexiLearner.Interfaces;
 using Microsoft.AspNetCore.Identity;
 
 
-using LexiLearn.Models;
+using LexiLearner.Models;
 
-namespace LexiLearn.Services
+namespace LexiLearner.Services
 {
     public class TwoFactorAuthService : ITwoFactorAuthService
     {

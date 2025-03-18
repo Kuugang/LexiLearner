@@ -1,5 +1,5 @@
-using LexiLearn.Models;
-namespace LexiLearn.Interfaces{
+using LexiLearner.Models;
+namespace LexiLearner.Interfaces{
 	public interface IUserRepository
 	{
 		Task<User?> GetUserByIdAsync(string userId);

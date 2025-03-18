@@ -1,4 +1,4 @@
-namespace LexiLearn.Models.DTO
+namespace LexiLearner.Models.DTO
 {
     public class LoginResponse
     {
