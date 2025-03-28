@@ -122,18 +122,23 @@ namespace LexiLearner.Services
         }
 
         
-        public async Task<SuccessResponseDTO> UpdateProfile(UpdateProfileDTO UpdateProfileDTO, ClaimsPrincipal User){
-
+        public async Task<ResponseDTO> UpdateProfile(UpdateProfileDTO UpdateProfileDTO, ClaimsPrincipal User){
             User? user = await GetUserFromToken(User);
 
-            if (!string.IsNullOrEmpty(UpdateProfileDTO.Email))
-                user.Email = UpdateProfileDTO.Email;
+            if (!string.IsNullOrEmpty(UpdateProfileDTO.UserName))
+                user.UserName = UpdateProfileDTO.UserName;
 
             if (!string.IsNullOrEmpty(UpdateProfileDTO.FirstName))
                 user.FirstName = UpdateProfileDTO.FirstName;
 
             if (!string.IsNullOrEmpty(UpdateProfileDTO.LastName))
                 user.LastName = UpdateProfileDTO.LastName;
+
+            if (UpdateProfileDTO.TwoFactorEnabled != null)
+                user.TwoFactorEnabled = UpdateProfileDTO.TwoFactorEnabled ?? false;
+
+            if (!string.IsNullOrEmpty(UpdateProfileDTO.PhoneNumber))
+                user.PhoneNumber = UpdateProfileDTO.PhoneNumber;
 
             await _cachedUserRepository.Update(user);
 
@@ -143,7 +148,9 @@ namespace LexiLearner.Services
                 Data = null
             };
 
-            if (UpdateProfileDTO.Role == "Pupil")
+            string role = await GetRole(user);
+
+            if (role == "Pupil")
             {
                 Pupil? pupil = await _cachedUserRepository.GetPupilByUserId(user.Id);
 
@@ -154,14 +161,14 @@ namespace LexiLearner.Services
                     pupil.GradeLevel = UpdateProfileDTO.GradeLevel;
 
                 await _cachedUserRepository.Update(pupil);
-                response.Data = pupil;
+                response.Data = new PupilProfileDTO(user, pupil);
             }
-            else if (UpdateProfileDTO.Role == "Teacher")
+            else if (role == "Teacher")
             {
                 Teacher? teacher = await _cachedUserRepository.GetTeacherByUserId(user.Id);
 
                 await _cachedUserRepository.Update(teacher);
-                response.Data = teacher;
+                response.Data = new TeacherProfileDTO(user, teacher);
             }
 
             return response;

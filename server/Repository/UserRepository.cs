@@ -82,8 +82,9 @@ namespace LexiLearner.Repository
 
         public async Task Update<T>(T entity) where T : class
         {
-            _context.Set<T>().Update(entity); // Tells EF Core to track changes
-            await _context.SaveChangesAsync(); // Saves changes to the database
+            _context.Set<T>().Update(entity); // Proceed with updating the entity
+            await _context.SaveChangesAsync();
+            _context.Entry(entity).State = EntityState.Detached; 
         }
     }
 }

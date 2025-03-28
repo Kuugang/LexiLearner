@@ -25,14 +25,12 @@ public class UsersController : ControllerBase
 
     [HttpPut("profile")]
     [Authorize]
-    public async Task<IActionResult> UpdateProfile([FromBody] UpdateProfileDTO request)
+    public async Task<IActionResult> UpdateProfile([FromForm] UpdateProfileDTO request)
     {
-        var userDTO = await _userService.GetUserProfile(User);
-        
-        return Ok(new SuccessResponseDTO
-        {
-            Message = "User profile fetched successfully",
-            Data = userDTO
-        });
+        var response = await _userService.UpdateProfile(request , User);
+
+        return response is SuccessResponseDTO success 
+            ? Ok(success) 
+            : StatusCode(((ErrorResponseDTO)response).StatusCode, response);
     }
 }
