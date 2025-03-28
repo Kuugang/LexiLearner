@@ -19,13 +19,7 @@ interface AuthContextType {
   user: User | null;
   // setUser: (user: User | null) => void;
   login: (email: string, password: string) => void;
-  signup: (
-    email: string,
-    password: string,
-    confirmPassword: string,
-    firstName: string,
-    lastName: string,
-  ) => void;
+  signup: (registerForm: Record<string, any>) => void;
   logout: () => void;
 }
 
@@ -78,24 +72,12 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
     }
   };
 
-  const signup = async (
-    email: string,
-    password: string,
-    confirmPassword: string,
-    firstName: string,
-    lastName: string,
-  ) => {
+  const signup = async (registerForm: Record<string, any>) => {
     try {
-      const response = await apiSignUp(
-        email,
-        password,
-        confirmPassword,
-        firstName,
-        lastName,
-      );
+      const response = await apiSignUp(registerForm);
       await AsyncStorage.setItem("token", response.data.token);
     } catch (error: any) {
-      throw new Error(
+      throw Error(
         error instanceof Error ? error.message : "Unknown error occurred",
       );
     }

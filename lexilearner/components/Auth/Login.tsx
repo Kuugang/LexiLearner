@@ -8,12 +8,7 @@ import { HStack } from "@/components/ui/hstack";
 import { EyeIcon, EyeOffIcon } from "@/components/ui/icon";
 import { Divider } from "@/components/ui/divider";
 
-import {
-  useToast,
-  Toast,
-  ToastTitle,
-  ToastDescription,
-} from "@/components/ui/toast";
+import { useToast, Toast, ToastTitle } from "@/components/ui/toast";
 
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faGoogle } from "@fortawesome/free-brands-svg-icons/faGoogle";

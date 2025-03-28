@@ -21,14 +21,11 @@ interface AuthResponse {
 
 export const login = async (email: string, password: string) => {
   try {
-    console.log(`${API_URL}/auth/login`);
     const response = await fetch(`${API_URL}/auth/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password }),
     });
-
-    console.log(response);
 
     const data = await response.json();
 
@@ -38,62 +35,25 @@ export const login = async (email: string, password: string) => {
 
     return data;
   } catch (error: any) {
-    console.log(error);
     throw new Error(
       error instanceof Error ? error.message : "Unknown error occurred",
     );
   }
 };
 
-export const signUp = async (
-  email: string,
-  password: string,
-  confirmPassword: string,
-  firstName: string,
-  lastName: string,
-) => {
-  try {
-    const response = await fetch(`${API_URL}/auth/register`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        email,
-        password,
-        confirmPassword,
-        firstName,
-        lastName,
-      }),
-    });
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      throw new Error("Sign Up failed: " + data.message);
-    }
-
-    return data;
-  } catch (error: any) {
-    throw new Error(
-      error instanceof Error ? error.message : "Unknown error occurred",
-    );
-  }
-};
-
-export const register = async (
-  email: string,
-  password: string,
-  confirmPassword: string,
-  firstName: string,
-  lastName: string,
-) => {
-  const response = await axios.post(`${API_URL}/register`, {
-    email,
-    password,
-    confirmPassword,
-    firstName,
-    lastName,
+export const signUp = async (registerForm: Record<string, any>) => {
+  const response = await fetch(`${API_URL}/auth/register`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(registerForm),
   });
-  return response.data;
+
+  const data = await response.json();
+  if (!response.ok) {
+    throw new Error("Sign Up failed: " + data.message);
+  }
+
+  return data;
 };
 
 export const tokenAuth = async (
