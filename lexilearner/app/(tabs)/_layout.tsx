@@ -2,7 +2,7 @@ import { Tabs } from "expo-router";
 import React from "react";
 import { Platform } from "react-native";
 
-import { IconSymbol } from "@/components/ui/IconSymbol";
+// import { IconSymbol } from "@/components/ui/IconSymbol";
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
 
@@ -29,9 +29,9 @@ export default function TabLayout() {
         name="home"
         options={{
           title: "Home",
-          tabBarIcon: ({ color }) => (
-            <IconSymbol size={28} name="house.fill" color={color} />
-          ),
+          // tabBarIcon: ({ color }) => (
+          //   <IconSymbol size={28} name="house.fill" color={color} />
+          // ),
         }}
       />
 
@@ -39,9 +39,9 @@ export default function TabLayout() {
         name="explore"
         options={{
           title: "Explore",
-          tabBarIcon: ({ color }) => (
-            <IconSymbol size={28} name="library-books" color={color} />
-          ),
+          // tabBarIcon: ({ color }) => (
+          //   <IconSymbol size={28} name="library-books" color={color} />
+          // ),
         }}
       />
 
@@ -49,9 +49,9 @@ export default function TabLayout() {
         name="profile"
         options={{
           title: "Profile",
-          tabBarIcon: ({ color }) => (
-            <IconSymbol size={28} name="profile" color={color} />
-          ),
+          // tabBarIcon: ({ color }) => (
+          //   <IconSymbol size={28} name="profile" color={color} />
+          // ),
         }}
       />
     </Tabs>
