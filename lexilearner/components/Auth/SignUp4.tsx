@@ -67,6 +67,7 @@ export default function SignUp4({
         <Input className="my-1">
           <InputField
             placeholder="Enter Grade Level"
+            keyboardType="numeric"
             value={form.gradeLevel}
             onChangeText={(text: string) =>
               setForm({ ...form, gradeLevel: text })

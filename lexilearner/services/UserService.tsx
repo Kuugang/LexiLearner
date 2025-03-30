@@ -5,13 +5,14 @@ import { API_URL } from "../utils/constants";
 export const getProfile = async () => {
   try {
     const token = await AsyncStorage.getItem("token");
+    console.log(token);
 
     if (!token) {
       throw new Error("No token found");
     }
 
     //modularize this
-    const response = await fetch(`${API_URL}/users/profile`, {
+    const response = await fetch(`${API_URL}/users/me`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -19,10 +20,12 @@ export const getProfile = async () => {
       },
     });
 
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
     const data = await response.json();
+
+    if (![200, 204].includes(response.status)) {
+      throw new Error(`Profile fetch failed: ${data.message}`);
+    }
+
     return data;
   } catch (error) {
     console.error("Error fetching data:", error);
@@ -44,7 +47,6 @@ export const updateProfile = async (updateProfileForm: Record<string, any>) => {
       updateProfileForm[key] instanceof File ||
       updateProfileForm[key] instanceof Blob
     ) {
-      // If it's a file, append it correctly
       requestData.append(key, updateProfileForm[key]);
     } else {
       // Convert other values to string before appending
@@ -52,7 +54,7 @@ export const updateProfile = async (updateProfileForm: Record<string, any>) => {
     }
   });
 
-  const response = await fetch(`${API_URL}/users/profile`, {
+  const response = await fetch(`${API_URL}/users/me`, {
     method: "PUT",
     headers: {
       Authorization: `Bearer ${token}`, // Do not set 'Content-Type', let FormData handle it
@@ -67,4 +69,24 @@ export const updateProfile = async (updateProfileForm: Record<string, any>) => {
   }
 
   return data;
+};
+
+export const checkUserExist = async (fieldType: string, fieldValue: string) => {
+  try {
+    const response = await fetch(
+      `${API_URL}/users/check-user?fieldType=${fieldType}&fieldValue=${fieldValue}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      },
+    );
+
+    const data = await response.json();
+
+    return data;
+  } catch (error) {
+    console.error("Error fetching data:", error);
+  }
 };

@@ -8,3 +8,39 @@ export const decodeToken = (token: string) => {
     return null;
   }
 };
+
+export const validateField = (
+  name: string,
+  value: string,
+  form: Record<string, any> = {},
+) => {
+  switch (name) {
+    case "username":
+      if (!value.trim() || !value) return "Username is required.";
+      if (!value) return "Username is required.";
+      return "";
+
+    case "email":
+      if (!value.trim() || !value) return "Email is required.";
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value))
+        return "Invalid email format.";
+      return ""; // No error
+
+    case "password":
+      if (!value.trim() || !value) return "Password is required.";
+      if (value.length < 6)
+        return "Password must be at least 6 characters long.";
+      if (!/[A-Z]/.test(value))
+        return "Password must contain at least one uppercase letter.";
+      if (!/[0-9]/.test(value))
+        return "Password must contain at least one number.";
+      return ""; // No error
+
+    case "confirmPassword":
+      if (value !== form.password) return "Passwords no not match.";
+      return "";
+
+    default:
+      return "";
+  }
+};

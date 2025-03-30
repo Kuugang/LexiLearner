@@ -1,4 +1,5 @@
 import React, { useContext } from "react";
+import { useLocalSearchParams } from "expo-router";
 
 //Components
 import { Heading } from "@/components/ui/heading";
@@ -30,7 +31,13 @@ interface SignUp3Props {
 }
 
 export default function SignUp3({ isInvalid, handleStep }: SignUp3Props) {
-  const { registerForm, setRegisterForm } = useContext(RegisterFormContext);
+  const { fromProviderAuth } = useLocalSearchParams();
+  const {
+    registerForm,
+    setRegisterForm,
+    providerRegisterForm,
+    setProviderRegisterForm,
+  } = useContext(RegisterFormContext);
   return (
     <>
       <FormControl isInvalid={isInvalid}>
@@ -43,7 +50,14 @@ export default function SignUp3({ isInvalid, handleStep }: SignUp3Props) {
         <RadioGroup
           className="my-2"
           onChange={(selected) => {
-            setRegisterForm({ ...registerForm, role: selected });
+            if (fromProviderAuth) {
+              setProviderRegisterForm({
+                ...providerRegisterForm,
+                role: selected,
+              });
+            } else {
+              setRegisterForm({ ...registerForm, role: selected });
+            }
           }}
         >
           <VStack space="sm">

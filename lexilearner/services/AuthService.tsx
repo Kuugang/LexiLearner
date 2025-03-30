@@ -81,7 +81,9 @@ export const tokenAuth = async (
 export const signInWithGoogle = async () => {
   try {
     await GoogleSignin.hasPlayServices();
-    return await GoogleSignin.signIn(); // Returns user info
+    let data = await GoogleSignin.signIn(); // Returns user info
+    await GoogleSignin.signOut();
+    return data;
   } catch (error: any) {
     if (error.code === statusCodes.IN_PROGRESS) {
       throw new Error("Google Sign-In already in progress");

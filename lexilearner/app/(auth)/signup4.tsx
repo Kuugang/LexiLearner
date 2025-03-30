@@ -2,14 +2,15 @@ import { ScrollView } from "react-native";
 
 import { useState } from "react";
 import { router } from "expo-router";
-import { updateProfile } from "@/services/UserService";
 import { useGlobalContext } from "@/context/GlobalProvider";
 
 import { useToast, Toast, ToastTitle } from "@/components/ui/toast";
 
 import SignUp4 from "@/components/Auth/SignUp4";
+import { useUserContext } from "@/context/UserProvider";
 
 export default function Step4() {
+  const { updateProfile } = useUserContext();
   const toast = useToast();
   const { setIsLoading } = useGlobalContext();
 
@@ -30,6 +31,7 @@ export default function Step4() {
       try {
         await updateProfile(form);
         router.replace("/home");
+        //TODO TOAST
       } catch (error: any) {
         toast.show({
           placement: "top",

@@ -1,9 +1,5 @@
 import React, { useContext, useState } from "react";
 
-import { router } from "expo-router";
-import { useGoogleAuth } from "@/hooks/useGoogleAuth";
-import { useFacebookAuth } from "@/hooks/useFacebookAuth";
-
 import { RegisterFormContext } from "../../app/(auth)/_layout";
 
 //Components
@@ -29,74 +25,22 @@ import { Divider } from "@/components/ui/divider";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faGoogle } from "@fortawesome/free-brands-svg-icons/faGoogle";
 import { faFacebook } from "@fortawesome/free-brands-svg-icons/faFacebook";
+import { useAuthContext } from "@/context/AuthProvider";
 
-export default function SignUp1() {
+interface SignUp1Props {
+  formErrors: Record<string, any>;
+  handleStep: () => void;
+}
+
+export default function SignUp1({ formErrors, handleStep }: SignUp1Props) {
   const { registerForm, setRegisterForm } = useContext(RegisterFormContext);
+  const { providerAuth } = useAuthContext();
 
   const [showPassword, setShowPassword] = React.useState(false);
   const handleState = () => {
     setShowPassword((showState) => {
       return !showState;
     });
-  };
-
-  const [formErrors, setFormErrors] = useState({
-    username: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-    firstName: "",
-    lastName: "",
-    role: "",
-  });
-
-  const validateField = (name: string, value: string) => {
-    switch (name) {
-      case "username":
-        if (!value.trim() || !value) return "Username is required.";
-        if (!value) return "Username is required.";
-        return "";
-
-      case "email":
-        if (!value.trim() || !value) return "Email is required.";
-        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value))
-          return "Invalid email format.";
-        return ""; // No error
-
-      case "password":
-        if (!value.trim() || !value) return "Password is required.";
-        if (value.length < 6)
-          return "Password must be at least 6 characters long.";
-        if (!/[A-Z]/.test(value))
-          return "Password must contain at least one uppercase letter.";
-        if (!/[0-9]/.test(value))
-          return "Password must contain at least one number.";
-        return ""; // No error
-
-      case "confirmPassword":
-        if (value !== registerForm.password) return "Passwords no not match.";
-        return "";
-
-      default:
-        return "";
-    }
-  };
-
-  const handleRegister = async () => {
-    const newErrors: any = {};
-    Object.keys(registerForm).forEach((field) => {
-      const error = validateField(
-        field,
-        registerForm[field as keyof typeof registerForm],
-      );
-      newErrors[field] = error;
-    });
-
-    setFormErrors(newErrors);
-
-    if (!Object.values(newErrors).some((value) => value !== "")) {
-      router.push("/signup2");
-    }
   };
 
   return (
@@ -205,7 +149,7 @@ export default function SignUp1() {
         <Button
           className="ml-auto"
           onPress={() => {
-            handleRegister();
+            handleStep();
           }}
         >
           <ButtonText className="text-typography-0">Sign Up</ButtonText>
@@ -223,7 +167,7 @@ export default function SignUp1() {
             action="secondary"
             className="bg-transparent border border-black-1"
             onPress={() => {
-              useGoogleAuth();
+              providerAuth(0);
             }}
           >
             <FontAwesomeIcon icon={faGoogle} />
@@ -234,7 +178,9 @@ export default function SignUp1() {
             variant="outline"
             action="secondary"
             className="bg-transparent border border-black-1"
-            onPress={useFacebookAuth}
+            onPress={() => {
+              providerAuth(1);
+            }}
           >
             <FontAwesomeIcon icon={faFacebook} />
           </Button>

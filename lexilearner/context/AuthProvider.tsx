@@ -10,19 +10,20 @@ import {
   login as apiLogin,
   signUp as apiSignUp,
   signInWithGoogle,
+  signInWithFacebook,
   tokenAuth,
 } from "../services/AuthService";
 import { User } from "../models/User";
 import { getProfile } from "@/services/UserService";
+import { router } from "expo-router";
+import { useUserContext } from "./UserProvider";
 
 interface AuthContextType {
-  user: User | null;
-  // setUser: (user: User | null) => void;
   login: (email: string, password: string) => void;
   signup: (registerForm: Record<string, any>) => void;
   logout: () => void;
+  providerAuth: (provider: number) => void;
 }
-
 export const AuthContext = createContext<AuthContextType | undefined>(
   undefined,
 );
@@ -38,16 +39,7 @@ export const useAuthContext = (): AuthContextType => {
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
-  const [user, setUser] = useState<User | null>(null);
-
-  useEffect(() => {
-    // Load user data on app start
-    const loadUser = async () => {
-      const storedUser = await AsyncStorage.getItem("user");
-      if (storedUser) setUser(JSON.parse(storedUser));
-    };
-    loadUser();
-  }, []);
+  const { setUser } = useUserContext();
 
   const login = async (email: string, password: string) => {
     try {
@@ -56,15 +48,21 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
       response = await getProfile();
 
       const userData = response.data;
-
-      const user: User = {
-        id: userData.id,
-        email: userData.email,
-        firstName: userData.firstName,
-        lastName: userData.lastName,
-      };
-
-      setUser(user);
+      if (userData) {
+        const user: User = {
+          id: userData.id,
+          email: userData.email,
+          firstName: userData.firstName,
+          lastName: userData.lastName,
+        };
+        setUser(user);
+      } else {
+        // Redirect user to profile setup screen
+        router.push({
+          pathname: "/signup3",
+          params: { fromProviderAuth: "false" },
+        });
+      }
     } catch (error: any) {
       throw new Error(
         error instanceof Error ? error.message : "Unknown error occurred",
@@ -83,13 +81,66 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
     }
   };
 
+  //0 -> Google, 1 -> Facebook
+  const providerAuth = async (provider: number) => {
+    try {
+      let token;
+      let response;
+      let signIn;
+
+      switch (provider) {
+        case 0:
+          signIn = await signInWithGoogle();
+          if (!signIn.data) {
+            throw Error("Signin Failed");
+          }
+          token = signIn.data?.idToken;
+          response = await tokenAuth(0, token as string);
+          break;
+        case 1:
+          signIn = await signInWithFacebook();
+          if (!signIn) {
+            throw Error("Signin Failed");
+          }
+          response = await tokenAuth(1, signIn as string);
+          break;
+        default:
+          console.warn("Invalid provider selected");
+          return;
+      }
+
+      await AsyncStorage.setItem("token", response.data.token);
+      let userProfileResponse = await getProfile();
+
+      const userData = userProfileResponse.data;
+
+      if (userData) {
+        const user: User = {
+          id: userData.id,
+          email: userData.email,
+          firstName: userData.firstName,
+          lastName: userData.lastName,
+        };
+        setUser(user);
+      } else {
+        // Redirect user to profile setup screen
+        router.push({
+          pathname: "/signup2",
+          params: { fromProviderAuth: "true" },
+        });
+      }
+    } catch (error) {
+      console.error("Authentication failed:", error);
+    }
+  };
+
   const logout = async () => {
     setUser(null);
     await AsyncStorage.removeItem("user");
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, signup, logout }}>
+    <AuthContext.Provider value={{ login, signup, logout, providerAuth }}>
       {children}
     </AuthContext.Provider>
   );
