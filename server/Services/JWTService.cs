@@ -15,9 +15,8 @@ namespace LexiLearner
 
         public JWTService(IConfiguration configuration){
 
-            Console.WriteLine("What");
-            Console.WriteLine(configuration["JWT:Secret"]);
-
+            // Console.WriteLine("What");
+            // Console.WriteLine(configuration["JWT:Secret"]);
             _configuration = configuration;
         }
 
@@ -26,11 +25,11 @@ namespace LexiLearner
         {
             var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Name, username),  // Username as 'Name' claim (optional, for better readability)
+                // new Claim(ClaimTypes.Name, username),  // Username as 'Name' claim (optional, for better readability)
                 new Claim(ClaimTypes.NameIdentifier, userId), // Use ClaimTypes.NameIdentifier for user ID
                 // new Claim(ClaimTypes.Role, role), // Role as a ClaimTypes.Role claim
-                new Claim(ClaimTypes.Sid, userId), // This can also be used for user ID (alternative)
-                new Claim(ClaimTypes.Upn, username), // UserPrincipalName for the username (if needed)
+                // new Claim(ClaimTypes.Sid, userId), // This can also be used for user ID (alternative)
+                // new Claim(ClaimTypes.Upn, username), // UserPrincipalName for the username (if needed)
 
                 // Optional: iat (Issued At) can be represented as a Unix timestamp
                 new Claim(ClaimTypes.DateOfBirth, DateTime.UtcNow.ToString("yyyy-MM-dd")), // Example custom claim for DOB (optional)

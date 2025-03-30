@@ -64,14 +64,10 @@ namespace LexiLearner.Services
 
             var token = _jwtService.GenerateJWTToken(user.Id, user.UserName!);
 
-            return new SuccessResponseDTO
-            {
-                Message = "Login successful",
-                Data = new JWTDTO { Token = token }
-            };
+            return new SuccessResponseDTO("Login successful", new JWTDTO (token));
         }
 
-        public async Task<SuccessResponseDTO> VerifyGoogleTokenAsync(string token)
+        public async Task<ResponseDTO> VerifyGoogleTokenAsync(string token)
         {
             string googleApiUrl = $"https://oauth2.googleapis.com/tokeninfo?id_token={token}";
     
@@ -87,6 +83,7 @@ namespace LexiLearner.Services
             string email = googleUser["email"]?.ToString();
 
             var user = await _userService.GetUserByEmail(email);
+
             if(user == null){
                 var passwordHasher = new PasswordHasher<object>();
                 string randomPassword = Guid.NewGuid().ToString("N").Substring(0, 8) + "A!";
@@ -97,23 +94,18 @@ namespace LexiLearner.Services
                     Email = googleUser["email"]?.ToString(),
                     UserName = googleUser["name"]?.ToString().Replace(" ", ""),
                     FirstName = googleUser["given_name"]?.ToString(),
-                    LastName = googleUser["family_name"]?.ToString(),
+                    LastName = googleUser["family_name"]?.ToString() ?? googleUser["given_name"]?.ToString(),
                     SecurityStamp = Guid.NewGuid().ToString()
                 };
-                await _cachedUserRepository.Create(user, hashedPassword, null);
+                await _cachedUserRepository.Create(user, hashedPassword);
             }
 
             var jwtToken = _jwtService.GenerateJWTToken(user.Id, user.UserName!);
-    
-            return new SuccessResponseDTO
-            {
-                Message = "Login successful",
-                Data = new JWTDTO { Token = jwtToken }
-            };
 
+            return new SuccessResponseDTO("Google authentication successful", new JWTDTO (jwtToken));
         }
 
-        public async Task<SuccessResponseDTO> VerifyFacebookTokenAsync(string token)
+        public async Task<ResponseDTO> VerifyFacebookTokenAsync(string token)
         {
             string facebookApiUrl = $"https://graph.facebook.com/me?fields=id,name,first_name,last_name,email,picture&access_token={token}";
 
@@ -128,6 +120,7 @@ namespace LexiLearner.Services
             var facebookUser = JObject.Parse(facebookUserString);
             
             string email = facebookUser["email"]?.ToString();
+            Console.WriteLine(email);
 
             var user = await _userService.GetUserByEmail(email);
             if(user == null){
@@ -143,17 +136,13 @@ namespace LexiLearner.Services
                     LastName = facebookUser["last_name"]?.ToString(),
                     SecurityStamp = Guid.NewGuid().ToString()
                 };
-                await _cachedUserRepository.Create(user, hashedPassword, null);
+                await _cachedUserRepository.Create(user, hashedPassword);
             }
             
 
             var jwtToken = _jwtService.GenerateJWTToken(user.Id, user.UserName!);
 
-            return new SuccessResponseDTO
-            {
-                Message = "Login successful",
-                Data = new JWTDTO { Token = jwtToken }
-            };
+            return new SuccessResponseDTO("Login successful", new JWTDTO(jwtToken));
         }
 
 
@@ -183,8 +172,7 @@ namespace LexiLearner.Services
 
             if(await _userManager.VerifyTwoFactorTokenAsync(user, "Email", request.Token))
             {
-                return new SuccessResponseDTO("Two Factor Authentication successful", 
-                    new JWTDTO { Token = _jwtService.GenerateJWTToken(user.Id, user.UserName!) });
+                return new SuccessResponseDTO("Two Factor Authentication successful",  new JWTDTO( _jwtService.GenerateJWTToken(user.Id, user.UserName!)));
             }
 
 

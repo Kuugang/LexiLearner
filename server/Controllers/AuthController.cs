@@ -48,18 +48,19 @@ public class AuthController : ControllerBase
 
 
     [HttpPost("token")]
-    public async Task<IActionResult> Google([FromBody] TokenAuthDTO request)
+    public async Task<IActionResult> Token([FromBody] TokenAuthDTO request)
     {
-        var authResponse = request.Provider switch
+        var response = request.Provider switch
         {
             Providers.Google => await _authService.VerifyGoogleTokenAsync(request.Token),
             Providers.Facebook => await _authService.VerifyFacebookTokenAsync(request.Token),
             _ => null
         };
 
-        if (authResponse == null)
-            return BadRequest("Invalid Provider.");
 
-        return Ok(authResponse);
+        Console.WriteLine(response.Data);
+        return response is SuccessResponseDTO success 
+            ? Ok(success) 
+            : StatusCode(((ErrorResponseDTO)response).StatusCode, response);
     }
 }

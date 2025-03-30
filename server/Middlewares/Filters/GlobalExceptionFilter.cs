@@ -9,6 +9,8 @@ public class GlobalExceptionFilter : IExceptionFilter
     {
         if (context.Exception is ApplicationExceptionBase ex)
         {
+            Console.WriteLine(ex.Message);
+            Console.WriteLine(ex.Error);
             context.Result = new ObjectResult(new ErrorResponseDTO(ex.Message, ex.Error, ex.StatusCode))
             {
                 StatusCode = ex.StatusCode
@@ -16,6 +18,8 @@ public class GlobalExceptionFilter : IExceptionFilter
         }
         else
         {
+            Console.WriteLine(context.Exception.Message);
+            Console.WriteLine(context.Exception.StackTrace);
             context.Result = new ObjectResult(new ErrorResponseDTO(context.Exception.Message, context.Exception.StackTrace, 500))
             {
                 StatusCode = StatusCodes.Status500InternalServerError

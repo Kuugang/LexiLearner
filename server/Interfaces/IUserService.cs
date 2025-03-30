@@ -9,9 +9,12 @@ namespace LexiLearner.Interfaces{
         Task<string> GetRole(User user);
 		Task<User?> GetUserByIdAsync(string userId);
 		Task<User?> GetUserByEmail(string email);
+        Task<User?> GetUserByUsername(string username);
+
 		Task<SuccessResponseDTO> Register(RegisterRequest RegisterRequest);
 
-        Task<SuccessResponseDTO> GetUserProfile(ClaimsPrincipal user);
+        Task<ResponseDTO> GetUserProfile(ClaimsPrincipal user);
+        Task<ResponseDTO> GetPublicProfile(string Username);
 
         Task<User?> GetUserFromToken(ClaimsPrincipal token);
 

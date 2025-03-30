@@ -12,21 +12,31 @@ namespace LexiLearner.Models.DTO
         public int? Age { get; set; }
         public int? GradeLevel { get; set; }
         public bool? TwoFactorEnabled { get; set; }
+
+        
+        //Can only be used when role is initially null
+        public Roles? Role {get; set;}  
     }
     
     public class PupilProfileDTO{
         public Guid Id { get; set; }
         
-        public UserDTO User { get; set; } = null!;
+        public object User { get; set; } = null!;
 
         public int? Age { get; set; }
         public int? GradeLevel { get; set; }
         public int? Level { get; set; }
 
-        public PupilProfileDTO(User user, Pupil pupil)
+        public PupilProfileDTO(User user, Pupil pupil, bool Public = false)
         {
             Id = pupil.Id;
-            User = new UserDTO(user);
+
+            if(Public){
+                User = new PublicProfileDTO(user);
+            }else{
+                User = new PrivateProfileDTO(user);
+            }
+
             Age = pupil.Age;
             GradeLevel = pupil.GradeLevel;
             Level = pupil.Level;
@@ -37,16 +47,22 @@ namespace LexiLearner.Models.DTO
         public Guid Id { get; set; }
         public string UserId { get; set; }
         
-        public UserDTO User { get; set; } = null!;
+        public object User { get; set; } = null!;
 
-        public TeacherProfileDTO(User user, Teacher teacher){
+        public TeacherProfileDTO(User user, Teacher teacher, bool Public = false){
             Id = teacher.Id;
             UserId = user.Id;
-            User = new UserDTO(user);
+
+            if(Public){
+                User = new PublicProfileDTO(user);
+            }else{
+                User = new PrivateProfileDTO(user);
+            }
         }
     }
 
-	public class UserDTO
+
+	public class PrivateProfileDTO
 	{
 		public string Id { get; set; }
 		public string Email { get; set; }
@@ -56,16 +72,32 @@ namespace LexiLearner.Models.DTO
 		public bool TwoFactorEnabled { get; set; }
 		public string PhoneNumber { get; set; }
 
-        public UserDTO(){}
+        public PrivateProfileDTO(){}
 
-        public UserDTO(User user){
-            Id = user.Id;
-            Email = user.Email;  
+        public PrivateProfileDTO(User user){
             FirstName = user.FirstName;
             LastName = user.LastName;
             Username = user.UserName;
+            
+            Id = user.Id;
+            Email = user.Email;  
             TwoFactorEnabled  = user.TwoFactorEnabled;
             PhoneNumber = user.PhoneNumber;
+        }
+	}
+
+	public class PublicProfileDTO 
+	{
+		public string FirstName { get; set; }
+		public string LastName { get; set; }
+		public string Username { get; set; }
+
+        public PublicProfileDTO(){}
+
+        public PublicProfileDTO(User user){
+            FirstName = user.FirstName;
+            LastName = user.LastName;
+            Username = user.UserName;
         }
 	}
 }

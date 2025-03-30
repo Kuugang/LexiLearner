@@ -7,7 +7,6 @@ namespace LexiLearner.Models.DTO
         public object? Error { get; set; }
         public int StatusCode { get; set; }
 
-
         public ResponseDTO() { }
 
         public ResponseDTO(string? message, object? data = null, object? error = null, int statusCode = 200)

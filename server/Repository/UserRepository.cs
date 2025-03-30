@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
+using System.Text.Json;
 
 using LexiLearner.Models;
 using LexiLearner.Data;
@@ -21,70 +22,83 @@ namespace LexiLearner.Repository
 
 		public async Task<User?> GetUserByIdAsync(string userId)
 		{
-			return await _context.Users
-				.FirstOrDefaultAsync(user => user.Id == userId);
+            return await _userManager.Users.AsNoTracking().FirstOrDefaultAsync(u => u.Id == userId);
 		}
 		public async Task<User?> GetUserByEmail(string email)
 		{
-			return await _context.Users
-				.FirstOrDefaultAsync(user => user.Email == email);
+            return await _userManager.FindByEmailAsync(email);
 		}
 
-		public async Task<User> Create(User user, string password, string role){
+		public async Task<User?> GetUserByUsername(string username){
+            return await _userManager.FindByNameAsync(username);
+        }
+
+		public async Task<User> Create(User user, string password){
 			var result = await _userManager.CreateAsync(user, password);
 
-            if(role != null){
-
-                await _userManager.AddToRoleAsync(user, role);
-
-                switch(role){
-                    case "Pupil":
-			    		Pupil pupil = new Pupil
-			    		{
-			    			UserId = user.Id,
-			    			User = user,
-			    		};
-			    		await _context.Pupil.AddAsync(pupil);
-			    		break;
-                    case "Teacher":
-                        Teacher teacher = new Teacher{
-			    			UserId = user.Id,
-			    			User = user,
-                        };
-			    		await _context.Teacher.AddAsync(teacher);
-			    		break;
-                }
+            if (!result.Succeeded)
+            {
+                var errors = string.Join(", ", result.Errors.Select(e => e.Description));
+                throw new ApplicationExceptionBase(
+                    $"{errors}",
+                    "User registration failed."
+                );
             }
-
-            // if (!result.Succeeded)
-            // {
-            //     var errors = string.Join(", ", result.Errors.Select(e => e.Description));
-            //     throw new ApplicationExceptionBase(
-            //         $"{errors}",
-            //         "User registration failed.",
-            //         StatusCodes.Status409Conflict
-            //     );
-            // }
 
 			await _context.SaveChangesAsync();
 			return user;
 		}
 
+        public async Task CreateProfile(User user, string role){
+            //TODO: FIX
+            user = await _userManager.FindByIdAsync(user.Id);
+            //user = JsonSerializer.Deserialize<User>(JsonSerializer.Serialize(user));
+            await _userManager.AddToRoleAsync(user, role);
+
+            switch(role){
+                case "Pupil":
+                    Pupil pupil = new Pupil
+                    {
+                        // UserId = trackedUser.Id,
+                        // User = trackedUser, //
+
+                        UserId = user.Id,
+                        User = user, //
+                    };
+                    await _context.Pupil.AddAsync(pupil);
+                    break;
+                case "Teacher":
+                    Teacher teacher = new Teacher{
+                        // UserId = trackedUser.Id,
+                        // User = trackedUser, //
+
+                        UserId = user.Id,
+                        User = user, //
+                    };
+                    await _context.Teacher.AddAsync(teacher);
+                    break;
+            }
+
+			await _context.SaveChangesAsync();
+            _context.Entry(user).State = EntityState.Detached; 
+        }
+
         public async Task<Pupil?> GetPupilByUserId(string UserId){
 			return await _context.Pupil
+                .AsNoTracking()
 				.FirstOrDefaultAsync(pupil => pupil.User.Id == UserId);
         }
 
         public async Task<Teacher?> GetTeacherByUserId(string UserId){
 			return await _context.Teacher
+                .AsNoTracking()
 				.FirstOrDefaultAsync(teacher => teacher.User.Id == UserId);
         }
 
         public async Task Update<T>(T entity) where T : class
         {
-            _context.Set<T>().Update(entity); // Proceed with updating the entity
+            _context.Set<T>().Update(entity);
             await _context.SaveChangesAsync();
-            _context.Entry(entity).State = EntityState.Detached; 
         }
     }
 }

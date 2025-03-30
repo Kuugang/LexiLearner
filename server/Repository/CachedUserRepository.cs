@@ -71,12 +71,34 @@ namespace LexiLearner.Repository
             return user;
         }
 
-        public async Task<User> Create(User user, string password, string role)
+        public async Task<User?> GetUserByUsername(string username)
         {
-            var createdUser = await _decorated.Create(user, password, role);
+            var cacheKey = $"User_Username_{username}";
+            var user = await GetFromCacheAsync<User>(cacheKey);
+
+            if (user is null)
+            {
+                user = await _decorated.GetUserByUsername(username);
+                if (user is not null)
+                {
+                    await SetCacheAsync(cacheKey, user, TimeSpan.FromMinutes(30));
+                }
+            }
+
+            return user;
+        }
+
+        public async Task<User> Create(User user, string password)
+        {
+            var createdUser = await _decorated.Create(user, password);
             var cacheKey = $"User_{createdUser.Id}";
             await SetCacheAsync(cacheKey, createdUser, TimeSpan.FromMinutes(30));
             return createdUser;
+        }
+
+        public async Task CreateProfile(User user, string role)
+        {
+            await _decorated.CreateProfile(user, role);
         }
 
         public async Task<Pupil?> GetPupilByUserId(string userId)

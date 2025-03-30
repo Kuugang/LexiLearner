@@ -8,8 +8,8 @@ namespace LexiLearner.Interfaces
     {
 		Task<SuccessResponseDTO> Login(LoginRequest LoginRequest);
 
-        Task<SuccessResponseDTO> VerifyGoogleTokenAsync(string token);
-        Task<SuccessResponseDTO> VerifyFacebookTokenAsync(string token);
+        Task<ResponseDTO> VerifyGoogleTokenAsync(string token);
+        Task<ResponseDTO> VerifyFacebookTokenAsync(string token);
 
         Task<string> GenerateTwoFactorTokenAsync(User user);
         Task<ResponseDTO> ValidateTwoFactorTokenAsync(TwoFactorRequest request);
