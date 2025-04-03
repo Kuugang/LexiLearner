@@ -6,11 +6,11 @@ import {
   statusCodes,
 } from "@react-native-google-signin/google-signin";
 
-import {
-  AccessToken,
-  AuthenticationToken,
-  LoginManager,
-} from "react-native-fbsdk-next";
+// import {
+//   AccessToken,
+//   AuthenticationToken,
+//   LoginManager,
+// } from "react-native-fbsdk-next";
 
 interface AuthResponse {
   message: string;

@@ -1,13 +1,11 @@
 import React, { createContext, useState, ReactNode, useContext } from "react";
 import { useColorScheme } from "react-native"; // Get light/dark mode
-import getTheme from "../theme";
 
 interface GlobalContextType {
   isLogged: boolean;
   setIsLogged: (value: boolean) => void;
   isLoading: boolean;
   setIsLoading: (value: boolean) => void;
-  theme: ReturnType<typeof getTheme>; // Add theme to context
 }
 
 export const GlobalContext = createContext<GlobalContextType | undefined>(
@@ -37,7 +35,6 @@ const GlobalProvider: React.FC<GlobalProviderProps> = ({ children }) => {
   const [isLogged, setIsLogged] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const scheme = useColorScheme() ?? "light";
-  const theme = getTheme(scheme);
 
   return (
     <GlobalContext.Provider
@@ -46,7 +43,6 @@ const GlobalProvider: React.FC<GlobalProviderProps> = ({ children }) => {
         setIsLogged,
         isLoading,
         setIsLoading,
-        theme,
       }}
     >
       {children}

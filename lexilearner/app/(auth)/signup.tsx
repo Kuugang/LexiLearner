@@ -51,15 +51,7 @@ export default function Step1() {
   };
 
   return (
-    <ScrollView
-      className="flex-1"
-      contentContainerStyle={{
-        flexGrow: 1,
-        justifyContent: "center",
-        alignItems: "center",
-        padding: 40,
-      }}
-    >
+    <ScrollView className="bg-background-yellowOrange">
       <SignUp1 formErrors={formErrors} handleStep={handleStep} />
     </ScrollView>
   );

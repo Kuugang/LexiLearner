@@ -15,7 +15,8 @@ module.exports = {
     extend: {
       colors: {
         primary: {
-          0: "rgb(var(--color-primary-0)/<alpha-value>)",
+          appWhite: "rgb(248, 248, 248, /<alpha-value>)",
+          0: "rgb(0, 0, 0, /<alpha-value>)",
           50: "rgb(var(--color-primary-50)/<alpha-value>)",
           100: "rgb(var(--color-primary-100)/<alpha-value>)",
           200: "rgb(var(--color-primary-200)/<alpha-value>)",
@@ -112,18 +113,6 @@ module.exports = {
           950: "rgb(var(--color-info-950)/<alpha-value>)",
         },
         typography: {
-          0: "rgb(var(--color-typography-0)/<alpha-value>)",
-          50: "rgb(var(--color-typography-50)/<alpha-value>)",
-          100: "rgb(var(--color-typography-100)/<alpha-value>)",
-          200: "rgb(var(--color-typography-200)/<alpha-value>)",
-          300: "rgb(var(--color-typography-300)/<alpha-value>)",
-          400: "rgb(var(--color-typography-400)/<alpha-value>)",
-          500: "rgb(var(--color-typography-500)/<alpha-value>)",
-          600: "rgb(var(--color-typography-600)/<alpha-value>)",
-          700: "rgb(var(--color-typography-700)/<alpha-value>)",
-          800: "rgb(var(--color-typography-800)/<alpha-value>)",
-          900: "rgb(var(--color-typography-900)/<alpha-value>)",
-          950: "rgb(var(--color-typography-950)/<alpha-value>)",
           white: "#FFFFFF",
           gray: "#D4D4D4",
           black: "#181718",
@@ -143,8 +132,10 @@ module.exports = {
           950: "rgb(var(--color-outline-950)/<alpha-value>)",
         },
         background: {
-          0: "rgb(var(--color-background-0)/<alpha-value>)",
-          50: "rgb(var(--color-background-50)/<alpha-value>)",
+          0: "rgb(255, 197, 73, <alpha-value>)",
+          orange: "rgb(255, 103, 64, <alpha-value>)",
+          yellowOrange: "rgb(255, 197, 73, <alpha-value>)",
+          lightGrayOrange: "rgb(248, 229, 187, <alpha-value>)",
           100: "rgb(var(--color-background-100)/<alpha-value>)",
           200: "rgb(var(--color-background-200)/<alpha-value>)",
           300: "rgb(var(--color-background-300)/<alpha-value>)",

@@ -43,15 +43,7 @@ export default function Step2() {
   };
 
   return (
-    <ScrollView
-      className="flex-1"
-      contentContainerStyle={{
-        flexGrow: 1,
-        justifyContent: "center",
-        alignItems: "center",
-        padding: 40,
-      }}
-    >
+    <ScrollView className="bg-background-yellowOrange">
       <SignUp2
         firstNameInvalid={firstNameInvalid}
         lastNameInvalid={lastNameInvalid}

@@ -26,8 +26,8 @@ import { Divider } from "@/components/ui/divider";
 import { useToast, Toast, ToastTitle } from "@/components/ui/toast";
 
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import { faGoogle } from "@fortawesome/free-brands-svg-icons/faGoogle";
-import { faFacebook } from "@fortawesome/free-brands-svg-icons/faFacebook";
+import { faGoogle, faFacebook } from "@fortawesome/free-brands-svg-icons";
+import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 
 export default function Login() {
   const toast = useToast();
@@ -109,99 +109,103 @@ export default function Login() {
   };
 
   return (
-    <VStack space="xl" className="text-typography-black">
-      <Heading className="text-typography-900">Login</Heading>
-
-      {/* Email Field */}
-      <FormControl isInvalid={!!formErrors.email}>
-        <FormControlLabel>
-          <FormControlLabelText className="text-black">
-            Email
-          </FormControlLabelText>
-        </FormControlLabel>
-
-        <Input className="min-w-[250px]">
-          <InputField
-            className="text-black"
-            value={form.email}
-            onChangeText={(text: string) => setForm({ ...form, email: text })}
-            type="text"
-          />
-        </Input>
-
-        <FormControlError>
-          <FormControlErrorIcon as={AlertCircleIcon} />
-          <FormControlErrorText>{formErrors.email}</FormControlErrorText>
-        </FormControlError>
-      </FormControl>
-
-      {/* Password Field */}
-      <FormControl isInvalid={!!formErrors.password}>
-        <FormControlLabel>
-          <FormControlLabelText className="text-black">
-            Password
-          </FormControlLabelText>
-        </FormControlLabel>
-
-        <Input className="text-center">
-          <InputField
-            className="text-black"
-            value={form.password}
-            onChangeText={(text: string) =>
-              setForm({ ...form, password: text })
-            }
-            type={showPassword ? "text" : "password"}
-          />
-          <InputSlot className="pr-3" onPress={handleState}>
-            <InputIcon as={showPassword ? EyeIcon : EyeOffIcon} />
-          </InputSlot>
-        </Input>
-
-        <FormControlError>
-          <FormControlErrorIcon as={AlertCircleIcon} />
-          <FormControlErrorText>{formErrors.password}</FormControlErrorText>
-        </FormControlError>
-      </FormControl>
-
+    <VStack space="xl" className="flex-1 gap-36 p-8 h-full justify-around">
       <Button
-        className="ml-auto"
-        onPress={() => {
-          handleLogin();
-        }}
+        className="bg-transparent self-start p-0"
+        onPress={() => router.back()}
       >
-        <ButtonText className="text-typography-0">Login</ButtonText>
+        <FontAwesomeIcon size={30} icon={faArrowLeft} />
       </Button>
-      <HStack space="md" className="w-full justify-center items-center mt-4">
-        <Divider className="flex-1" />
-        <Text>OR CONTINUE WITH</Text>
-        <Divider className="flex-1" />
-      </HStack>
 
-      <HStack space="md" className="w-full justify-center items-center">
+      <VStack space="xl" className="justify-around">
+        <Heading className="text-primary-0 text-2xl">Welcome Back!</Heading>
+
+        {/* Email Field */}
+        <FormControl isInvalid={!!formErrors.email}>
+          <Input className="rounded-lg bg-primary-appWhite">
+            <InputField
+              className="text-black"
+              value={form.email}
+              onChangeText={(text: string) => setForm({ ...form, email: text })}
+              placeholder="Email"
+              type="text"
+            />
+          </Input>
+
+          <FormControlError>
+            <FormControlErrorIcon as={AlertCircleIcon} />
+            <FormControlErrorText>{formErrors.email}</FormControlErrorText>
+          </FormControlError>
+        </FormControl>
+
+        {/* Password Field */}
+        <FormControl isInvalid={!!formErrors.password}>
+          <Input className="rounded-lg bg-primary-appWhite">
+            <InputField
+              className="text-black"
+              value={form.password}
+              onChangeText={(text: string) =>
+                setForm({ ...form, password: text })
+              }
+              placeholder="Password"
+              type={showPassword ? "text" : "password"}
+            />
+            <InputSlot className="pr-3" onPress={handleState}>
+              <InputIcon as={showPassword ? EyeIcon : EyeOffIcon} />
+            </InputSlot>
+          </Input>
+
+          <FormControlError>
+            <FormControlErrorIcon as={AlertCircleIcon} />
+            <FormControlErrorText>{formErrors.password}</FormControlErrorText>
+          </FormControlError>
+        </FormControl>
+      </VStack>
+
+      <VStack space="lg">
         <Button
-          size="md"
-          variant="outline"
-          action="secondary"
-          className="bg-transparent border border-black-1"
+          className="bg-background-orange rounded-lg"
           onPress={() => {
-            providerAuth(0);
+            handleLogin();
           }}
         >
-          <FontAwesomeIcon icon={faGoogle} />
+          <ButtonText className="text-primary-appWhite">Login</ButtonText>
         </Button>
+        <VStack space="lg">
+          <HStack
+            space="md"
+            className="w-full justify-center items-center mt-4"
+          >
+            <Divider className="flex-1" />
+            <Text className="text-primary-0">OR CONTINUE WITH</Text>
+            <Divider className="flex-1" />
+          </HStack>
 
-        <Button
-          size="md"
-          variant="outline"
-          action="secondary"
-          className="bg-transparent border border-black-1"
-          onPress={() => {
-            providerAuth(1);
-          }}
-        >
-          <FontAwesomeIcon icon={faFacebook} />
-        </Button>
-      </HStack>
+          <HStack space="md" className="w-full justify-center items-center">
+            <Button
+              size="md"
+              action="secondary"
+              className="bg-white shadow-md rounded-lg"
+              onPress={() => {
+                providerAuth(0);
+              }}
+            >
+              <FontAwesomeIcon icon={faGoogle} />
+            </Button>
+
+            <Button
+              size="md"
+              action="secondary"
+              className="bg-white shadow-md rounded-lg"
+              onPress={() => {
+                providerAuth(1);
+              }}
+            >
+              <FontAwesomeIcon icon={faFacebook} />
+            </Button>
+          </HStack>
+        </VStack>
+      </VStack>
     </VStack>
   );
 }

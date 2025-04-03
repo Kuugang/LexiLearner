@@ -70,17 +70,7 @@ export default function Step3() {
   };
 
   return (
-    <ScrollView
-      className="flex-1"
-      contentContainerStyle={{
-        flexGrow: 1,
-        justifyContent: "center",
-        alignItems: "center",
-        padding: 40,
-      }}
-    >
-      <Text>{fromProviderAuth ? "Setup Profile" : "Full Registration"}</Text>
-
+    <ScrollView className="bg-background-yellowOrange">
       <SignUp3 isInvalid={isInvalid} handleStep={handleStep} />
     </ScrollView>
   );

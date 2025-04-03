@@ -1,3 +1,19 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+:root {
+  --color-primary-0: 0, 0, 0; /* White */
+  --color-primary-50: 240, 240, 240; /* Light Grey */
+  --color-primary-100: 220, 220, 220;
+  --color-primary-200: 200, 200, 200;
+  --color-primary-300: 180, 180, 180;
+  --color-primary-400: 160, 160, 160;
+  --color-primary-500: 140, 140, 140; /* Grey */
+  --color-primary-600: 120, 120, 120;
+  --color-primary-700: 100, 100, 100;
+  --color-primary-800: 80, 80, 80;
+  --color-primary-900: 60, 60, 60;
+  --color-primary-950: 40, 40, 40; /* Dark Grey */
+  /* Define other color variables similarly */
+}

@@ -57,15 +57,7 @@ export default function Step4() {
   };
 
   return (
-    <ScrollView
-      className="flex-1"
-      contentContainerStyle={{
-        flexGrow: 1,
-        justifyContent: "center",
-        alignItems: "center",
-        padding: 40,
-      }}
-    >
+    <ScrollView className="bg-background-yellowOrange">
       <SignUp4
         ageInvalid={ageInvalid}
         gradeLevelInvalid={gradeLevelInvalid}

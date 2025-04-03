@@ -1,9 +1,10 @@
 import React from "react";
 
 //Components
+import { View } from "react-native";
 import { VStack } from "@/components/ui/vstack";
 import { Heading } from "@/components/ui/heading";
-
+import { Image } from "@/components/ui/image";
 import {
   FormControl,
   FormControlError,
@@ -13,9 +14,22 @@ import {
   FormControlLabelText,
 } from "@/components/ui/form-control";
 
-import { Input, InputField } from "@/components/ui/input";
 import { AlertCircleIcon } from "@/components/ui/icon";
 import { Button, ButtonText } from "@/components/ui/button";
+
+import {
+  Select,
+  SelectTrigger,
+  SelectInput,
+  SelectIcon,
+  SelectPortal,
+  SelectBackdrop,
+  SelectContent,
+  SelectDragIndicator,
+  SelectDragIndicatorWrapper,
+  SelectItem,
+} from "@/components/ui/select";
+import { ChevronDownIcon } from "@/components/ui/icon";
 
 interface SignUp4Props {
   ageInvalid: boolean;
@@ -37,57 +51,99 @@ export default function SignUp4({
   handleStep,
 }: SignUp4Props) {
   return (
-    <VStack space="xl" className="text-typography-black">
-      <Heading className="text-typography-black">Final Step!</Heading>
+    <View className="flex-1 gap-14 p-8 h-full justify-around items-center">
+      <View className="flex-1 gap-6 p-8 h-full justify-around items-center">
+        <Image
+          source={require("@/assets/images/role-pupil.png")}
+          className="w-32 h-32"
+          resizeMode="contain"
+          alt=""
+        />
+        <Heading className="text-typography-black font-bold text-3xl">
+          Almost There!
+        </Heading>
+      </View>
+      <Heading>USBON PANI</Heading>
 
-      {/* Age Field */}
-      <FormControl isInvalid={ageInvalid}>
-        <FormControlLabel>
-          <FormControlLabelText>First Name</FormControlLabelText>
-        </FormControlLabel>
-        <Input className="my-1">
-          <InputField
-            placeholder="Enter Age"
-            value={form.age}
-            keyboardType="numeric"
-            onChangeText={(text: string) => setForm({ ...form, age: text })}
-          />
-        </Input>
-        <FormControlError>
-          <FormControlErrorIcon as={AlertCircleIcon} />
-          <FormControlErrorText>Age is required.</FormControlErrorText>
-        </FormControlError>
-      </FormControl>
+      <View className="flex flex-row gap-4">
+        <FormControl isInvalid={ageInvalid}>
+          <Select
+            onValueChange={(value: string) => setForm({ ...form, age: value })}
+          >
+            <SelectTrigger>
+              <SelectInput placeholder="Age" />
+              <SelectIcon className="mr-3" as={ChevronDownIcon} />
+            </SelectTrigger>
+            <SelectPortal>
+              <SelectBackdrop />
+              <SelectContent>
+                <SelectDragIndicatorWrapper>
+                  <SelectDragIndicator />
+                </SelectDragIndicatorWrapper>
 
-      {/* Grade Level Field */}
-      <FormControl isInvalid={gradeLevelInvalid}>
-        <FormControlLabel>
-          <FormControlLabelText>Grade Level</FormControlLabelText>
-        </FormControlLabel>
-        <Input className="my-1">
-          <InputField
-            placeholder="Enter Grade Level"
-            keyboardType="numeric"
-            value={form.gradeLevel}
-            onChangeText={(text: string) =>
-              setForm({ ...form, gradeLevel: text })
+                <SelectItem label="11" value="11" />
+                <SelectItem label="12" value="12" />
+                <SelectItem label="13" value="13" />
+                <SelectItem label="14" value="14" />
+                <SelectItem label="15" value="15" />
+                <SelectItem label="16" value="16" />
+                <SelectItem label="17" value="17" />
+                <SelectItem label="18" value="19" />
+              </SelectContent>
+            </SelectPortal>
+          </Select>
+
+          <FormControlError>
+            <FormControlErrorIcon as={AlertCircleIcon} />
+            <FormControlErrorText>
+              Grade Level is required.
+            </FormControlErrorText>
+          </FormControlError>
+        </FormControl>
+        <FormControl isInvalid={gradeLevelInvalid}>
+          <Select
+            onValueChange={(value: string) =>
+              setForm({ ...form, gradeLevel: value })
             }
-          />
-        </Input>
-        <FormControlError>
-          <FormControlErrorIcon as={AlertCircleIcon} />
-          <FormControlErrorText>Grade Level is required.</FormControlErrorText>
-        </FormControlError>
-      </FormControl>
+          >
+            <SelectTrigger className="text-typography-black">
+              <SelectInput placeholder="Grade Level" />
+              <SelectIcon className="mr-3" as={ChevronDownIcon} />
+            </SelectTrigger>
+            <SelectPortal>
+              <SelectBackdrop />
+              <SelectContent>
+                <SelectDragIndicatorWrapper>
+                  <SelectDragIndicator />
+                </SelectDragIndicatorWrapper>
+
+                <SelectItem label="5" value="5" />
+                <SelectItem label="6" value="6" />
+                <SelectItem label="7" value="7" />
+                <SelectItem label="8" value="8" />
+                <SelectItem label="9" value="9" />
+                <SelectItem label="10" value="10" />
+                <SelectItem label="11" value="11" />
+                <SelectItem label="12" value="12" />
+              </SelectContent>
+            </SelectPortal>
+          </Select>
+
+          <FormControlError>
+            <FormControlErrorIcon as={AlertCircleIcon} />
+            <FormControlErrorText>Age is required.</FormControlErrorText>
+          </FormControlError>
+        </FormControl>
+      </View>
 
       <Button
-        className="ml-auto"
+        className="bg-background-orange rounded-lg w-full"
         onPress={() => {
           handleStep();
         }}
       >
-        <ButtonText className="text-typography-0">Finish</ButtonText>
+        <ButtonText className="text-primary-appWhite">Finish</ButtonText>
       </Button>
-    </VStack>
+    </View>
   );
 }

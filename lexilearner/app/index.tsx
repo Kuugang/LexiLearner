@@ -1,9 +1,9 @@
 import React from "react";
 import { router } from "expo-router"; // Or useNavigation if using React Navigation
-import { ScrollView, View } from "react-native";
 
+import { ScrollView, View } from "react-native";
 import { Heading } from "@/components/ui/heading";
-import { VStack } from "@/components/ui/vstack";
+import { Image } from "@/components/ui/image";
 import { Button, ButtonText } from "@/components/ui/button";
 
 import Login from "@/components/Auth/Login";
@@ -21,35 +21,54 @@ GoogleSignin.configure({
 
 const Index = () => {
   return (
-    <>
-      <SpinnerOverlay />
-      <ScrollView>
-        <VStack
-          space="xl"
-          className="flex flex-col items-center justify-center"
+    <ScrollView
+      contentContainerStyle={{
+        flexGrow: 1,
+        justifyContent: "space-around",
+        alignItems: "center",
+      }}
+    >
+      <View className="absolute w-[600px] h-[600px] bg-background-0 rounded-full -top-20 left-0 -z-10"></View>
+      {/* Illustration */}
+      <Image
+        source={require("@/assets/images/woman-reading.png")}
+        className="absolute top-16 left-1/2 -translate-x-1/2 w-60 h-60"
+        resizeMode="contain"
+        alt=""
+      />
+
+      {/* Title */}
+      <Heading className="text-3xl font-bold text-gray-900 mt-72">
+        LexiLearner
+      </Heading>
+
+      {/* Buttons Section */}
+      <View className="w-full mt-12 space-y-4 gap-2 px-6">
+        {/* Register Button */}
+        <Button
+          onPress={() => {
+            router.push("/signup");
+          }}
+          className="w-full bg-orange-500 rounded-lg"
         >
-          <Heading className="text-black">Lexi Learning</Heading>
+          <ButtonText className="text-white text-lg font-bold">
+            Register
+          </ButtonText>
+        </Button>
 
-          <Button
-            size="md"
-            variant="solid"
-            action="primary"
-            onPress={() => router.push("/signin")}
-          >
-            <ButtonText>Login</ButtonText>
-          </Button>
-
-          <Button
-            size="md"
-            variant="solid"
-            action="primary"
-            onPress={() => router.push("/signup")}
-          >
-            <ButtonText>Register</ButtonText>
-          </Button>
-        </VStack>
-      </ScrollView>
-    </>
+        {/* Log In Button */}
+        <Button
+          onPress={() => {
+            router.push("/signin");
+          }}
+          className="w-full border border-orange-500 bg-white rounded-lg "
+        >
+          <ButtonText className="text-orange-500 text-lg font-bold">
+            Log In
+          </ButtonText>
+        </Button>
+      </View>
+    </ScrollView>
   );
 };
 

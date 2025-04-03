@@ -15,7 +15,7 @@ export default function Profile() {
         <ButtonText
           onPress={async () => {
             await logout();
-            router.replace("/");
+            router.push("/");
           }}
         >
           LogOut
