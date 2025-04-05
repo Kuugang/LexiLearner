@@ -91,7 +91,12 @@ export default function ReadDetail() {
         {book.Author && <Text className="text-lg mb-2">{book.Author}</Text>}
         <View className="flex flex-row w-full justify-center gap-6">
           <View className="flex flex-col justify-center items-center">
-            <Button className="w-16 h-16 rounded-full bg-background-lightGrayOrange">
+            <Button
+              className="w-16 h-16 rounded-full bg-background-lightGrayOrange"
+              onPress={() => {
+                router.push(`/content/read/${book.Id}`);
+              }}
+            >
               <FontAwesomeIcon size={30} icon={faBookOpen} />
             </Button>
             <Text className="font-bold">Read</Text>

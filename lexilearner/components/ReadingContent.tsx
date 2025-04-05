@@ -23,7 +23,7 @@ function ReadingContent(props: ReadingContentProps) {
     // Store all book details in context
     selectBook(props);
     // Navigate with just the ID
-    router.push(`/read/${props.Id}`);
+    router.push(`/content/${props.Id}`);
   };
 
   if (props.Type === "Recommended") {
