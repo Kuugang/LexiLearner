@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "lexilearner",
-    "slug": "lexilearner",
+    "name": "LexiLearner",
+    "slug": "LexiLearner",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",

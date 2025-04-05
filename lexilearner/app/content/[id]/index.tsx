@@ -3,8 +3,9 @@ import { router } from "expo-router";
 import { View, Text, ScrollView, Image, ActivityIndicator } from "react-native";
 import { useLocalSearchParams } from "expo-router";
 import { useBooks } from "@/context/ReadingContentProvider";
+import { ReadingContentType } from "@/models/ReadingContent";
 
-import { Button, ButtonText } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import {
   faArrowLeft,
@@ -12,21 +13,10 @@ import {
   faPlus,
 } from "@fortawesome/free-solid-svg-icons";
 
-interface BookDetails {
-  Id: string;
-  Title: string;
-  Author?: string;
-  Description?: string;
-  Cover: string;
-  Content: string;
-  Genre: string;
-  Difficulty: number;
-}
-
-export default function ReadDetail() {
+export default function ReadIndex() {
   const params = useLocalSearchParams<{ id: string }>();
   const { selectedBook, getBookById } = useBooks();
-  const [book, setBook] = useState<BookDetails | null>(null);
+  const [book, setBook] = useState<ReadingContentType | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
@@ -94,7 +84,7 @@ export default function ReadDetail() {
             <Button
               className="w-16 h-16 rounded-full bg-background-lightGrayOrange"
               onPress={() => {
-                router.push(`/content/read/${book.Id}`);
+                router.push(`/content/${book.Id}/read`);
               }}
             >
               <FontAwesomeIcon size={30} icon={faBookOpen} />
