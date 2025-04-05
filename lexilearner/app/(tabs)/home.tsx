@@ -7,13 +7,13 @@ import { Heading } from "@/components/ui/heading";
 import { Image } from "@/components/ui/image";
 import { SearchIcon } from "@/components/ui/icon";
 import ReadingContent from "@/components/ReadingContent";
-import { ReadingItem } from "@/models/ReadingContent";
+import { ReadingContentType } from "@/models/ReadingContent";
 
 interface HomeScreenProps {}
 
 interface ContentCategory {
   title: string;
-  items: ReadingItem[];
+  items: ReadingContentType[];
 }
 
 export default function HomeScreen({}: HomeScreenProps): JSX.Element {
@@ -22,69 +22,69 @@ export default function HomeScreen({}: HomeScreenProps): JSX.Element {
       title: "Top Picks For You",
       items: [
         {
-          id: "101",
-          type: "ScrollView",
-          title: "Beyond the Kingdoms",
-          author: "Chris Colfer",
-          description:
+          Id: "101",
+          Type: "ScrollView",
+          Title: "Beyond the Kingdoms",
+          Author: "Chris Colfer",
+          Description:
             "The Masked Man is on the loose in the Land of Stories, and it's up to Alex and Conner Bailey to stop him—except Alex has been thrown off the Fairy Council, and no one will believe they’re in danger. With only the help of a ragtag group—including Goldilocks, Jack, Red Riding Hood, and Mother Goose with her gander, Lester—the Bailey twins uncover the Masked Man’s secret scheme: he possesses a powerful magic potion that turns every book it touches into a portal. Even worse, he is recruiting an army of literature's greatest villains! Thus begins a race through the magical Land of Oz, the fantastical world of Neverland, the madness of Wonderland, and beyond. Can Alex and Conner catch up to the Masked Man, or will they be one step behind until it's too late? Fairy tales and classic stories collide in the fourth adventure in the bestselling Land of Stories series as the twins travel beyond the kingdoms!",
-          cover:
+          Cover:
             "https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1430009826i/24968392.jpg",
-          content:
+          Content:
             "Once upon a time, there were twins named Alex and Conner...",
-          genre: "Fantasy",
-          difficulty: 3,
+          Genre: "Fantasy",
+          Difficulty: 3,
         },
         {
-          id: "102",
-          type: "ScrollView",
-          title: "Harry Potter and the Prisoner of Azkaban",
-          author: "J.K. Rowling",
-          description:
+          Id: "102",
+          Type: "ScrollView",
+          Title: "Harry Potter and the Prisoner of Azkaban",
+          Author: "J.K. Rowling",
+          Description:
             "Harry Potter, along with his best friends, Ron and Hermione, is about to start his third year at Hogwarts School of Witchcraft and Wizardry. Harry can't wait to get back to school after the summer holidays. (Who wouldn't if they lived with the horrible Dursleys?) But when Harry gets to Hogwarts, the atmosphere is tense. There's an escaped mass murderer on the loose, and the sinister prison guards of Azkaban have been called in to guard the school...",
-          cover:
+          Cover:
             "https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1630547330i/5.jpg",
-          content: "Mr. and Mrs. Dursley of number four, Privet Drive...",
-          genre: "Fantasy",
-          difficulty: 4,
+          Content: "Mr. and Mrs. Dursley of number four, Privet Drive...",
+          Genre: "Fantasy",
+          Difficulty: 4,
         },
         {
-          id: "103",
-          type: "ScrollView",
-          title: "The Lightning Thief",
-          author: "Rick Riordan",
-          description:
+          Id: "103",
+          Type: "ScrollView",
+          Title: "The Lightning Thief",
+          Author: "Rick Riordan",
+          Description:
             "The first book in the New York Times best-selling saga with a cover image and an 8-page photo insert from the Disney+ series! Read the book that launched Percy Jackson into the stratosphere before the Disney+ series comes out! Lately, mythological monsters and the Olympian gods seem to be walking straight out of the pages of Percy Jackson’s Greek mythology textbook and into his life. Zeus's master lightning bolt has been stolen, and Percy is the prime suspect. Percy and his friends have just ten days to find and return Zeus's stolen property and bring peace to a warring Mount Olympus. Whether you are new to Percy or a longtime fan, this tie-in paperback edition with full-color photos from the Disney+ series is a must-have for your library.",
-          cover:
+          Cover:
             "https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1684776677i/123675190.jpg",
-          content: "Look, I didn't want to be a half-blood...",
-          genre: "Mythology",
-          difficulty: 3,
+          Content: "Look, I didn't want to be a half-blood...",
+          Genre: "Mythology",
+          Difficulty: 3,
         },
         {
-          id: "104",
-          type: "ScrollView",
-          title: "Charlotte's Web",
-          author: "E.B. White",
-          description: `This beloved book by E. B. White, author of Stuart Little and The Trumpet of the Swan, is a classic of children's literature that is "just about perfect." This high-quality paperback features vibrant illustrations colorized by Rosemary Wells! Some Pig. Humble. Radiant. These are the words in Charlotte's Web, high up in Zuckerman's barn. Charlotte's spiderweb tells of her feelings for a little pig named Wilbur, who simply wants a friend. They also express the love of a girl named Fern, who saved Wilbur's life when he was born the runt of his litter. E. B. White's Newbery Honor Book is a tender novel of friendship, love, life, and death that will continue to be enjoyed by generations to come. This edition contains newly color illustrations by Garth Williams, the acclaimed illustrator of E. B. White's Stuart Little and Laura Ingalls Wilder's Little House series, among many other books.`,
-          cover:
+          Id: "104",
+          Type: "ScrollView",
+          Title: "Charlotte's Web",
+          Author: "E.B. White",
+          Description: `This beloved book by E. B. White, author of Stuart Little and The Trumpet of the Swan, is a classic of children's literature that is "just about perfect." This high-quality paperback features vibrant illustrations colorized by Rosemary Wells! Some Pig. Humble. Radiant. These are the words in Charlotte's Web, high up in Zuckerman's barn. Charlotte's spiderweb tells of her feelings for a little pig named Wilbur, who simply wants a friend. They also express the love of a girl named Fern, who saved Wilbur's life when he was born the runt of his litter. E. B. White's Newbery Honor Book is a tender novel of friendship, love, life, and death that will continue to be enjoyed by generations to come. This edition contains newly color illustrations by Garth Williams, the acclaimed illustrator of E. B. White's Stuart Little and Laura Ingalls Wilder's Little House series, among many other books.`,
+          Cover:
             "https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1628267712i/24178.jpg",
-          content: "Where's Papa going with that ax?...",
-          genre: "Children's",
-          difficulty: 2,
+          Content: "Where's Papa going with that ax?...",
+          Genre: "Children's",
+          Difficulty: 2,
         },
         {
-          id: "105",
-          type: "ScrollView",
-          title: "The Hobbit",
-          author: "J.R.R. Tolkien",
-          description:
+          Id: "105",
+          Type: "ScrollView",
+          Title: "The Hobbit",
+          Author: "J.R.R. Tolkien",
+          Description:
             "First published over 50 years ago, J.R.R. Tolkien's 'The Hobbit' has become one of the best-loved books of all time. Now Tolkien's fantasy classic has been adapted into a fully painted graphic novel. 'The Hobbit' is the story of Bilbo Baggins…a quiet and contented hobbit whose life is turned upside down when he joins the wizard Gandalf and thirteen dwarves on their quest to reclaim the dwarves' stolen treasure. It is a journey fraught with danger – and in the end it is Bilbo alone who must face the guardian of this treasure, the most-dreaded dragon Smaug. Illustrated in full colour throughout, and accompanied by the carefully abridged text of the original novel, this handsome authorised edition will introduce new generations to a magical masterpiece – and be treasured by Hobbit fans of all ages, everywhere.",
-          cover:
+          Cover:
             "https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1374681632i/659469.jpg",
-          content: "In a hole in the ground there lived a hobbit...",
-          genre: "Fantasy",
-          difficulty: 5,
+          Content: "In a hole in the ground there lived a hobbit...",
+          Genre: "Fantasy",
+          Difficulty: 5,
         },
       ],
     },
@@ -92,67 +92,67 @@ export default function HomeScreen({}: HomeScreenProps): JSX.Element {
       title: "New Releases",
       items: [
         {
-          id: "201",
-          type: "ScrollView",
-          title: "The Midnight Library",
-          author: "Matt Haig",
-          description: "Between life and death",
-          cover:
+          Id: "201",
+          Type: "ScrollView",
+          Title: "The Midnight Library",
+          Author: "Matt Haig",
+          Description: "Between life and death",
+          Cover:
             "https://images-na.ssl-images-amazon.com/images/I/81eB+7+CkUL.jpg",
-          content: "Nineteen years before she decided to die...",
-          genre: "Fiction",
-          difficulty: 4,
+          Content: "Nineteen years before she decided to die...",
+          Genre: "Fiction",
+          Difficulty: 4,
         },
         {
-          id: "202",
-          type: "ScrollView",
-          title: "Project Hail Mary",
-          author: "Andy Weir",
-          description: "A lone astronaut must save humanity",
-          cover:
+          Id: "202",
+          Type: "ScrollView",
+          Title: "Project Hail Mary",
+          Author: "Andy Weir",
+          Description: "A lone astronaut must save humanity",
+          Cover:
             "https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1597695864i/54493401.jpg",
-          content:
+          Content:
             "I wake up to the pain. Not the discomfort kind, but the truly...",
-          genre: "Sci-Fi",
-          difficulty: 5,
+          Genre: "Sci-Fi",
+          Difficulty: 5,
         },
         {
-          id: "203",
-          type: "ScrollView",
-          title: "The Hill We Climb",
-          author: "Amanda Gorman",
-          description: "An inaugural poem for the country",
-          cover:
+          Id: "203",
+          Type: "ScrollView",
+          Title: "The Hill We Climb",
+          Author: "Amanda Gorman",
+          Description: "An inaugural poem for the country",
+          Cover:
             "https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1612178266i/56914101.jpg",
-          content:
+          Content:
             "When day comes, we ask ourselves, where can we find light...",
-          genre: "Poetry",
-          difficulty: 3,
+          Genre: "Poetry",
+          Difficulty: 3,
         },
         {
-          id: "204",
-          type: "ScrollView",
-          title: "Klara and the Sun",
-          author: "Kazuo Ishiguro",
-          description: "A story of connection",
-          cover:
+          Id: "204",
+          Type: "ScrollView",
+          Title: "Klara and the Sun",
+          Author: "Kazuo Ishiguro",
+          Description: "A story of connection",
+          Cover:
             "https://images-na.ssl-images-amazon.com/images/I/71KilybDOoL.jpg",
-          content:
+          Content:
             "When we were new, Rosa and I were mid-store, on the magazines table...",
-          genre: "Literary Fiction",
-          difficulty: 4,
+          Genre: "Literary Fiction",
+          Difficulty: 4,
         },
         {
-          id: "205",
-          type: "ScrollView",
-          title: "The Four Winds",
-          author: "Kristin Hannah",
-          description: "An epic novel of love and heroism",
-          cover:
+          Id: "205",
+          Type: "ScrollView",
+          Title: "The Four Winds",
+          Author: "Kristin Hannah",
+          Description: "An epic novel of love and heroism",
+          Cover:
             "https://images-na.ssl-images-amazon.com/images/I/81WojUxbbFL.jpg",
-          content: "She had always been different...",
-          genre: "Historical Fiction",
-          difficulty: 4,
+          Content: "She had always been different...",
+          Genre: "Historical Fiction",
+          Difficulty: 4,
         },
       ],
     },
@@ -160,41 +160,41 @@ export default function HomeScreen({}: HomeScreenProps): JSX.Element {
       title: "Educational Reads",
       items: [
         {
-          id: "301",
-          type: "ScrollView",
-          title: "A Brief History of Time",
-          author: "Stephen Hawking",
-          description: "From big bang to black holes",
-          cover:
+          Id: "301",
+          Type: "ScrollView",
+          Title: "A Brief History of Time",
+          Author: "Stephen Hawking",
+          Description: "From big bang to black holes",
+          Cover:
             "https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1333578746i/3869.jpg",
-          content: "Our picture of the universe...",
-          genre: "Science",
-          difficulty: 7,
+          Content: "Our picture of the universe...",
+          Genre: "Science",
+          Difficulty: 7,
         },
         {
-          id: "302",
-          type: "ScrollView",
-          title: "Sapiens",
-          author: "Yuval Noah Harari",
-          description: "A brief history of humankind",
-          cover:
+          Id: "302",
+          Type: "ScrollView",
+          Title: "Sapiens",
+          Author: "Yuval Noah Harari",
+          Description: "A brief history of humankind",
+          Cover:
             "https://images-na.ssl-images-amazon.com/images/I/713jIoMO3UL.jpg",
-          content:
+          Content:
             "About 13.5 billion years ago, matter, energy, time and space...",
-          genre: "History",
-          difficulty: 6,
+          Genre: "History",
+          Difficulty: 6,
         },
         {
-          id: "303",
-          type: "ScrollView",
-          title: "Cosmos",
-          author: "Carl Sagan",
-          description: "A personal voyage",
-          cover:
+          Id: "303",
+          Type: "ScrollView",
+          Title: "Cosmos",
+          Author: "Carl Sagan",
+          Description: "A personal voyage",
+          Cover:
             "https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1388620656i/55030.jpg",
-          content: "The Cosmos is all that is or ever was or ever will be...",
-          genre: "Science",
-          difficulty: 5,
+          Content: "The Cosmos is all that is or ever was or ever will be...",
+          Genre: "Science",
+          Difficulty: 5,
         },
       ],
     },
@@ -230,7 +230,15 @@ export default function HomeScreen({}: HomeScreenProps): JSX.Element {
         <ReadingContent
           Type={"Recommended"}
           Id={"123"}
-          Content={"Hello"}
+          Content={`
+    "Cat in the Hat" is a delightful and whimsical story by Dr. Seuss, packed with fun and chaos. The plot revolves around a young brother and sister who are stuck indoors on a rainy day. Their boredom is quickly turned upside down when the mischievous Cat in the Hat shows up, bringing along his troublesome friends, Thing 1 and Thing 2. Together, they cause mayhem and mess, but they also help turn the day into an unforgettable adventure. 
+
+    The Cat’s antics and the antics of his companions are a source of laughter and imagination, all while teaching important lessons about responsibility and the consequences of causing trouble. This story is known for its simple rhymes and repetitive words, making it perfect for young readers to follow along with and build their reading skills. Whether it’s parents, teachers, or kids, "Cat in the Hat" has earned a lasting spot in the hearts of many for its playful nature and engaging characters.
+
+    Dr. Seuss’s trademark use of vibrant illustrations and clever wordplay makes the story even more fun. The characters like Thing 1 and Thing 2, and the talking fish, add to the charm and humor. The book's smaller format and easy-to-read design make it great for kids aged 3-7 to practice reading on their own. 
+
+    This edition is part of the Beginner Books collection, which aims to encourage early readers with its simple language and visual storytelling. It’s a perfect book for both independent reading and family read-aloud sessions!
+  `}
           Title={"Cat In The Hat"}
           Author={"Dr. Seuss"}
           Description="Have a ball with Dr. Seuss and the Cat in the Hat in this classic picture book...but don't forget to clean up your mess!
@@ -255,17 +263,17 @@ Originally created by Dr. Seuss himself, Beginner Books are fun, funny, and easy
               className="p-2"
             >
               {category.items.map((item) => (
-                <View key={item.id} className="mr-4">
+                <View key={item.Id} className="mr-4">
                   <ReadingContent
-                    Type={item.type}
-                    Id={item.id}
-                    Title={item.title}
-                    Author={item.author}
-                    Description={item.description}
-                    Cover={item.cover}
-                    Content={item.content}
-                    Genre={item.genre}
-                    Difficulty={item.difficulty}
+                    Type="ScrollView"
+                    Id={item.Id}
+                    Title={item.Title}
+                    Author={item.Author}
+                    Description={item.Description}
+                    Cover={item.Cover}
+                    Content={item.Content}
+                    Genre={item.Genre}
+                    Difficulty={item.Difficulty}
                   />
                 </View>
               ))}
