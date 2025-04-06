@@ -32,7 +32,7 @@ function ProtectedRouteGuard({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     // router.push("/read/123");
-    router.push("/home");
+    router.push("/profile");
   }, []);
 
   return <>{children}</>;
