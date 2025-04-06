@@ -6,29 +6,17 @@ import React, {
   ReactNode,
 } from "react";
 
-// Define types
-interface Book {
-  Id: string;
-  Type: string;
-  Title: string;
-  Author?: string;
-  Description?: string;
-  Cover: string;
-  Content: string;
-  Genre: string;
-  Difficulty: number;
-  [key: string]: any; // For any additional properties
-}
+import { ReadingContentType } from "@/models/ReadingContent";
 
 interface BookCache {
-  [key: string]: Book;
+  [key: string]: ReadingContentType;
 }
 
 interface ReadingContentContextType {
-  selectedBook: Book | null;
-  selectBook: (book: Book) => void;
+  selectedBook: ReadingContentType | null;
+  selectBook: (book: ReadingContentType) => void;
   bookCache: BookCache;
-  getBookById: (id: string) => Promise<Book | null>;
+  getBookById: (id: string) => Promise<ReadingContentType | null>;
 }
 
 // Create context with a default value
@@ -45,11 +33,13 @@ interface ReadingContentProviderProps {
 export function ReadingContentProvider({
   children,
 }: ReadingContentProviderProps) {
-  const [selectedBook, setSelectedBook] = useState<Book | null>(null);
+  const [selectedBook, setSelectedBook] = useState<ReadingContentType | null>(
+    null,
+  );
   const [bookCache, setBookCache] = useState<BookCache>({});
 
   // Select a book
-  const selectBook = (book: Book) => {
+  const selectBook = (book: ReadingContentType) => {
     setSelectedBook(book);
 
     // Also cache it for future use
@@ -60,7 +50,9 @@ export function ReadingContentProvider({
   };
 
   // Get book by ID (from cache or API)
-  const getBookById = async (id: string): Promise<Book | null> => {
+  const getBookById = async (
+    id: string,
+  ): Promise<ReadingContentType | null> => {
     // Return from cache if available
     if (bookCache[id]) {
       return bookCache[id];
@@ -73,7 +65,7 @@ export function ReadingContentProvider({
       // const book = await response.json();
 
       // Simulated API response
-      const book: Book = {
+      const book: ReadingContentType = {
         Id: id,
         Type: "API",
         Title: `Book ${id}`,

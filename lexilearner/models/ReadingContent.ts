@@ -1,5 +1,6 @@
-export interface ReadingContent {
+export interface ReadingContentType {
   Id: string;
+  Type?: string;
   Title: string;
   Author?: string;
   Description: string;
@@ -7,16 +8,4 @@ export interface ReadingContent {
   Content: string;
   Genre: string;
   Difficulty: number;
-}
-
-export interface ReadingItem {
-  id: string;
-  type: string;
-  title: string;
-  author?: string;
-  description?: string;
-  cover: string;
-  content: string;
-  genre: string;
-  difficulty: number;
 }
