@@ -9,11 +9,11 @@ interface ProfileStatsProps {
 
 function ProfileStats({ level, description }: ProfileStatsProps) {
   return (
-    <View className="items-center w-full p-4">
-      <Heading bold className="text-2xl">
-        {level}
-      </Heading>
-      <Text className="flex-wrap text-center w-full">{description}</Text>
+    <View className="w-[48%] py-1">
+      <View className="p-3 border-2 rounded-xl border-gray-300">
+        <Text className="text-lg font-bold">{level}</Text>
+        <Text className="text-sm text-gray-700">{description}</Text>
+      </View>
     </View>
   );
 }

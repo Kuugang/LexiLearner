@@ -19,7 +19,7 @@ function ProtectedRouteGuard({ children }: { children: ReactNode }) {
   // useEffect(() => {
   //   const inAuthGroup = segments[0] === "(auth)";
   //   const inProtectedGroup = segments[0] === "(tabs)";
-  //
+
   //   // If no user is signed in and the route isn't in the auth group, redirect to login
   //   if (!user && !inAuthGroup) {
   //     router.replace("/");

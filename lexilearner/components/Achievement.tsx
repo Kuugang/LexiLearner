@@ -1,31 +1,16 @@
-import { View } from "react-native";
 import { Text } from "@/components/ui/text";
-import { Heading } from "./ui/heading";
-import { Image } from "@/components/ui/image";
+import { StyleSheet, ScrollView, View } from "react-native";
 
-interface AchievementProps {
+interface AchievementProp {
   title: string;
   description: string;
 }
 
-function Achievement({ title, description }: AchievementProps) {
+export default function Achievement({ title, description }: AchievementProp) {
   return (
-    <View className="py-1 w-full">
-      <View className="flex-row items-start gap-3 w-full">
-        <Image
-          source={require("@/assets/icons/achievementTest.png")}
-          alt="achievement"
-          className="w-25 h-25"
-        />
-        <View className="flex-1">
-          <Heading>{title}</Heading>
-          <Text numberOfLines={1} className="truncate">
-            {description}
-          </Text>
-        </View>
-      </View>
+    <View className="p-5 mb-5 bg-background-yellowOrange rounded-xl">
+      <Text className="font-bold text-lg">{title}</Text>
+      <Text className="text-sm">{description}</Text>
     </View>
   );
 }
-
-export default Achievement;
