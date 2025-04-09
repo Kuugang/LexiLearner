@@ -3,15 +3,16 @@ using System.Security.Claims;
 using LexiLearner.Models;
 using LexiLearner.Models.DTO;
 
-namespace LexiLearner.Interfaces{
-	public interface IUserService
-	{
+namespace LexiLearner.Interfaces
+{
+    public interface IUserService
+    {
         Task<string> GetRole(User user);
-		Task<User?> GetUserByIdAsync(string userId);
-		Task<User?> GetUserByEmail(string email);
+        Task<User?> GetUserByIdAsync(string userId);
+        Task<User?> GetUserByEmail(string email);
         Task<User?> GetUserByUsername(string username);
 
-		Task<SuccessResponseDTO> Register(RegisterRequest RegisterRequest);
+        Task<SuccessResponseDTO> Register(RegisterRequest RegisterRequest);
 
         Task<ResponseDTO> GetUserProfile(ClaimsPrincipal user);
         Task<ResponseDTO> GetPublicProfile(string Username);
@@ -19,5 +20,5 @@ namespace LexiLearner.Interfaces{
         Task<User?> GetUserFromToken(ClaimsPrincipal token);
 
         Task<ResponseDTO> UpdateProfile(UpdateProfileDTO UpdateProfileDTO, ClaimsPrincipal User);
-	}
+    }
 }

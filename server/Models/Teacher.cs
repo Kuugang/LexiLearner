@@ -1,11 +1,10 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.AspNetCore.Identity;
 
 namespace LexiLearner.Models
 {
-	public class Teacher
-	{
+    public class Teacher
+    {
         public Guid Id { get; set; } = Guid.NewGuid();
 
         [Required]
@@ -14,5 +13,5 @@ namespace LexiLearner.Models
         [Required]
         [ForeignKey("UserId")]
         public required User User { get; set; }
-	}
+    }
 }
