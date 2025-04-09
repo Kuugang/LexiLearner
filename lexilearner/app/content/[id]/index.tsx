@@ -19,6 +19,9 @@ export default function ReadIndex() {
   const [book, setBook] = useState<ReadingContentType | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
+  //TODO: If word is followed by a period, eg: "you."
+  // also consider "Mrs.", "Mr." which is valid
+
   useEffect(() => {
     const loadBook = async () => {
       // If we already have the selected book and it matches the ID

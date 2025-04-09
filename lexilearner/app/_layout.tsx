@@ -15,24 +15,14 @@ function ProtectedRouteGuard({ children }: { children: ReactNode }) {
   const { user } = useUserContext();
 
   const segments = useSegments();
-
-  // useEffect(() => {
-  //   const inAuthGroup = segments[0] === "(auth)";
-  //   const inProtectedGroup = segments[0] === "(tabs)";
-  //
-  //   // If no user is signed in and the route isn't in the auth group, redirect to login
-  //   if (!user && !inAuthGroup) {
-  //     router.replace("/");
-  //   }
-  //   // If user is signed in and they're in the auth group, redirect to main content
-  //   else if (user && inAuthGroup) {
-  //     router.replace("/(tabs)/home");
-  //   }
-  // }, [user, segments]);
-
   useEffect(() => {
-    // router.push("/read/123");
-    router.push("/home");
+    const inAuthGroup = segments[0] === "(auth)";
+    if (!user && !inAuthGroup) {
+      // Only redirect to index if not already there
+      router.replace("/");
+    } else if (user && inAuthGroup) {
+      router.replace("/(tabs)/home");
+    }
   }, []);
 
   return <>{children}</>;
@@ -43,18 +33,18 @@ export default function RootLayout() {
     <GlobalProvider>
       <UserProvider>
         <AuthProvider>
-          <GluestackUIProvider mode="light">
-            <ProtectedRouteGuard>
-              <ReadingContentProvider>
+          <ProtectedRouteGuard>
+            <ReadingContentProvider>
+              <GluestackUIProvider mode="light">
                 <Stack screenOptions={{ headerShown: false }}>
                   <Stack.Screen name="index" />
                   <Stack.Screen name="(tabs)" />
                   <Stack.Screen name="(auth)" />
                   <Stack.Screen name="content" />
                 </Stack>
-              </ReadingContentProvider>
-            </ProtectedRouteGuard>
-          </GluestackUIProvider>
+              </GluestackUIProvider>
+            </ReadingContentProvider>
+          </ProtectedRouteGuard>
         </AuthProvider>
       </UserProvider>
     </GlobalProvider>

@@ -9,7 +9,6 @@ import {
   Modal,
   useWindowDimensions,
   ScrollView,
-  unstable_batchedUpdates,
 } from "react-native";
 import Tts from "react-native-tts";
 import axios from "axios";
@@ -17,15 +16,23 @@ import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faVolumeUp } from "@fortawesome/free-solid-svg-icons";
 import { useBooks } from "@/context/ReadingContentProvider";
 import { Button, ButtonText } from "@/components/ui/button";
+import { Input, InputField } from "@/components/ui/input";
 
 export default function Read() {
   const { width } = useWindowDimensions();
-  const { selectedBook, getBookById } = useBooks();
+  const { selectedBook } = useBooks();
 
-  const [selectedWord, setSelectedWord] = useState<string | null>(null);
-  const [definition, setDefinition] = useState<string>("");
-  const [definitionVisible, setDefinitionVisible] = useState<boolean>(false);
-  const [cache, setCache] = useState<Record<string, string>>({});
+  const [selectedWord, setSelectedWord] = useState("");
+  const [isDefinitionLoading, setIsDefinitionLoading] = useState(true);
+  const [definitionVisible, setDefinitionVisible] = useState(false);
+  const [definitionCache, setdefinitionCache] = useState<
+    Record<string, string>
+  >({});
+
+  const [translationCache, setTranslationCache] = useState<
+    Record<string, string>
+  >({});
+
   const [html, setHtml] = useState("");
 
   const words = useMemo(
@@ -33,57 +40,75 @@ export default function Read() {
     [selectedBook?.Content],
   ); // Memoize word splitting
 
-  const handleWordPress = async (word: string) => {
-    // Batch initial state updates
-    unstable_batchedUpdates(() => {
-      setSelectedWord(word);
-      setDefinitionVisible(true);
-    });
+  const getTranslation = async (word: string) => {
+    const formData = new URLSearchParams();
+    formData.append("from", "en_US");
+    formData.append("to", "ceb_PH");
+    formData.append("text", word);
+    formData.append("platform", "dp");
 
-    // Check cache
-    if (cache[word]) {
-      setDefinition(cache[word]);
+    const { data } = await axios.post(
+      "https://corsproxy.io/?url=https://lingvanex.com/translation/translate",
+      formData,
+      {
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+      },
+    );
+    return data;
+  };
+
+  const getDefinition = async (word: string) => {
+    const { data } = await axios.get(
+      `https://corsproxy.io/?url=https://googledictionary.freecollocation.com/meaning?word=${word}`,
+    );
+    return data;
+  };
+
+  const handleDisplayDefinition = async (word: string) => {
+    if (definitionCache[word]) {
+      setHtml(definitionCache[word]);
       return;
     }
 
     try {
-      const { data } = await axios.get(
-        `https://googledictionary.freecollocation.com/meaning?word=${word}`,
-      );
+      setIsDefinitionLoading(true);
+      const data = await getDefinition(word);
 
-      requestAnimationFrame(() => {
-        const $ = cheerio.load(data);
-        $('script, style, link[rel="stylesheet"]').remove();
+      const $ = cheerio.load(data);
+      $('script, style, link[rel="stylesheet"]').remove();
 
-        $("div")
-          .filter(function (this: HTMLElement): boolean {
-            const style = $(this).attr("style") ?? "";
-            return (
-              style.includes("float:right") &&
-              style.includes("text-align:right")
-            );
-          })
-          .remove();
-        $("img.forEmbed[url]").each(function (this: HTMLElement) {
-          const url = $(this).attr("url");
-          if (
-            url ===
-            "http://www.gstatic.com/dictionary/static/sounds/de/0/twin.mp3"
-          ) {
-            $(this).remove();
-          }
-        });
+      $("#smaller").closest("div").remove();
+      $("img.forEmbed").remove();
 
-        const html = $("#forEmbed").html();
+      const html = $("#forEmbed").html();
+      if (html === null) {
+        setHtml(`
+              <div style="text-align: center; padding: 20px;">
+                <p style="font-size: 18px; color: #888;">🧐 Definition not found</p>
+              </div>
+            `);
+        return;
+      }
 
-        setCache((prev) => ({ ...prev, [word]: html }));
-        setHtml(html);
-      });
+      const translation = await getTranslation(word);
+      setTranslationCache((prev) => ({ ...prev, [word]: translation.result }));
+      setdefinitionCache((prev) => ({ ...prev, [word]: html }));
+      setHtml(html);
     } catch (error) {
       if (!axios.isCancel(error)) {
         console.error("Error:", error);
       }
+    } finally {
+      setIsDefinitionLoading(false);
     }
+  };
+
+  const handleWordPress = (word: string) => {
+    setSelectedWord(word);
+    setDefinitionVisible(true);
+    handleDisplayDefinition(word);
   };
 
   const handlePronounce = () => {
@@ -107,7 +132,17 @@ export default function Read() {
 
       <Modal visible={definitionVisible} animationType="slide">
         <ScrollView>
-          <Text className="text-lg font-bold">{selectedWord}</Text>
+          <Input className="rounded-lg bg-primary-appWhite">
+            <InputField
+              className="text-black"
+              value={selectedWord}
+              onChangeText={(text: string) => setSelectedWord(text)}
+              onBlur={() => handleDisplayDefinition(selectedWord)}
+              type="text"
+            />
+          </Input>
+
+          <Text>{translationCache[selectedWord]}</Text>
 
           <Pressable onPress={handlePronounce} className="mt-4">
             <FontAwesomeIcon size={24} icon={faVolumeUp} />
@@ -119,7 +154,11 @@ export default function Read() {
             <Text>Close</Text>
           </Pressable>
 
-          <RenderHtml contentWidth={width} source={{ html }} />
+          {isDefinitionLoading ? (
+            <Text>Fetching Definition</Text>
+          ) : (
+            <RenderHtml contentWidth={width} source={{ html }} />
+          )}
         </ScrollView>
       </Modal>
     </View>

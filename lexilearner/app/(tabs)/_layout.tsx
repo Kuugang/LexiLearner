@@ -1,13 +1,26 @@
-import { Tabs } from "expo-router";
-import React from "react";
+import { Tabs, useSegments } from "expo-router";
+import React, { useEffect } from "react";
 import { Platform } from "react-native";
+import { BackHandler } from "react-native";
 
 // import { IconSymbol } from "@/components/ui/IconSymbol";
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
+import { useUserContext } from "@/context/UserProvider";
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
+
+  useEffect(() => {
+    const onBackPress = () => {
+      BackHandler.exitApp();
+      return true;
+    };
+
+    BackHandler.addEventListener("hardwareBackPress", onBackPress);
+    return () =>
+      BackHandler.removeEventListener("hardwareBackPress", onBackPress);
+  }, []);
 
   return (
     <Tabs
