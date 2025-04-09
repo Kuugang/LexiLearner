@@ -3,15 +3,11 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using DotNetEnv;
 
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.FileProviders;
-
 
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.Extensions.Caching.StackExchangeRedis;
 
 using LexiLearner.Data;
 using LexiLearner.Models;
@@ -20,6 +16,7 @@ using LexiLearner.Middlewares.Filters;
 using LexiLearner.Interfaces;
 using LexiLearner.Services;
 using LexiLearner.Repository;
+using LexiLearner.Validators;
 
 
 namespace LexiLearner
@@ -34,8 +31,10 @@ namespace LexiLearner
             if (File.Exists(dotenvPath))
             {
                 Env.Load();
-                
-            }else{
+
+            }
+            else
+            {
                 throw new FileNotFoundException($".env file not found.");
             }
 
@@ -44,7 +43,7 @@ namespace LexiLearner
             var jwtAudience = Env.GetString("JWT_AUDIENCE");
             var jwtIssuer = Env.GetString("JWT_ISSUER");
             var jwtSecret = Env.GetString("JWT_SECRET");
-        
+
             var inMemorySettings = new Dictionary<string, string>
             {
                 { "ConnectionStrings:DefaultConnection", defaultConnection },
@@ -67,6 +66,16 @@ namespace LexiLearner
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAll", policy =>
+                {
+                    policy.AllowAnyOrigin()
+                          .AllowAnyMethod()
+                          .AllowAnyHeader();
+                });
+            });
+
             services.Configure<JwtOptions>(Configuration.GetSection("JWT"));
 
             services.AddControllers();
@@ -99,7 +108,6 @@ namespace LexiLearner
             services.AddHttpClient<IAuthService, AuthService>();
 
             services.AddScoped<IUserRepository, UserRepository>();
-            services.AddScoped<CachedUserRepository>();
 
             // Configure Entity Framework with PostgreSQL
             services.AddDbContext<DataContext>(options =>
@@ -115,7 +123,9 @@ namespace LexiLearner
             .AddEntityFrameworkStores<DataContext>()
             .AddDefaultTokenProviders()
             .AddTokenProvider<DataProtectorTokenProvider<User>>("MyApp");
-            
+
+            services.AddScoped<IUserValidator<User>, OptionalEmailUserValidator<User>>();
+
             // Configure Authentication
             services.AddAuthentication(options =>
             {
@@ -156,10 +166,10 @@ namespace LexiLearner
 
 
             //Redis
-            services.AddStackExchangeRedisCache(options =>
-            {
-                options.Configuration = Configuration.GetConnectionString("Redis");
-            });
+            // services.AddStackExchangeRedisCache(options =>
+            // {
+            //     options.Configuration = Configuration.GetConnectionString("Redis");
+            // });
 
 
             // Enable Swagger for API documentation
@@ -192,6 +202,7 @@ namespace LexiLearner
                 Secure = CookieSecurePolicy.Always
             });
 
+            app.UseCors("AllowAll");
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

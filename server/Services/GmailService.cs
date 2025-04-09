@@ -1,9 +1,9 @@
-using System;
-using System.IO;
-using System.Text;
-using System.Threading.Tasks;
-using System.Net.Mail;
-using System.Net.Mime;
+// using System;
+// using System.IO;
+// using System.Text;
+// using System.Threading.Tasks;
+// using System.Net.Mail;
+// using System.Net.Mime;
 
 namespace LexiLearner
 {
@@ -27,7 +27,7 @@ namespace LexiLearner
             //
             // var alternativeView = AlternateView.CreateAlternateViewFromString(content, new ContentType(MediaTypeNames.Text.Html));
             // message.AlternateViews.Add(alternativeView);
-            
+
             using (var client = new System.Net.Mail.SmtpClient("smtp.gmail.com")
             {
                 Port = 587,
