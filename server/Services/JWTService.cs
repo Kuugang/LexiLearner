@@ -13,7 +13,8 @@ namespace LexiLearner
 
         private readonly IConfiguration _configuration;
 
-        public JWTService(IConfiguration configuration){
+        public JWTService(IConfiguration configuration)
+        {
 
             // Console.WriteLine("What");
             // Console.WriteLine(configuration["JWT:Secret"]);

@@ -6,7 +6,6 @@ using System.Text.Json;
 using LexiLearner.Models;
 using LexiLearner.Models.DTO;
 using LexiLearner.Interfaces;
-using LexiLearner.Middlewares;
 using LexiLearner.Exceptions;
 using LexiLearner.Repository;
 
@@ -16,14 +15,15 @@ namespace LexiLearner.Services
     public class UserService : IUserService
     {
         private readonly UserManager<User> _userManager;
-        private readonly CachedUserRepository _cachedUserRepository;
+        private readonly IUserRepository _userRepository;
+        // private readonly CachedUserRepository _userRepository;
         private readonly ITwoFactorAuthService _twoFactorAuthService;
         private readonly IJWTService _jwtService;
 
-        public UserService(UserManager<User> userManager, CachedUserRepository cachedUserRepository, ITwoFactorAuthService twoFactorAuthService, IJWTService jwtService)
+        public UserService(UserManager<User> userManager, IUserRepository userRepository, ITwoFactorAuthService twoFactorAuthService, IJWTService jwtService)
         {
             _userManager = userManager;
-            _cachedUserRepository = cachedUserRepository;
+            _userRepository = userRepository;
             _twoFactorAuthService = twoFactorAuthService;
             _jwtService = jwtService;
 
@@ -33,23 +33,23 @@ namespace LexiLearner.Services
         {
             // string role = (await _userManager.GetRolesAsync(user))[0];
             // return role;
-            
+
             var roles = await _userManager.GetRolesAsync(user);
             return roles.FirstOrDefault();
         }
 
         public async Task<User?> GetUserByIdAsync(string userId)
         {
-            return await _cachedUserRepository.GetUserByIdAsync(userId);
+            return await _userRepository.GetUserByIdAsync(userId);
         }
         public async Task<User?> GetUserByEmail(string email)
         {
-            return await _cachedUserRepository.GetUserByEmail(email);
+            return await _userRepository.GetUserByEmail(email);
         }
 
         public async Task<User?> GetUserByUsername(string username)
         {
-            return await _cachedUserRepository.GetUserByUsername(username);
+            return await _userRepository.GetUserByUsername(username);
         }
 
         public async Task<SuccessResponseDTO> Register(RegisterRequest RegisterRequest)
@@ -73,8 +73,8 @@ namespace LexiLearner.Services
                 LastName = RegisterRequest.LastName,
                 SecurityStamp = Guid.NewGuid().ToString()
             };
-            user = await _cachedUserRepository.Create(user, RegisterRequest.Password);
-            await _cachedUserRepository.CreateProfile(user, RegisterRequest.Role);
+            user = await _userRepository.Create(user, RegisterRequest.Password);
+            await _userRepository.CreateProfile(user, RegisterRequest.Role);
 
             var token = _jwtService.GenerateJWTToken(user.Id, user.UserName!);
 
@@ -82,31 +82,34 @@ namespace LexiLearner.Services
         }
 
 
-            // var emailService = new EmailService();
-            // // await emailService.SendEmailAsync("angelsheinen.cambarijan@cit.edu", "Lexi Learn", "Bang");
-            // // await emailService.SendEmailAsync("charlene.repuesto@cit.edu", "Lexi Learn", "Bang");
-            // // await emailService.SendEmailAsync("deo.talip@cit.edu", "Lexi Learn", "Bang");
-            // await emailService.SendEmailAsync("jake.bajo@cit.edu", "Lexi Learn", "Bang");
-            //
-            // // await emailService.SendEmailAsync("jakebajo11@gmail.com", "Lexi Learn", "Bang");
+        // var emailService = new EmailService();
+        // // await emailService.SendEmailAsync("angelsheinen.cambarijan@cit.edu", "Lexi Learn", "Bang");
+        // // await emailService.SendEmailAsync("charlene.repuesto@cit.edu", "Lexi Learn", "Bang");
+        // // await emailService.SendEmailAsync("deo.talip@cit.edu", "Lexi Learn", "Bang");
+        // await emailService.SendEmailAsync("jake.bajo@cit.edu", "Lexi Learn", "Bang");
+        //
+        // // await emailService.SendEmailAsync("jakebajo11@gmail.com", "Lexi Learn", "Bang");
 
-        public async Task<ResponseDTO> GetUserProfile(ClaimsPrincipal token){
+        public async Task<ResponseDTO> GetUserProfile(ClaimsPrincipal token)
+        {
             User? user = await GetUserFromToken(token);
             string role = await GetRole(user);
-            
+
             var response = new SuccessResponseDTO("User profile fetched successfully", null);
-            
+
             if (role == "Pupil")
             {
-                Pupil? pupil = await _cachedUserRepository.GetPupilByUserId(user.Id);
+                Pupil? pupil = await _userRepository.GetPupilByUserId(user.Id);
                 response.Data = new PupilProfileDTO(user, pupil);
             }
 
             else if (role == "Teacher")
             {
-                Teacher? teacher = await _cachedUserRepository.GetTeacherByUserId(user.Id);
+                Teacher? teacher = await _userRepository.GetTeacherByUserId(user.Id);
                 response.Data = new TeacherProfileDTO(user, teacher);
-            }else{
+            }
+            else
+            {
                 response.Message = "User has not yet selected a role.";
                 response.StatusCode = 204;
             }
@@ -114,10 +117,12 @@ namespace LexiLearner.Services
             return response;
         }
 
-        public async Task<ResponseDTO> GetPublicProfile(string Username){
-            User? user = await _cachedUserRepository.GetUserByUsername(Username);
+        public async Task<ResponseDTO> GetPublicProfile(string Username)
+        {
+            User? user = await _userRepository.GetUserByUsername(Username);
 
-            if(user == null){
+            if (user == null)
+            {
                 throw new ApplicationExceptionBase(
                     $"User does not exist",
                     "User Profile Fetched Failed",
@@ -128,18 +133,20 @@ namespace LexiLearner.Services
             var response = new SuccessResponseDTO("User profile fetched successfully", null);
 
             string role = await GetRole(user);
-            
+
             if (role == "Pupil")
             {
-                Pupil? pupil = await _cachedUserRepository.GetPupilByUserId(user.Id);
+                Pupil? pupil = await _userRepository.GetPupilByUserId(user.Id);
                 response.Data = new PupilProfileDTO(user, pupil, true);
             }
 
             else if (role == "Teacher")
             {
-                Teacher? teacher = await _cachedUserRepository.GetTeacherByUserId(user.Id);
+                Teacher? teacher = await _userRepository.GetTeacherByUserId(user.Id);
                 response.Data = new TeacherProfileDTO(user, teacher, true);
-            }else{
+            }
+            else
+            {
                 response.Message = "User has not yet selected a role.";
                 response.StatusCode = 204;
             }
@@ -157,11 +164,11 @@ namespace LexiLearner.Services
             return await GetUserByIdAsync(userId);
         }
 
-        public async Task<ResponseDTO> UpdateProfile(UpdateProfileDTO UpdateProfileDTO, ClaimsPrincipal User){
+        public async Task<ResponseDTO> UpdateProfile(UpdateProfileDTO UpdateProfileDTO, ClaimsPrincipal User)
+        {
             User? user = await GetUserFromToken(User);
             Console.WriteLine(user);
 
-            bool update = false;
             if (!string.IsNullOrEmpty(UpdateProfileDTO.UserName))
                 user.UserName = UpdateProfileDTO.UserName;
 
@@ -179,22 +186,24 @@ namespace LexiLearner.Services
 
             // JsonSerializer.Deserialize<User>(JsonSerializer.Serialize(user)) 
             // TODO: ABOVE IS JUST A TEMPORARY FIX TO AVOID TRACKING PROBLEMS
-            await _cachedUserRepository.Update(user);
+            await _userRepository.Update(user);
 
             string role = await GetRole(user);
-            
-            if(!string.IsNullOrEmpty(UpdateProfileDTO.Role.ToString())){
-                if(role != null){
+
+            if (!string.IsNullOrEmpty(UpdateProfileDTO.Role.ToString()))
+            {
+                if (role != null)
+                {
                     throw new ApplicationExceptionBase(
                         $"Role for this user has already been set",
                         "User Profile Update Failed",
                         StatusCodes.Status409Conflict
                     );
-                } 
+                }
                 // JsonSerializer.Deserialize<User>(JsonSerializer.Serialize(user)) 
                 // TODO: ABOVE IS JUST A TEMPORARY FIX TO AVOID TRACKING PROBLEMS
-                await _cachedUserRepository.CreateProfile(
-                        JsonSerializer.Deserialize<User>(JsonSerializer.Serialize(user)), 
+                await _userRepository.CreateProfile(
+                        JsonSerializer.Deserialize<User>(JsonSerializer.Serialize(user)),
                         UpdateProfileDTO.Role.ToString()
                 );
                 role = UpdateProfileDTO.Role.ToString();
@@ -210,7 +219,7 @@ namespace LexiLearner.Services
 
             if (role == "Pupil")
             {
-                Pupil? pupil = await _cachedUserRepository.GetPupilByUserId(user.Id);
+                Pupil? pupil = await _userRepository.GetPupilByUserId(user.Id);
 
                 if (UpdateProfileDTO.Age != null)
                     pupil.Age = UpdateProfileDTO.Age;
@@ -218,14 +227,14 @@ namespace LexiLearner.Services
                 if (UpdateProfileDTO.GradeLevel != null)
                     pupil.GradeLevel = UpdateProfileDTO.GradeLevel;
 
-                await _cachedUserRepository.Update(pupil);
+                await _userRepository.Update(pupil);
                 response.Data = new PupilProfileDTO(user, pupil);
             }
             else if (role == "Teacher")
             {
-                Teacher? teacher = await _cachedUserRepository.GetTeacherByUserId(user.Id);
+                Teacher? teacher = await _userRepository.GetTeacherByUserId(user.Id);
 
-                await _cachedUserRepository.Update(teacher);
+                await _userRepository.Update(teacher);
                 response.Data = new TeacherProfileDTO(user, teacher);
             }
 
