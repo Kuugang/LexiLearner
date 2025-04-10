@@ -15,6 +15,7 @@ function ProtectedRouteGuard({ children }: { children: ReactNode }) {
   const { user } = useUserContext();
 
   const segments = useSegments();
+<<<<<<< HEAD
 
   // useEffect(() => {
   //   const inAuthGroup = segments[0] === "(auth)";
@@ -33,6 +34,16 @@ function ProtectedRouteGuard({ children }: { children: ReactNode }) {
   useEffect(() => {
     // router.push("/read/123");
     router.push("/profile");
+=======
+  useEffect(() => {
+    const inAuthGroup = segments[0] === "(auth)";
+    if (!user && !inAuthGroup) {
+      // Only redirect to index if not already there
+      router.replace("/");
+    } else if (user && inAuthGroup) {
+      router.replace("/(tabs)/home");
+    }
+>>>>>>> b0a872f12dfe7be53f0a516cf7a9711c629d5c39
   }, []);
 
   return <>{children}</>;
@@ -43,18 +54,18 @@ export default function RootLayout() {
     <GlobalProvider>
       <UserProvider>
         <AuthProvider>
-          <GluestackUIProvider mode="light">
-            <ProtectedRouteGuard>
-              <ReadingContentProvider>
+          <ProtectedRouteGuard>
+            <ReadingContentProvider>
+              <GluestackUIProvider mode="light">
                 <Stack screenOptions={{ headerShown: false }}>
                   <Stack.Screen name="index" />
                   <Stack.Screen name="(tabs)" />
                   <Stack.Screen name="(auth)" />
                   <Stack.Screen name="content" />
                 </Stack>
-              </ReadingContentProvider>
-            </ProtectedRouteGuard>
-          </GluestackUIProvider>
+              </GluestackUIProvider>
+            </ReadingContentProvider>
+          </ProtectedRouteGuard>
         </AuthProvider>
       </UserProvider>
     </GlobalProvider>
