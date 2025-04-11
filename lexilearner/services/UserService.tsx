@@ -80,7 +80,7 @@ export const checkUserExist = async (fieldType: string, fieldValue: string) => {
         headers: {
           "Content-Type": "application/json",
         },
-      },
+      }
     );
 
     const data = await response.json();
@@ -89,4 +89,28 @@ export const checkUserExist = async (fieldType: string, fieldValue: string) => {
   } catch (error) {
     console.error("Error fetching data:", error);
   }
+};
+
+// DD:
+export const deleteAccount = async () => {
+  const token = await AsyncStorage.getItem("token");
+
+  if (!token) {
+    throw new Error("No token found");
+  }
+
+  const response = await fetch(`${API_URL}/users/me`, {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message || "Account deletion failed");
+  }
+
+  return data;
 };

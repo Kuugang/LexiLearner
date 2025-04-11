@@ -20,5 +20,6 @@ namespace LexiLearner.Interfaces
         Task<User?> GetUserFromToken(ClaimsPrincipal token);
 
         Task<ResponseDTO> UpdateProfile(UpdateProfileDTO UpdateProfileDTO, ClaimsPrincipal User);
+        Task<ResponseDTO> DeleteAccount(ClaimsPrincipal user);
     }
 }

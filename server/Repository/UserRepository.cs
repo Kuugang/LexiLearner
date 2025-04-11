@@ -51,6 +51,16 @@ namespace LexiLearner.Repository
             return user;
         }
 
+        public async Task<User> DeleteAccount(User user) {
+            if(user == null) {
+                throw new Exception("User not found");
+                // throw new ApplicationExceptionBase(,"User not found");
+            }
+            _context.Users.Remove(user);
+            await _context.SaveChangesAsync();
+            return user;
+        }
+
         public async Task CreateProfile(User user, string role)
         {
             //TODO: FIX

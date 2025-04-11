@@ -35,6 +35,7 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({
     // Load user data on app start
     const loadUser = async () => {
       const storedUser = await AsyncStorage.getItem("user");
+
       if (storedUser) setUser(JSON.parse(storedUser));
     };
     loadUser();
@@ -42,7 +43,7 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({
 
   const updateProfile = async (
     form: Record<string, any>,
-    update: boolean = true,
+    update: boolean = true
   ) => {
     try {
       let data = await apiUpdateProfile(form);
@@ -54,10 +55,12 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({
         lastName: data.lastName,
       };
       if (!update) return;
+      console.log("userprovider before setUser: ", user);
       setUser(user);
+      console.log("userprovider AFTER setuser: ", user);
     } catch (error: any) {
       throw new Error(
-        error instanceof Error ? error.message : "Unknown error occurred",
+        error instanceof Error ? error.message : "Unknown error occurred"
       );
     }
   };

@@ -7,6 +7,7 @@ namespace LexiLearner.Interfaces{
 		Task<User?> GetUserByUsername(string username);
 		Task<User> Create(User user, string password);
 		Task CreateProfile (User user, string role);
+		Task<User> DeleteAccount(User user); 
 
         Task<Pupil?> GetPupilByUserId(string UserId);
         Task<Teacher?> GetTeacherByUserId(string UserId);

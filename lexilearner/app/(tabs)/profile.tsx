@@ -10,17 +10,17 @@ import ProfileStat from "@/components/ProfileStat";
 import { Divider } from "@/components/ui/divider";
 import Achievement from "@/components/AchievementIcon";
 import { useUserContext } from "@/context/UserProvider";
+import { useEffect } from "react";
 
 export default function Profile() {
-  const user: User = {
-    id: "100",
-    email: "angel@g.com",
-    firstName: "angel",
-    lastName: "cambarijan",
-  };
-
-  // const { user } = useUserContext();
+  const { user, updateProfile } = useUserContext();
   const { logout } = useAuthContext();
+
+  console.log(user);
+
+  // useEffect(() => {
+  //   // router.replace("/profile");
+  // }, [user]);
 
   return (
     <View>
@@ -40,11 +40,11 @@ export default function Profile() {
               <View className="pb-5">
                 <View className="flex-row">
                   <Heading>
-                    {user?.id}
+                    {/* {user?.id} */}
                     {user?.firstName} {user?.lastName}
                   </Heading>
                 </View>
-                <Text>@UsernameUnta</Text>
+                <Text>@haaaaaakdog</Text>
               </View>
               <Button //mogana rani man
                 onPress={async () => {
@@ -78,7 +78,7 @@ export default function Profile() {
 
             <View className="flex-row justify-between">
               <Heading className="pb-5">Achievements</Heading>
-              <Text // idk how to arrange sa screens sorry :((
+              <Text
                 underline
                 onPress={async () => {
                   router.push("profile/achievements");

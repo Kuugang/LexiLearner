@@ -15,26 +15,6 @@ function ProtectedRouteGuard({ children }: { children: ReactNode }) {
   const { user } = useUserContext();
 
   const segments = useSegments();
-<<<<<<< HEAD
-
-  // useEffect(() => {
-  //   const inAuthGroup = segments[0] === "(auth)";
-  //   const inProtectedGroup = segments[0] === "(tabs)";
-
-  //   // If no user is signed in and the route isn't in the auth group, redirect to login
-  //   if (!user && !inAuthGroup) {
-  //     router.replace("/");
-  //   }
-  //   // If user is signed in and they're in the auth group, redirect to main content
-  //   else if (user && inAuthGroup) {
-  //     router.replace("/(tabs)/home");
-  //   }
-  // }, [user, segments]);
-
-  useEffect(() => {
-    // router.push("/read/123");
-    router.push("/profile");
-=======
   useEffect(() => {
     const inAuthGroup = segments[0] === "(auth)";
     if (!user && !inAuthGroup) {
@@ -43,8 +23,11 @@ function ProtectedRouteGuard({ children }: { children: ReactNode }) {
     } else if (user && inAuthGroup) {
       router.replace("/(tabs)/home");
     }
->>>>>>> b0a872f12dfe7be53f0a516cf7a9711c629d5c39
   }, []);
+
+  // useEffect(() => {
+  //   router.push("/profile/profileSettings");
+  // }, []);
 
   return <>{children}</>;
 }

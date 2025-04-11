@@ -240,5 +240,20 @@ namespace LexiLearner.Services
 
             return response;
         }
+
+        public async Task<ResponseDTO> DeleteAccount(ClaimsPrincipal userPrincipal) {
+            User? user = await GetUserFromToken(userPrincipal);
+
+            if(user == null) {
+                throw new ApplicationExceptionBase(
+                    $"User does not exist",
+                    "User Profile Fetched Failed",
+                    StatusCodes.Status404NotFound
+                );
+            }
+
+            await _userRepository.DeleteAccount(user);
+            return new SuccessResponseDTO("Account Deleted Successfully");
+        }
     }
 }
