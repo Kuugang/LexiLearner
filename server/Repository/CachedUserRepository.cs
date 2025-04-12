@@ -153,5 +153,20 @@ namespace LexiLearner.Repository
                 await InvalidateCacheAsync($"Teacher_{teacher.UserId}");
             }
         }
+
+// idk diri dapita DDD: chatgpt lang eto :(
+        public async Task<User> DeleteAccount(User user) {
+            User deletedUser = await _decorated.DeleteAccount(user);
+
+            // Invalidate related cache entries 
+
+            // comment lng sa basin kani nakapaguba ni profile user DDD:
+            // await InvalidateCacheAsync($"User_{user.Id}");
+            // await InvalidateCacheAsync($"User_Email_{user.Email}");
+            // await InvalidateCacheAsync($"User_Username_{user.UserName}");
+
+            return deletedUser;
+        }
+
     }
 }

@@ -45,7 +45,13 @@ public class UsersController : ControllerBase
             : StatusCode(((ErrorResponseDTO)response).StatusCode, response);
     }
 
-
+    [HttpDelete("me")]
+    public async Task<IActionResult> DeleteAccount() {
+        var response = await _userService.DeleteAccount(User);
+        return response is SuccessResponseDTO success
+            ? Ok(success) 
+            : StatusCode(((ErrorResponseDTO)response).StatusCode, response);
+    }
 
     [HttpGet("check-user")]
     public async Task<IActionResult> CheckUserExists([FromQuery] string fieldType, [FromQuery] string fieldValue)
