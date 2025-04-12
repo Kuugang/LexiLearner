@@ -15,19 +15,19 @@ function ProtectedRouteGuard({ children }: { children: ReactNode }) {
   const { user } = useUserContext();
 
   const segments = useSegments();
-  useEffect(() => {
-    const inAuthGroup = segments[0] === "(auth)";
-    if (!user && !inAuthGroup) {
-      // Only redirect to index if not already there
-      router.replace("/");
-    } else if (user && inAuthGroup) {
-      router.replace("/(tabs)/home");
-    }
-  }, []);
-
   // useEffect(() => {
-  //   router.push("/profile/profileSettings");
+  //   const inAuthGroup = segments[0] === "(auth)";
+  //   if (!user && !inAuthGroup) {
+  //     // Only redirect to index if not already there
+  //     router.replace("/");
+  //   } else if (user && inAuthGroup) {
+  //     router.replace("/(tabs)/home");
+  //   }
   // }, []);
+
+  useEffect(() => {
+    router.push("/profile/profileSettings");
+  }, []);
 
   return <>{children}</>;
 }

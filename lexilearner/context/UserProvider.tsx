@@ -46,7 +46,8 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({
     update: boolean = true
   ) => {
     try {
-      let data = await apiUpdateProfile(form);
+      let response = await apiUpdateProfile(form);
+      const data = response.data.user;
 
       const user: User = {
         id: data.id,
@@ -55,9 +56,7 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({
         lastName: data.lastName,
       };
       if (!update) return;
-      console.log("userprovider before setUser: ", user);
       setUser(user);
-      console.log("userprovider AFTER setuser: ", user);
     } catch (error: any) {
       throw new Error(
         error instanceof Error ? error.message : "Unknown error occurred"

@@ -27,6 +27,8 @@ export default function profileSettings() {
       ...prevState,
       [field]: value,
     }));
+
+    console.log("check update rawr: ", profile);
   };
 
   const handleDeleteAccount = async () => {
@@ -46,50 +48,61 @@ export default function profileSettings() {
       <BackHeader />
 
       <View className="p-10">
-        <Heading>Profile</Heading>
+        <Heading className="center">Profile</Heading>
 
-        <Text>First Name</Text>
-        <Input>
-          <InputField
-            placeholder={profile.firstName}
-            value={profile.firstName}
-            onChangeText={(value) => handleInputChange("firstName", value)}
-          />
-        </Input>
+        <View className="py-1">
+          <Text className="font-bold">First Name</Text>
+          <Input>
+            <InputField
+              placeholder={profile.firstName}
+              value={profile.firstName}
+              onChangeText={(value) => handleInputChange("firstName", value)}
+            />
+          </Input>
+        </View>
 
-        <Text>Last Name</Text>
-        <Input>
-          <InputField
-            placeholder={profile.lastName}
-            value={profile.lastName}
-            onChangeText={(value) => handleInputChange("lastName", value)}
-          />
-        </Input>
+        <View className="py-1">
+          <Text>Last Name</Text>
+          <Input>
+            <InputField
+              placeholder={profile.lastName}
+              value={profile.lastName}
+              onChangeText={(value) => handleInputChange("lastName", value)}
+            />
+          </Input>
+        </View>
 
-        <Text>Username</Text>
-        <Input>
-          <InputField placeholder="Leeseo" />
-        </Input>
+        <View className="py-1">
+          <Text>Username</Text>
+          <Input>
+            <InputField placeholder="Leeseo" />
+          </Input>
+        </View>
 
-        <Text>Email</Text>
-        <Input>
-          <InputField
-            placeholder={profile.email}
-            value={profile.email}
-            onChangeText={(value) => handleInputChange("email", value)}
-          />
-        </Input>
+        <View className="py-1">
+          <Text>Email</Text>
+          <Input>
+            <InputField
+              placeholder={profile.email}
+              value={profile.email}
+              onChangeText={(value) => handleInputChange("email", value)}
+            />
+          </Input>
+        </View>
 
-        <Text>Password</Text>
-        <Input>
-          <InputField placeholder="*****" />
-        </Input>
+        <View className="py-5">
+          <Text>Password</Text>
+          <Input>
+            <InputField placeholder="*****" />
+          </Input>
+        </View>
 
         <Button
           onPress={() => {
             updateProfile(profile);
             console.log("update profile test", profile);
           }}
+          className="my-2"
         >
           <ButtonText>EDIT ACCOUNT</ButtonText>
         </Button>
@@ -99,6 +112,7 @@ export default function profileSettings() {
             handleDeleteAccount();
             console.log("delete account unta", user);
           }}
+          className="my-2"
         >
           <ButtonText>DELETE ACCOUNT</ButtonText>
         </Button>
