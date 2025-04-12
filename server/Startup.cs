@@ -23,6 +23,8 @@ namespace LexiLearner
 {
     public class Startup
     {
+        public IConfiguration Configuration { get; }
+
         public Startup(IConfiguration configuration)
         {
             var root = Directory.GetCurrentDirectory();
@@ -62,7 +64,6 @@ namespace LexiLearner
             Configuration = builder.Build();
         }
 
-        public IConfiguration Configuration { get; }
 
         public void ConfigureServices(IServiceCollection services)
         {
@@ -75,6 +76,7 @@ namespace LexiLearner
                           .AllowAnyHeader();
                 });
             });
+            services.AddMemoryCache();
 
             services.Configure<JwtOptions>(Configuration.GetSection("JWT"));
 
@@ -176,6 +178,7 @@ namespace LexiLearner
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen();
         }
+
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())

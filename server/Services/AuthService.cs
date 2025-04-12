@@ -1,6 +1,6 @@
-using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Caching.Memory;
 
+using Microsoft.AspNetCore.Identity;
 using Newtonsoft.Json.Linq;
 
 using LexiLearner.Interfaces;
@@ -19,14 +19,16 @@ namespace LexiLearner.Services
         private readonly IUserService _userService;
         private readonly UserManager<User> _userManager;
         private readonly IJWTService _jwtService;
+        private readonly IMemoryCache _memoryCache;
 
-        public AuthService(HttpClient httpClient, IUserRepository userRepository, IUserService userService, UserManager<User> userManager, IJWTService jwtService, IConfiguration configuration)
+        public AuthService(HttpClient httpClient, IUserRepository userRepository, IUserService userService, UserManager<User> userManager, IJWTService jwtService, IConfiguration configuration, IMemoryCache memoryCache)
         {
             _userService = userService;
             _userManager = userManager;
             _httpClient = httpClient;
             _userRepository = userRepository;
             _jwtService = jwtService;
+            _memoryCache = memoryCache;
         }
 
         public async Task<SuccessResponseDTO> Login(LoginRequest LoginRequest)
@@ -144,12 +146,7 @@ namespace LexiLearner.Services
         public async Task<string> GenerateTwoFactorTokenAsync(User user)
         {
             string token = await _userManager.GenerateTwoFactorTokenAsync(user, "Email");
-
-            // await _cache.SetStringAsync($"2fa_token:{user.Id}", token, new DistributedCacheEntryOptions
-            // {
-            //     AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(3)
-            // });
-
+            _memoryCache.Set($"2fa_token:{user.Id}", token, TimeSpan.FromMinutes(10));
             return token;
         }
 
@@ -158,23 +155,21 @@ namespace LexiLearner.Services
         {
             var user = await _userService.GetUserByEmail(request.Email);
 
-            // var cachedToken = await _cache.GetStringAsync($"2fa_token:{user.Id}");
-            //
-            // if (cachedToken == null || cachedToken != request.Token)
-            // {
-            //     return new ErrorResponseDTO("Invalid or expired two-factor authentication token.", "TokenMismatch", 400);
-            // }
-            //
-            // await _cache.RemoveAsync($"2fa_token:{user.Id}");
+            _memoryCache.TryGetValue($"2fa_token:{user?.Id}", out string cachedToken);
 
-            // if (await _userManager.VerifyTwoFactorTokenAsync(user, "Email", request.Token))
-            // {
-            //     return new SuccessResponseDTO("Two Factor Authentication successful", new JWTDTO(_jwtService.GenerateJWTToken(user.Id, user.UserName!)));
-            // }
-            return new SuccessResponseDTO("Two Factor Authentication successful", new JWTDTO(_jwtService.GenerateJWTToken(user.Id, user.UserName!)));
+            if (cachedToken == null || cachedToken != request.Token)
+            {
+                return new ErrorResponseDTO("Invalid or expired two-factor authentication token.", "TokenMismatch", 400);
+            }
 
+            _memoryCache.Remove($"2fa_token:{user?.Id}");
 
-            // return new ErrorResponseDTO("Invalid or expired two-factor authentication token.", "TokenMismatch", 400);
+            if (await _userManager.VerifyTwoFactorTokenAsync(user, "Email", request.Token))
+            {
+                return new SuccessResponseDTO("Two Factor Authentication successful", new JWTDTO(_jwtService.GenerateJWTToken(user.Id, user.UserName!)));
+            }
+
+            return new ErrorResponseDTO("Invalid or expired two-factor authentication token.", "TokenMismatch", 400);
         }
     }
 }

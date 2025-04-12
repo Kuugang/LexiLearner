@@ -7,7 +7,6 @@ using LexiLearner.Models;
 using LexiLearner.Models.DTO;
 using LexiLearner.Interfaces;
 using LexiLearner.Exceptions;
-using LexiLearner.Repository;
 
 
 namespace LexiLearner.Services
