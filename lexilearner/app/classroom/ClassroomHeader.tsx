@@ -7,7 +7,10 @@ export default function ClassroomHeader() {
     <View className="bg-background-yellowOrange w-full rounded-bl-4xl h-32 drop-shadow-lg">
       <Text>Grade 6 - F2</Text>
       <Text>x5AhYyj</Text>
-      <Image source={require("@/assets/images/classroom-header.png")} />
+      <Image
+        source={require("@/assets/images/classroom-header.png")}
+        alt="classroom desktop header"
+      />
     </View>
   );
 }

@@ -136,6 +136,7 @@ module.exports = {
           orange: "rgb(255, 103, 64, <alpha-value>)",
           yellowOrange: "rgb(255, 197, 73, <alpha-value>)",
           lightGrayOrange: "rgb(248, 229, 187, <alpha-value>)",
+          lightGray: "rgb(229, 221, 234, <alpha-value>)",
           100: "rgb(var(--color-background-100)/<alpha-value>)",
           200: "rgb(var(--color-background-200)/<alpha-value>)",
           300: "rgb(var(--color-background-300)/<alpha-value>)",

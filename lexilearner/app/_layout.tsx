@@ -26,7 +26,7 @@ function ProtectedRouteGuard({ children }: { children: ReactNode }) {
   // }, []);
 
   useEffect(() => {
-    router.push("/(tabs)/classroom");
+    router.push("/minigames/WordHunt");
   }, []);
 
   return <>{children}</>;
