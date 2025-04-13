@@ -1,34 +1,112 @@
+import { useUserContext } from "@/context/UserProvider";
+import { Alert, View, ScrollView } from "react-native";
+import { router } from "expo-router";
+import { useEffect, useState } from "react";
+import { checkUserExist, deleteAccount } from "@/services/UserService";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
+//Components
 import { Text } from "@/components/ui/text";
 import { Heading } from "@/components/ui/heading";
-import { Alert, View } from "react-native";
 import { Input, InputField } from "@/components/ui/input";
 import { Button, ButtonText } from "@/components/ui/button";
-import { useUserContext } from "@/context/UserProvider";
-import { useEffect, useState } from "react";
-import { router } from "expo-router";
-import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import BackHeader from "@/components/BackHeader";
-import { deleteAccount } from "@/services/UserService";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Image } from "@/components/ui/image";
+import { VStack } from "@/components/ui/vstack";
+import { Center } from "@/components/ui/center";
+import { useToast } from "@/components/ui/toast";
+import { Toast, ToastTitle } from "@/components/ui/toast";
+
+import {
+  FormControl,
+  FormControlError,
+  FormControlErrorIcon,
+  FormControlErrorText,
+} from "@/components/ui/form-control";
+import { AlertCircleIcon } from "@/components/ui/icon";
+import { validateField } from "@/utils/utils";
+
 export default function profileSettings() {
   const { user, updateProfile } = useUserContext();
+  const toast = useToast();
 
-  const [profile, setNewProfile] = useState({
+  const [isProfileChanged, setIsProfileChanged] = useState(false);
+  const [profile, setProfile] = useState({
     firstName: user?.firstName,
     lastName: user?.lastName,
-    // username: "",
-    email: user?.email,
+    username: user?.userName,
   });
 
-  const handleInputChange = (field: string, value: string) => {
-    //string lng sa ??
-    setNewProfile((prevState) => ({
-      ...prevState,
-      [field]: value,
-    }));
+  const [formErrors, setFormErrors] = useState({
+    firstName: "",
+    lastName: "",
+    username: "",
+  });
 
-    console.log("check update rawr: ", profile);
+  useEffect(() => {
+    if (
+      profile.firstName === user?.firstName &&
+      profile.lastName === user?.lastName &&
+      profile.username === user?.userName
+    ) {
+      setIsProfileChanged(false);
+      return;
+    }
+    setIsProfileChanged(true);
+  }, [profile]);
+
+  const handleUpdateProfile = async () => {
+    try {
+      const newErrors: any = {};
+      Object.keys(profile).forEach((field) => {
+        const error = validateField(field, profile[field], profile);
+        if (error === "") return;
+        newErrors[field] = error;
+      });
+      setFormErrors(newErrors);
+
+      if (
+        (await checkUserExist("username", profile.username as string))
+          .statusCode == 200 &&
+        profile.username !== user?.userName
+      ) {
+        setFormErrors({ ...formErrors, username: "Username is already taken" });
+      }
+      if (Object.keys(newErrors).length > 0) return;
+
+      await updateProfile(profile);
+
+      toast.show({
+        placement: "top",
+        render: ({ id }) => {
+          const toastId = "toast-" + id;
+          return (
+            <Toast nativeID={toastId} className="">
+              <ToastTitle size="sm">Profile Updated Successfully</ToastTitle>
+            </Toast>
+          );
+        },
+      });
+    } catch (error: any) {
+      //TODO: make reusable
+      toast.show({
+        placement: "top",
+        render: ({ id }) => {
+          const toastId = "toast-" + id;
+          const errorMessage =
+            error instanceof Error ? error.message : "An error occurred";
+
+          return (
+            <Toast
+              nativeID={toastId}
+              className="px-5 py-3 gap-4 shadow-soft-1 items-center flex-row bg-red-500 rounded-lg"
+            >
+              <ToastTitle size="sm">{errorMessage}</ToastTitle>
+            </Toast>
+          );
+        },
+      });
+    }
   };
 
   const handleDeleteAccount = async () => {
@@ -42,52 +120,82 @@ export default function profileSettings() {
   };
 
   return (
-    <View>
-      {/* <View className="z-10 absolute top-0 w-full h-64 bg-background-lightGrayOrange"></View> */}
-
+    <ScrollView className="flex-1 gap-36 p-8 h-full justify-around">
       <BackHeader />
 
-      <View className="p-10">
+      <VStack space="xl" className="justify-around">
+        <Center>
+          <Image
+            source={require("@/assets/images/leeseopp.png")}
+            className="rounded-full border-[5px] border-white w-32 h-32"
+            size="lg"
+            alt="User profile pic"
+          />
+        </Center>
+
         <Heading className="center">Profile</Heading>
 
         <View className="py-1">
-          <Text className="font-bold">First Name</Text>
-          <Input>
-            <InputField
-              placeholder={profile.firstName}
-              value={profile.firstName}
-              onChangeText={(value) => handleInputChange("firstName", value)}
-            />
-          </Input>
+          <FormControl isInvalid={!!formErrors.firstName}>
+            <Text className="font-bold">First Name</Text>
+            <Input>
+              <InputField
+                placeholder={profile.firstName}
+                value={profile.firstName}
+                onChangeText={(value: string) =>
+                  setProfile({ ...profile, firstName: value })
+                }
+              />
+            </Input>
+
+            <FormControlError>
+              <FormControlErrorIcon as={AlertCircleIcon} />
+              <FormControlErrorText>
+                {formErrors.firstName}
+              </FormControlErrorText>
+            </FormControlError>
+          </FormControl>
         </View>
 
         <View className="py-1">
-          <Text>Last Name</Text>
-          <Input>
-            <InputField
-              placeholder={profile.lastName}
-              value={profile.lastName}
-              onChangeText={(value) => handleInputChange("lastName", value)}
-            />
-          </Input>
+          <FormControl isInvalid={!!formErrors.lastName}>
+            <Text>Last Name</Text>
+            <Input>
+              <InputField
+                placeholder={profile.lastName}
+                value={profile.lastName}
+                onChangeText={(value: string) =>
+                  setProfile({ ...profile, lastName: value })
+                }
+              />
+            </Input>
+
+            <FormControlError>
+              <FormControlErrorIcon as={AlertCircleIcon} />
+              <FormControlErrorText>{formErrors.lastName}</FormControlErrorText>
+            </FormControlError>
+          </FormControl>
         </View>
 
         <View className="py-1">
           <Text>Username</Text>
-          <Input>
-            <InputField placeholder="Leeseo" />
-          </Input>
-        </View>
 
-        <View className="py-1">
-          <Text>Email</Text>
-          <Input>
-            <InputField
-              placeholder={profile.email}
-              value={profile.email}
-              onChangeText={(value) => handleInputChange("email", value)}
-            />
-          </Input>
+          <FormControl isInvalid={!!formErrors.username}>
+            <Input>
+              <InputField
+                placeholder={profile.username}
+                value={profile.username}
+                onChangeText={(value: string) =>
+                  setProfile({ ...profile, username: value })
+                }
+              />
+            </Input>
+
+            <FormControlError>
+              <FormControlErrorIcon as={AlertCircleIcon} />
+              <FormControlErrorText>{formErrors.username}</FormControlErrorText>
+            </FormControlError>
+          </FormControl>
         </View>
 
         <View className="py-5">
@@ -97,26 +205,16 @@ export default function profileSettings() {
           </Input>
         </View>
 
-        <Button
-          onPress={() => {
-            updateProfile(profile);
-            console.log("update profile test", profile);
-          }}
-          className="my-2"
-        >
-          <ButtonText>EDIT ACCOUNT</ButtonText>
-        </Button>
+        {isProfileChanged && (
+          <Button onPress={() => handleUpdateProfile()} className="my-2">
+            <ButtonText>EDIT ACCOUNT</ButtonText>
+          </Button>
+        )}
 
-        <Button
-          onPress={() => {
-            handleDeleteAccount();
-            console.log("delete account unta", user);
-          }}
-          className="my-2"
-        >
+        <Button onPress={() => handleDeleteAccount()} className="my-2">
           <ButtonText>DELETE ACCOUNT</ButtonText>
         </Button>
-      </View>
-    </View>
+      </VStack>
+    </ScrollView>
   );
 }

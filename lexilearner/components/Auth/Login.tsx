@@ -11,8 +11,6 @@ import {
   FormControlError,
   FormControlErrorIcon,
   FormControlErrorText,
-  FormControlLabel,
-  FormControlLabelText,
 } from "@/components/ui/form-control";
 import { AlertCircleIcon } from "@/components/ui/icon";
 
@@ -38,8 +36,8 @@ export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
 
   const [form, setForm] = useState({
-    email: "",
-    password: "",
+    email: "mrekajojab@gmail.com",
+    password: "Maotka1!",
   });
 
   const [formErrors, setFormErrors] = useState({

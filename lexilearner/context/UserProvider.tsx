@@ -43,23 +43,44 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({
 
   const updateProfile = async (
     form: Record<string, any>,
-    update: boolean = true
+    update: boolean = true,
   ) => {
     try {
       let response = await apiUpdateProfile(form);
-      const data = response.data.user;
+      const data = response.data;
+
+      const {
+        id,
+        email,
+        firstName,
+        lastName,
+        userName,
+        twoFactorEnabled,
+        phoneNumber,
+        role,
+        age,
+        level,
+      } = data;
 
       const user: User = {
-        id: data.id,
-        email: data.email,
-        firstName: data.firstName,
-        lastName: data.lastName,
+        id: id,
+        email: email,
+        firstName: firstName,
+        lastName: lastName,
+        userName: userName,
+        twoFactorEnabled: twoFactorEnabled,
+        phoneNumber: phoneNumber,
+        role: role,
+        age: age,
+        level: level ?? 0,
       };
+
       if (!update) return;
       setUser(user);
+      AsyncStorage.setItem("user", JSON.stringify(user));
     } catch (error: any) {
       throw new Error(
-        error instanceof Error ? error.message : "Unknown error occurred"
+        error instanceof Error ? error.message : "Unknown error occurred",
       );
     }
   };

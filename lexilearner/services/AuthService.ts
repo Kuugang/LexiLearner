@@ -120,7 +120,3 @@ export const signInWithFacebook = async () => {
     console.log(error);
   }
 };
-
-export const logout = async () => {
-  // Handle logout (clear token, notify server if needed)
-};

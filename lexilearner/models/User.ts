@@ -3,10 +3,13 @@ export interface User {
   email: string;
   firstName: string;
   lastName: string;
-  // username: string;
-  // twoFactorEnabled: boolean;
-  // phoneNumber: string;
-  // role?: string;
+  userName: string;
+  twoFactorEnabled: boolean;
+  phoneNumber: string;
+  role: string;
+
+  age?: number;
+  level?: number;
 }
 
 export interface TeacherProfile {

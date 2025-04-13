@@ -5,7 +5,6 @@ import { API_URL } from "../utils/constants";
 export const getProfile = async () => {
   try {
     const token = await AsyncStorage.getItem("token");
-    console.log(token);
 
     if (!token) {
       throw new Error("No token found");
@@ -80,7 +79,7 @@ export const checkUserExist = async (fieldType: string, fieldValue: string) => {
         headers: {
           "Content-Type": "application/json",
         },
-      }
+      },
     );
 
     const data = await response.json();

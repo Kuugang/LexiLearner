@@ -25,7 +25,7 @@ interface AuthContextType {
   providerAuth: (provider: number) => void;
 }
 export const AuthContext = createContext<AuthContextType | undefined>(
-  undefined
+  undefined,
 );
 
 export const useAuthContext = (): AuthContextType => {
@@ -41,24 +41,46 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
 }) => {
   const { setUser } = useUserContext();
 
+  //TODO: automatic login if token / user is in local storage
+
   const login = async (email: string, password: string) => {
     try {
       let response = await apiLogin(email, password);
       await AsyncStorage.setItem("token", response.data.token);
       response = await getProfile();
 
-      const userData = response.data.user;
-      console.log(response);
+      const userData = response.data;
+
       if (userData) {
+        const {
+          id,
+          email,
+          firstName,
+          lastName,
+          userName,
+          twoFactorEnabled,
+          phoneNumber,
+          role,
+          age,
+          level,
+        } = userData;
+
         const user: User = {
-          id: userData.id,
-          email: userData.email,
-          firstName: userData.firstName,
-          lastName: userData.lastName,
+          id: id,
+          email: email,
+          firstName: firstName,
+          lastName: lastName,
+          userName: userName,
+          twoFactorEnabled: twoFactorEnabled,
+          phoneNumber: phoneNumber,
+          role: role,
+          age: age,
+          level: level ?? 0,
         };
+
         setUser(user);
+        await AsyncStorage.setItem("user", JSON.stringify(user));
       } else {
-        // Redirect user to profile setup screen
         router.push({
           pathname: "/signup3",
           params: { fromProviderAuth: "false" },
@@ -66,7 +88,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
       }
     } catch (error: any) {
       throw new Error(
-        error instanceof Error ? error.message : "Unknown error occurred"
+        error instanceof Error ? error.message : "Unknown error occurred",
       );
     }
   };
@@ -77,7 +99,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
       await AsyncStorage.setItem("token", response.data.token);
     } catch (error: any) {
       throw Error(
-        error instanceof Error ? error.message : "Unknown error occurred"
+        error instanceof Error ? error.message : "Unknown error occurred",
       );
     }
   };
@@ -137,7 +159,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
 
   const logout = async () => {
     setUser(null);
-    await AsyncStorage.removeItem("user");
+    await AsyncStorage.removeItem("token");
   };
 
   return (

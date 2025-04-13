@@ -1,31 +1,34 @@
 import { Text } from "@/components/ui/text";
-import { StyleSheet, ScrollView, View } from "react-native";
+import { ScrollView, View } from "react-native";
 import { Image } from "@/components/ui/image";
 import { Button, ButtonText } from "@/components/ui/button";
 import { router } from "expo-router";
 import { useAuthContext } from "@/context/AuthProvider";
-import { User } from "@/models/User";
 import { Heading } from "@/components/ui/heading";
 import ProfileStat from "@/components/ProfileStat";
-import { Divider } from "@/components/ui/divider";
 import Achievement from "@/components/AchievementIcon";
 import { useUserContext } from "@/context/UserProvider";
-import { useEffect } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+
+import { faGear } from "@fortawesome/free-solid-svg-icons";
 
 export default function Profile() {
   const { user, updateProfile } = useUserContext();
   const { logout } = useAuthContext();
 
-  console.log(user);
-
-  // useEffect(() => {
-  //   // router.replace("/profile");
-  // }, [user]);
-
   return (
     <View>
       <ScrollView className="pb-5">
-        <View className="bg-background-lightGrayOrange w-full h-32 drop-shadow-lg"></View>
+        <View className="bg-background-lightGrayOrange w-full h-32 p-4 drop-shadow-lg">
+          <Button
+            className="self-end bg-transparent p-0"
+            onPress={async () => {
+              router.push("profile/profileSettings");
+            }}
+          >
+            <FontAwesomeIcon icon={faGear} />
+          </Button>
+        </View>
 
         <View className="flex">
           <View className="px-8 pt-6 pb-3 w-full">
@@ -44,23 +47,11 @@ export default function Profile() {
                     {user?.firstName} {user?.lastName}
                   </Heading>
                 </View>
-                <Text>@haaaaaakdog</Text>
+                <Text>@{user?.userName}</Text>
               </View>
-              <Button //mogana rani man
-                onPress={async () => {
-                  router.push("profile/profileSettings");
-                }}
-              >
-                <Text>test</Text>
-              </Button>
-              <Image
-                source={require("@/assets/icons/settings_icon.png")}
-                alt="settings icon"
-                className="w-15 h-15"
-              />
 
               <View>
-                <Text className="text-lg font-bold">321</Text>
+                <Text className="text-lg font-bold">{user?.level}</Text>
                 <Text className="text-sm text-gray-700">
                   Reading Compr. Level
                 </Text>
