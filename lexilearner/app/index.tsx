@@ -1,13 +1,9 @@
 import React from "react";
 import { router } from "expo-router"; // Or useNavigation if using React Navigation
 
-import { ScrollView, View } from "react-native";
-import { Heading } from "@/components/ui/heading";
-import { Image } from "@/components/ui/image";
-import { Button, ButtonText } from "@/components/ui/button";
-
-import Login from "@/components/Auth/Login";
-import SpinnerOverlay from "@/components/SpinnerOverlay";
+import { ScrollView, View, Image } from "react-native";
+import { Button } from "~/components/ui/button";
+import { Text } from "~/components/ui/text";
 
 // MOVE THIS
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
@@ -38,9 +34,9 @@ const Index = () => {
       />
 
       {/* Title */}
-      <Heading className="text-3xl font-bold text-gray-900 mt-72">
+      <Text className="text-3xl font-bold text-gray-900 mt-72">
         LexiLearner
-      </Heading>
+      </Text>
 
       {/* Buttons Section */}
       <View className="w-full mt-12 space-y-4 gap-2 px-6">
@@ -51,9 +47,7 @@ const Index = () => {
           }}
           className="w-full bg-orange-500 rounded-lg"
         >
-          <ButtonText className="text-white text-lg font-bold">
-            Register
-          </ButtonText>
+          <Text className="text-white text-lg font-bold">Register</Text>
         </Button>
 
         {/* Log In Button */}
@@ -63,9 +57,7 @@ const Index = () => {
           }}
           className="w-full border border-orange-500 bg-white rounded-lg "
         >
-          <ButtonText className="text-orange-500 text-lg font-bold">
-            Log In
-          </ButtonText>
+          <Text className="text-orange-500 text-lg font-bold">Log In</Text>
         </Button>
       </View>
     </ScrollView>

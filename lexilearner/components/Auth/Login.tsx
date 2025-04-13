@@ -5,32 +5,18 @@ import { useAuthContext } from "@/context/AuthProvider";
 import { validateField } from "@/utils/utils";
 
 //Components
-import { Button, ButtonText } from "@/components/ui/button";
-import {
-  FormControl,
-  FormControlError,
-  FormControlErrorIcon,
-  FormControlErrorText,
-  FormControlLabel,
-  FormControlLabelText,
-} from "@/components/ui/form-control";
-import { AlertCircleIcon } from "@/components/ui/icon";
-
-import { Heading } from "@/components/ui/heading";
-import { Input, InputField, InputIcon, InputSlot } from "@/components/ui/input";
-import { Text } from "@/components/ui/text";
-import { VStack } from "@/components/ui/vstack";
-import { HStack } from "@/components/ui/hstack";
-import { EyeIcon, EyeOffIcon } from "@/components/ui/icon";
-import { Divider } from "@/components/ui/divider";
-import { useToast, Toast, ToastTitle } from "@/components/ui/toast";
+import { View } from "react-native";
+import { Eye, EyeOff, Mail, KeyRound } from "lucide-react-native";
+import { Button } from "~/components/ui/button";
+import { Input } from "~/components/ui/input";
+import { Text } from "~/components/ui/text";
+import { Separator } from "~/components/ui/separator";
 
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faGoogle, faFacebook } from "@fortawesome/free-brands-svg-icons";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 
 export default function Login() {
-  const toast = useToast();
   const { login } = useAuthContext();
   const { providerAuth } = useAuthContext();
   const { setIsLoading } = useGlobalContext();
@@ -38,8 +24,8 @@ export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
 
   const [form, setForm] = useState({
-    email: "",
-    password: "",
+    email: "mrekajojab@gmail.com",
+    password: "Maotka1!",
   });
 
   const [formErrors, setFormErrors] = useState({
@@ -57,59 +43,28 @@ export default function Login() {
     const newErrors: any = {};
     Object.keys(form).forEach((field) => {
       const error = validateField(field, form[field as keyof typeof form]);
+      if (error == "") return;
       newErrors[field] = error;
     });
 
     setFormErrors(newErrors);
-
-    if (form.email === "" || form.password === "") {
-      toast.show({
-        placement: "top",
-        render: ({ id }) => {
-          const toastId = "toast-" + id;
-          return (
-            <Toast
-              nativeID={toastId}
-              className="px-5 py-3 gap-4 shadow-soft-1 items-center flex-row bg-red-500 rounded-lg"
-            >
-              <ToastTitle size="sm">Please fill in all fields</ToastTitle>
-            </Toast>
-          );
-        },
-      });
+    if (Object.keys(newErrors).length > 0) {
       return;
     }
 
-    setIsLoading(true);
-
     try {
+      setIsLoading(true);
       await login(form.email, form.password);
       router.push("/home");
     } catch (error: any) {
-      toast.show({
-        placement: "top",
-        render: ({ id }) => {
-          const toastId = "toast-" + id;
-          const errorMessage =
-            error instanceof Error ? error.message : "An error occurred";
-
-          return (
-            <Toast
-              nativeID={toastId}
-              className="px-5 py-3 gap-4 shadow-soft-1 items-center flex-row bg-red-500 rounded-lg"
-            >
-              <ToastTitle size="sm">{errorMessage}</ToastTitle>
-            </Toast>
-          );
-        },
-      });
+      //TODO: Toast
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <VStack space="xl" className="flex-1 gap-36 p-8 h-full justify-around">
+    <View className="flex-1 gap-36 p-8 h-full justify-around">
       <Button
         className="bg-transparent self-start p-0"
         onPress={() => router.back()}
@@ -117,75 +72,77 @@ export default function Login() {
         <FontAwesomeIcon size={30} icon={faArrowLeft} />
       </Button>
 
-      <VStack space="xl" className="justify-around">
-        <Heading className="text-primary-0 text-2xl">Welcome Back!</Heading>
+      <View className="flex gap-3 justify-around">
+        <Text className="text-2xl">Welcome Back!</Text>
 
-        {/* Email Field */}
-        <FormControl isInvalid={!!formErrors.email}>
-          <Input className="rounded-lg bg-primary-appWhite">
-            <InputField
-              className="text-black"
-              value={form.email}
-              onChangeText={(text: string) => setForm({ ...form, email: text })}
+        <View className="flex gap-2">
+          <View className="relative">
+            <Mail className="absolute left-2 top-2" />
+            <Input
+              className="p-10"
               placeholder="Email"
-              type="text"
-            />
-          </Input>
-
-          <FormControlError>
-            <FormControlErrorIcon as={AlertCircleIcon} />
-            <FormControlErrorText>{formErrors.email}</FormControlErrorText>
-          </FormControlError>
-        </FormControl>
-
-        {/* Password Field */}
-        <FormControl isInvalid={!!formErrors.password}>
-          <Input className="rounded-lg bg-primary-appWhite">
-            <InputField
-              className="text-black"
-              value={form.password}
-              onChangeText={(text: string) =>
-                setForm({ ...form, password: text })
+              value={form.email}
+              onChangeText={(value: string) =>
+                setForm({ ...form, email: value })
               }
-              placeholder="Password"
-              type={showPassword ? "text" : "password"}
+              aria-labelledby="inputLabel"
+              aria-errormessage="inputError"
             />
-            <InputSlot className="pr-3" onPress={handleState}>
-              <InputIcon as={showPassword ? EyeIcon : EyeOffIcon} />
-            </InputSlot>
-          </Input>
+          </View>
+          <Text className="text-destructive">{formErrors.email}</Text>
+        </View>
 
-          <FormControlError>
-            <FormControlErrorIcon as={AlertCircleIcon} />
-            <FormControlErrorText>{formErrors.password}</FormControlErrorText>
-          </FormControlError>
-        </FormControl>
-      </VStack>
+        <View className="flex gap-2">
+          <View>
+            <View className="relative">
+              <KeyRound className="absolute left-2 top-2" />
 
-      <VStack space="lg">
+              <Input
+                className="p-10"
+                placeholder="Password"
+                value={form.password}
+                secureTextEntry={showPassword ? false : true}
+                onChangeText={(value: string) =>
+                  setForm({ ...form, password: value })
+                }
+                aria-labelledby="inputLabel"
+                aria-errormessage="inputError"
+              />
+            </View>
+
+            <Button
+              variant="ghost"
+              size="icon"
+              onPress={() => setShowPassword((prev) => !prev)}
+              className="absolute right-2 top-1/2 -translate-y-1/2 h-6 w-6 p-0 text-muted-foreground"
+            >
+              {showPassword ? <EyeOff /> : <Eye />}
+            </Button>
+          </View>
+          <Text className="text-destructive">{formErrors.password}</Text>
+        </View>
+      </View>
+
+      <View>
         <Button
-          className="bg-background-orange rounded-lg"
+          className="bg-primary rounded-lg"
           onPress={() => {
             handleLogin();
           }}
         >
-          <ButtonText className="text-primary-appWhite">Login</ButtonText>
+          <Text className="text-primary-foreground">Log In</Text>
         </Button>
-        <VStack space="lg">
-          <HStack
-            space="md"
-            className="w-full justify-center items-center mt-4"
-          >
-            <Divider className="flex-1" />
-            <Text className="text-primary-0">OR CONTINUE WITH</Text>
-            <Divider className="flex-1" />
-          </HStack>
 
-          <HStack space="md" className="w-full justify-center items-center">
+        <View className="flex gap-3">
+          <View className="flex flex-row w-full justify-center items-center mt-4">
+            <Separator />
+            <Text className="text-primary-0">OR CONTINUE WITH</Text>
+            <Separator />
+          </View>
+
+          <View className="flex flex-row gap-3 w-full justify-center items-center">
             <Button
-              size="md"
-              action="secondary"
-              className="bg-white shadow-md rounded-lg"
+              className="shadow-md rounded-lg"
               onPress={() => {
                 providerAuth(0);
               }}
@@ -194,18 +151,16 @@ export default function Login() {
             </Button>
 
             <Button
-              size="md"
-              action="secondary"
-              className="bg-white shadow-md rounded-lg"
+              className="shadow-md rounded-lg"
               onPress={() => {
                 providerAuth(1);
               }}
             >
               <FontAwesomeIcon icon={faFacebook} />
             </Button>
-          </HStack>
-        </VStack>
-      </VStack>
-    </VStack>
+          </View>
+        </View>
+      </View>
+    </View>
   );
 }

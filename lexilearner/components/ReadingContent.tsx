@@ -11,7 +11,7 @@ interface ReadingContentProps {
   Description?: string;
   Cover: string;
   Content: string;
-  Genre: string;
+  Genre: string[];
   Difficulty: number;
 }
 
@@ -75,7 +75,36 @@ function ReadingContent(props: ReadingContentProps) {
     );
   }
 
-  return null; // Handle case where Type doesn't match
+  if (props.Type === "QueryView") {
+    return (
+      <TouchableOpacity
+        onPress={onPress}
+        activeOpacity={0.7}
+        className="flex flex-row gap-2 justify-start items-start"
+      >
+        <Image
+          source={{
+            uri: props.Cover,
+          }}
+          style={{ width: 100, height: 140 }}
+          resizeMode="contain"
+        />
+
+        <View className="flex-1 flex flex-col gap-2 w-full p-2">
+          <Text className="font-bold">{props.Title}</Text>
+          <Text
+            className="text-sm text-gray-700"
+            numberOfLines={5}
+            ellipsizeMode="tail"
+          >
+            {props.Description}
+          </Text>
+        </View>
+      </TouchableOpacity>
+    );
+  }
+
+  return null;
 }
 
 export default ReadingContent;

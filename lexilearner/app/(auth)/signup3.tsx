@@ -8,15 +8,7 @@ import { RegisterFormContext } from "./_layout";
 import { useGlobalContext } from "@/context/GlobalProvider";
 import { useAuthContext } from "@/context/AuthProvider";
 
-import {
-  useToast,
-  Toast,
-  ToastTitle,
-  ToastDescription,
-} from "@/components/ui/toast";
-
 import SignUp3 from "@/components/Auth/SignUp3";
-import { Text } from "@/components/ui/text";
 import { useUserContext } from "@/context/UserProvider";
 
 export default function Step3() {
@@ -24,7 +16,6 @@ export default function Step3() {
 
   const { fromProviderAuth } = useLocalSearchParams();
 
-  const toast = useToast();
   const { signup } = useAuthContext();
 
   const { registerForm, providerRegisterForm } =
@@ -52,18 +43,7 @@ export default function Step3() {
     } catch (error) {
       const errorMessage =
         error instanceof Error ? error.message : "An error occurred";
-
-      toast.show({
-        placement: "top",
-        render: ({ id }) => (
-          <Toast
-            nativeID={`toast-${id}`}
-            className="px-5 py-3 gap-4 shadow-soft-1 items-center flex-row bg-red-500 rounded-lg"
-          >
-            <ToastTitle size="sm">{errorMessage}</ToastTitle>
-          </Toast>
-        ),
-      });
+      //TODO: TOAST
     } finally {
       setIsLoading(false);
     }

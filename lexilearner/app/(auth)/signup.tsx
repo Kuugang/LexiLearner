@@ -15,9 +15,6 @@ export default function Step1() {
     email: "",
     password: "",
     confirmPassword: "",
-    firstName: "",
-    lastName: "",
-    role: "",
   });
 
   const handleStep = async () => {
@@ -28,19 +25,22 @@ export default function Step1() {
         registerForm[field as keyof typeof registerForm],
         registerForm,
       );
+      if (error == "") return;
       newErrors[field] = error;
     });
 
-    if (
-      (await checkUserExist("email", registerForm.email)).statusCode === 200
-    ) {
-      newErrors["email"] = "Email is already in use";
-    }
-    if (
-      (await checkUserExist("username", registerForm.username)).statusCode ===
-      200
-    ) {
-      newErrors["username"] = "Username is already taken.";
+    if (Object.keys(newErrors).length === 0) {
+      if (
+        (await checkUserExist("email", registerForm.email)).statusCode === 200
+      ) {
+        newErrors["email"] = "Email is already in use";
+      }
+      if (
+        (await checkUserExist("username", registerForm.username)).statusCode ===
+        200
+      ) {
+        newErrors["username"] = "Username is already taken.";
+      }
     }
 
     setFormErrors(newErrors);

@@ -15,6 +15,20 @@ export const validateField = (
   form: Record<string, any> = {},
 ) => {
   switch (name) {
+    case "firstName":
+      if (!value.trim() || !value) return "First Name is required.";
+      if (!value) return "First Name is required.";
+      if (value.length > 64)
+        return "Length of First Name is at most 64 characters.";
+      return "";
+
+    case "lastName":
+      if (!value.trim() || !value) return "Last Name is required.";
+      if (!value) return "Last Name is required.";
+      if (value.length > 64)
+        return "Length of First Name is at most 64 characters.";
+      return "";
+
     case "username":
       if (!value.trim() || !value) return "Username is required.";
       if (!value) return "Username is required.";
@@ -36,6 +50,8 @@ export const validateField = (
         return "Password must contain at least one lowercase letter.";
       if (!/[0-9]/.test(value))
         return "Password must contain at least one number.";
+      if (!/[^a-zA-Z0-9]/.test(value))
+        return "Password must contain at least one special character.";
       return ""; // No error
 
     case "confirmPassword":

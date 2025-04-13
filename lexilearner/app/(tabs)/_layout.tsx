@@ -1,12 +1,11 @@
-import { Tabs, useSegments } from "expo-router";
+import { Tabs } from "expo-router";
 import React, { useEffect } from "react";
 import { Platform } from "react-native";
 import { BackHandler } from "react-native";
 
-// import { IconSymbol } from "@/components/ui/IconSymbol";
+import { Compass, House, Library, School, User } from "lucide-react-native";
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
-import { useUserContext } from "@/context/UserProvider";
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
@@ -25,10 +24,7 @@ export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
         headerShown: false,
-        // tabBarButton: HapticTab,
-        // tabBarBackground: TabBarBackground,
         tabBarStyle: Platform.select({
           ios: {
             // Use a transparent background on iOS to show the blur effect
@@ -42,9 +38,9 @@ export default function TabLayout() {
         name="home"
         options={{
           title: "Home",
-          // tabBarIcon: ({ color }) => (
-          // <IconSymbol size={28} name="house.fill" color={color} />
-          // ),
+          tabBarIcon: ({ color, focused }) => (
+            <House color={focused ? "#f97316" : "#9ca3af"} /> // Orange if active, Gray if not
+          ),
         }}
       />
 
@@ -52,19 +48,35 @@ export default function TabLayout() {
         name="explore"
         options={{
           title: "Explore",
-          // tabBarIcon: ({ color }) => (
-          //   <IconSymbol size={28} name="library-books" color={color} />
-          // ),
+          tabBarIcon: ({ color, focused }) => (
+            <Compass color={focused ? "#f97316" : "#9ca3af"} /> // Orange if active, Gray if not
+          ),
+        }}
+      />
+
+      <Tabs.Screen
+        name="library"
+        options={{
+          tabBarLabel: "Library",
+          tabBarIcon: ({ color, focused }) => (
+            <Library color={focused ? "#f97316" : "#9ca3af"} />
+          ),
         }}
       />
 
       <Tabs.Screen
         name="profile"
         options={{
-          title: "Profile",
-          // tabBarIcon: ({ color }) => (
-          //   <IconSymbol size={28} name="profile" color={color} />
-          // ),
+          href: null,
+        }}
+      />
+      <Tabs.Screen
+        name="classrooms"
+        options={{
+          tabBarLabel: "Classrooms",
+          tabBarIcon: ({ color, focused }) => (
+            <School color={focused ? "#f97316" : "#9ca3af"} />
+          ),
         }}
       />
     </Tabs>

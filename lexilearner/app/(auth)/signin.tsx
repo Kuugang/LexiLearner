@@ -4,7 +4,7 @@ import Login from "@/components/Auth/Login";
 
 const SignIn = () => {
   return (
-    <ScrollView className="bg-background-yellowOrange">
+    <ScrollView className="bg-background">
       <Login />
     </ScrollView>
   );

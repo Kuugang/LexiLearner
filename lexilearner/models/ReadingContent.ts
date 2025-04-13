@@ -6,6 +6,6 @@ export interface ReadingContentType {
   Description: string;
   Cover: string;
   Content: string;
-  Genre: string;
+  Genre: string[];
   Difficulty: number;
 }

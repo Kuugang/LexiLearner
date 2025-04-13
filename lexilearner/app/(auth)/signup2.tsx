@@ -2,35 +2,48 @@ import React, { useContext, useState } from "react";
 import { router, useLocalSearchParams } from "expo-router";
 import { RegisterFormContext } from "./_layout";
 
-import SignUp2 from "@/components/Auth/SignUp2";
 import { ScrollView } from "react-native";
 import { checkUserExist } from "@/services/UserService";
+import { validateField } from "@/utils/utils";
+import SignUp2 from "@/components/Auth/SignUp2";
 
 export default function Step2() {
   const { registerForm, providerRegisterForm } =
     useContext(RegisterFormContext);
   const { fromProviderAuth } = useLocalSearchParams();
 
-  const [userNameInvalid, setUserNameInvalid] = useState(false);
-  const [firstNameInvalid, setFirstNameInvalid] = useState(false);
-  const [lastNameInvalid, setLastNameInvalid] = useState(false);
+  const [formErrors, setFormErrors] = useState({
+    username: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+  });
 
   const handleStep = async () => {
     let form = fromProviderAuth ? providerRegisterForm : registerForm;
-    setFirstNameInvalid(!form.firstName.trim());
-    setLastNameInvalid(!form.lastName.trim());
 
-    if (fromProviderAuth) {
-      const userExists =
+    const newErrors: any = {};
+    Object.keys(form).forEach((field) => {
+      const error = validateField(
+        field,
+        form[field as keyof typeof form],
+        form,
+      );
+      if (error == "") return;
+      newErrors[field] = error;
+    });
+
+    if (Object.keys(newErrors).length === 0 && fromProviderAuth) {
+      if (
         (await checkUserExist("username", providerRegisterForm.username))
-          .statusCode === 200;
-      if (userExists) {
-        setUserNameInvalid(true);
-        return;
+          .statusCode === 200
+      ) {
+        newErrors["username"] = "Username is already taken.";
       }
     }
+    setFormErrors(newErrors);
 
-    if (form.firstName?.trim() && form.lastName?.trim()) {
+    if (Object.keys(newErrors).length === 0) {
       if (fromProviderAuth) {
         router.push({
           pathname: "/signup3",
@@ -44,12 +57,7 @@ export default function Step2() {
 
   return (
     <ScrollView className="bg-background-yellowOrange">
-      <SignUp2
-        firstNameInvalid={firstNameInvalid}
-        lastNameInvalid={lastNameInvalid}
-        userNameInvalid={userNameInvalid}
-        handleStep={handleStep}
-      />
+      <SignUp2 formErrors={formErrors} handleStep={handleStep} />
     </ScrollView>
   );
 }
