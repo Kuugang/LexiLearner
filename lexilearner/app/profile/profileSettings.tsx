@@ -11,10 +11,11 @@ import { Text } from "@/components/ui/text";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import BackHeader from "@/components/BackHeader";
+import { AuthContext, useAuthContext } from "@/context/AuthProvider";
 
 export default function profileSettings() {
   const { user, updateProfile } = useUserContext();
-
+  const { logout } = useAuthContext();
   const [isProfileChanged, setIsProfileChanged] = useState(false);
   const [profile, setProfile] = useState({
     firstName: user?.firstName,
@@ -138,6 +139,10 @@ export default function profileSettings() {
 
         <Button onPress={() => handleDeleteAccount()} className="my-2">
           <Text>DELETE ACCOUNT</Text>
+        </Button>
+
+        <Button onPress={()=> logout()} className="my-2">
+          <Text>LOG OUT</Text>
         </Button>
       </View>
     </ScrollView>
