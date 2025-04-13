@@ -26,7 +26,7 @@ function ProtectedRouteGuard({ children }: { children: ReactNode }) {
   // }, []);
 
   useEffect(() => {
-    router.push("/profile/profileSettings");
+    router.push("/(tabs)/classroom");
   }, []);
 
   return <>{children}</>;
