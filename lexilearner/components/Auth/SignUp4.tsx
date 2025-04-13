@@ -1,148 +1,97 @@
 import React from "react";
 
 //Components
-import { View } from "react-native";
-import { VStack } from "@/components/ui/vstack";
-import { Heading } from "@/components/ui/heading";
-import { Image } from "@/components/ui/image";
-import {
-  FormControl,
-  FormControlError,
-  FormControlErrorIcon,
-  FormControlErrorText,
-  FormControlLabel,
-  FormControlLabelText,
-} from "@/components/ui/form-control";
-
-import { AlertCircleIcon } from "@/components/ui/icon";
-import { Button, ButtonText } from "@/components/ui/button";
-
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import {
   Select,
-  SelectTrigger,
-  SelectInput,
-  SelectIcon,
-  SelectPortal,
-  SelectBackdrop,
   SelectContent,
-  SelectDragIndicator,
-  SelectDragIndicatorWrapper,
+  SelectGroup,
   SelectItem,
-} from "@/components/ui/select";
-import { ChevronDownIcon } from "@/components/ui/icon";
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "~/components/ui/select";
+
+import { View, Image } from "react-native";
+import { Button } from "~/components/ui/button";
+import { Text } from "~/components/ui/text";
 
 interface SignUp4Props {
   ageInvalid: boolean;
-  gradeLevelInvalid: boolean;
-
-  form: { age: string; gradeLevel: string };
-  setForm: React.Dispatch<
-    React.SetStateAction<{ age: string; gradeLevel: string }>
-  >;
-
+  setAge: React.Dispatch<React.SetStateAction<{ age: string }>>;
   handleStep: () => void;
 }
 
 export default function SignUp4({
   ageInvalid,
-  gradeLevelInvalid,
-  form,
-  setForm,
+  setAge,
   handleStep,
 }: SignUp4Props) {
+  const insets = useSafeAreaInsets();
+  const contentInsets = {
+    top: insets.top,
+    bottom: insets.bottom,
+    left: 12,
+    right: 12,
+  };
+
   return (
     <View className="flex-1 gap-14 p-8 h-full justify-around items-center">
       <View className="flex-1 gap-6 p-8 h-full justify-around items-center">
         <Image
           source={require("@/assets/images/role-pupil.png")}
-          className="w-32 h-32"
+          style={{ width: 200, height: 200 }}
           resizeMode="contain"
           alt=""
         />
-        <Heading className="text-typography-black font-bold text-3xl">
+        <Text className="text-typography-black font-bold text-3xl">
           Almost There!
-        </Heading>
+        </Text>
       </View>
-      <Heading>USBON PANI</Heading>
 
-      <View className="flex flex-row gap-4">
-        <FormControl isInvalid={ageInvalid}>
-          <Select
-            onValueChange={(value: string) => setForm({ ...form, age: value })}
-          >
-            <SelectTrigger>
-              <SelectInput placeholder="Age" />
-              <SelectIcon className="mr-3" as={ChevronDownIcon} />
-            </SelectTrigger>
-            <SelectPortal>
-              <SelectBackdrop />
-              <SelectContent>
-                <SelectDragIndicatorWrapper>
-                  <SelectDragIndicator />
-                </SelectDragIndicatorWrapper>
+      <Select
+        onValueChange={(e) => {
+          setAge(e.value);
+        }}
+      >
+        <SelectTrigger className="w-[250px]">
+          <SelectValue
+            className="text-foreground text-sm native:text-lg"
+            placeholder="Enter age"
+          />
+        </SelectTrigger>
+        <SelectContent insets={contentInsets} className="w-[250px]">
+          <SelectGroup>
+            <SelectLabel>Age</SelectLabel>
 
-                <SelectItem label="11" value="11" />
-                <SelectItem label="12" value="12" />
-                <SelectItem label="13" value="13" />
-                <SelectItem label="14" value="14" />
-                <SelectItem label="15" value="15" />
-                <SelectItem label="16" value="16" />
-                <SelectItem label="17" value="17" />
-                <SelectItem label="18" value="19" />
-              </SelectContent>
-            </SelectPortal>
-          </Select>
+            {[
+              6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22,
+            ].map((value) => (
+              <SelectItem
+                key={value}
+                label={String(value)}
+                value={String(value)}
+              >
+                {value}
+              </SelectItem>
+            ))}
+          </SelectGroup>
+        </SelectContent>
+      </Select>
 
-          <FormControlError>
-            <FormControlErrorIcon as={AlertCircleIcon} />
-            <FormControlErrorText>
-              Grade Level is required.
-            </FormControlErrorText>
-          </FormControlError>
-        </FormControl>
-        <FormControl isInvalid={gradeLevelInvalid}>
-          <Select
-            onValueChange={(value: string) =>
-              setForm({ ...form, gradeLevel: value })
-            }
-          >
-            <SelectTrigger className="text-typography-black">
-              <SelectInput placeholder="Grade Level" />
-              <SelectIcon className="mr-3" as={ChevronDownIcon} />
-            </SelectTrigger>
-            <SelectPortal>
-              <SelectBackdrop />
-              <SelectContent>
-                <SelectDragIndicatorWrapper>
-                  <SelectDragIndicator />
-                </SelectDragIndicatorWrapper>
-
-                <SelectItem label="5" value="5" />
-                <SelectItem label="6" value="6" />
-                <SelectItem label="7" value="7" />
-                <SelectItem label="8" value="8" />
-                <SelectItem label="9" value="9" />
-                <SelectItem label="10" value="10" />
-                <SelectItem label="11" value="11" />
-                <SelectItem label="12" value="12" />
-              </SelectContent>
-            </SelectPortal>
-          </Select>
-
-          <FormControlError>
-            <FormControlErrorIcon as={AlertCircleIcon} />
-            <FormControlErrorText>Age is required.</FormControlErrorText>
-          </FormControlError>
-        </FormControl>
-      </View>
+      {ageInvalid && (
+        <Text className="text-lg text-destructive text-center">
+          Please enter your age.
+        </Text>
+      )}
 
       <Button
-        className="bg-background-orange rounded-lg w-full"
+        className="bg-primary rounded-lg w-full"
         onPress={() => {
           handleStep();
         }}
       >
-        <ButtonText className="text-primary-appWhite">Finish</ButtonText>
+        <Text className="text-primary-foreground">Finish</Text>
       </Button>
     </View>
   );

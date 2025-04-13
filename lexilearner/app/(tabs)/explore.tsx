@@ -3,39 +3,45 @@ import { useStories } from "@/services/ReadingMaterial";
 import { router } from "expo-router";
 
 // Components
-
-import {
-  Checkbox,
-  CheckboxIndicator,
-  CheckboxLabel,
-  CheckboxIcon,
-} from "@/components/ui/checkbox";
-import {
-  Popover,
-  PopoverBackdrop,
-  PopoverArrow,
-  PopoverBody,
-  PopoverContent,
-} from "@/components/ui/popover";
-import { CheckIcon } from "@/components/ui/icon";
-
+import ReadingContent from "@/components/ReadingContent";
 import { View, ScrollView, Text, TouchableOpacity } from "react-native";
-import { SearchIcon } from "@/components/ui/icon";
-import { Button } from "@/components/ui/button";
-import { Input, InputField, InputIcon, InputSlot } from "@/components/ui/input";
-import { faUser } from "@fortawesome/free-regular-svg-icons";
+import { Button } from "~/components/ui/button";
+import { Input } from "~/components/ui/input";
+import { Checkbox } from "~/components/ui/checkbox";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "~/components/ui/dropdown-menu";
+
 import {
   faHeart,
   faWandMagicSparkles,
   faFlask,
   faFilter,
+  faUser,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import ReadingContent from "@/components/ReadingContent"; // adjust path as needed
+import { Search, ListFilter, Check } from "lucide-react-native";
 
 export default function Explore() {
   const { data: stories, isLoading: isStoriesLoading } = useStories();
-  const [selectedGenre, setSelectedGenre] = useState<string | null>(null);
+  const [query, setQuery] = useState<string>("");
+
+  const [selectedGenres, setSelectedGenres] = useState<Set<string>>(new Set());
+  const toggleGenre = (genre: string) => {
+    setSelectedGenres((prev) => {
+      const newSet = new Set(prev);
+      if (newSet.has(genre)) {
+        newSet.delete(genre);
+      } else {
+        newSet.add(genre);
+      }
+      return newSet;
+    });
+  };
 
   const genres: string[] = [
     "Science Fiction",
@@ -55,14 +61,29 @@ export default function Explore() {
     "Metafiction",
   ];
 
-  const filteredStories = selectedGenre
-    ? stories?.filter((story) => story.Genre.includes(selectedGenre))
-    : null;
+  const filteredStories =
+    selectedGenres.size === 0 && query.trim() === ""
+      ? null
+      : stories?.filter((story) => {
+          const matchesGenre =
+            selectedGenres.size === 0 ||
+            selectedGenres.has(story.Genre) ||
+            (Array.isArray(story.Genre) &&
+              story.Genre.some((genre) => selectedGenres.has(genre)));
+
+          const matchesQuery =
+            query.trim() === "" ||
+            story.Title.toLowerCase().includes(query.trim().toLowerCase()) ||
+            (story.Author &&
+              story.Author.toLowerCase().includes(query.trim().toLowerCase()));
+
+          return matchesGenre && matchesQuery;
+        });
 
   return (
     <ScrollView>
-      <View className="p-8 flex gap-4">
-        <View className="flex flex-row gap-2">
+      <View className="flex flex-col h-20 justify-center items-end">
+        <View className="flex flex-row gap-2 justify-center">
           <Button
             className="bg-transparent self-start p-0"
             onPress={() => router.push("/profile")}
@@ -74,73 +95,91 @@ export default function Explore() {
             />
           </Button>
 
-          <Input className="rounded-lg">
-            <InputSlot className="pl-3">
-              <InputIcon as={SearchIcon} />
-            </InputSlot>
-            <InputField placeholder="Search stories..." />
-          </Input>
-        </View>
-
-        <View className="flex flex-row items-center justify-between">
-          <Text className="font-semibold">Genres</Text>
-          <Checkbox size="md" isInvalid={false} isDisabled={false}>
-            <CheckboxIndicator>
-              <CheckboxIcon as={CheckIcon} />
-            </CheckboxIndicator>
-            <CheckboxLabel>Label</CheckboxLabel>
-          </Checkbox>
-        </View>
-
-        {!selectedGenre && (
-          <View className="flex-1 w-full px-4">
-            <Text className="font-bold text-2xl mb-2">Genres</Text>
-
-            <View className="grid grid-cols-2 gap-4">
-              {genres.map((genre) => {
-                return (
-                  <TouchableOpacity
-                    key={genre}
-                    className={`flex items-center justify-around p-4 rounded-xl bg-background-yellowOrange`}
-                    onPress={() =>
-                      setSelectedGenre((prev) =>
-                        prev === genre ? null : genre,
-                      )
-                    }
-                  >
-                    {/* TODO:  */}
-                    <FontAwesomeIcon size={30} icon={faHeart} />
-                    <Text className="font-semibold text-center">{genre}</Text>
-                  </TouchableOpacity>
-                );
-              })}
-            </View>
+          <View className="relative">
+            <Search className="absolute left-2 top-2" />
+            <Input
+              className="p-10 rounded-lg"
+              value={query}
+              onChangeText={(value: string) => setQuery(value)}
+              placeholder="Search for stories..."
+              aria-labelledby={`label-for-searchStories`}
+              aria-errormessage="inputError"
+            />
           </View>
-        )}
-
-        {selectedGenre && (
-          <View className="mt-6 px-4">
-            <Text className="font-bold text-xl mb-2">
-              {`${selectedGenre} Stories`}
-            </Text>
-
-            {filteredStories?.map((item) => (
-              <ReadingContent
-                key={item.Id}
-                Type="ScrollView"
-                Id={item.Id}
-                Title={item.Title}
-                Author={item.Author}
-                Description={item.Description}
-                Cover={item.Cover}
-                Content={item.Content}
-                Genre={item.Genre}
-                Difficulty={item.Difficulty}
-              />
-            ))}
-          </View>
-        )}
+        </View>
       </View>
+
+      <View className="flex flex-row justify-end">
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="outline">
+              <ListFilter />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent className="w-64 native:w-72">
+            <DropdownMenuLabel>Genre</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            {genres.map((genre) => {
+              const isChecked = selectedGenres.has(genre);
+
+              return (
+                <TouchableOpacity
+                  onPress={() => toggleGenre(genre)}
+                  className="flex-row items-center mb-2 gap-2"
+                >
+                  <Checkbox
+                    checked={isChecked}
+                    onCheckedChange={() => toggleGenre(genre)}
+                    className="w-5 h-5 border border-gray-400 rounded items-center justify-center"
+                  >
+                    {isChecked && <Check className="w-4 h-4 text-white" />}
+                  </Checkbox>
+                  <Text>{genre}</Text>
+                </TouchableOpacity>
+              );
+            })}
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </View>
+
+      {!filteredStories && (
+        <View className="flex-1 w-full px-4">
+          <View className="grid grid-cols-2 gap-4">
+            {genres.map((genre) => {
+              return (
+                <TouchableOpacity
+                  key={genre}
+                  className={`flex items-center justify-around p-4 rounded-xl bg-background-yellowOrange`}
+                  onPress={() => toggleGenre(genre)}
+                >
+                  {/* TODO:  */}
+                  <FontAwesomeIcon size={30} icon={faHeart} />
+                  <Text className="font-semibold text-center">{genre}</Text>
+                </TouchableOpacity>
+              );
+            })}
+          </View>
+        </View>
+      )}
+
+      {filteredStories?.length > 0 && (
+        <View className="flex flex-col gap-2">
+          {filteredStories?.map((item) => (
+            <ReadingContent
+              key={item.Id}
+              Type="QueryView"
+              Id={item.Id}
+              Title={item.Title}
+              Author={item.Author}
+              Description={item.Description}
+              Cover={item.Cover}
+              Content={item.Content}
+              Genre={item.Genre}
+              Difficulty={item.Difficulty}
+            />
+          ))}
+        </View>
+      )}
     </ScrollView>
   );
 }

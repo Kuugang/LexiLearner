@@ -50,6 +50,8 @@ export const validateField = (
         return "Password must contain at least one lowercase letter.";
       if (!/[0-9]/.test(value))
         return "Password must contain at least one number.";
+      if (!/[^a-zA-Z0-9]/.test(value))
+        return "Password must contain at least one special character.";
       return ""; // No error
 
     case "confirmPassword":

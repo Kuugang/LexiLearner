@@ -1,4 +1,4 @@
-import "@/global.css";
+import "~/global.css";
 import { ReactNode } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { SplashScreen, Stack, router, useSegments } from "expo-router";
@@ -8,7 +8,18 @@ import { UserProvider, useUserContext } from "@/context/UserProvider";
 import { ReadingContentProvider } from "@/context/ReadingContentProvider";
 
 import React, { useEffect } from "react";
-import { GluestackUIProvider } from "@/components/ui/gluestack-ui-provider";
+import { PortalHost } from "@rn-primitives/portal";
+
+import {
+  Theme,
+  ThemeProvider,
+  DefaultTheme,
+  DarkTheme,
+} from "@react-navigation/native";
+import { StatusBar } from "expo-status-bar";
+import { Platform } from "react-native";
+import { NAV_THEME } from "~/lib/constants";
+import { useColorScheme } from "~/lib/useColorScheme";
 
 SplashScreen.hideAsync();
 
@@ -24,39 +35,82 @@ function ProtectedRouteGuard({ children }: { children: ReactNode }) {
       // Only redirect to index if not already there
       router.replace("/");
     } else if (user && (inAuthGroup || segments.length === 0)) {
-      //router.replace("/(tabs)/home");
+      // router.replace("/(tabs)/home");
       router.replace("/(tabs)/explore");
     }
   }, [user, segments]);
 
   // useEffect(() => {
-  //   router.push("/profile/profileSettings");
+  //   router.push("/profile");
   // }, []);
 
   return <>{children}</>;
 }
 
+const LIGHT_THEME: Theme = {
+  ...DefaultTheme,
+  colors: NAV_THEME.light,
+};
+const DARK_THEME: Theme = {
+  ...DarkTheme,
+  colors: NAV_THEME.dark,
+};
+
+export {
+  // Catch any errors thrown by the Layout component.
+  ErrorBoundary,
+} from "expo-router";
+
 export default function RootLayout() {
+  const hasMounted = React.useRef(false);
+  const { colorScheme, isDarkColorScheme } = useColorScheme();
+  const [isColorSchemeLoaded, setIsColorSchemeLoaded] = React.useState(false);
+
+  useIsomorphicLayoutEffect(() => {
+    if (hasMounted.current) {
+      return;
+    }
+
+    if (Platform.OS === "web") {
+      // Adds the background color to the html element to prevent white background on overscroll.
+      document.documentElement.classList.add("bg-background");
+    }
+    setIsColorSchemeLoaded(true);
+    hasMounted.current = true;
+  }, []);
+
+  if (!isColorSchemeLoaded) {
+    return null;
+  }
+
   return (
     <GlobalProvider>
-      <QueryClientProvider client={queryClient}>
-        <UserProvider>
-          <AuthProvider>
-            <ProtectedRouteGuard>
-              <ReadingContentProvider>
-                <GluestackUIProvider mode="light">
+      <ThemeProvider value={isDarkColorScheme ? DARK_THEME : LIGHT_THEME}>
+        <QueryClientProvider client={queryClient}>
+          <UserProvider>
+            <AuthProvider>
+              <ProtectedRouteGuard>
+                <ReadingContentProvider>
+                  <StatusBar style={isDarkColorScheme ? "light" : "dark"} />
                   <Stack screenOptions={{ headerShown: false }}>
                     <Stack.Screen name="index" />
                     <Stack.Screen name="(tabs)" />
                     <Stack.Screen name="(auth)" />
+                    <Stack.Screen name="profile" />
                     <Stack.Screen name="content" />
                   </Stack>
-                </GluestackUIProvider>
-              </ReadingContentProvider>
-            </ProtectedRouteGuard>
-          </AuthProvider>
-        </UserProvider>
-      </QueryClientProvider>
+                  <PortalHost />
+                </ReadingContentProvider>
+              </ProtectedRouteGuard>
+            </AuthProvider>
+          </UserProvider>
+        </QueryClientProvider>
+      </ThemeProvider>
     </GlobalProvider>
   );
 }
+
+const useIsomorphicLayoutEffect =
+  Platform.OS === "web" && typeof window === "undefined"
+    ? React.useEffect
+    : React.useLayoutEffect;

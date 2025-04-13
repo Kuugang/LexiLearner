@@ -1,18 +1,22 @@
 import { View } from "react-native";
 import { Text } from "@/components/ui/text";
-import { Heading } from "./ui/heading";
+import { ReactNode } from "react";
 
 interface ProfileStatsProps {
-  level: number;
+  level: string;
   description: string;
+  icon?: ReactNode;
 }
 
-function ProfileStats({ level, description }: ProfileStatsProps) {
+function ProfileStats({ level, description, icon }: ProfileStatsProps) {
   return (
-    <View className="w-[48%] py-1">
-      <View className="p-3 border-2 rounded-xl border-gray-300">
-        <Text className="text-lg font-bold">{level}</Text>
-        <Text className="text-sm text-gray-700">{description}</Text>
+    <View className="flex flex-row gap-3 items-center p-3 border-2 rounded-xl border-gray-300">
+      <View>{icon}</View>
+      <View>
+        <Text className="text-md font-bold">{level}</Text>
+        <Text className="text-sm text-gray-700" style={{ flexWrap: "wrap" }}>
+          {description}
+        </Text>
       </View>
     </View>
   );

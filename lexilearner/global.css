@@ -2,18 +2,59 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --color-primary-0: 0, 0, 0; /* White */
-  --color-primary-50: 240, 240, 240; /* Light Grey */
-  --color-primary-100: 220, 220, 220;
-  --color-primary-200: 200, 200, 200;
-  --color-primary-300: 180, 180, 180;
-  --color-primary-400: 160, 160, 160;
-  --color-primary-500: 140, 140, 140; /* Grey */
-  --color-primary-600: 120, 120, 120;
-  --color-primary-700: 100, 100, 100;
-  --color-primary-800: 80, 80, 80;
-  --color-primary-900: 60, 60, 60;
-  --color-primary-950: 40, 40, 40; /* Dark Grey */
-  /* Define other color variables similarly */
+@layer base {
+  :root {
+    --background: 0 0% 98.97%;
+    --foreground: 270.73 43.16% 18.63%;
+    --muted: 43.9 100% 83.92%;
+    --muted-foreground: 272.31 19.12% 26.67%;
+    --popover: 0 0% 98.82%;
+    --popover-foreground: 270.73 43.16% 18.63%;
+    --card: 0 0% 98.82%;
+    --card-foreground: 270.73 43.16% 18.63%;
+    --border: 276.92 23.64% 89.22%;
+    --input: 276.92 23.64% 89.22%;
+    --primary: 47.89 100% 58.24%;
+    --primary-foreground: 270.73 43.16% 18.63%;
+    --secondary: 240 100% 75.69%;
+    --secondary-foreground: 0 0% 98.82%;
+    --accent: 61 12% 80%;
+    --accent-foreground: 61 12% 20%;
+    --destructive: 12.25 100% 62.55%;
+    --destructive-foreground: 0 0% 97.25%;
+    --ring: 272.31 19.12% 26.67%;
+    --chart-1: 272.31 19.12% 26.67%;
+    --chart-2: 272.31 23.6% 46.88%;
+    --chart-3: 276.92 23.64% 89.22%;
+    --chart-4: 43.9 100% 83.92%;
+    --chart-5: 270.73 43.16% 18.63%;
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 61 35% 3%;
+    --foreground: 61 24% 100%;
+    --muted: 61 29% 12%;
+    --muted-foreground: 61 1% 60%;
+    --popover: 61 35% 3%;
+    --popover-foreground: 61 24% 100%;
+    --card: 61 35% 4%;
+    --card-foreground: 0 0% 100%;
+    --border: 61 12% 11%;
+    --input: 61 12% 11%;
+    --primary: 61 32% 44%;
+    --primary-foreground: 61 32% 4%;
+    --secondary: 61 3% 17%;
+    --secondary-foreground: 61 3% 77%;
+    --accent: 61 12% 24%;
+    --accent-foreground: 61 12% 84%;
+    --destructive: 20 80% 59%;
+    --destructive-foreground: 0 0% 0%;
+    --ring: 61 32% 44%;
+    --chart-1: 61 32% 44%;
+    --chart-2: 61 3% 17%;
+    --chart-3: 61 12% 24%;
+    --chart-4: 61 3% 20%;
+    --chart-5: 61 35% 44%;
+  }
 }
