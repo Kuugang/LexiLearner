@@ -16,13 +16,7 @@ import {
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
 
-import {
-  faHeart,
-  faWandMagicSparkles,
-  faFlask,
-  faFilter,
-  faUser,
-} from "@fortawesome/free-solid-svg-icons";
+import { faHeart } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { Search, ListFilter, Check, CircleUser } from "lucide-react-native";
 
@@ -148,11 +142,10 @@ export default function Explore() {
               return (
                 <TouchableOpacity
                   key={genre}
-                  className={`flex items-center justify-around p-4 rounded-xl bg-background-yellowOrange`}
+                  className={`flex items-center justify-around p-4 rounded-xl bg-orange-500`}
                   onPress={() => toggleGenre(genre)}
                 >
                   {/* TODO:  */}
-                  <FontAwesomeIcon size={30} icon={faHeart} />
                   <Text className="font-semibold text-center">{genre}</Text>
                 </TouchableOpacity>
               );

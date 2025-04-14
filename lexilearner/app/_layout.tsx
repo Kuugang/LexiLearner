@@ -20,6 +20,7 @@ import { Platform } from "react-native";
 import { NAV_THEME } from "~/lib/constants";
 import { useColorScheme } from "~/lib/useColorScheme";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -69,16 +70,18 @@ export default function RootLayout() {
             <AuthProvider>
               <ReadingContentProvider>
                 <SafeAreaView className="flex-1 bg-background">
-                  {/* <StatusBar style={isDarkColorScheme ? "light" : "dark"} /> */}
-                  <StatusBar style={"light"} />
-                  <Stack screenOptions={{ headerShown: false }}>
-                    <Stack.Screen name="index" />
-                    <Stack.Screen name="(tabs)" />
-                    <Stack.Screen name="(auth)" />
-                    <Stack.Screen name="profile" />
-                    <Stack.Screen name="content" />
-                  </Stack>
-                  <PortalHost />
+                  <GestureHandlerRootView style={{ flex: 1 }}>
+                    {/* <StatusBar style={isDarkColorScheme ? "light" : "dark"} /> */}
+                    <StatusBar style={"light"} />
+                    <Stack screenOptions={{ headerShown: false }}>
+                      <Stack.Screen name="index" />
+                      <Stack.Screen name="(tabs)" />
+                      <Stack.Screen name="(auth)" />
+                      <Stack.Screen name="profile" />
+                      <Stack.Screen name="content" />
+                    </Stack>
+                    <PortalHost />
+                  </GestureHandlerRootView>
                 </SafeAreaView>
               </ReadingContentProvider>
             </AuthProvider>

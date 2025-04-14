@@ -20,6 +20,8 @@ import { Input } from "~/components/ui/input";
 export default function Read() {
   const { width } = useWindowDimensions();
   const { selectedBook } = useBooks();
+  const averageWordWidth = 60;
+  const numColumns = Math.floor(width / averageWordWidth);
 
   const [selectedWord, setSelectedWord] = useState("");
   const [isDefinitionLoading, setIsDefinitionLoading] = useState(true);
@@ -117,15 +119,21 @@ export default function Read() {
   };
 
   return (
-    <ScrollView className="p-6 bg-background h-screen">
-      <View style={{ flexWrap: "wrap", flexDirection: "row" }}>
-        {words?.map((word, idx) => (
-          <Pressable key={idx} onLongPress={() => handleWordPress(word)}>
-            <Text>{word} </Text>
+    <>
+      <FlatList
+        className="p-6 bg-background h-screen"
+        data={words}
+        keyExtractor={(_, idx) => idx.toString()}
+        numColumns={numColumns}
+        renderItem={({ item }) => (
+          <Pressable
+            onLongPress={() => handleWordPress(item)}
+            className="mr-1 mb-1"
+          >
+            <Text>{item}</Text>
           </Pressable>
-        ))}
-      </View>
-
+        )}
+      />
       <Modal visible={definitionVisible} animationType="slide">
         <ScrollView>
           <Input
@@ -154,6 +162,6 @@ export default function Read() {
           )}
         </ScrollView>
       </Modal>
-    </ScrollView>
+    </>
   );
 }

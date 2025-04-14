@@ -1,4 +1,5 @@
 import React, { createContext, useState, ReactNode, useContext } from "react";
+import { ActivityIndicator, View } from "react-native";
 
 interface GlobalContextType {
   isLoading: boolean;
@@ -31,6 +32,24 @@ const GlobalProvider: React.FC<GlobalProviderProps> = ({ children }) => {
         setIsLoading,
       }}
     >
+      {isLoading && (
+        <View
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            backgroundColor: "rgba(0,0,0,0.2)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            zIndex: 999,
+          }}
+        >
+          <ActivityIndicator size="large" color="#ffffff" />
+        </View>
+      )}
       {children}
     </GlobalContext.Provider>
   );

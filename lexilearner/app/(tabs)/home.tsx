@@ -34,7 +34,6 @@ export default function HomeScreen({}: HomeScreenProps): JSX.Element {
             }}
           />
           <Input
-            editable={false} // This disables the input
             className="pl-10 py-3 rounded-lg w-full"
             onFocus={() => router.push("/explore")}
             placeholder="Search for stories..."

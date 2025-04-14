@@ -1,11 +1,12 @@
 import React from "react";
 
 //Components
+import { Platform } from "react-native";
+import { ScrollView } from "react-native-gesture-handler";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import {
   Select,
   SelectContent,
-  SelectGroup,
   SelectItem,
   SelectLabel,
   SelectTrigger,
@@ -18,7 +19,7 @@ import { Text } from "~/components/ui/text";
 
 interface SignUp4Props {
   ageInvalid: boolean;
-  setAge: React.Dispatch<React.SetStateAction<{ age: string }>>;
+  setAge: (value: string | null) => void;
   handleStep: () => void;
 }
 
@@ -30,7 +31,10 @@ export default function SignUp4({
   const insets = useSafeAreaInsets();
   const contentInsets = {
     top: insets.top,
-    bottom: insets.bottom,
+    bottom: Platform.select({
+      android: insets.bottom,
+      default: insets.bottom,
+    }),
     left: 12,
     right: 12,
   };
@@ -51,19 +55,19 @@ export default function SignUp4({
 
       <Select
         onValueChange={(e) => {
-          setAge(e.value);
+          setAge(e?.value as string);
         }}
       >
         <SelectTrigger className="w-[250px]">
           <SelectValue
             className="text-foreground text-sm native:text-lg"
-            placeholder="Enter age"
+            placeholder="Enter your age"
           />
         </SelectTrigger>
-        <SelectContent insets={contentInsets} className="w-[250px]">
-          <SelectGroup>
-            <SelectLabel>Age</SelectLabel>
 
+        <SelectContent insets={contentInsets} side="bottom">
+          <ScrollView className="w-[245px] max-h-64">
+            <SelectLabel>Age</SelectLabel>
             {[
               6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22,
             ].map((value) => (
@@ -75,7 +79,7 @@ export default function SignUp4({
                 {value}
               </SelectItem>
             ))}
-          </SelectGroup>
+          </ScrollView>
         </SelectContent>
       </Select>
 

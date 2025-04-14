@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Redirect, router } from "expo-router"; // Or useNavigation if using React Navigation
 
 import { ScrollView, View, Image } from "react-native";

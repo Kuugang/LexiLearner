@@ -1,19 +1,16 @@
-import { ScrollView } from "react-native";
-
 import { useState } from "react";
 import { router } from "expo-router";
 import { useGlobalContext } from "@/context/GlobalProvider";
-
-import { useToast, Toast, ToastTitle } from "@/components/ui/toast";
-
-import SignUp4 from "@/components/Auth/SignUp4";
 import { useUserContext } from "@/context/UserProvider";
+
+import { ScrollView } from "react-native";
+import SignUp4 from "@/components/Auth/SignUp4";
 
 export default function Step4() {
   const { updateProfile } = useUserContext();
   const { setIsLoading } = useGlobalContext();
 
-  const [age, setAge] = useState(null);
+  const [age, setAge] = useState<string | null>(null);
   const [ageInvalid, setAgeInvalid] = useState(false);
 
   const handleStep = async () => {
@@ -36,7 +33,7 @@ export default function Step4() {
   };
 
   return (
-    <ScrollView className="bg-background-yellowOrange">
+    <ScrollView className="bg-background">
       <SignUp4
         ageInvalid={ageInvalid}
         setAge={setAge}
