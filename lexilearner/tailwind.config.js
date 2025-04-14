@@ -8,10 +8,16 @@ module.exports = {
   theme: {
     extend: {
       colors: {
+        orange: "rgb(255, 103, 64)",
+        yellowOrange: "rgb(255, 212, 42)",
+        lightGrayOrange: "rgb(255, 233, 173)",
+
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
-        background: "hsl(var(--background))",
+        background: {
+          DEFAULT: "hsl(var(--background))",
+        },
         foreground: "hsl(var(--foreground))",
         primary: {
           DEFAULT: "hsl(var(--primary))",

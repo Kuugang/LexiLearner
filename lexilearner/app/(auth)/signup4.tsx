@@ -3,7 +3,6 @@ import { router } from "expo-router";
 import { useGlobalContext } from "@/context/GlobalProvider";
 import { useUserContext } from "@/context/UserProvider";
 
-import { ScrollView } from "react-native";
 import SignUp4 from "@/components/Auth/SignUp4";
 
 export default function Step4() {
@@ -33,12 +32,6 @@ export default function Step4() {
   };
 
   return (
-    <ScrollView className="bg-background">
-      <SignUp4
-        ageInvalid={ageInvalid}
-        setAge={setAge}
-        handleStep={handleStep}
-      />
-    </ScrollView>
+    <SignUp4 ageInvalid={ageInvalid} setAge={setAge} handleStep={handleStep} />
   );
 }

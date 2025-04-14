@@ -15,7 +15,7 @@ const Index = () => {
 
   return (
     <ScrollView
-      className="bg-background"
+      className="bg-background-yellowOrange"
       contentContainerStyle={{
         flexGrow: 1,
         justifyContent: "space-around",
@@ -43,7 +43,7 @@ const Index = () => {
           onPress={() => {
             router.push("/signup");
           }}
-          className="w-full bg-orange-500 rounded-lg"
+          className="w-full bg-orange rounded-lg"
         >
           <Text className="text-white text-lg font-bold">Register</Text>
         </Button>

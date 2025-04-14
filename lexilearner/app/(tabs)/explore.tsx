@@ -16,9 +16,13 @@ import {
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
 
-import { faHeart } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import { Search, ListFilter, Check, CircleUser } from "lucide-react-native";
+import {
+  Search,
+  ListFilter,
+  Check,
+  CircleUser,
+  Flame,
+} from "lucide-react-native";
 
 export default function Explore() {
   const { data: stories, isLoading: isStoriesLoading } = useStories();
@@ -78,8 +82,15 @@ export default function Explore() {
     <ScrollView className="bg-background">
       <View className="flex flex-row gap-2 items-center w-full p-4">
         <TouchableOpacity onPress={() => router.push("/profile")}>
-          <CircleUser color="#FFD43B" size={40} />
+          <CircleUser color="#FFD43B" size={30} />
         </TouchableOpacity>
+
+        <View>
+          <Flame color="red" size={30} />
+          <Text className="text-red-500 font-bold absolute -bottom-1 -right-1">
+            3
+          </Text>
+        </View>
 
         <View className="relative flex-1">
           <Search

@@ -8,7 +8,7 @@ import { Image } from "react-native";
 import { Text } from "~/components/ui/text";
 import { Input } from "~/components/ui/input";
 
-import { CircleUser, Search } from "lucide-react-native";
+import { CircleUser, Search, Flame } from "lucide-react-native";
 
 interface HomeScreenProps {}
 
@@ -17,10 +17,18 @@ export default function HomeScreen({}: HomeScreenProps): JSX.Element {
 
   return (
     <ScrollView className="bg-background">
+      {/* TODO: MAKE THIS INTO COMPONENT*/}
       <View className="flex flex-row gap-2 items-center w-full p-4">
         <TouchableOpacity onPress={() => router.push("/profile")}>
-          <CircleUser color="#FFD43B" size={40} />
+          <CircleUser color="#FFD43B" size={30} />
         </TouchableOpacity>
+
+        <View>
+          <Flame color="red" size={30} />
+          <Text className="text-red-500 font-bold absolute -bottom-1 -right-1">
+            3
+          </Text>
+        </View>
 
         <View className="relative flex-1">
           <Search
@@ -43,9 +51,9 @@ export default function HomeScreen({}: HomeScreenProps): JSX.Element {
         </View>
       </View>
 
-      <View className="flex flex-row items-center px-4 py-4 bg-accent">
+      <View className="flex flex-row items-center px-4 py-4 bg-yellowOrange">
         <View className="flex-1 pr-2">
-          <Text className="text-4xl font-bold text-wrap">
+          <Text className="text-orange text-4xl font-bold text-wrap">
             Ready for a Journey?
           </Text>
         </View>
@@ -59,7 +67,7 @@ export default function HomeScreen({}: HomeScreenProps): JSX.Element {
       </View>
 
       <View className="flex-1  w-full h-60 p-4">
-        <Text>Recommended</Text>
+        <Text className="text-2xl font-bold">Recommended</Text>
 
         <ReadingContent
           Type={"Recommended"}
@@ -99,6 +107,7 @@ Originally created by Dr. Seuss himself, Beginner Books are fun, funny, and easy
       </View>
 
       <View className="flex-1 gap-4 w-full p-4">
+        <Text className="text-2xl font-bold">Explore</Text>
         <ScrollView
           horizontal={true}
           showsHorizontalScrollIndicator={false}

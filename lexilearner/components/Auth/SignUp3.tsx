@@ -4,8 +4,7 @@ import { useLocalSearchParams } from "expo-router";
 import { RegisterFormContext } from "@/app/(auth)/_layout";
 
 //Components
-import { Label } from "~/components/ui/label";
-import { View, Image, TouchableOpacity } from "react-native";
+import { View, Image, TouchableOpacity, ScrollView } from "react-native";
 import { Button } from "~/components/ui/button";
 import { Text } from "~/components/ui/text";
 
@@ -27,7 +26,7 @@ export default function SignUp3({ isInvalid, handleStep }: SignUp3Props) {
   } = useContext(RegisterFormContext);
 
   return (
-    <>
+    <ScrollView className="bg-yellowOrange">
       <View className="flex-1 gap-2 p-8 h-full justify-around">
         <Button
           className="bg-transparent self-start p-0"
@@ -100,14 +99,14 @@ export default function SignUp3({ isInvalid, handleStep }: SignUp3Props) {
         )}
 
         <Button
-          className="bg-primary rounded-lg"
+          className="bg-orange rounded-lg mt-6"
           onPress={() => {
             handleStep();
           }}
         >
-          <Text className="text-white">Continue</Text>
+          <Text className="text-white text-2xl font-bold">Continue</Text>
         </Button>
       </View>
-    </>
+    </ScrollView>
   );
 }

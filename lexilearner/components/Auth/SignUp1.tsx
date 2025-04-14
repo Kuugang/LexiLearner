@@ -5,16 +5,15 @@ import { RegisterFormContext } from "../../app/(auth)/_layout";
 import { useAuthContext } from "@/context/AuthProvider";
 
 //Components
-import { TouchableOpacity, View } from "react-native";
+import { TouchableOpacity, View, ScrollView } from "react-native";
 import { Eye, EyeOff, Mail, KeyRound, UserRound } from "lucide-react-native";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Text } from "~/components/ui/text";
-import { Separator } from "~/components/ui/separator";
 
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faGoogle, faFacebook } from "@fortawesome/free-brands-svg-icons";
-import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
+import BackHeader from "../BackHeader";
 
 interface SignUp1Props {
   formErrors: Record<string, any>;
@@ -28,14 +27,9 @@ export default function SignUp1({ formErrors, handleStep }: SignUp1Props) {
   const [showPassword, setShowPassword] = React.useState(false);
 
   return (
-    <>
+    <ScrollView className="bg-yellowOrange">
       <View className="flex-1 gap-12 p-8 h-full justify-around">
-        <Button
-          className="bg-transparent self-start p-0"
-          onPress={() => router.back()}
-        >
-          <FontAwesomeIcon size={30} icon={faArrowLeft} />
-        </Button>
+        <BackHeader />
 
         <View className="flex flex-col gap-4">
           <Text className="font-bold text-2xl">Let's Get Started!</Text>
@@ -53,7 +47,7 @@ export default function SignUp1({ formErrors, handleStep }: SignUp1Props) {
                 }}
               />
               <Input
-                className="pl-10 py-2"
+                className="pl-10 py-2 rounded-xl shadow-xl"
                 placeholder="Username"
                 value={registerForm.username}
                 onChangeText={(value: string) =>
@@ -82,7 +76,7 @@ export default function SignUp1({ formErrors, handleStep }: SignUp1Props) {
                 }}
               />
               <Input
-                className="pl-10 py-2"
+                className="pl-10 py-2 rounded-xl shadow-xl"
                 placeholder="Email"
                 value={registerForm.email}
                 onChangeText={(value: string) =>
@@ -112,7 +106,7 @@ export default function SignUp1({ formErrors, handleStep }: SignUp1Props) {
                 />
 
                 <Input
-                  className="pl-10 py-2"
+                  className="pl-10 py-2 rounded-xl shadow-xl"
                   placeholder="Password"
                   value={registerForm.password}
                   secureTextEntry={showPassword ? false : true}
@@ -155,7 +149,7 @@ export default function SignUp1({ formErrors, handleStep }: SignUp1Props) {
                 />
 
                 <Input
-                  className="pl-10 py-2"
+                  className="pl-10 py-2 rounded-xl shadow-xl"
                   placeholder="Password"
                   value={registerForm.confirmPassword}
                   secureTextEntry={showPassword ? false : true}
@@ -188,24 +182,26 @@ export default function SignUp1({ formErrors, handleStep }: SignUp1Props) {
 
         <View>
           <Button
-            className="bg-primary"
+            className="bg-orange rounded-lg"
             onPress={() => {
               handleStep();
             }}
           >
-            <Text className="text-primary-foreground">Sign Up</Text>
+            <Text className="text-white text-2xl font-bold">Sign Up</Text>
           </Button>
 
           <View className="flex gap-3">
             <View className="w-full flex flex-row items-center gap-2 mt-4">
-              <View className="flex-1 h-px bg-gray-300" />
-              <Text className="text-primary-0 mx-2">OR CONTINUE WITH</Text>
-              <View className="flex-1 h-px bg-gray-300" />
+              <View className="flex-1 h-px bg-black" />
+              <Text className="text-primary-0 mx-2 text-sm">
+                OR CONTINUE WITH
+              </Text>
+              <View className="flex-1 h-px bg-black" />
             </View>
 
             <View className="flex flex-row gap-3 w-full justify-center items-center">
               <Button
-                className="shadow-md rounded-lg"
+                className="bg-white shadow-md rounded-lg"
                 onPress={() => {
                   providerAuth(0);
                 }}
@@ -214,7 +210,7 @@ export default function SignUp1({ formErrors, handleStep }: SignUp1Props) {
               </Button>
 
               <Button
-                className="shadow-md rounded-lg"
+                className="bg-white shadow-md rounded-lg"
                 onPress={() => {
                   providerAuth(1);
                 }}
@@ -225,6 +221,6 @@ export default function SignUp1({ formErrors, handleStep }: SignUp1Props) {
           </View>
         </View>
       </View>
-    </>
+    </ScrollView>
   );
 }

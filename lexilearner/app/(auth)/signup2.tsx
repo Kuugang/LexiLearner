@@ -55,9 +55,5 @@ export default function Step2() {
     }
   };
 
-  return (
-    <ScrollView className="bg-background">
-      <SignUp2 formErrors={formErrors} handleStep={handleStep} />
-    </ScrollView>
-  );
+  return <SignUp2 formErrors={formErrors} handleStep={handleStep} />;
 }

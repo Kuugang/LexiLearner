@@ -22,8 +22,7 @@ import ProfileStat from "@/components/ProfileStat";
 import BackHeader from "@/components/BackHeader";
 
 export default function Profile() {
-  const { user, updateProfile } = useUserContext();
-  const { logout } = useAuthContext();
+  const { user } = useUserContext();
 
   return (
     <ScrollView className="bg-background">
@@ -31,9 +30,9 @@ export default function Profile() {
         style={{
           height: 150,
           width: "100%",
-          borderBottomLeftRadius: "30px",
+          borderBottomLeftRadius: "300px",
         }}
-        className="bg-orange-500 p-4 shadow-lg"
+        className="bg-lightGrayOrange p-4 shadow-lg w-full"
       >
         <View className="flex flex-row justify-between">
           <BackHeader />
@@ -72,65 +71,76 @@ export default function Profile() {
             </View>
 
             <View>
-              <View className="flex flex-row gap-2 items-center">
-                <Zap color="yellow" />
-                <Text className="text-lg font-bold">{user?.level}</Text>
+              {user?.role === "Pupil" ? (
+                <>
+                  <View className="flex flex-row gap-2 items-center">
+                    <Zap color="yellow" />
+                    <Text className="text-lg font-bold">{user?.level}</Text>
+                  </View>
+                  <Text className="text-sm text-gray-800">
+                    Reading Compr. Level
+                  </Text>
+                </>
+              ) : (
+                <>
+                  <Text className="text-xl font-bold">Teacher</Text>
+                </>
+              )}
+            </View>
+          </View>
+          {user?.role === "Pupil" && (
+            <>
+              <Text className="text-xl font-bold">Overview</Text>
+
+              <View className="grid grid-cols-2 gap-2">
+                <ProfileStat
+                  level={"3"}
+                  description="Longest Streak"
+                  icon={<Flame color="red" />}
+                />
+                <ProfileStat
+                  level={"10"}
+                  description="Books Read"
+                  icon={<Book color="blue" />}
+                />
+                <ProfileStat
+                  level={"4.5 Hours"}
+                  description="Avg. Screentime"
+                  icon={<Smartphone color="black" />}
+                />
+                <ProfileStat
+                  level={"2"}
+                  description="Achievements"
+                  icon={<Star color="yellow" />}
+                />
               </View>
-              <Text className="text-sm text-gray-800">
-                Reading Compr. Level
-              </Text>
-            </View>
-          </View>
 
-          <Text className="text-xl font-bold">Overview</Text>
+              <View className="flex-row justify-between">
+                <Text className="text-xl font-bold">Achievements</Text>
+                <Text
+                  className="underline"
+                  onPress={async () => {
+                    router.push("/profile/achievements");
+                  }}
+                >
+                  View All
+                </Text>
+              </View>
 
-          <View className="grid grid-cols-2 gap-2">
-            <ProfileStat
-              level={"3"}
-              description="Longest Streak"
-              icon={<Flame color="red" />}
-            />
-            <ProfileStat
-              level={"10"}
-              description="Books Read"
-              icon={<Book color="blue" />}
-            />
-            <ProfileStat
-              level={"4.5 Hours"}
-              description="Avg. Screentime"
-              icon={<Smartphone color="black" />}
-            />
-            <ProfileStat
-              level={"2"}
-              description="Achievements"
-              icon={<Star color="yellow" />}
-            />
-          </View>
+              <View className="flex-row flex gap-4">
+                <View className="p-4 rounded-md bg-yellow-500 shadow-md">
+                  <Award color="black" style={{ width: 30, height: 30 }} />
+                </View>
 
-          <View className="flex-row justify-between">
-            <Text className="text-xl font-bold">Achievements</Text>
-            <Text
-              className="underline"
-              onPress={async () => {
-                router.push("/profile/achievements");
-              }}
-            >
-              View All
-            </Text>
-          </View>
-
-          <View className="flex-row flex gap-4">
-            <View className="p-4 rounded-md bg-yellow-500 shadow-md">
-              <Award color="black" style={{ width: 30, height: 30 }} />
-            </View>
-
-            <View className="p-4 rounded-md bg-yellow-500 shadow-md">
-              <Medal color="black" style={{ width: 30, height: 30 }} />
-            </View>
-            <View className="p-4 rounded-md bg-yellow-500 shadow-md">
-              <Trophy color="black" style={{ width: 30, height: 30 }} />
-            </View>
-          </View>
+                <View className="p-4 rounded-md bg-yellow-500 shadow-md">
+                  <Medal color="black" style={{ width: 30, height: 30 }} />
+                </View>
+                <View className="p-4 rounded-md bg-yellow-500 shadow-md">
+                  <Trophy color="black" style={{ width: 30, height: 30 }} />
+                </View>
+              </View>
+            </>
+          )}
         </View>
       </View>
     </ScrollView>
