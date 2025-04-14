@@ -112,7 +112,7 @@ export default function Profile() {
             <Text
               className="underline"
               onPress={async () => {
-                router.push("profile/achievements");
+                router.push("/profile/achievements");
               }}
             >
               View All
