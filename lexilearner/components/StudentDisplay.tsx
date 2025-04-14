@@ -1,26 +1,24 @@
 import { Text } from "@/components/ui/text";
-import { StyleSheet, ScrollView, View } from "react-native";
-import { Image } from "@/components/ui/image";
+import { StyleSheet, ScrollView, View, Image } from "react-native";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import { TrashIcon } from "@/components/ui/icon";
 import { faBarChart, faTrashCan } from "@fortawesome/free-solid-svg-icons";
+
+// hardcoded. images weirdo mag sizing
 
 // regular listing
 export function StudentDisplay() {
   return (
-    <View className="border-2 rounded-xl border-gray-300 my-1">
+    <View className="border-2 rounded-xl border-gray-300 my-1 shadow-main">
       <View className="p-3">
         <View className="flex-row justify-between items-center">
           <View className="flex-row items-center">
-            <Image
+            {/* <Image
               source={require("@/assets/images/leeseopp.png")}
-              className="rounded-xl w-14 h-14" // hardcoded sizing DD;
-              size="lg"
+              resizeMode="contain"
+              className="rounded-xl"
               alt="User profile pic"
-            />
-            <Text bold className="px-5">
-              Leeseo
-            </Text>
+            /> */}
+            <Text className="px-5">Leeseo</Text>
           </View>
           <View className="flex-row">
             <FontAwesomeIcon icon={faBarChart} size={18} />
@@ -35,24 +33,20 @@ export function StudentDisplay() {
 // leaderboard listing
 export function StudentLeaderboardDisplay() {
   return (
-    <View className="border-2 rounded-xl border-gray-300 my-1">
+    <View className="border-2 rounded-xl border-gray-300 my-1 shadow-main">
       <View className="p-3">
         <View className="flex-row justify-between items-center">
           <View className="flex-row items-center">
-            <Text bold className="mr-3">
-              1st
-            </Text>
-            <Image
+            <Text className="mr-3 font-bold">1st</Text>
+            {/* <Image
               source={require("@/assets/images/leeseopp.png")}
-              className="rounded-xl w-14 h-14" // hardcoded sizing DD;
-              size="lg"
-              alt="User profile pic"
-            />
-            <Text bold className="px-5">
-              Leeseo
-            </Text>
+              resizeMode="cover"
+              className="rounded-xl w-5 h-5"
+              alt="leaderboard profile pic"
+            /> */}
+            <Text className="px-5">Leeseo</Text>
           </View>
-          <Text bold>1200 Lvl</Text>
+          <Text className="font-bold">1200 Lvl</Text>
         </View>
       </View>
     </View>

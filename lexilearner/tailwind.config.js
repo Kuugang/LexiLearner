@@ -42,6 +42,7 @@ module.exports = {
           foreground: "hsl(var(--card-foreground))",
         },
       },
+      boxShadow: { main: "0px 3px 1px 0px rgba(48, 27, 68, 0.25)" },
       borderWidth: {
         hairline: hairlineWidth(),
       },

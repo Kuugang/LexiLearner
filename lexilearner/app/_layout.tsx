@@ -36,7 +36,8 @@ function ProtectedRouteGuard({ children }: { children: ReactNode }) {
       router.replace("/");
     } else if (user && (inAuthGroup || segments.length === 0)) {
       // router.replace("/(tabs)/home");
-      router.replace("/(tabs)/explore");
+      // router.replace("/(tabs)/explore");
+      router.replace("/minigames/WordHunt");
     }
   }, [user, segments]);
 

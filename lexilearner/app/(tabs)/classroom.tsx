@@ -1,8 +1,7 @@
 import { Text } from "@/components/ui/text";
 import { StyleSheet, ScrollView, View } from "react-native";
-import { NewClassroomBtn } from "../classroom/MainClassroomBtns";
-import ClassroomCard from "../classroom/ClassroomCard";
-import ClassroomScreen from "../classroom/[id]/ClassroomScreen";
+import { NewClassroomBtn } from "../../components/MainClassroomBtns";
+import ClassroomCard from "../../components/ClassroomCard";
 
 // temp aah aah ahashahsah hardcoded hasha
 
@@ -10,7 +9,14 @@ export default function Classroom() {
   return (
     <ScrollView>
       <View>
-        <View className="bg-background-yellowOrange w-full rounded-bl-4xl h-32 drop-shadow-lg">
+        <View
+          style={{
+            height: 150,
+            width: "100%",
+            borderBottomLeftRadius: "30px",
+          }}
+          className="bg-yellow-500 p-4"
+        >
           <Text>Your Classrooms</Text>
         </View>
 
