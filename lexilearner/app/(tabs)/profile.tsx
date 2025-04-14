@@ -42,7 +42,7 @@ export default function Profile() {
           <Button
             className="self-end bg-transparent"
             onPress={async () => {
-              router.push("profile/profileSettings");
+              router.push("/profile/profileSettings");
             }}
           >
             <Settings />
@@ -126,7 +126,7 @@ export default function Profile() {
             <Text
               underline
               onPress={async () => {
-                router.push("profile/achievements");
+                router.push("/profile/achievements");
               }}
             >
               View All
