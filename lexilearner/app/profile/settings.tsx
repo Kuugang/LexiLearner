@@ -12,7 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import BackHeader from "@/components/BackHeader";
 
-export default function profileSettings() {
+export default function Settings() {
   const { user, updateProfile } = useUserContext();
 
   const [isProfileChanged, setIsProfileChanged] = useState(false);
@@ -78,18 +78,19 @@ export default function profileSettings() {
   };
 
   return (
-    <ScrollView className="flex-1 gap-36 p-8 h-full justify-around">
+    <ScrollView className="bg-background p-8">
       <BackHeader />
 
       <View space="xl" className="justify-around">
-        <Image
-          source={require("@/assets/images/leeseopp.png")}
-          className="rounded-full border-[5px] border-white w-32 h-32"
-          size="lg"
-          alt="User profile pic"
-        />
+        <View className="flex items-center justify-center gap-4">
+          <Image
+            source={require("@/assets/images/leeseopp.png")}
+            className="rounded-full border-4 w-32 h-32"
+            alt="User profile pic"
+          />
 
-        <Text className="center">Profile</Text>
+          <Text className="text-2xl font-bold">Profile</Text>
+        </View>
 
         <View className="py-1">
           <Text className="font-bold">First Name</Text>
@@ -100,6 +101,9 @@ export default function profileSettings() {
               setProfile({ ...profile, firstName: value })
             }
           ></Input>
+          {formErrors.firstName && (
+            <Text className="text-destructive">{formErrors.firstName}</Text>
+          )}
         </View>
 
         <View className="py-1">

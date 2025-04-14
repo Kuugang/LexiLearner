@@ -5,7 +5,7 @@ import { useAuthContext } from "@/context/AuthProvider";
 import { validateField } from "@/utils/utils";
 
 //Components
-import { View } from "react-native";
+import { TouchableOpacity, View } from "react-native";
 import { Eye, EyeOff, Mail, KeyRound } from "lucide-react-native";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
@@ -73,13 +73,22 @@ export default function Login() {
       </Button>
 
       <View className="flex gap-3 justify-around">
-        <Text className="text-2xl">Welcome Back!</Text>
+        <Text className="font-black text-2xl">Welcome Back!</Text>
 
         <View className="flex gap-2">
           <View className="relative">
-            <Mail className="absolute left-2 top-2" />
+            <Mail
+              size={20}
+              color="#888"
+              style={{
+                position: "absolute",
+                left: 10,
+                top: 12,
+                zIndex: 1,
+              }}
+            />
             <Input
-              className="p-10"
+              className="pl-10 py-2"
               placeholder="Email"
               value={form.email}
               onChangeText={(value: string) =>
@@ -89,16 +98,27 @@ export default function Login() {
               aria-errormessage="inputError"
             />
           </View>
-          <Text className="text-destructive">{formErrors.email}</Text>
+          {formErrors.email && (
+            <Text className="text-destructive">{formErrors.email}</Text>
+          )}
         </View>
 
         <View className="flex gap-2">
           <View>
             <View className="relative">
-              <KeyRound className="absolute left-2 top-2" />
+              <KeyRound
+                size={20}
+                color="#888"
+                style={{
+                  position: "absolute",
+                  left: 10,
+                  top: 12,
+                  zIndex: 1,
+                }}
+              />
 
               <Input
-                className="p-10"
+                className="pl-10 py-2"
                 placeholder="Password"
                 value={form.password}
                 secureTextEntry={showPassword ? false : true}
@@ -110,16 +130,20 @@ export default function Login() {
               />
             </View>
 
-            <Button
-              variant="ghost"
-              size="icon"
+            <TouchableOpacity
               onPress={() => setShowPassword((prev) => !prev)}
               className="absolute right-2 top-1/2 -translate-y-1/2 h-6 w-6 p-0 text-muted-foreground"
             >
-              {showPassword ? <EyeOff /> : <Eye />}
-            </Button>
+              {showPassword ? (
+                <EyeOff size={20} color="#888" />
+              ) : (
+                <Eye size={20} color="#888" />
+              )}
+            </TouchableOpacity>
           </View>
-          <Text className="text-destructive">{formErrors.password}</Text>
+          {formErrors.password && (
+            <Text className="text-destructive">{formErrors.password}</Text>
+          )}
         </View>
       </View>
 

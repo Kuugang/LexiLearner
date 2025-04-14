@@ -5,7 +5,7 @@ import { RegisterFormContext } from "../../app/(auth)/_layout";
 import { useAuthContext } from "@/context/AuthProvider";
 
 //Components
-import { View } from "react-native";
+import { TouchableOpacity, View } from "react-native";
 import { Eye, EyeOff, Mail, KeyRound, UserRound } from "lucide-react-native";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
@@ -29,7 +29,7 @@ export default function SignUp1({ formErrors, handleStep }: SignUp1Props) {
 
   return (
     <>
-      <View className="flex-1 gap-36 p-8 h-full justify-around">
+      <View className="flex-1 gap-12 p-8 h-full justify-around">
         <Button
           className="bg-transparent self-start p-0"
           onPress={() => router.back()}
@@ -38,14 +38,22 @@ export default function SignUp1({ formErrors, handleStep }: SignUp1Props) {
         </Button>
 
         <View>
-          <Text className="text-primary-0 text-2xl">Let's Get Started!</Text>
+          <Text className="font-bold text-2xl">Let's Get Started!</Text>
 
-          {/* Username Field */}
           <View className="flex gap-2">
             <View className="relative">
-              <UserRound className="absolute left-2 top-2" />
+              <UserRound
+                size={20}
+                color="#888"
+                style={{
+                  position: "absolute",
+                  left: 10,
+                  top: 12,
+                  zIndex: 1,
+                }}
+              />
               <Input
-                className="p-10"
+                className="pl-10 py-2"
                 placeholder="Username"
                 value={registerForm.username}
                 onChangeText={(value: string) =>
@@ -55,15 +63,26 @@ export default function SignUp1({ formErrors, handleStep }: SignUp1Props) {
                 aria-errormessage="inputError"
               />
             </View>
-            <Text className="text-destructive">{formErrors.username}</Text>
+            {formErrors.username && (
+              <Text className="text-destructive">{formErrors.username}</Text>
+            )}
           </View>
 
           {/* Email Field */}
           <View className="flex gap-2">
             <View className="relative">
-              <Mail className="absolute left-2 top-2" />
+              <Mail
+                size={20}
+                color="#888"
+                style={{
+                  position: "absolute",
+                  left: 10,
+                  top: 12,
+                  zIndex: 1,
+                }}
+              />
               <Input
-                className="p-10"
+                className="pl-10 py-2"
                 placeholder="Email"
                 value={registerForm.email}
                 onChangeText={(value: string) =>
@@ -73,16 +92,27 @@ export default function SignUp1({ formErrors, handleStep }: SignUp1Props) {
                 aria-errormessage="inputError"
               />
             </View>
-            <Text className="text-destructive">{formErrors.email}</Text>
+            {formErrors.email && (
+              <Text className="text-destructive">{formErrors.email}</Text>
+            )}
           </View>
 
           <View className="flex gap-2">
             <View>
               <View className="relative">
-                <KeyRound className="absolute left-2 top-2" />
+                <KeyRound
+                  size={20}
+                  color="#888"
+                  style={{
+                    position: "absolute",
+                    left: 10,
+                    top: 12,
+                    zIndex: 1,
+                  }}
+                />
 
                 <Input
-                  className="p-10"
+                  className="pl-10 py-2"
                   placeholder="Password"
                   value={registerForm.password}
                   secureTextEntry={showPassword ? false : true}
@@ -94,25 +124,38 @@ export default function SignUp1({ formErrors, handleStep }: SignUp1Props) {
                 />
               </View>
 
-              <Button
-                variant="ghost"
-                size="icon"
+              <TouchableOpacity
                 onPress={() => setShowPassword((prev) => !prev)}
                 className="absolute right-2 top-1/2 -translate-y-1/2 h-6 w-6 p-0 text-muted-foreground"
               >
-                {showPassword ? <EyeOff /> : <Eye />}
-              </Button>
+                {showPassword ? (
+                  <EyeOff size={20} color="#888" />
+                ) : (
+                  <Eye size={20} color="#888" />
+                )}
+              </TouchableOpacity>
             </View>
-            <Text className="text-destructive">{formErrors.password}</Text>
+            {formErrors.password && (
+              <Text className="text-destructive">{formErrors.password}</Text>
+            )}
           </View>
 
           <View className="flex gap-2">
             <View>
               <View className="relative">
-                <KeyRound className="absolute left-2 top-2" />
+                <KeyRound
+                  size={20}
+                  color="#888"
+                  style={{
+                    position: "absolute",
+                    left: 10,
+                    top: 12,
+                    zIndex: 1,
+                  }}
+                />
 
                 <Input
-                  className="p-10"
+                  className="pl-10 py-2"
                   placeholder="Password"
                   value={registerForm.confirmPassword}
                   secureTextEntry={showPassword ? false : true}
@@ -124,18 +167,22 @@ export default function SignUp1({ formErrors, handleStep }: SignUp1Props) {
                 />
               </View>
 
-              <Button
-                variant="ghost"
-                size="icon"
+              <TouchableOpacity
                 onPress={() => setShowPassword((prev) => !prev)}
                 className="absolute right-2 top-1/2 -translate-y-1/2 h-6 w-6 p-0 text-muted-foreground"
               >
-                {showPassword ? <EyeOff /> : <Eye />}
-              </Button>
+                {showPassword ? (
+                  <EyeOff size={20} color="#888" />
+                ) : (
+                  <Eye size={20} color="#888" />
+                )}
+              </TouchableOpacity>
             </View>
-            <Text className="text-destructive">
-              {formErrors.confirmPassword}
-            </Text>
+            {formErrors.confirmPassword && (
+              <Text className="text-destructive">
+                {formErrors.confirmPassword}
+              </Text>
+            )}
           </View>
         </View>
 
@@ -150,15 +197,15 @@ export default function SignUp1({ formErrors, handleStep }: SignUp1Props) {
           </Button>
 
           <View className="flex gap-3">
-            <View className="w-full justify-center items-center mt-4">
-              <Separator />
-              <Text className="text-primary-0">OR CONTINUE WITH</Text>
-              <Separator />
+            <View className="w-full flex flex-row items-center gap-2 mt-4">
+              <View className="flex-1 h-px bg-gray-300" />
+              <Text className="text-primary-0 mx-2">OR CONTINUE WITH</Text>
+              <View className="flex-1 h-px bg-gray-300" />
             </View>
 
             <View className="flex flex-row gap-3 w-full justify-center items-center">
               <Button
-                className="bg-backgruond shadow-md rounded-lg"
+                className="shadow-md rounded-lg"
                 onPress={() => {
                   providerAuth(0);
                 }}
@@ -167,7 +214,7 @@ export default function SignUp1({ formErrors, handleStep }: SignUp1Props) {
               </Button>
 
               <Button
-                className="bg-card shadow-md rounded-lg"
+                className="shadow-md rounded-lg"
                 onPress={() => {
                   providerAuth(1);
                 }}

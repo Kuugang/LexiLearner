@@ -12,6 +12,7 @@ import {
   faBookOpen,
   faPlus,
 } from "@fortawesome/free-solid-svg-icons";
+import BackHeader from "@/components/BackHeader";
 
 export default function ReadIndex() {
   const params = useLocalSearchParams<{ id: string }>();
@@ -59,17 +60,12 @@ export default function ReadIndex() {
 
   return (
     <>
-      <View className="z-10 absolute top-0 w-full h-64 bg-background-lightGrayOrange"></View>
+      <View className="z-10 absolute top-0 w-full h-64 bg-red-500"></View>
       <ScrollView
-        className="flex flex-col z-50 p-8 gap-6"
+        className="flex flex-col z-50 p-8 gap-6 bg-background"
         contentContainerStyle={{ alignItems: "center", gap: 24 }}
       >
-        <Button
-          className="bg-transparent self-start p-0"
-          onPress={() => router.back()}
-        >
-          <FontAwesomeIcon size={30} icon={faArrowLeft} />
-        </Button>
+        <BackHeader />
 
         <Image
           source={{
@@ -83,9 +79,11 @@ export default function ReadIndex() {
         <Text className="text-2xl font-bold">{book.Title}</Text>
         {book.Author && <Text className="text-lg mb-2">{book.Author}</Text>}
         <View className="flex flex-row w-full justify-center gap-6">
-          <View className="flex flex-col justify-center items-center">
+          <View className="flex flex-col justify-center items-center gap-2">
             <Button
-              className="w-16 h-16 rounded-full bg-background-lightGrayOrange"
+              style={{ borderRadius: "100%", width: 65, height: 65 }}
+              className="bg-primary"
+              variant={"default"}
               onPress={() => {
                 router.push(`/content/${book.Id}/read`);
               }}
@@ -95,8 +93,12 @@ export default function ReadIndex() {
             <Text className="font-bold">Read</Text>
           </View>
 
-          <View className="flex flex-col justify-center items-center">
-            <Button className="w-16 h-16 rounded-full bg-background-lightGrayOrange">
+          <View className="flex flex-col justify-center items-center gap-2">
+            <Button
+              style={{ borderRadius: "100%", width: 65, height: 65 }}
+              className="bg-primary"
+              variant={"default"}
+            >
               <FontAwesomeIcon size={30} icon={faPlus} />
             </Button>
             <Text className="font-bold">Add to Library</Text>

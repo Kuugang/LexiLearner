@@ -1,13 +1,12 @@
 import "~/global.css";
-import { ReactNode } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { SplashScreen, Stack, router, useSegments } from "expo-router";
-import GlobalProvider, { useGlobalContext } from "../context/GlobalProvider";
+import { SplashScreen, Stack } from "expo-router";
+import GlobalProvider from "../context/GlobalProvider";
 import { AuthProvider } from "@/context/AuthProvider";
-import { UserProvider, useUserContext } from "@/context/UserProvider";
+import { UserProvider } from "@/context/UserProvider";
 import { ReadingContentProvider } from "@/context/ReadingContentProvider";
 
-import React, { useEffect } from "react";
+import React from "react";
 import { PortalHost } from "@rn-primitives/portal";
 
 import {
@@ -20,32 +19,11 @@ import { StatusBar } from "expo-status-bar";
 import { Platform } from "react-native";
 import { NAV_THEME } from "~/lib/constants";
 import { useColorScheme } from "~/lib/useColorScheme";
+import { SafeAreaView } from "react-native-safe-area-context";
 
-SplashScreen.hideAsync();
+SplashScreen.preventAutoHideAsync();
 
 const queryClient = new QueryClient();
-
-function ProtectedRouteGuard({ children }: { children: ReactNode }) {
-  const { user } = useUserContext();
-
-  const segments = useSegments();
-  useEffect(() => {
-    const inAuthGroup = segments[0] === "(auth)";
-    if (!user && !inAuthGroup) {
-      // Only redirect to index if not already there
-      router.replace("/");
-    } else if (user && (inAuthGroup || segments.length === 0)) {
-      // router.replace("/(tabs)/home");
-      router.replace("/(tabs)/explore");
-    }
-  }, [user, segments]);
-
-  // useEffect(() => {
-  //   router.push("/profile");
-  // }, []);
-
-  return <>{children}</>;
-}
 
 const LIGHT_THEME: Theme = {
   ...DefaultTheme,
@@ -89,9 +67,10 @@ export default function RootLayout() {
         <QueryClientProvider client={queryClient}>
           <UserProvider>
             <AuthProvider>
-              <ProtectedRouteGuard>
-                <ReadingContentProvider>
-                  <StatusBar style={isDarkColorScheme ? "light" : "dark"} />
+              <ReadingContentProvider>
+                <SafeAreaView className="flex-1 bg-background">
+                  {/* <StatusBar style={isDarkColorScheme ? "light" : "dark"} /> */}
+                  <StatusBar style={"light"} />
                   <Stack screenOptions={{ headerShown: false }}>
                     <Stack.Screen name="index" />
                     <Stack.Screen name="(tabs)" />
@@ -100,8 +79,8 @@ export default function RootLayout() {
                     <Stack.Screen name="content" />
                   </Stack>
                   <PortalHost />
-                </ReadingContentProvider>
-              </ProtectedRouteGuard>
+                </SafeAreaView>
+              </ReadingContentProvider>
             </AuthProvider>
           </UserProvider>
         </QueryClientProvider>

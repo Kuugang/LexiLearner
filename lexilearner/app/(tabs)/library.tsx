@@ -1,8 +1,17 @@
+import BackHeader from "@/components/BackHeader";
 import React from "react";
-import { Text } from "~/components/ui/text";
+import { ScrollView, View } from "react-native";
 
 function library() {
-  return <Text>Library</Text>;
+  return (
+    <ScrollView className="bg-background">
+      <View>
+        <View className="flex flex-row justify-between">
+          <BackHeader />
+        </View>
+      </View>
+    </ScrollView>
+  );
 }
 
 export default library;

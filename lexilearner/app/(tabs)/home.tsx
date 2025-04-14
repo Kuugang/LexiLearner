@@ -3,16 +3,12 @@ import { useStories } from "@/services/ReadingMaterial";
 import ReadingContent from "@/components/ReadingContent";
 
 //Components
-import { ScrollView, View } from "react-native";
+import { ScrollView, TouchableOpacity, View } from "react-native";
 import { Image } from "react-native";
 import { Text } from "~/components/ui/text";
-import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
-import { Label } from "~/components/ui/label";
 
-import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import { Search } from "lucide-react-native";
-import { faUser } from "@fortawesome/free-solid-svg-icons";
+import { CircleUser, Search } from "lucide-react-native";
 
 interface HomeScreenProps {}
 
@@ -20,35 +16,41 @@ export default function HomeScreen({}: HomeScreenProps): JSX.Element {
   const { data: stories, isLoading: isStoriesLoading } = useStories();
 
   return (
-    <ScrollView>
-      <View className="flex flex-col h-20 justify-center items-end">
-        <View className="flex flex-row gap-2 justify-center">
-          <Button
-            className="bg-transparent self-start p-0"
-            onPress={() => router.push("/profile")}
-          >
-            <FontAwesomeIcon
-              style={{ color: "#FFD43B" }}
-              size={30}
-              icon={faUser}
-            />
-          </Button>
+    <ScrollView className="bg-background">
+      <View className="flex flex-row gap-2 items-center w-full p-4">
+        <TouchableOpacity onPress={() => router.push("/profile")}>
+          <CircleUser color="#FFD43B" size={40} />
+        </TouchableOpacity>
 
-          <View className="relative">
-            <Search className="absolute left-2 top-2" />
-            <Input
-              className="p-10 rounded-lg"
-              onFocus={() => router.push("/explore")}
-              placeholder="Search for stories..."
-              aria-labelledby={`label-for-searchStories`}
-              aria-errormessage="inputError"
-            />
-          </View>
+        <View className="relative flex-1">
+          <Search
+            size={20}
+            color="#888"
+            style={{
+              position: "absolute",
+              left: 10,
+              top: 12,
+              zIndex: 1,
+            }}
+          />
+          <Input
+            editable={false} // This disables the input
+            className="pl-10 py-3 rounded-lg w-full"
+            onFocus={() => router.push("/explore")}
+            placeholder="Search for stories..."
+            aria-labelledby="label-for-searchStories"
+            aria-errormessage="inputError"
+          />
         </View>
       </View>
 
-      <View className="flex flex-row px-6 justify-center w-full items-center bg-orange-500">
-        <Text className="text-3xl font-bold">Ready for a Journey? </Text>
+      <View className="flex flex-row items-center px-4 py-4 bg-accent">
+        <View className="flex-1 pr-2">
+          <Text className="text-4xl font-bold text-wrap">
+            Ready for a Journey?
+          </Text>
+        </View>
+
         <Image
           source={require("@/assets/images/woman-reading-2.png")}
           style={{ width: 200, height: 200 }}
@@ -63,13 +65,24 @@ export default function HomeScreen({}: HomeScreenProps): JSX.Element {
         <ReadingContent
           Type={"Recommended"}
           Id={"123"}
-          Content={`
+          Content={`This edition is part of the Beginner Books collection, which aims to encourage early readers with its simple language and visual storytelling. It’s a perfect book for both independent reading and family read-aloud sessions!
     "Cat in the Hat" is a delightful and whimsical story by Dr. Seuss, packed with fun and chaos. The plot revolves around a young brother and sister who are stuck indoors on a rainy day. Their boredom is quickly turned upside down when the mischievous Cat in the Hat shows up, bringing along his troublesome friends, Thing 1 and Thing 2. Together, they cause mayhem and mess, but they also help turn the day into an unforgettable adventure. 
 
     The Cat’s antics and the antics of his companions are a source of laughter and imagination, all while teaching important lessons about responsibility and the consequences of causing trouble. This story is known for its simple rhymes and repetitive words, making it perfect for young readers to follow along with and build their reading skills. Whether it’s parents, teachers, or kids, "Cat in the Hat" has earned a lasting spot in the hearts of many for its playful nature and engaging characters.
 
     Dr. Seuss’s trademark use of vibrant illustrations and clever wordplay makes the story even more fun. The characters like Thing 1 and Thing 2, and the talking fish, add to the charm and humor. The book's smaller format and easy-to-read design make it great for kids aged 3-7 to practice reading on their own. 
 
+    This edition is part of the Beginner Books collection, which aims to encourage early readers with its simple language and visual storytelling. It’s a perfect book for both independent reading and family read-aloud sessions!
+    This edition is part of the Beginner Books collection, which aims to encourage early readers with its simple language and visual storytelling. It’s a perfect book for both independent reading and family read-aloud sessions!
+    This edition is part of the Beginner Books collection, which aims to encourage early readers with its simple language and visual storytelling. It’s a perfect book for both independent reading and family read-aloud sessions!
+    This edition is part of the Beginner Books collection, which aims to encourage early readers with its simple language and visual storytelling. It’s a perfect book for both independent reading and family read-aloud sessions!
+    This edition is part of the Beginner Books collection, which aims to encourage early readers with its simple language and visual storytelling. It’s a perfect book for both independent reading and family read-aloud sessions!
+    This edition is part of the Beginner Books collection, which aims to encourage early readers with its simple language and visual storytelling. It’s a perfect book for both independent reading and family read-aloud sessions!
+    This edition is part of the Beginner Books collection, which aims to encourage early readers with its simple language and visual storytelling. It’s a perfect book for both independent reading and family read-aloud sessions!
+    This edition is part of the Beginner Books collection, which aims to encourage early readers with its simple language and visual storytelling. It’s a perfect book for both independent reading and family read-aloud sessions!
+    This edition is part of the Beginner Books collection, which aims to encourage early readers with its simple language and visual storytelling. It’s a perfect book for both independent reading and family read-aloud sessions!
+    This edition is part of the Beginner Books collection, which aims to encourage early readers with its simple language and visual storytelling. It’s a perfect book for both independent reading and family read-aloud sessions!
+    This edition is part of the Beginner Books collection, which aims to encourage early readers with its simple language and visual storytelling. It’s a perfect book for both independent reading and family read-aloud sessions!
     This edition is part of the Beginner Books collection, which aims to encourage early readers with its simple language and visual storytelling. It’s a perfect book for both independent reading and family read-aloud sessions!
   `}
           Title={"Cat In The Hat"}

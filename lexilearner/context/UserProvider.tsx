@@ -31,16 +31,6 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({
 }) => {
   const [user, setUser] = useState<User | null>(null);
 
-  useEffect(() => {
-    // Load user data on app start
-    const loadUser = async () => {
-      const storedUser = await AsyncStorage.getItem("user");
-
-      if (storedUser) setUser(JSON.parse(storedUser));
-    };
-    loadUser();
-  }, []);
-
   const updateProfile = async (
     form: Record<string, any>,
     update: boolean = true,

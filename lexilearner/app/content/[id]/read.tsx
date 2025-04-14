@@ -15,8 +15,7 @@ import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faVolumeUp } from "@fortawesome/free-solid-svg-icons";
 import { useBooks } from "@/context/ReadingContentProvider";
-import { Button, ButtonText } from "@/components/ui/button";
-import { Input, InputField } from "@/components/ui/input";
+import { Input } from "~/components/ui/input";
 
 export default function Read() {
   const { width } = useWindowDimensions();
@@ -118,29 +117,23 @@ export default function Read() {
   };
 
   return (
-    <View className="p-8">
-      <FlatList
-        data={words}
-        keyExtractor={(_, index) => index.toString()}
-        numColumns={10} // Helps balance rendering
-        renderItem={({ item }) => (
-          <Pressable onLongPress={() => handleWordPress(item)}>
-            <Text className="text-blue-600">{item} </Text>
+    <ScrollView className="p-6 bg-background h-screen">
+      <View style={{ flexWrap: "wrap", flexDirection: "row" }}>
+        {words?.map((word, idx) => (
+          <Pressable key={idx} onLongPress={() => handleWordPress(word)}>
+            <Text>{word} </Text>
           </Pressable>
-        )}
-      />
+        ))}
+      </View>
 
       <Modal visible={definitionVisible} animationType="slide">
         <ScrollView>
-          <Input className="rounded-lg bg-primary-appWhite">
-            <InputField
-              className="text-black"
-              value={selectedWord}
-              onChangeText={(text: string) => setSelectedWord(text)}
-              onBlur={() => handleDisplayDefinition(selectedWord)}
-              type="text"
-            />
-          </Input>
+          <Input
+            className="rounded-lg text-black"
+            value={selectedWord}
+            onChangeText={(text: string) => setSelectedWord(text)}
+            onBlur={() => handleDisplayDefinition(selectedWord)}
+          />
 
           <Text>{translationCache[selectedWord]}</Text>
 
@@ -161,6 +154,6 @@ export default function Read() {
           )}
         </ScrollView>
       </Modal>
-    </View>
+    </ScrollView>
   );
 }

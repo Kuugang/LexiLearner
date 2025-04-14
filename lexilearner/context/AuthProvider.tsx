@@ -1,10 +1,4 @@
-import {
-  createContext,
-  useState,
-  useEffect,
-  ReactNode,
-  useContext,
-} from "react";
+import { createContext, useEffect, ReactNode, useContext } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
   login as apiLogin,
@@ -15,7 +9,7 @@ import {
 } from "../services/AuthService";
 import { User } from "../models/User";
 import { getProfile } from "@/services/UserService";
-import { router } from "expo-router";
+import { router, SplashScreen, useSegments } from "expo-router";
 import { useUserContext } from "./UserProvider";
 
 interface AuthContextType {
@@ -41,7 +35,23 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
 }) => {
   const { setUser } = useUserContext();
 
-  //TODO: automatic login if token / user is in local storage
+  useEffect(() => {
+    const prepareApp = async () => {
+      try {
+        const storedUser = await AsyncStorage.getItem("user");
+
+        if (storedUser) {
+          setUser(JSON.parse(storedUser));
+        }
+      } catch (e) {
+        console.warn("Auth preprocessing failed", e);
+      } finally {
+        SplashScreen.hideAsync();
+      }
+    };
+
+    prepareApp();
+  }, []);
 
   const login = async (email: string, password: string) => {
     try {

@@ -6,11 +6,19 @@ import {
   statusCodes,
 } from "@react-native-google-signin/google-signin";
 
-// import {
-//   AccessToken,
-//   AuthenticationToken,
-//   LoginManager,
-// } from "react-native-fbsdk-next";
+GoogleSignin.configure({
+  webClientId:
+    "393477780121-6i4h7kp3f18avqb857j8jlmb5uv5q5j6.apps.googleusercontent.com",
+  offlineAccess: true, // Request refresh token
+  forceCodeForRefreshToken: true, // Ensure token is provided
+  scopes: ["profile", "email"],
+});
+
+import {
+  AccessToken,
+  AuthenticationToken,
+  LoginManager,
+} from "react-native-fbsdk-next";
 
 interface AuthResponse {
   message: string;

@@ -1,23 +1,21 @@
 import React from "react";
-import { router } from "expo-router"; // Or useNavigation if using React Navigation
+import { Redirect, router } from "expo-router"; // Or useNavigation if using React Navigation
 
 import { ScrollView, View, Image } from "react-native";
 import { Button } from "~/components/ui/button";
 import { Text } from "~/components/ui/text";
-
-// MOVE THIS
-import { GoogleSignin } from "@react-native-google-signin/google-signin";
-GoogleSignin.configure({
-  webClientId:
-    "393477780121-6i4h7kp3f18avqb857j8jlmb5uv5q5j6.apps.googleusercontent.com",
-  offlineAccess: true, // Request refresh token
-  forceCodeForRefreshToken: true, // Ensure token is provided
-  scopes: ["profile", "email"],
-});
+import { useUserContext } from "@/context/UserProvider";
 
 const Index = () => {
+  const { user } = useUserContext();
+
+  if (user) {
+    return <Redirect href="/home" />;
+  }
+
   return (
     <ScrollView
+      className="bg-background"
       contentContainerStyle={{
         flexGrow: 1,
         justifyContent: "space-around",

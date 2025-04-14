@@ -50,7 +50,7 @@ export default function Step3() {
   };
 
   return (
-    <ScrollView className="bg-background-yellowOrange">
+    <ScrollView className="bg-background">
       <SignUp3 isInvalid={isInvalid} handleStep={handleStep} />
     </ScrollView>
   );

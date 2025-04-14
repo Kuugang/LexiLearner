@@ -3,6 +3,7 @@ import { useAuthContext } from "@/context/AuthProvider";
 import { useUserContext } from "@/context/UserProvider";
 
 import { ScrollView, View, Image } from "react-native";
+
 import { Text } from "~/components/ui/text";
 import { Button } from "~/components/ui/button";
 import {
@@ -14,20 +15,18 @@ import {
   Medal,
   Award,
   Trophy,
+  Zap,
 } from "lucide-react-native";
 
 import ProfileStat from "@/components/ProfileStat";
 import BackHeader from "@/components/BackHeader";
-
-import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import { faBolt } from "@fortawesome/free-solid-svg-icons";
 
 export default function Profile() {
   const { user, updateProfile } = useUserContext();
   const { logout } = useAuthContext();
 
   return (
-    <ScrollView>
+    <ScrollView className="bg-background">
       <View
         style={{
           height: 150,
@@ -42,36 +41,23 @@ export default function Profile() {
           <Button
             className="self-end bg-transparent"
             onPress={async () => {
-              router.push("profile/profileSettings");
+              router.push("profile/settings");
             }}
           >
-            <Settings />
+            <Settings color="black" />
           </Button>
         </View>
       </View>
 
       <View
         className="flex p-8 gap-4"
-        style={{ position: "relative", bottom: 69 }}
+        style={{ position: "relative", bottom: 90 }}
       >
-        <View
-          style={{
-            borderRadius: "100%",
-            borderColor: "white",
-            width: 140,
-            height: 140,
-            padding: 6,
-            backgroundColor: "white",
-          }}
-          className="shadow-lg"
-        >
+        <View className="h-32 w-32">
           <Image
             source={require("@/assets/images/leeseopp.png")}
-            style={{
-              borderRadius: "100%",
-              width: "100%",
-              height: "100%",
-            }}
+            className="rounded-full shadow-lg w-full h-full"
+            resizeMode="contain"
             alt="User profile pic"
           />
         </View>
@@ -87,7 +73,7 @@ export default function Profile() {
 
             <View>
               <View className="flex flex-row gap-2 items-center">
-                <FontAwesomeIcon style={{ color: "yellow" }} icon={faBolt} />
+                <Zap color="yellow" />
                 <Text className="text-lg font-bold">{user?.level}</Text>
               </View>
               <Text className="text-sm text-gray-800">
@@ -102,29 +88,29 @@ export default function Profile() {
             <ProfileStat
               level={"3"}
               description="Longest Streak"
-              icon={<Flame style={{ color: "red" }} />}
+              icon={<Flame color="red" />}
             />
             <ProfileStat
               level={"10"}
               description="Books Read"
-              icon={<Book style={{ color: "blue" }} />}
+              icon={<Book color="blue" />}
             />
             <ProfileStat
               level={"4.5 Hours"}
               description="Avg. Screentime"
-              icon={<Smartphone />}
+              icon={<Smartphone color="black" />}
             />
             <ProfileStat
               level={"2"}
               description="Achievements"
-              icon={<Star style={{ color: "yellow" }} />}
+              icon={<Star color="yellow" />}
             />
           </View>
 
           <View className="flex-row justify-between">
             <Text className="text-xl font-bold">Achievements</Text>
             <Text
-              underline
+              className="underline"
               onPress={async () => {
                 router.push("profile/achievements");
               }}
@@ -135,14 +121,14 @@ export default function Profile() {
 
           <View className="flex-row flex gap-4">
             <View className="p-4 rounded-md bg-yellow-500 shadow-md">
-              <Award style={{ width: 30, height: 30 }} />
+              <Award color="black" style={{ width: 30, height: 30 }} />
             </View>
 
             <View className="p-4 rounded-md bg-yellow-500 shadow-md">
-              <Medal style={{ width: 30, height: 30 }} />
+              <Medal color="black" style={{ width: 30, height: 30 }} />
             </View>
             <View className="p-4 rounded-md bg-yellow-500 shadow-md">
-              <Trophy style={{ width: 30, height: 30 }} />
+              <Trophy color="black" style={{ width: 30, height: 30 }} />
             </View>
           </View>
         </View>

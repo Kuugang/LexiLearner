@@ -4,22 +4,21 @@ import { Platform } from "react-native";
 import { BackHandler } from "react-native";
 
 import { Compass, House, Library, School, User } from "lucide-react-native";
-import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
 
-  useEffect(() => {
-    const onBackPress = () => {
-      BackHandler.exitApp();
-      return true;
-    };
-
-    BackHandler.addEventListener("hardwareBackPress", onBackPress);
-    return () =>
-      BackHandler.removeEventListener("hardwareBackPress", onBackPress);
-  }, []);
+  // useEffect(() => {
+  //   const onBackPress = () => {
+  //     BackHandler.exitApp();
+  //     return true;
+  //   };
+  //
+  //   BackHandler.addEventListener("hardwareBackPress", onBackPress);
+  //   return () =>
+  //     BackHandler.removeEventListener("hardwareBackPress", onBackPress);
+  // }, []);
 
   return (
     <Tabs
@@ -27,17 +26,21 @@ export default function TabLayout() {
         headerShown: false,
         tabBarStyle: Platform.select({
           ios: {
-            // Use a transparent background on iOS to show the blur effect
+            // Transparent background for iOS with a blur effect
+            backgroundColor: "rgba(0, 0, 0, 0.5)", // Set the background color here
             position: "absolute",
+            bottom: 0, // Optionally adjust the position
           },
-          default: {},
+          default: {
+            backgroundColor: "white", // Set background color for Android or other platforms
+          },
         }),
       }}
     >
       <Tabs.Screen
         name="home"
         options={{
-          title: "Home",
+          tabBarLabel: () => null,
           tabBarIcon: ({ color, focused }) => (
             <House color={focused ? "#f97316" : "#9ca3af"} /> // Orange if active, Gray if not
           ),
@@ -47,7 +50,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="explore"
         options={{
-          title: "Explore",
+          tabBarLabel: () => null,
           tabBarIcon: ({ color, focused }) => (
             <Compass color={focused ? "#f97316" : "#9ca3af"} /> // Orange if active, Gray if not
           ),
@@ -57,7 +60,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="library"
         options={{
-          tabBarLabel: "Library",
+          tabBarLabel: () => null,
           tabBarIcon: ({ color, focused }) => (
             <Library color={focused ? "#f97316" : "#9ca3af"} />
           ),
@@ -70,10 +73,11 @@ export default function TabLayout() {
           href: null,
         }}
       />
+
       <Tabs.Screen
         name="classrooms"
         options={{
-          tabBarLabel: "Classrooms",
+          tabBarLabel: () => null,
           tabBarIcon: ({ color, focused }) => (
             <School color={focused ? "#f97316" : "#9ca3af"} />
           ),

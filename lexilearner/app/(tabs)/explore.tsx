@@ -24,7 +24,7 @@ import {
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import { Search, ListFilter, Check } from "lucide-react-native";
+import { Search, ListFilter, Check, CircleUser } from "lucide-react-native";
 
 export default function Explore() {
   const { data: stories, isLoading: isStoriesLoading } = useStories();
@@ -81,31 +81,30 @@ export default function Explore() {
         });
 
   return (
-    <ScrollView>
-      <View className="flex flex-col h-20 justify-center items-end">
-        <View className="flex flex-row gap-2 justify-center">
-          <Button
-            className="bg-transparent self-start p-0"
-            onPress={() => router.push("/profile")}
-          >
-            <FontAwesomeIcon
-              style={{ color: "#FFD43B" }}
-              size={30}
-              icon={faUser}
-            />
-          </Button>
+    <ScrollView className="bg-background">
+      <View className="flex flex-row gap-2 items-center w-full p-4">
+        <TouchableOpacity onPress={() => router.push("/profile")}>
+          <CircleUser color="#FFD43B" size={40} />
+        </TouchableOpacity>
 
-          <View className="relative">
-            <Search className="absolute left-2 top-2" />
-            <Input
-              className="p-10 rounded-lg"
-              value={query}
-              onChangeText={(value: string) => setQuery(value)}
-              placeholder="Search for stories..."
-              aria-labelledby={`label-for-searchStories`}
-              aria-errormessage="inputError"
-            />
-          </View>
+        <View className="relative flex-1">
+          <Search
+            size={20}
+            color="#888"
+            style={{
+              position: "absolute",
+              left: 10,
+              top: 12,
+              zIndex: 1,
+            }}
+          />
+          <Input
+            className="pl-10 py-3 rounded-lg w-full"
+            onChangeText={(value: string) => setQuery(value)}
+            placeholder="Search for stories..."
+            aria-labelledby="label-for-searchStories"
+            aria-errormessage="inputError"
+          />
         </View>
       </View>
 
@@ -113,17 +112,17 @@ export default function Explore() {
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline">
-              <ListFilter />
+              <ListFilter size={20} color="#888" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent className="w-64 native:w-72">
             <DropdownMenuLabel>Genre</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            {genres.map((genre) => {
+            {genres.map((genre, i) => {
               const isChecked = selectedGenres.has(genre);
-
               return (
                 <TouchableOpacity
+                  key={i}
                   onPress={() => toggleGenre(genre)}
                   className="flex-row items-center mb-2 gap-2"
                 >
