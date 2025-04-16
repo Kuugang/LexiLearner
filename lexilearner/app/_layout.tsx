@@ -79,6 +79,7 @@ export default function RootLayout() {
                       <Stack.Screen name="(auth)" />
                       <Stack.Screen name="profile" />
                       <Stack.Screen name="content" />
+                      <Stack.Screen name="minigames" />
                     </Stack>
                     <PortalHost />
                     <Toast />

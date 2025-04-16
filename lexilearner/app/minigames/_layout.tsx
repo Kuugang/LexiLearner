@@ -6,6 +6,7 @@ export default function MinigamesLayout() {
   return (
     <Stack screenOptions={{ headerShown: false }}>
       <Stack.Screen name="wordhunt" />
+      <Stack.Screen name="wordfromletters" />
     </Stack>
   );
 }

@@ -9,11 +9,16 @@ import { Text } from "~/components/ui/text";
 import { Input } from "~/components/ui/input";
 
 import { CircleUser, Search, Flame } from "lucide-react-native";
+import { useEffect } from "react";
 
 interface HomeScreenProps {}
 
 export default function HomeScreen({}: HomeScreenProps): JSX.Element {
   const { data: stories, isLoading: isStoriesLoading } = useStories();
+
+  useEffect(() => {
+    // router.push("/minigames/wordfromletters");
+  }, []);
 
   return (
     <ScrollView className="bg-background">

@@ -11,6 +11,7 @@ module.exports = {
         orange: "rgb(255, 103, 64)",
         yellowOrange: "rgb(255, 212, 42)",
         lightGrayOrange: "rgb(255, 233, 173)",
+        lightGray: "#E5DDEA",
 
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
