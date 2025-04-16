@@ -2,7 +2,6 @@ import React, { useContext, useState } from "react";
 import { router, useLocalSearchParams } from "expo-router";
 import { RegisterFormContext } from "./_layout";
 
-import { ScrollView } from "react-native";
 import { checkUserExist } from "@/services/UserService";
 import { validateField } from "@/utils/utils";
 import SignUp2 from "@/components/Auth/SignUp2";

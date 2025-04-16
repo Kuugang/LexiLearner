@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import Toast from "react-native-toast-message";
 import { useGlobalContext } from "@/context/GlobalProvider";
 import { router } from "expo-router";
 import { useAuthContext } from "@/context/AuthProvider";
@@ -57,8 +58,17 @@ export default function Login() {
       setIsLoading(true);
       await login(form.email, form.password);
       router.push("/home");
+
+      Toast.show({
+        type: "success",
+        text1: "Login Success",
+      });
     } catch (error: any) {
-      //TODO: Toast
+      Toast.show({
+        type: "error",
+        text1: "Login Failed",
+        text2: error.message,
+      });
     } finally {
       setIsLoading(false);
     }

@@ -71,12 +71,13 @@ namespace LexiLearner.Services
                 throw new Exception("Invalid Google access token");
             }
 
-            var googleUserString = await response.Content.ReadAsStringAsync();
-            var googleUser = JObject.Parse(googleUserString);
+            var GoogleUserString = await response.Content.ReadAsStringAsync();
+            var GoogleUser = JObject.Parse(GoogleUserString);
 
-            string email = googleUser["email"]?.ToString();
+            string GoogleId = GoogleUser["sub"]?.ToString();
 
-            var user = await _userService.GetUserByEmail(email);
+            var user = await _userManager.FindByLoginAsync("Google", GoogleId);
+            user = await _userService.GetUserByEmail(GoogleUser["email"]?.ToString());
 
             if (user == null)
             {
@@ -86,14 +87,15 @@ namespace LexiLearner.Services
 
                 user = new User
                 {
-                    Email = googleUser["email"]?.ToString(),
-                    UserName = googleUser["name"]?.ToString().Replace(" ", ""),
-                    FirstName = googleUser["given_name"]?.ToString(),
-                    LastName = googleUser["family_name"]?.ToString() ?? googleUser["given_name"]?.ToString(),
+                    Email = GoogleUser["email"]?.ToString(),
+                    UserName = GoogleUser["name"]?.ToString().Replace(" ", ""),
+                    FirstName = GoogleUser["given_name"]?.ToString(),
+                    LastName = GoogleUser["family_name"]?.ToString() ?? GoogleUser["given_name"]?.ToString(),
                     SecurityStamp = Guid.NewGuid().ToString()
                 };
                 await _userRepository.Create(user, hashedPassword);
             }
+            await _userManager.AddLoginAsync(user, new UserLoginInfo("Google", GoogleId, "Google"));
 
             var jwtToken = _jwtService.GenerateJWTToken(user.Id, user.UserName!);
 
@@ -104,20 +106,19 @@ namespace LexiLearner.Services
         {
             string facebookApiUrl = $"https://graph.facebook.com/me?fields=id,name,first_name,last_name,email,picture&access_token={token}";
 
-
             HttpResponseMessage response = await _httpClient.GetAsync(facebookApiUrl);
             if (!response.IsSuccessStatusCode)
             {
                 throw new Exception("Invalid Facebook access token");
             }
 
-            var facebookUserString = await response.Content.ReadAsStringAsync();
-            var facebookUser = JObject.Parse(facebookUserString);
+            var FacebookUserString = await response.Content.ReadAsStringAsync();
+            var FacebookUser = JObject.Parse(FacebookUserString);
 
-            string email = facebookUser["email"]?.ToString();
-            Console.WriteLine(email);
+            string FacebookId = FacebookUser["id"]?.ToString();
 
-            var user = await _userService.GetUserByEmail(email);
+            var user = await _userManager.FindByLoginAsync("Facebook", FacebookId);
+            user = await _userService.GetUserByEmail(FacebookUser["email"]?.ToString());
             if (user == null)
             {
                 var passwordHasher = new PasswordHasher<object>();
@@ -126,16 +127,15 @@ namespace LexiLearner.Services
 
                 user = new User
                 {
-                    //TODO: WHAT IF NULL EMAIL
-                    Email = facebookUser["email"]?.ToString(),
-                    UserName = facebookUser["name"]?.ToString().Replace(" ", ""),
-                    FirstName = facebookUser["first_name"]?.ToString(),
-                    LastName = facebookUser["last_name"]?.ToString(),
+                    Email = FacebookUser["email"]?.ToString(),
+                    UserName = FacebookUser["name"]?.ToString().Replace(" ", ""),
+                    FirstName = FacebookUser["first_name"]?.ToString(),
+                    LastName = FacebookUser["last_name"]?.ToString(),
                     SecurityStamp = Guid.NewGuid().ToString()
                 };
                 await _userRepository.Create(user, hashedPassword);
             }
-
+            await _userManager.AddLoginAsync(user, new UserLoginInfo("Facebook", FacebookId, "Facebook"));
 
             var jwtToken = _jwtService.GenerateJWTToken(user.Id, user.UserName!);
 

@@ -80,7 +80,12 @@ namespace LexiLearner
 
             services.Configure<JwtOptions>(Configuration.GetSection("JWT"));
 
-            services.AddControllers();
+            services.AddControllers()
+                .AddJsonOptions(options =>
+                {
+                    options.JsonSerializerOptions.DefaultIgnoreCondition =
+                        System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull;
+                });
 
             services.ConfigureApplicationCookie(options =>
             {
@@ -126,7 +131,7 @@ namespace LexiLearner
             .AddDefaultTokenProviders()
             .AddTokenProvider<DataProtectorTokenProvider<User>>("MyApp");
 
-            services.AddScoped<IUserValidator<User>, OptionalEmailUserValidator<User>>();
+            services.AddTransient<IUserValidator<User>, OptionalEmailUserValidator<User>>();
 
             // Configure Authentication
             services.AddAuthentication(options =>

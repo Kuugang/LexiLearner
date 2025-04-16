@@ -50,7 +50,7 @@ export default function SignUp3({ isInvalid, handleStep }: SignUp3Props) {
             }}
           >
             <View
-              className={`h-60 w-60 p-2 rounded-full ${registerForm.role == "Teacher" ? "bg-orange-500 scale-105" : ""}}`}
+              className={`h-60 w-60 p-2 rounded-full ${registerForm.role === "Teacher" || providerRegisterForm.role === "Teacher" ? "bg-orange scale-105" : ""}}`}
             >
               <Image
                 source={require("@/assets/images/role-teacher.png")}
@@ -80,7 +80,7 @@ export default function SignUp3({ isInvalid, handleStep }: SignUp3Props) {
             }}
           >
             <View
-              className={`h-60 w-60 p-2 rounded-full ${registerForm.role == "Pupil" ? "bg-orange-500 scale-105" : ""}}`}
+              className={`h-60 w-60 p-2 rounded-full ${registerForm.role === "Pupil" || providerRegisterForm.role === "Pupil" ? "bg-orange scale-105" : ""}}`}
             >
               <Image
                 source={require("@/assets/images/role-pupil.png")}

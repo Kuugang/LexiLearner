@@ -10,11 +10,24 @@ import { Alert, View, ScrollView, Image } from "react-native";
 import { Text } from "@/components/ui/text";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "~/components/ui/dialog";
 import BackHeader from "@/components/BackHeader";
 import { AuthContext, useAuthContext } from "@/context/AuthProvider";
 import { StackActions } from "@react-navigation/native";
+import Toast from "react-native-toast-message";
+import { useGlobalContext } from "@/context/GlobalProvider";
 
 export default function Settings() {
+  const { setIsLoading } = useGlobalContext();
   const { user, updateProfile } = useUserContext();
   const { logout } = useAuthContext();
   const [isProfileChanged, setIsProfileChanged] = useState(false);
@@ -44,6 +57,7 @@ export default function Settings() {
 
   const handleUpdateProfile = async () => {
     try {
+      setIsLoading(true);
       const newErrors: any = {};
       Object.keys(profile).forEach((field) => {
         const error = validateField(field, profile[field], profile);
@@ -62,10 +76,18 @@ export default function Settings() {
       if (Object.keys(newErrors).length > 0) return;
 
       await updateProfile(profile);
-      //TODO: SUCCESS TOAST
+      Toast.show({
+        type: "success",
+        text1: "Profile Updated",
+      });
     } catch (error: any) {
-      //TODO: make reusable
-      //TODO: ERROR TOAST
+      Toast.show({
+        type: "error",
+        text1: "Login Failed",
+        text2: error.message,
+      });
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -142,9 +164,35 @@ export default function Settings() {
           </Button>
         )}
 
-        <Button onPress={() => handleDeleteAccount()} className="my-2">
-          <Text>DELETE ACCOUNT</Text>
-        </Button>
+        {/* <Button onPress={() => handleDeleteAccount()} className="my-2"> */}
+        {/*   <Text>DELETE ACCOUNT</Text> */}
+        {/* </Button> */}
+
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button variant="outline">
+              <Text className="text-destructive">Delete Account</Text>
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="sm:max-w-[425px]">
+            <DialogHeader>
+              <DialogTitle>Delete Account</DialogTitle>
+              <DialogDescription>
+                Are you sure you want to delete your account?
+              </DialogDescription>
+            </DialogHeader>
+            <DialogFooter className="flex flex-row justify-center">
+              <Button onPress={() => handleDeleteAccount()}>
+                <Text className="text-destructive">Yes</Text>
+              </Button>
+              <DialogClose asChild>
+                <Button>
+                  <Text>No</Text>
+                </Button>
+              </DialogClose>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
 
         <Button
           onPress={() => {

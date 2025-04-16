@@ -1,17 +1,20 @@
 import React, { useEffect, useState } from "react";
 import { router } from "expo-router";
-import { View, Text, ScrollView, Image, ActivityIndicator } from "react-native";
+import {
+  StyleSheet,
+  View,
+  Text,
+  ScrollView,
+  Image,
+  ActivityIndicator,
+} from "react-native";
 import { useLocalSearchParams } from "expo-router";
 import { useBooks } from "@/context/ReadingContentProvider";
 import { ReadingContentType } from "@/models/ReadingContent";
 
 import { Button } from "@/components/ui/button";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import {
-  faArrowLeft,
-  faBookOpen,
-  faPlus,
-} from "@fortawesome/free-solid-svg-icons";
+import { faBookOpen, faPlus } from "@fortawesome/free-solid-svg-icons";
 import BackHeader from "@/components/BackHeader";
 
 export default function ReadIndex() {
@@ -57,11 +60,20 @@ export default function ReadIndex() {
 
   return (
     <>
-      <View className="z-10 absolute top-0 w-full h-64 bg-red-500"></View>
       <ScrollView
         className="flex flex-col z-50 p-8 gap-6 bg-background"
         contentContainerStyle={{ alignItems: "center", gap: 24 }}
       >
+        <View
+          style={{
+            zIndex: -1,
+            position: "absolute",
+            width: "120%",
+            height: 160,
+          }}
+          className="-top-8 -left-8 bg-lightGrayOrange"
+        />
+
         <BackHeader />
 
         <Image

@@ -8,11 +8,11 @@ using LexiLearner.Models.DTO;
 using LexiLearner.Interfaces;
 using LexiLearner.Exceptions;
 
-
 namespace LexiLearner.Services
 {
     public class UserService : IUserService
     {
+
         private readonly UserManager<User> _userManager;
         private readonly IUserRepository _userRepository;
         // private readonly CachedUserRepository _userRepository;
@@ -99,13 +99,13 @@ namespace LexiLearner.Services
             if (role == "Pupil")
             {
                 Pupil? pupil = await _userRepository.GetPupilByUserId(user.Id);
-                response.Data = new PupilProfileDTO(user, pupil);
+                response.Data = new ProfileDTO(user, pupil);
             }
 
             else if (role == "Teacher")
             {
                 Teacher? teacher = await _userRepository.GetTeacherByUserId(user.Id);
-                response.Data = new TeacherProfileDTO(user, teacher);
+                response.Data = new ProfileDTO(user, teacher);
             }
             else
             {
@@ -136,13 +136,30 @@ namespace LexiLearner.Services
             if (role == "Pupil")
             {
                 Pupil? pupil = await _userRepository.GetPupilByUserId(user.Id);
-                response.Data = new PupilProfileDTO(user, pupil, true);
+                if (pupil == null)
+                {
+                    throw new ApplicationExceptionBase(
+                        $"User does not exist",
+                        "User Profile Fetched Failed",
+                        StatusCodes.Status404NotFound
+                    );
+                }
+
+                response.Data = new ProfileDTO(user, pupil, true);
             }
 
             else if (role == "Teacher")
             {
                 Teacher? teacher = await _userRepository.GetTeacherByUserId(user.Id);
-                response.Data = new TeacherProfileDTO(user, teacher, true);
+                if (teacher == null)
+                {
+                    throw new ApplicationExceptionBase(
+                        $"User does not exist",
+                        "User Profile Fetched Failed",
+                        StatusCodes.Status404NotFound
+                    );
+                }
+                response.Data = new ProfileDTO(user, teacher, true);
             }
             else
             {
@@ -166,26 +183,53 @@ namespace LexiLearner.Services
         public async Task<ResponseDTO> UpdateProfile(UpdateProfileDTO UpdateProfileDTO, ClaimsPrincipal User)
         {
             User? user = await GetUserFromToken(User);
-            Console.WriteLine(user);
+
+            if (user == null)
+            {
+                throw new ApplicationExceptionBase(
+                    $"User does not exist",
+                    "User Profile Fetched Failed",
+                    StatusCodes.Status404NotFound
+                );
+            }
+            bool update = false;
 
             if (!string.IsNullOrEmpty(UpdateProfileDTO.UserName))
+            {
                 user.UserName = UpdateProfileDTO.UserName;
+                user.NormalizedUserName = _userManager.NormalizeName(UpdateProfileDTO.UserName);
+                update = true;
+            }
 
             if (!string.IsNullOrEmpty(UpdateProfileDTO.FirstName))
+            {
                 user.FirstName = UpdateProfileDTO.FirstName;
+                update = true;
+            }
 
             if (!string.IsNullOrEmpty(UpdateProfileDTO.LastName))
+            {
                 user.LastName = UpdateProfileDTO.LastName;
+                update = true;
+            }
 
             if (UpdateProfileDTO.TwoFactorEnabled != null)
+            {
                 user.TwoFactorEnabled = UpdateProfileDTO.TwoFactorEnabled ?? false;
+                update = true;
+            }
 
             if (!string.IsNullOrEmpty(UpdateProfileDTO.PhoneNumber))
+            {
                 user.PhoneNumber = UpdateProfileDTO.PhoneNumber;
+                update = true;
+            }
 
-            // JsonSerializer.Deserialize<User>(JsonSerializer.Serialize(user)) 
-            // TODO: ABOVE IS JUST A TEMPORARY FIX TO AVOID TRACKING PROBLEMS
-            await _userRepository.Update(user);
+            if (update) //TODO: should use entity state
+            {
+                user.UpdatedAt = DateTime.UtcNow;
+                await _userRepository.Update(user);
+            }
 
             string role = await GetRole(user);
 
@@ -227,23 +271,25 @@ namespace LexiLearner.Services
                     pupil.GradeLevel = UpdateProfileDTO.GradeLevel;
 
                 await _userRepository.Update(pupil);
-                response.Data = new PupilProfileDTO(user, pupil);
+                response.Data = new ProfileDTO(user, pupil);
             }
             else if (role == "Teacher")
             {
                 Teacher? teacher = await _userRepository.GetTeacherByUserId(user.Id);
 
                 await _userRepository.Update(teacher);
-                response.Data = new TeacherProfileDTO(user, teacher);
+                response.Data = new ProfileDTO(user, teacher);
             }
 
             return response;
         }
 
-        public async Task<ResponseDTO> DeleteAccount(ClaimsPrincipal userPrincipal) {
+        public async Task<ResponseDTO> DeleteAccount(ClaimsPrincipal userPrincipal)
+        {
             User? user = await GetUserFromToken(userPrincipal);
 
-            if(user == null) {
+            if (user == null)
+            {
                 throw new ApplicationExceptionBase(
                     $"User does not exist",
                     "User Profile Fetched Failed",

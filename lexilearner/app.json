@@ -18,9 +18,16 @@
           },
           {
             "SKAdNetworkIdentifier": "n38lu8286q.skadnetwork"
+          },
+          {
+            "SKAdNetworkIdentifier": "v9wttpbfk9.skadnetwork"
+          },
+          {
+            "SKAdNetworkIdentifier": "n38lu8286q.skadnetwork"
           }
         ]
-      }
+      },
+      "bundleIdentifier": "com.anonymous.lexilearner"
     },
     "android": {
       "adaptiveIcon": {
@@ -28,7 +35,6 @@
         "backgroundColor": "#ffffff"
       },
       "permissions": [
-        "android.permission.INTERNET",
         "android.permission.INTERNET"
       ],
       "package": "com.anonymous.lexilearner"
@@ -65,6 +71,14 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "6c85ffc2-e0e0-453b-8f16-2e8552e3c2a6"
+      }
     }
   }
 }

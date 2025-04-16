@@ -154,8 +154,9 @@ namespace LexiLearner.Repository
             }
         }
 
-// idk diri dapita DDD: chatgpt lang eto :(
-        public async Task<User> DeleteAccount(User user) {
+        // idk diri dapita DDD: chatgpt lang eto :(
+        public async Task<User> DeleteAccount(User user)
+        {
             User deletedUser = await _decorated.DeleteAccount(user);
 
             // Invalidate related cache entries 

@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 import { useLocalSearchParams } from "expo-router";
-import { ScrollView } from "react-native";
+import Toast from "react-native-toast-message";
 
 import { router } from "expo-router";
 import { RegisterFormContext } from "./_layout";
@@ -34,16 +34,25 @@ export default function Step3() {
 
     try {
       if (fromProviderAuth) {
-        await updateProfile(form, form.role === "Teacher" ? true : false);
+        await updateProfile(form);
       } else {
         await signup(form);
       }
-
-      router.push(form.role === "Pupil" ? "/signup4" : "/home");
-    } catch (error) {
-      const errorMessage =
-        error instanceof Error ? error.message : "An error occurred";
-      //TODO: TOAST
+      if (form.role === "Pupil") {
+        router.push("/signup4");
+      } else {
+        Toast.show({
+          type: "success",
+          text1: "Registration Success",
+        });
+        router.push("/home");
+      }
+    } catch (error: any) {
+      Toast.show({
+        type: "error",
+        text1: "Registration Failed",
+        text2: error.message,
+      });
     } finally {
       setIsLoading(false);
     }

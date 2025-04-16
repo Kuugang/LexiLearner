@@ -9,8 +9,9 @@ import {
 } from "../services/AuthService";
 import { User } from "../models/User";
 import { getProfile } from "@/services/UserService";
-import { router, SplashScreen, useSegments } from "expo-router";
+import { router, SplashScreen } from "expo-router";
 import { useUserContext } from "./UserProvider";
+import { useGlobalContext } from "./GlobalProvider";
 
 interface AuthContextType {
   login: (email: string, password: string) => void;
@@ -33,6 +34,7 @@ export const useAuthContext = (): AuthContextType => {
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
+  const { setIsLoading } = useGlobalContext();
   const { setUser } = useUserContext();
 
   useEffect(() => {
@@ -105,8 +107,38 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
 
   const signup = async (registerForm: Record<string, any>) => {
     try {
-      const response = await apiSignUp(registerForm);
+      let response = await apiSignUp(registerForm);
       await AsyncStorage.setItem("token", response.data.token);
+      response = await getProfile();
+
+      const {
+        id,
+        email,
+        firstName,
+        lastName,
+        userName,
+        twoFactorEnabled,
+        phoneNumber,
+        role,
+        age,
+        level,
+      } = response.data;
+
+      const user: User = {
+        id: id,
+        email: email,
+        firstName: firstName,
+        lastName: lastName,
+        userName: userName,
+        twoFactorEnabled: twoFactorEnabled,
+        phoneNumber: phoneNumber,
+        role: role,
+        age: age,
+        level: level ?? 0,
+      };
+
+      setUser(user);
+      await AsyncStorage.setItem("user", JSON.stringify(user));
     } catch (error: any) {
       throw Error(
         error instanceof Error ? error.message : "Unknown error occurred",
@@ -141,6 +173,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
           console.warn("Invalid provider selected");
           return;
       }
+      setIsLoading(true);
 
       await AsyncStorage.setItem("token", response.data.token);
       let userProfileResponse = await getProfile();
@@ -148,22 +181,46 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
       const userData = userProfileResponse.data;
 
       if (userData) {
+        const {
+          id,
+          email,
+          firstName,
+          lastName,
+          userName,
+          twoFactorEnabled,
+          phoneNumber,
+          role,
+          age,
+          level,
+        } = userData;
+
         const user: User = {
-          id: userData.id,
-          email: userData.email,
-          firstName: userData.firstName,
-          lastName: userData.lastName,
+          id: id,
+          email: email,
+          firstName: firstName,
+          lastName: lastName,
+          userName: userName,
+          twoFactorEnabled: twoFactorEnabled,
+          phoneNumber: phoneNumber,
+          role: role,
+          age: age,
+          level: level ?? 0,
         };
+
+        await AsyncStorage.setItem("user", JSON.stringify(user));
         setUser(user);
+        router.replace("/home");
       } else {
         // Redirect user to profile setup screen
         router.push({
-          pathname: "/signup2",
+          pathname: "/signup3",
           params: { fromProviderAuth: "true" },
         });
       }
     } catch (error) {
       console.error("Authentication failed:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 

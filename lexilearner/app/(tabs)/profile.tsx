@@ -74,7 +74,7 @@ export default function Profile() {
               {user?.role === "Pupil" ? (
                 <>
                   <View className="flex flex-row gap-2 items-center">
-                    <Zap color="yellow" />
+                    <Zap color="#FFD43B" />
                     <Text className="text-lg font-bold">{user?.level}</Text>
                   </View>
                   <Text className="text-sm text-gray-800">
@@ -111,7 +111,7 @@ export default function Profile() {
                 <ProfileStat
                   level={"2"}
                   description="Achievements"
-                  icon={<Star color="yellow" />}
+                  icon={<Star color="#FFD43B" />}
                 />
               </View>
 

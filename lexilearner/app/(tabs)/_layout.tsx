@@ -1,24 +1,42 @@
 import { Tabs } from "expo-router";
-import React, { useEffect } from "react";
-import { Platform } from "react-native";
-import { BackHandler } from "react-native";
+import React, { useEffect, useRef, useState } from "react";
+import { Platform, TouchableOpacity } from "react-native";
+import LottieView from "lottie-react-native";
 
 import { Compass, House, Library, School, User } from "lucide-react-native";
 import { useColorScheme } from "@/hooks/useColorScheme";
 
-export default function TabLayout() {
-  const colorScheme = useColorScheme();
+import CompassAnimation from "~/assets/animations/Animation - 1744671952675.json";
 
-  // useEffect(() => {
-  //   const onBackPress = () => {
-  //     BackHandler.exitApp();
-  //     return true;
-  //   };
-  //
-  //   BackHandler.addEventListener("hardwareBackPress", onBackPress);
-  //   return () =>
-  //     BackHandler.removeEventListener("hardwareBackPress", onBackPress);
-  // }, []);
+const CompassIcon = ({ compassFocused, setCompassFocused }) => {
+  const animationRef = useRef(null);
+
+  useEffect(() => {
+    if (compassFocused) {
+      animationRef.current?.play();
+      setCompassFocused(false);
+    } else {
+      animationRef.current?.reset();
+    }
+  }, [compassFocused]);
+
+  return (
+    <LottieView
+      ref={animationRef}
+      source={CompassAnimation}
+      loop={false}
+      style={{
+        width: 30,
+        height: 30,
+      }}
+    />
+  );
+};
+
+export default function TabLayout() {
+  const animationRef = useRef<LottieView>(null);
+  const colorScheme = useColorScheme();
+  const [compassFocused, setCompassFocused] = useState<boolean>(false);
 
   return (
     <Tabs
@@ -47,12 +65,34 @@ export default function TabLayout() {
         }}
       />
 
+      {/* <Tabs.Screen */}
+      {/*   name="explore" */}
+      {/*   options={{ */}
+      {/*     tabBarLabel: () => null, */}
+      {/*     tabBarIcon: ({ focused }) => ( */}
+      {/*       <CompassIcon */}
+      {/*         compassFocused={compassFocused} */}
+      {/*         setCompassFocused={setCompassFocused} */}
+      {/*       /> */}
+      {/*     ), */}
+      {/*     tabBarButton: (props) => ( */}
+      {/*       <TouchableOpacity */}
+      {/*         {...props} */}
+      {/*         onPress={() => { */}
+      {/*           props.onPress(); // don't forget this to navigate! */}
+      {/*           setCompassFocused(true); */}
+      {/*         }} */}
+      {/*       /> */}
+      {/*     ), */}
+      {/*   }} */}
+      {/* /> */}
+
       <Tabs.Screen
         name="explore"
         options={{
           tabBarLabel: () => null,
           tabBarIcon: ({ color, focused }) => (
-            <Compass color={focused ? "#f97316" : "#9ca3af"} /> // Orange if active, Gray if not
+            <Compass color={focused ? "#f97316" : "#9ca3af"} />
           ),
         }}
       />

@@ -5,6 +5,7 @@ import GlobalProvider from "../context/GlobalProvider";
 import { AuthProvider } from "@/context/AuthProvider";
 import { UserProvider } from "@/context/UserProvider";
 import { ReadingContentProvider } from "@/context/ReadingContentProvider";
+import Toast from "react-native-toast-message";
 
 import React from "react";
 import { PortalHost } from "@rn-primitives/portal";
@@ -69,10 +70,9 @@ export default function RootLayout() {
           <UserProvider>
             <AuthProvider>
               <ReadingContentProvider>
+                <StatusBar style={"dark"} />
                 <SafeAreaView className="flex-1 bg-background">
                   <GestureHandlerRootView style={{ flex: 1 }}>
-                    {/* <StatusBar style={isDarkColorScheme ? "light" : "dark"} /> */}
-                    <StatusBar style={"light"} />
                     <Stack screenOptions={{ headerShown: false }}>
                       <Stack.Screen name="index" />
                       <Stack.Screen name="(tabs)" />
@@ -81,6 +81,7 @@ export default function RootLayout() {
                       <Stack.Screen name="content" />
                     </Stack>
                     <PortalHost />
+                    <Toast />
                   </GestureHandlerRootView>
                 </SafeAreaView>
               </ReadingContentProvider>

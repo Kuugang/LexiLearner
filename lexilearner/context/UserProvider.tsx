@@ -1,10 +1,4 @@
-import React, {
-  createContext,
-  useState,
-  useContext,
-  ReactNode,
-  useEffect,
-} from "react";
+import React, { createContext, useState, useContext, ReactNode } from "react";
 import { updateProfile as apiUpdateProfile } from "@/services/UserService";
 
 import { User } from "../models/User";
@@ -31,10 +25,7 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({
 }) => {
   const [user, setUser] = useState<User | null>(null);
 
-  const updateProfile = async (
-    form: Record<string, any>,
-    update: boolean = true,
-  ) => {
+  const updateProfile = async (form: Record<string, any>) => {
     try {
       let response = await apiUpdateProfile(form);
       const data = response.data;
@@ -65,7 +56,6 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({
         level: level ?? 0,
       };
 
-      if (!update) return;
       setUser(user);
       AsyncStorage.setItem("user", JSON.stringify(user));
     } catch (error: any) {

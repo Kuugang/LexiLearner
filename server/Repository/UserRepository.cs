@@ -1,6 +1,5 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
-using System.Text.Json;
 
 using LexiLearner.Models;
 using LexiLearner.Data;
@@ -51,11 +50,8 @@ namespace LexiLearner.Repository
             return user;
         }
 
-        public async Task<User> DeleteAccount(User user) {
-            if(user == null) {
-                throw new Exception("User not found");
-                // throw new ApplicationExceptionBase(,"User not found");
-            }
+        public async Task<User> DeleteAccount(User user)
+        {
             _context.Users.Remove(user);
             await _context.SaveChangesAsync();
             return user;
