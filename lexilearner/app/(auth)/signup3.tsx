@@ -9,10 +9,10 @@ import { useGlobalContext } from "@/context/GlobalProvider";
 import { useAuthContext } from "@/context/AuthProvider";
 
 import SignUp3 from "@/components/Auth/SignUp3";
-import { useUserContext } from "@/context/UserProvider";
+import { useUserStore } from "@/stores/userStore";
 
 export default function Step3() {
-  const { updateProfile } = useUserContext();
+  const updateProfile = useUserStore((state) => state.updateProfile);
 
   const { fromProviderAuth } = useLocalSearchParams();
 

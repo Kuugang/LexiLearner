@@ -1,13 +1,13 @@
 import { useState } from "react";
 import { router } from "expo-router";
 import { useGlobalContext } from "@/context/GlobalProvider";
-import { useUserContext } from "@/context/UserProvider";
+import { useUserStore } from "@/stores/userStore";
 import Toast from "react-native-toast-message";
 
 import SignUp4 from "@/components/Auth/SignUp4";
 
 export default function Step4() {
-  const { updateProfile } = useUserContext();
+  const updateProfile = useUserStore((state) => state.updateProfile);
   const { setIsLoading } = useGlobalContext();
 
   const [age, setAge] = useState<string | null>(null);

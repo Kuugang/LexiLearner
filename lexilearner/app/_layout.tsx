@@ -1,13 +1,12 @@
 import "~/global.css";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { SplashScreen, Stack } from "expo-router";
+import { RelativePathString, router, SplashScreen, Stack } from "expo-router";
 import GlobalProvider from "../context/GlobalProvider";
 import { AuthProvider } from "@/context/AuthProvider";
-import { UserProvider } from "@/context/UserProvider";
 import { ReadingContentProvider } from "@/context/ReadingContentProvider";
 import Toast from "react-native-toast-message";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { PortalHost } from "@rn-primitives/portal";
 
 import {
@@ -22,6 +21,7 @@ import { NAV_THEME } from "~/lib/constants";
 import { useColorScheme } from "~/lib/useColorScheme";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { useMiniGameStore } from "@/stores/miniGameStore";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -42,10 +42,12 @@ export {
 } from "expo-router";
 
 export default function RootLayout() {
+  const [isReady, setIsReady] = useState(false);
   const hasMounted = React.useRef(false);
   const { colorScheme, isDarkColorScheme } = useColorScheme();
   const [isColorSchemeLoaded, setIsColorSchemeLoaded] = React.useState(false);
 
+  const game = useMiniGameStore((state) => state.game);
   useIsomorphicLayoutEffect(() => {
     if (hasMounted.current) {
       return;
@@ -56,8 +58,16 @@ export default function RootLayout() {
       document.documentElement.classList.add("bg-background");
     }
     setIsColorSchemeLoaded(true);
+
     hasMounted.current = true;
+    setIsReady(true);
   }, []);
+
+  // useEffect(() => {
+  //   if (isReady && game) {
+  //     router.push(game as RelativePathString);
+  //   }
+  // }, [isReady, game]);
 
   if (!isColorSchemeLoaded) {
     return null;
@@ -67,27 +77,25 @@ export default function RootLayout() {
     <GlobalProvider>
       <ThemeProvider value={isDarkColorScheme ? DARK_THEME : LIGHT_THEME}>
         <QueryClientProvider client={queryClient}>
-          <UserProvider>
-            <AuthProvider>
-              <ReadingContentProvider>
-                <StatusBar style={"dark"} />
-                <SafeAreaView className="flex-1 bg-background">
-                  <GestureHandlerRootView style={{ flex: 1 }}>
-                    <Stack screenOptions={{ headerShown: false }}>
-                      <Stack.Screen name="index" />
-                      <Stack.Screen name="(tabs)" />
-                      <Stack.Screen name="(auth)" />
-                      <Stack.Screen name="profile" />
-                      <Stack.Screen name="content" />
-                      <Stack.Screen name="minigames" />
-                    </Stack>
-                    <PortalHost />
-                    <Toast />
-                  </GestureHandlerRootView>
-                </SafeAreaView>
-              </ReadingContentProvider>
-            </AuthProvider>
-          </UserProvider>
+          <AuthProvider>
+            <ReadingContentProvider>
+              <StatusBar style={"dark"} />
+              <SafeAreaView className="flex-1 bg-background">
+                <GestureHandlerRootView style={{ flex: 1 }}>
+                  <Stack screenOptions={{ headerShown: false }}>
+                    <Stack.Screen name="index" />
+                    <Stack.Screen name="(tabs)" />
+                    <Stack.Screen name="(auth)" />
+                    <Stack.Screen name="profile" />
+                    <Stack.Screen name="content" />
+                    <Stack.Screen name="minigames" />
+                  </Stack>
+                  <PortalHost />
+                  <Toast />
+                </GestureHandlerRootView>
+              </SafeAreaView>
+            </ReadingContentProvider>
+          </AuthProvider>
         </QueryClientProvider>
       </ThemeProvider>
     </GlobalProvider>

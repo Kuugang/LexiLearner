@@ -1,8 +1,9 @@
-import { useUserContext } from "@/context/UserProvider";
 import { router } from "expo-router";
 import { useEffect, useState } from "react";
 import { checkUserExist, deleteAccount } from "@/services/UserService";
 import { validateField } from "@/utils/utils";
+import { useGlobalContext } from "@/context/GlobalProvider";
+import { useUserStore } from "@/stores/userStore";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 //Components
@@ -24,11 +25,12 @@ import BackHeader from "@/components/BackHeader";
 import { AuthContext, useAuthContext } from "@/context/AuthProvider";
 import { StackActions } from "@react-navigation/native";
 import Toast from "react-native-toast-message";
-import { useGlobalContext } from "@/context/GlobalProvider";
 
 export default function Settings() {
   const { setIsLoading } = useGlobalContext();
-  const { user, updateProfile } = useUserContext();
+  const user = useUserStore((state) => state.user);
+  const updateProfile = useUserStore((state) => state.updateProfile);
+
   const { logout } = useAuthContext();
   const [isProfileChanged, setIsProfileChanged] = useState(false);
   const [profile, setProfile] = useState({

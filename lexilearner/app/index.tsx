@@ -4,10 +4,10 @@ import { Redirect, router } from "expo-router"; // Or useNavigation if using Rea
 import { ScrollView, View, Image } from "react-native";
 import { Button } from "~/components/ui/button";
 import { Text } from "~/components/ui/text";
-import { useUserContext } from "@/context/UserProvider";
+import { useUserStore } from "@/stores/userStore";
 
 const Index = () => {
-  const { user } = useUserContext();
+  const user = useUserStore((state) => state.user);
 
   if (user) {
     return <Redirect href="/home" />;

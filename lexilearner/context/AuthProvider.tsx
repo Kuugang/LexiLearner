@@ -10,8 +10,8 @@ import {
 import { User } from "../models/User";
 import { getProfile } from "@/services/UserService";
 import { router, SplashScreen } from "expo-router";
-import { useUserContext } from "./UserProvider";
 import { useGlobalContext } from "./GlobalProvider";
+import { useUserStore } from "@/stores/userStore";
 
 interface AuthContextType {
   login: (email: string, password: string) => void;
@@ -35,7 +35,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
   const { setIsLoading } = useGlobalContext();
-  const { setUser } = useUserContext();
+  const setUser = useUserStore((state) => state.setUser);
 
   useEffect(() => {
     const prepareApp = async () => {
