@@ -81,7 +81,7 @@ export default function Explore() {
   return (
     <ScrollView className="bg-background">
       <View className="flex flex-row gap-2 items-center w-full p-4">
-        <TouchableOpacity onPress={() => router.push("/profile")}>
+        <TouchableOpacity onPress={() => router.push("/(tabs)/profile")}>
           <CircleUser color="#FFD43B" size={30} />
         </TouchableOpacity>
 

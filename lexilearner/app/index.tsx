@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Redirect, RelativePathString, router } from "expo-router"; // Or useNavigation if using React Navigation
 import { useUserStore } from "@/stores/userStore";
 import { useMiniGameStore } from "@/stores/miniGameStore";
@@ -16,8 +16,8 @@ const Index = () => {
     if (game) {
       return <Redirect href={game as RelativePathString} />;
     } else {
-      return <Redirect href="/home" />;
     }
+    return <Redirect href="/home" />;
   }
 
   return (

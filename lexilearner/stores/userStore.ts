@@ -1,13 +1,17 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { updateProfile as apiUpdateProfile } from "@/services/UserService";
 import { User } from "../models/User";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import {
+  updateProfile as apiUpdateProfile,
+  deleteAccount as apiDeleteAccount,
+} from "~/services/UserService";
 
 type UserStore = {
   user: User | null;
   setUser: (user: User | null) => void;
   updateProfile: (form: Record<string, any>) => Promise<void>;
+  deleteAccount: () => Promise<void>;
 };
 
 export const useUserStore = create<UserStore>()(
@@ -39,6 +43,10 @@ export const useUserStore = create<UserStore>()(
             error instanceof Error ? error.message : "Unknown error occurred",
           );
         }
+      },
+      deleteAccount: async () => {
+        await apiDeleteAccount();
+        set({ user: null });
       },
     }),
     {
