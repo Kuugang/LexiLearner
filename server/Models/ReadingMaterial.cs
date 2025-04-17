@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Security.Cryptography;
 
 namespace LexiLearner.Models
 {
@@ -10,6 +11,7 @@ namespace LexiLearner.Models
         public required Guid GenreId { get; set; }
         [ForeignKey("GenreId")]
         public required Genre Genre { get; set; }
+        public required string Author { get; set; }
 
         [Required]
         [StringLength(100, MinimumLength = 5)]
@@ -27,10 +29,11 @@ namespace LexiLearner.Models
         [DataType(DataType.MultilineText)]
         public required string Content { get; set; }
 
-        [Range(0.0, 10)]
+        [Range(0.0, 100)]
         public required float Difficulty { get; set; }
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public required bool IsDepEd { get; set; }
     }
 }
 
