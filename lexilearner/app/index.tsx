@@ -1,16 +1,23 @@
-import React, { useEffect } from "react";
-import { Redirect, router } from "expo-router"; // Or useNavigation if using React Navigation
+import React from "react";
+import { Redirect, RelativePathString, router } from "expo-router"; // Or useNavigation if using React Navigation
+import { useUserStore } from "@/stores/userStore";
+import { useMiniGameStore } from "@/stores/miniGameStore";
 
+//Components
 import { ScrollView, View, Image } from "react-native";
 import { Button } from "~/components/ui/button";
 import { Text } from "~/components/ui/text";
-import { useUserStore } from "@/stores/userStore";
 
 const Index = () => {
   const user = useUserStore((state) => state.user);
+  const game = useMiniGameStore((state) => state.game);
 
   if (user) {
-    return <Redirect href="/home" />;
+    if (game) {
+      return <Redirect href={game as RelativePathString} />;
+    } else {
+      return <Redirect href="/home" />;
+    }
   }
 
   return (
