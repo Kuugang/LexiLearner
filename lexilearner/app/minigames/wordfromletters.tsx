@@ -12,8 +12,8 @@ import { View, ScrollView, TouchableOpacity } from "react-native";
 import { Text } from "~/components/ui/text";
 import { Heart } from "lucide-react-native";
 import BackHeader from "@/components/BackHeader";
-import { CorrectSound } from "@/utils/sounds";
 import { Progress } from "@/components/ui/progress";
+import { CorrectSound } from "@/utils/sounds";
 
 const LetterButton = memo(({ letter, onPress, disabled }) => (
   <TouchableOpacity
@@ -34,7 +34,7 @@ const GuessSlot = memo(({ letter, onPress, isCorrect }) => {
         withTiming(-5, { duration: 50 }),
         withTiming(5, { duration: 50 }),
         withTiming(-5, { duration: 50 }),
-        withTiming(0, { duration: 50 }),
+        withTiming(0, { duration: 50 })
       );
     }
   }, [isCorrect]);
@@ -49,15 +49,15 @@ const GuessSlot = memo(({ letter, onPress, isCorrect }) => {
     isCorrect === true
       ? "border-green-500"
       : isCorrect === false
-        ? "border-red-500"
-        : "";
+      ? "border-red-500"
+      : "";
 
   const textClass =
     isCorrect === true
       ? "text-green-500"
       : isCorrect === false
-        ? "text-red-500"
-        : "";
+      ? "text-red-500"
+      : "";
 
   return (
     <Animated.View
@@ -156,7 +156,7 @@ function WordFromLetters() {
 
         <Progress
           value={Math.floor(
-            (correctAnswers.length / wordsFromLetters.words.length) * 100,
+            (correctAnswers.length / wordsFromLetters.words.length) * 100
           )}
           className="web:w-[60%] bg-background"
           indicatorClassName="bg-[#8383FF]"

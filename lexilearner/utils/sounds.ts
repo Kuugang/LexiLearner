@@ -16,5 +16,5 @@ export const CorrectSound = new Sound(
         console.log("Playback failed for correct sound");
       }
     });
-  },
+  }
 );
