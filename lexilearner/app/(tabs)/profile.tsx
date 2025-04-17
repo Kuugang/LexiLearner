@@ -1,6 +1,5 @@
 import { router } from "expo-router";
-import { useAuthContext } from "@/context/AuthProvider";
-import { useUserContext } from "@/context/UserProvider";
+import { useUserStore } from "@/stores/userStore";
 
 import { ScrollView, View, Image } from "react-native";
 
@@ -22,7 +21,7 @@ import ProfileStat from "@/components/ProfileStat";
 import BackHeader from "@/components/BackHeader";
 
 export default function Profile() {
-  const { user } = useUserContext();
+  const user = useUserStore((state) => state.user);
 
   return (
     <ScrollView className="bg-background">

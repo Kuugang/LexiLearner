@@ -19,7 +19,7 @@ export const RegisterFormContext =
 export default function AuthLayout() {
   const [registerForm, setRegisterForm] = useState<Record<string, any>>({
     username: "kuugang",
-    email: "jakebajo21@gmail.com",
+    email: "mrekajojab@gmail.com",
     password: "Maotka1!",
     confirmPassword: "Maotka1!",
     firstName: "Jake",

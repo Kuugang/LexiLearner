@@ -1,8 +1,7 @@
 import React, { useContext, useState } from "react";
-import { router } from "expo-router";
 
 import { RegisterFormContext } from "../../app/(auth)/_layout";
-import { useAuthContext } from "@/context/AuthProvider";
+import { useAuthStore } from "@/stores/authStore";
 
 //Components
 import { TouchableOpacity, View, ScrollView } from "react-native";
@@ -22,7 +21,7 @@ interface SignUp1Props {
 
 export default function SignUp1({ formErrors, handleStep }: SignUp1Props) {
   const { registerForm, setRegisterForm } = useContext(RegisterFormContext);
-  const { providerAuth } = useAuthContext();
+  const providerAuth = useAuthStore((state) => state.providerAuth);
 
   const [showPassword, setShowPassword] = React.useState(false);
 

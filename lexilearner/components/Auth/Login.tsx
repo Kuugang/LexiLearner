@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import Toast from "react-native-toast-message";
-import { useGlobalContext } from "@/context/GlobalProvider";
+import { useGlobalStore } from "~/stores/globalStore";
 import { router } from "expo-router";
-import { useAuthContext } from "@/context/AuthProvider";
+import { useAuthStore } from "@/stores/authStore";
 import { validateField } from "@/utils/utils";
 
 //Components
@@ -11,17 +11,15 @@ import { Eye, EyeOff, Mail, KeyRound } from "lucide-react-native";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Text } from "~/components/ui/text";
-import { Separator } from "~/components/ui/separator";
 
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faGoogle, faFacebook } from "@fortawesome/free-brands-svg-icons";
-import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import BackHeader from "../BackHeader";
 
 export default function Login() {
-  const { login } = useAuthContext();
-  const { providerAuth } = useAuthContext();
-  const { setIsLoading } = useGlobalContext();
+  const login = useAuthStore((state) => state.login);
+  const providerAuth = useAuthStore((state) => state.providerAuth);
+  const setIsLoading = useGlobalStore((state) => state.setIsLoading);
 
   const [showPassword, setShowPassword] = useState(false);
 
@@ -35,10 +33,25 @@ export default function Login() {
     password: "",
   });
 
-  const handleState = () => {
-    setShowPassword((showState) => {
-      return !showState;
-    });
+  const handleProviderAuth = async (provider: number) => {
+    try {
+      setIsLoading(true);
+      await providerAuth(provider);
+
+      Toast.show({
+        type: "success",
+        text1: "Authentication Success",
+      });
+      router.replace("/home");
+    } catch (error: any) {
+      Toast.show({
+        type: "error",
+        text1: "Authentication Failed",
+        text2: error.message,
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleLogin = async () => {
@@ -177,7 +190,7 @@ export default function Login() {
               <Button
                 className="bg-white shadow-md rounded-lg"
                 onPress={() => {
-                  providerAuth(0);
+                  handleProviderAuth(0);
                 }}
               >
                 <FontAwesomeIcon icon={faGoogle} />
@@ -186,7 +199,7 @@ export default function Login() {
               <Button
                 className="bg-white shadow-md rounded-lg"
                 onPress={() => {
-                  providerAuth(1);
+                  handleProviderAuth(1);
                 }}
               >
                 <FontAwesomeIcon icon={faFacebook} />

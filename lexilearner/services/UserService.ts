@@ -1,115 +1,58 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { axiosInstance } from "@/utils/axiosInstance";
 
 import { API_URL } from "../utils/constants";
 
 export const getProfile = async () => {
   try {
-    const token = await AsyncStorage.getItem("token");
+    const response = await axiosInstance.get(`${API_URL}/users/me`);
 
-    if (!token) {
-      throw new Error("No token found");
-    }
-
-    //modularize this
-    const response = await fetch(`${API_URL}/users/me`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    });
-
-    const data = await response.json();
-
-    if (![200, 204].includes(response.status)) {
-      throw new Error(`Profile fetch failed: ${data.message}`);
-    }
-
-    return data;
-  } catch (error) {
-    console.error("Error fetching data:", error);
+    return response.data;
+  } catch (error: any) {
+    console.error("Error fetching profile:", error);
+    throw new Error(
+      error?.response?.data?.message || "Failed to fetch profile",
+    );
   }
 };
 
 export const updateProfile = async (updateProfileForm: Record<string, any>) => {
-  const token = await AsyncStorage.getItem("token");
+  const requestData = new FormData();
 
-  if (!token) {
-    throw new Error("No token found");
-  }
-
-  let requestData = new FormData();
-
-  // Append each field from updateProfileForm to FormData
   Object.keys(updateProfileForm).forEach((key) => {
-    if (
-      updateProfileForm[key] instanceof File ||
-      updateProfileForm[key] instanceof Blob
-    ) {
-      requestData.append(key, updateProfileForm[key]);
+    const value = updateProfileForm[key];
+    if (value instanceof File || value instanceof Blob) {
+      requestData.append(key, value);
     } else {
-      // Convert other values to string before appending
-      requestData.append(key, updateProfileForm[key].toString());
+      requestData.append(key, value?.toString());
     }
   });
 
-  const response = await fetch(`${API_URL}/users/me`, {
-    method: "PUT",
-    headers: {
-      Authorization: `Bearer ${token}`, // Do not set 'Content-Type', let FormData handle it
-    },
-    body: requestData,
-  });
+  try {
+    const response = await axiosInstance.put(`/users/me`, requestData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
 
-  const data = await response.json();
-
-  if (!response.ok) {
-    throw new Error("Update profile failed: " + data.message);
+    return response.data;
+  } catch (error: any) {
+    const message = error.response?.data?.message || "";
+    throw Error(message);
   }
-
-  return data;
 };
 
 export const checkUserExist = async (fieldType: string, fieldValue: string) => {
-  try {
-    const response = await fetch(
-      `${API_URL}/users/check-user?fieldType=${fieldType}&fieldValue=${fieldValue}`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      },
-    );
-
-    const data = await response.json();
-
-    return data;
-  } catch (error) {
-    console.error("Error fetching data:", error);
-  }
+  const response = await axiosInstance.get(
+    `/users/check-user?fieldType=${fieldType}&fieldValue=${fieldValue}`,
+    {
+      validateStatus: () => true,
+    },
+  );
+  return response.data;
 };
 
-// DD:
 export const deleteAccount = async () => {
-  const token = await AsyncStorage.getItem("token");
-
-  if (!token) {
-    throw new Error("No token found");
-  }
-
-  const response = await fetch(`${API_URL}/users/me`, {
-    method: "DELETE",
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-
-  const data = await response.json();
-
-  if (!response.ok) {
-    throw new Error(data.message || "Account deletion failed");
-  }
-
-  return data;
+  const response = await axiosInstance.delete(`/users/me`);
+  return response.data;
 };

@@ -1,12 +1,13 @@
-import { useUserContext } from "@/context/UserProvider";
 import { router } from "expo-router";
 import { useEffect, useState } from "react";
-import { checkUserExist, deleteAccount } from "@/services/UserService";
+import { checkUserExist } from "@/services/UserService";
 import { validateField } from "@/utils/utils";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useUserStore } from "@/stores/userStore";
+import { useGlobalStore } from "@/stores/globalStore";
+import { useAuthStore } from "@/stores/authStore";
 
 //Components
-import { Alert, View, ScrollView, Image } from "react-native";
+import { View, ScrollView, Image } from "react-native";
 import { Text } from "@/components/ui/text";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -21,16 +22,19 @@ import {
   DialogTrigger,
 } from "~/components/ui/dialog";
 import BackHeader from "@/components/BackHeader";
-import { AuthContext, useAuthContext } from "@/context/AuthProvider";
-import { StackActions } from "@react-navigation/native";
 import Toast from "react-native-toast-message";
-import { useGlobalContext } from "@/context/GlobalProvider";
 
 export default function Settings() {
-  const { setIsLoading } = useGlobalContext();
-  const { user, updateProfile } = useUserContext();
-  const { logout } = useAuthContext();
+  const [deleteAccountDialogOpen, setDeleteAccountDialogOpen] =
+    useState<boolean>(false);
   const [isProfileChanged, setIsProfileChanged] = useState(false);
+  const setIsLoading = useGlobalStore((state) => state.setIsLoading);
+  const user = useUserStore((state) => state.user);
+  const updateProfile = useUserStore((state) => state.updateProfile);
+  const deleteAccount = useUserStore((state) => state.deleteAccount);
+
+  const logout = useAuthStore((state) => state.logout);
+
   const [profile, setProfile] = useState({
     firstName: user?.firstName,
     lastName: user?.lastName,
@@ -83,7 +87,7 @@ export default function Settings() {
     } catch (error: any) {
       Toast.show({
         type: "error",
-        text1: "Login Failed",
+        text1: "Update Profile Failed",
         text2: error.message,
       });
     } finally {
@@ -93,11 +97,25 @@ export default function Settings() {
 
   const handleDeleteAccount = async () => {
     try {
+      setIsLoading(true);
       await deleteAccount();
-      await AsyncStorage.removeItem("token");
-      router.push("/");
-    } catch (err) {
-      Alert.alert("Error deleting account");
+
+      Toast.show({
+        type: "success",
+        text1: "Goodbye for now 👋",
+        text2: "Your account has been deleted. We're sad to see you go!",
+      });
+      setDeleteAccountDialogOpen(false);
+
+      router.replace("/");
+    } catch (error: any) {
+      Toast.show({
+        type: "error",
+        text1: "Delete Account Failed",
+        text2: error.message,
+      });
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -105,7 +123,7 @@ export default function Settings() {
     <ScrollView className="bg-background p-8">
       <BackHeader />
 
-      <View space="xl" className="justify-around">
+      <View className="justify-around">
         <View className="flex items-center justify-center gap-4">
           <Image
             source={require("@/assets/images/leeseopp.png")}
@@ -153,6 +171,16 @@ export default function Settings() {
           ></Input>
         </View>
 
+        <View className="py-1">
+          <Text>Email</Text>
+
+          <Input
+            editable={false}
+            placeholder={user?.email}
+            value={user?.email}
+          ></Input>
+        </View>
+
         <View className="py-5">
           <Text>Password</Text>
           <Input placeholder="******"></Input>
@@ -168,12 +196,16 @@ export default function Settings() {
         {/*   <Text>DELETE ACCOUNT</Text> */}
         {/* </Button> */}
 
-        <Dialog>
-          <DialogTrigger asChild>
-            <Button variant="outline">
-              <Text className="text-destructive">Delete Account</Text>
-            </Button>
-          </DialogTrigger>
+        <Dialog
+          open={deleteAccountDialogOpen}
+          onOpenChange={setDeleteAccountDialogOpen}
+        >
+          <Button
+            variant="outline"
+            onPress={() => setDeleteAccountDialogOpen(true)}
+          >
+            <Text className="text-destructive">Delete Account</Text>
+          </Button>
           <DialogContent className="sm:max-w-[425px]">
             <DialogHeader>
               <DialogTitle>Delete Account</DialogTitle>
@@ -185,11 +217,9 @@ export default function Settings() {
               <Button onPress={() => handleDeleteAccount()}>
                 <Text className="text-destructive">Yes</Text>
               </Button>
-              <DialogClose asChild>
-                <Button>
-                  <Text>No</Text>
-                </Button>
-              </DialogClose>
+              <Button onPress={() => setDeleteAccountDialogOpen(false)}>
+                <Text>No</Text>
+              </Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>

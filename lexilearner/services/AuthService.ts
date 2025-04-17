@@ -19,6 +19,7 @@ import {
   AuthenticationToken,
   LoginManager,
 } from "react-native-fbsdk-next";
+import { axiosInstance } from "@/utils/axiosInstance";
 
 interface AuthResponse {
   message: string;
@@ -29,18 +30,22 @@ interface AuthResponse {
 
 export const login = async (email: string, password: string) => {
   try {
-    const response = await fetch(`${API_URL}/auth/login`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password }),
-    });
+    const response = await axiosInstance.post(
+      "/auth/login",
+      {
+        email,
+        password,
+      },
+      {
+        validateStatus: () => true,
+      },
+    );
 
-    const data = await response.json();
-
-    if (!response.ok) {
-      throw new Error(data.message);
+    if (response.status !== 200) {
+      throw new Error(response.data.message);
     }
-    return data;
+
+    return response.data;
   } catch (error: any) {
     throw new Error(
       error instanceof Error ? error.message : "Unknown error occurred",
@@ -49,18 +54,20 @@ export const login = async (email: string, password: string) => {
 };
 
 export const signUp = async (registerForm: Record<string, any>) => {
-  const response = await fetch(`${API_URL}/auth/register`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(registerForm),
-  });
+  const response = await axiosInstance.post(
+    "/auth/register",
+    registerForm,
 
-  const data = await response.json();
-  if (!response.ok) {
-    throw new Error("Sign Up failed: " + data.message);
+    {
+      validateStatus: () => true,
+    },
+  );
+
+  if (response.status !== 200 && response.status !== 201) {
+    throw new Error(response.data.message);
   }
 
-  return data;
+  return response.data;
 };
 
 export const tokenAuth = async (
@@ -68,16 +75,22 @@ export const tokenAuth = async (
   Token: string,
 ): Promise<AuthResponse> => {
   try {
-    const response = await fetch(`${API_URL}/auth/token`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ token: Token, provider: Provider }),
-    });
-    if (!response.ok) {
-      throw new Error("Failed to authenticate with backend");
+    const response = await axiosInstance.post(
+      "/auth/token",
+      {
+        token: Token,
+        provider: Provider,
+      },
+      {
+        validateStatus: () => true,
+      },
+    );
+
+    if (response.status !== 200 && response.status !== 201) {
+      throw new Error(response.data.message);
     }
 
-    return await response.json();
+    return response.data;
   } catch (error) {
     throw new Error(
       error instanceof Error ? error.message : "Unknown error occurred",
@@ -104,7 +117,7 @@ export const signInWithGoogle = async () => {
 
 export const signInWithFacebook = async () => {
   try {
-    const result = await LoginManager.logInWithPermissions(
+    await LoginManager.logInWithPermissions(
       ["public_profile", "email"],
       "limited",
       "my_nonce", // Optional
