@@ -86,28 +86,28 @@ namespace LexiLearner.Data
                 .HasOne(rs => rs.ReadingMaterial)
                 .WithMany()
                 .HasForeignKey(rs => rs.ReadingMaterialId);
-                
-            modelBuilder.Entity<Genre>()
-                .HasData(
-                    new Genre { Name = "Science Fiction" },
-                    new Genre { Name = "Mystery" },
-                    new Genre { Name = "Supernatural" },
-                    new Genre { Name = "Fantasy" },
-                    new Genre { Name = "Political Intrigue" },
-                    new Genre { Name = "Paranormal" },
-                    new Genre { Name = "Romance" },
-                    new Genre { Name = "Horror" },
-                    new Genre { Name = "Thriller" },
-                    new Genre { Name = "Coming of Age" },
-                    new Genre { Name = "Historical Fiction" },
-                    new Genre { Name = "Drama" },
-                    new Genre { Name = "Adventure" },
-                    new Genre { Name = "Comedy" },
-                    new Genre { Name = "Metafiction" },
-                    new Genre { Name = "Short story" },
-                    new Genre { Name = "Passage" },
-                    new Genre { Name = "Novel" }
-                );
+
+    //   modelBuilder.Entity<Genre>()
+    //        .HasData(
+    //          new Genre { Name = "Science Fiction" },
+    //          new Genre { Name = "Mystery" },
+    //          new Genre { Name = "Supernatural" },
+    //          new Genre { Name = "Fantasy" },
+    //          new Genre { Name = "Political Intrigue" },
+    //          new Genre { Name = "Paranormal" },
+    //          new Genre { Name = "Romance" },
+    //          new Genre { Name = "Horror" },
+    //          new Genre { Name = "Thriller" },
+    //          new Genre { Name = "Coming of Age" },
+    //          new Genre { Name = "Historical Fiction" },
+    //          new Genre { Name = "Drama" },
+    //          new Genre { Name = "Adventure" },
+    //          new Genre { Name = "Comedy" },
+    //          new Genre { Name = "Metafiction" },
+    //          new Genre { Name = "Short story" },
+    //          new Genre { Name = "Passage" },
+    //          new Genre { Name = "Novel" }
+    //         );
         }
     }
 }

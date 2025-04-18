@@ -7,6 +7,6 @@ namespace LexiLearner.Interfaces
     {
       Task<ReadingMaterial> Create(ReadingMaterialDTO.Create request);
       Task<ReadingMaterial?> GetById(Guid id);
-      Task<List<ReadingMaterial>> FilterReadingMaterials(ReadingMaterialDTO.Read read);
+      Task<List<ReadingMaterial>> FilterReadingMaterials(ReadingMaterialDTO.Read filters);
     }
 }

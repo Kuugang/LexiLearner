@@ -17,6 +17,8 @@ using LexiLearner.Interfaces;
 using LexiLearner.Services;
 using LexiLearner.Repository;
 using LexiLearner.Validators;
+using System.Threading.Tasks;
+using LexiLearner.Extensions;
 
 
 namespace LexiLearner
@@ -113,8 +115,16 @@ namespace LexiLearner
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<ITwoFactorAuthService, TwoFactorAuthService>();
             services.AddHttpClient<IAuthService, AuthService>();
+            services.AddScoped<IGenreService, GenreService>();
+            services.AddScoped<IReadabilityService, ReadabilityService>();
+            services.AddScoped<IReadingMaterialService,  ReadingMaterialService>();
+            services.AddScoped<IFileUploadService, FileUploadService>();
+
 
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IGenreRepository, GenreRepository>();
+            services.AddScoped<IReadingMaterialRepository, ReadingMaterialRepository>();
+
 
             // Configure Entity Framework with PostgreSQL
             services.AddDbContext<DataContext>(options =>
@@ -215,6 +225,8 @@ namespace LexiLearner
             {
                 endpoints.MapControllers();
             });
+
+            app.SeedDatabaseAsync().Wait();
         }
     }
 }

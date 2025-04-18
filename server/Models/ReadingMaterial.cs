@@ -34,6 +34,7 @@ namespace LexiLearner.Models
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public required bool IsDepEd { get; set; }
+        public int Grade_Level { get; set; }
     }
 }
 

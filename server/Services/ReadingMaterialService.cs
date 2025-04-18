@@ -42,14 +42,16 @@ namespace LexiLearner.Services
     }
     
 
-    public Task<List<ReadingMaterial>> FilterReadingMaterials(ReadingMaterialDTO.Read read)
+    public async Task<List<ReadingMaterial>> FilterReadingMaterials(ReadingMaterialDTO.Read filters)
     {
-      throw new NotImplementedException();
+      var readingMats = await _readingMaterialRepository.FilterReadingMaterial(filters);
+      return readingMats;
     }
 
-    public Task<ReadingMaterial?> GetById(Guid id)
+    public async Task<ReadingMaterial?> GetById(Guid id)
     {
-      throw new NotImplementedException();
+      var readingMat = await _readingMaterialRepository.GetByIdAsync(id);
+      return readingMat;
     }
   }
 }
