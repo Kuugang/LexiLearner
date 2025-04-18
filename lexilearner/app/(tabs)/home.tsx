@@ -16,9 +16,9 @@ interface HomeScreenProps {}
 export default function HomeScreen({}: HomeScreenProps): JSX.Element {
   const { data: stories, isLoading: isStoriesLoading } = useStories();
 
-  // useEffect(() => {
-  //   router.push("/minigames/2truths1lie");
-  // }, []);
+  useEffect(() => {
+    router.push("/minigames/sentencearrangement");
+  }, []);
 
   return (
     <ScrollView className="bg-background">

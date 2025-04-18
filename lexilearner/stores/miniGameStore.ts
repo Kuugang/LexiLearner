@@ -27,8 +27,8 @@ export const useMiniGameStore = create<MiniGameStore>()(
           await AsyncStorage.removeItem(name);
         },
       },
-    }
-  )
+    },
+  ),
 );
 
 interface WordsFromLettersGameState {
@@ -117,8 +117,8 @@ export const use2Truths1LieGameStore = create<_2Truths1LieGameState>()(
           await AsyncStorage.removeItem(name);
         },
       },
-    }
-  )
+    },
+  ),
 );
 
 export const useWordHuntGameStore = create<WordHuntGameState>()(
@@ -183,8 +183,8 @@ export const useWordHuntGameStore = create<WordHuntGameState>()(
           await AsyncStorage.removeItem(name);
         },
       },
-    }
-  )
+    },
+  ),
 );
 
 export const useWordsFromLettersMiniGameStore =
@@ -219,7 +219,7 @@ export const useWordsFromLettersMiniGameStore =
             state.usedIndices.forEach((letterIndex, guessIndex) => {
               if (letterIndex !== -1) {
                 const newPosition = shuffled.findIndex(
-                  (item) => item.originalIndex === letterIndex
+                  (item) => item.originalIndex === letterIndex,
                 );
                 if (newPosition !== -1) {
                   newUsedIndices[guessIndex] = newPosition;
@@ -318,9 +318,14 @@ interface SentenceArrangementGameState {
   lives: number;
 
   setCorrectAnswer: (answer: string[]) => void;
+  setParts: (parts: string[]) => void;
   addAnswer: (answer: string[]) => void;
+  resetCurrentAnswer: () => void;
+  addPartToCurrentAnswer: (part: string) => void;
+  removePartFromCurrentAnswer: (index: number) => void;
   resetGame: () => void;
   decrementLives: () => void;
+  resetGameState: () => void;
 }
 
 export const useSentenceArrangementMiniGameStore =
@@ -334,11 +339,24 @@ export const useSentenceArrangementMiniGameStore =
         lives: 3,
 
         setCorrectAnswer: (answer: string[]) => set({ correctAnswer: answer }),
+        setParts: (parts: string[]) => set({ parts: parts }),
+        resetCurrentAnswer: () => set({ currentAnswer: [] }),
 
         addAnswer: (answer: string[]) =>
           set((state) => ({
             answers: [...state.answers, [...answer]],
           })),
+
+        addPartToCurrentAnswer: (part: string) =>
+          set((state) => ({ currentAnswer: [...state.currentAnswer, part] })),
+
+        removePartFromCurrentAnswer: (index: number) =>
+          set((state) => {
+            const updated = [...state.currentAnswer];
+            const newParts = [...state.parts, updated[index]];
+            updated.splice(index, 1);
+            return { currentAnswer: updated, parts: newParts };
+          }),
 
         resetGame: () =>
           set(() => {
@@ -354,9 +372,20 @@ export const useSentenceArrangementMiniGameStore =
           }),
 
         decrementLives: () => set((state) => ({ lives: state.lives - 1 })),
+
+        resetGameState: () =>
+          set((state) => {
+            return {
+              correctAnswer: [],
+              parts: [],
+              answers: [],
+              currentAnswer: [],
+              lives: 3,
+            };
+          }),
       }),
       {
-        name: "words-from-letters-store",
+        name: "sentence-arrangement-store",
         storage: {
           getItem: async (name) => {
             const value = await AsyncStorage.getItem(name);
@@ -369,6 +398,6 @@ export const useSentenceArrangementMiniGameStore =
             await AsyncStorage.removeItem(name);
           },
         },
-      }
-    )
+      },
+    ),
   );

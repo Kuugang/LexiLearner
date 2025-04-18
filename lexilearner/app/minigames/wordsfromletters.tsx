@@ -75,6 +75,7 @@ export default function WordsFromLetters() {
 
   useEffect(() => {
     setGame(pathname);
+    setLetters(wordsFromLetters.letters);
     const backHandler = BackHandler.addEventListener(
       "hardwareBackPress",
       () => {

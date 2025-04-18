@@ -73,7 +73,7 @@ export function ReadingContentProvider({
         Description: "Book description from the API",
         Cover: "default-cover.png",
         Content: "Book content here loaded from the API...",
-        Genre: "Fiction",
+        Genre: ["Fiction"],
         Difficulty: 3,
       };
 
