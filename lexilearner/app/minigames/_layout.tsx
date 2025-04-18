@@ -7,6 +7,9 @@ export default function MinigamesLayout() {
     <Stack screenOptions={{ headerShown: false }}>
       <Stack.Screen name="wordhunt" />
       <Stack.Screen name="wordfromletters" />
+      <Stack.Screen name="2truths1lie" />
+      {/* <Stack.Screen name="fillintheblanks" />
+      <Stack.Screen name="sentencearrangement" /> */}
     </Stack>
   );
 }

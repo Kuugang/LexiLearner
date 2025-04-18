@@ -27,8 +27,8 @@ export const useMiniGameStore = create<MiniGameStore>()(
           await AsyncStorage.removeItem(name);
         },
       },
-    },
-  ),
+    }
+  )
 );
 
 interface WordsFromLettersGameState {
@@ -59,6 +59,133 @@ interface WordsFromLettersGameState {
 
   decrementLives: () => void;
 }
+
+type Choice = { choice: string; answer: boolean };
+interface _2Truths1LieGameState {
+  choices: Choice[];
+  score: number;
+
+  setScore: () => void;
+  setChoices: (choices: Choice[]) => void;
+  newGame: () => void;
+}
+
+interface WordHuntGameState {
+  correctAnswers: string[];
+  wrongAnswers: string[];
+  allWords: string[];
+  lives: number;
+  streak: number;
+  shuffledWords: string[];
+  answered: string[];
+
+  setShuffled: (allWords: string[]) => void;
+  setAnswered: (answered: string) => void;
+  setCorrectAnswers: (correctAnswers: string[]) => void;
+  setWrongAnswers: (wrongAnswers: string[]) => void;
+  setAllWords: (allWords: string[]) => void;
+
+  incrementStreak: () => void;
+  resetStreak: () => void;
+  newGame: () => void;
+  decrementLives: () => void;
+}
+
+export const use2Truths1LieGameStore = create<_2Truths1LieGameState>()(
+  persist(
+    (set) => ({
+      choices: [],
+      score: 0,
+
+      setScore: () => set((state) => ({ score: state.score + 1 })),
+      setChoices: (choices: Choice[]) => set((state) => ({ choices: choices })),
+      newGame: () => set(() => ({ score: 0 })),
+    }),
+    {
+      name: "2-truths-1-lie-store",
+      storage: {
+        getItem: async (name) => {
+          const value = await AsyncStorage.getItem(name);
+          // Parse string to object if exists
+          return value ? JSON.parse(value) : null;
+        },
+        setItem: async (name, value) => {
+          // Convert object to string
+          await AsyncStorage.setItem(name, JSON.stringify(value));
+        },
+        removeItem: async (name) => {
+          await AsyncStorage.removeItem(name);
+        },
+      },
+    }
+  )
+);
+
+export const useWordHuntGameStore = create<WordHuntGameState>()(
+  persist(
+    (set) => ({
+      correctAnswers: [],
+      wrongAnswers: [],
+      allWords: [],
+      lives: 3,
+      streak: 0,
+      shuffledWords: [],
+      answered: [],
+
+      setShuffled: (allWords: string[]) => {
+        const shuffled = allWords
+          .map((value) => ({ value, sort: Math.random() }))
+          .sort((a, b) => a.sort - b.sort)
+          .map(({ value }) => value);
+
+        set({ shuffledWords: shuffled });
+      },
+
+      setAnswered: (word: string) =>
+        set((state) => ({
+          answered: [...state.answered, word],
+        })),
+
+      setCorrectAnswers: (correctAnswers: string[]) =>
+        set((state) => ({ correctAnswers: correctAnswers })),
+      setWrongAnswers: (wrongAnswers: string[]) =>
+        set((state) => ({ wrongAnswers: wrongAnswers })),
+      setAllWords: (allWords: string[]) =>
+        set((state) => ({ allWords: allWords })),
+
+      decrementLives: () =>
+        set((state) => ({
+          lives: state.lives - 1,
+        })),
+
+      resetStreak: () => set((state) => ({ streak: 0 })),
+      newGame: () =>
+        set(() => ({
+          lives: 3,
+          streak: 0,
+          answered: [],
+        })),
+      incrementStreak: () => set((state) => ({ streak: state.streak + 1 })),
+    }),
+    {
+      name: "words-hunt-store",
+      storage: {
+        getItem: async (name) => {
+          const value = await AsyncStorage.getItem(name);
+          // Parse string to object if exists
+          return value ? JSON.parse(value) : null;
+        },
+        setItem: async (name, value) => {
+          // Convert object to string
+          await AsyncStorage.setItem(name, JSON.stringify(value));
+        },
+        removeItem: async (name) => {
+          await AsyncStorage.removeItem(name);
+        },
+      },
+    }
+  )
+);
 
 export const useWordsFromLettersMiniGameStore =
   create<WordsFromLettersGameState>()(
@@ -92,7 +219,7 @@ export const useWordsFromLettersMiniGameStore =
             state.usedIndices.forEach((letterIndex, guessIndex) => {
               if (letterIndex !== -1) {
                 const newPosition = shuffled.findIndex(
-                  (item) => item.originalIndex === letterIndex,
+                  (item) => item.originalIndex === letterIndex
                 );
                 if (newPosition !== -1) {
                   newUsedIndices[guessIndex] = newPosition;
@@ -179,6 +306,6 @@ export const useWordsFromLettersMiniGameStore =
             await AsyncStorage.removeItem(name);
           },
         },
-      },
-    ),
+      }
+    )
   );
