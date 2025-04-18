@@ -1,7 +1,19 @@
-import { ScrollView, StyleSheet, Text, View, Pressable } from "react-native";
-import React, { useState } from "react";
+import {
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+  Pressable,
+  BackHandler,
+} from "react-native";
+import React, { useEffect, useState } from "react";
 import { Progress } from "@/components/ui/progress";
 import BackHeader from "@/components/BackHeader";
+import {
+  use2Truths1LieGameStore,
+  useMiniGameStore,
+} from "@/stores/miniGameStore";
+import { usePathname } from "expo-router";
 
 export function ChoicesBtn({
   sentence,
@@ -31,13 +43,37 @@ export default function _2Truths1Lie() {
     { choice: "The sky is green", answer: true },
     { choice: "Fish live in water", answer: false },
   ];
-  const [score, setScore] = useState(0);
+
+  // const choices = use2Truths1LieGameStore((state) => state.choices);
+  const score = use2Truths1LieGameStore((state) => state.score);
+
+  // const setChoices = use2Truths1LieGameStore((state) => state.setChoices);
+  const setScore = use2Truths1LieGameStore((state) => state.setScore);
+  const newGame = use2Truths1LieGameStore((state) => state.newGame);
+
+  const setGame = useMiniGameStore((state) => state.setGame);
+  const pathname = usePathname(); // This gives you the current path
+
+  useEffect(() => {
+    newGame();
+    setGame(pathname);
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      () => {
+        return true;
+      }
+    );
+
+    return () => backHandler.remove();
+  }, []);
 
   const onPress = (answer: boolean) => {
     if (answer === true) {
-      setScore(score + 1);
+      setScore();
     }
   };
+
+  console.log("TEST: ", score);
 
   return (
     <ScrollView className="bg-lightGray">
@@ -56,12 +92,12 @@ export default function _2Truths1Lie() {
           </View>
           <Text className="text-center font-medium p-3">
             Can you find which one is the lie?
-            {score}
           </Text>
 
           <View className="my-24">
-            {choices.map((choice) => (
+            {choices.map((choice, i) => (
               <ChoicesBtn
+                key={i}
                 sentence={choice.choice}
                 onPress={() => {
                   onPress(choice.answer);

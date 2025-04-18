@@ -1,4 +1,5 @@
 import {
+  BackHandler,
   ColorValue,
   Pressable,
   ScrollView,
@@ -6,10 +7,13 @@ import {
   Text,
   View,
 } from "react-native";
-import React, { memo, useEffect, useState } from "react";
+import React, { memo, useCallback, useEffect, useState } from "react";
 import BackHeader from "@/components/BackHeader";
 import { Progress } from "@/components/ui/progress";
 import { Heart } from "lucide-react-native";
+import { useWordHuntGameStore } from "@/stores/miniGameStore";
+import { useMiniGameStore } from "@/stores/miniGameStore";
+import { usePathname } from "expo-router";
 
 export function WordHuntBtn({
   word,
@@ -35,37 +39,77 @@ export function WordHuntBtn({
 }
 
 export default function WordHunt() {
-  const [lives, setLives] = useState(3);
-  const [score, setScore] = useState(0);
+  const correctAnswers = useWordHuntGameStore((state) => state.correctAnswers);
+  const wrongAnswers = useWordHuntGameStore((state) => state.wrongAnswers);
+  const allWords = useWordHuntGameStore((state) => state.allWords);
+  const lives = useWordHuntGameStore((state) => state.lives);
+  const streak = useWordHuntGameStore((state) => state.streak);
+  const shuffledWords = useWordHuntGameStore((state) => state.shuffledWords);
+  const answered = useWordHuntGameStore((state) => state.answered);
 
-  if (lives == 0) {
-    alert("No more lives!" + score);
-  }
+  const setShuffled = useWordHuntGameStore((state) => state.setShuffled);
+  const setAnswered = useWordHuntGameStore((state) => state.setAnswered);
+  const setCorrectAnswers = useWordHuntGameStore(
+    (state) => state.setCorrectAnswers
+  );
+  const setWrongAnswers = useWordHuntGameStore(
+    (state) => state.setWrongAnswers
+  );
+  const setAllWords = useWordHuntGameStore((state) => state.setAllWords);
+  const incrementStreak = useWordHuntGameStore(
+    (state) => state.incrementStreak
+  );
+  const newGame = useWordHuntGameStore((state) => state.newGame);
+  const resetStreak = useWordHuntGameStore((state) => state.resetStreak);
+  const decrementLives = useWordHuntGameStore((state) => state.decrementLives);
 
-  const answers = ["hood", "weak", "peep", "quietly", "child", "nothing"]; //mga sakto
-  const allWord = [...answers, "paramore", "laptop", "phone"];
-  const [random, setRandomWord] = useState<string[]>([]);
+  const setGame = useMiniGameStore((state) => state.setGame);
+  const pathname = usePathname(); // This gives you the current path
 
-  const [correct, setCorrect] = useState<number[]>([]);
-
-  // stackoverflow aah
+  // TODO morerender syag thrice somewhere diri HSHAHSAH
   useEffect(() => {
-    let randomized = allWord
-      .map((value) => ({ value, sort: Math.random() }))
-      .sort((a, b) => a.sort - b.sort)
-      .map(({ value }) => value);
+    const correct = ["hood", "weak", "peep", "quietly", "child", "nothing"];
+    const wrong = ["paramore", "laptop", "phone"];
+    const combined = [...correct, ...wrong];
 
-    setRandomWord(randomized);
+    setCorrectAnswers(correct);
+    setWrongAnswers(wrong);
+    setAllWords(combined);
+    newGame();
   }, []);
 
-  const onPress = (word: string, clickedWord: number) => {
-    if (answers.includes(word) && lives > 0) {
-      setScore(score + 1);
-      setCorrect((prev) => [...prev, clickedWord]);
-    } else {
-      setLives(lives - 1);
-    }
-  };
+  useEffect(() => {
+    setGame(pathname);
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      () => {
+        return true;
+      }
+    );
+
+    return () => backHandler.remove();
+  }, []);
+
+  useEffect(() => {
+    setShuffled(allWords);
+  }, [allWords]);
+
+  const onPress = useCallback(
+    (word: string) => {
+      console.log("TEST: ", correctAnswers.includes(word));
+      if (correctAnswers.includes(word) && lives > 0) {
+        incrementStreak();
+        setAnswered(word);
+      } else {
+        decrementLives();
+        resetStreak();
+      }
+    },
+    [lives, streak, answered]
+  );
+
+  console.log(correctAnswers, lives, streak);
+  console.log("ANSWERED: ", answered);
 
   return (
     <ScrollView className="bg-lightGray">
@@ -73,15 +117,19 @@ export default function WordHunt() {
         <BackHeader />
 
         <Progress
-          value={(score / answers.length) * 100}
+          value={(streak / correctAnswers.length) * 100}
           className="web:w-[60%] bg-background"
           indicatorClassName="bg-[#8383FF]"
         />
 
         <View className="p-8">
           <View className="items-center">
+            <View className="flex flex-row justify-center gap-3">
+              {Array.from({ length: lives }).map((_, i) => (
+                <Heart key={i} fill="#8383FF" />
+              ))}
+            </View>
             <View className="flex flex-row gap-2 justify-center items-center">
-              <Heart fill="#8383FF" />
               <Text className="text-3xl font-black">Word Hunt</Text>
             </View>
             <Text className="text-center font-medium p-3">
@@ -90,14 +138,16 @@ export default function WordHunt() {
           </View>
 
           <View className="flex-row flex-wrap gap-3 justify-center mt-6">
-            {random.map((word, i) => (
+            {shuffledWords.map((word, i) => (
               <WordHuntBtn
                 key={i}
                 word={word}
-                onPress={() => {
-                  onPress(word, i);
-                }}
-                disabled={correct.includes(i) || lives === 0}
+                onPress={() => onPress(word)}
+                disabled={
+                  answered.includes(word) ||
+                  lives === 0 ||
+                  answered.length == correctAnswers.length
+                }
               />
             ))}
           </View>
