@@ -168,11 +168,74 @@ export const useWordsFromLettersMiniGameStore =
         storage: {
           getItem: async (name) => {
             const value = await AsyncStorage.getItem(name);
-            // Parse string to object if exists
             return value ? JSON.parse(value) : null;
           },
           setItem: async (name, value) => {
-            // Convert object to string
+            await AsyncStorage.setItem(name, JSON.stringify(value));
+          },
+          removeItem: async (name) => {
+            await AsyncStorage.removeItem(name);
+          },
+        },
+      },
+    ),
+  );
+
+interface SentenceArrangementGameState {
+  correctAnswer: string[];
+  parts: string[];
+  currentAnswer: string[];
+
+  answers: string[][];
+
+  lives: number;
+
+  setCorrectAnswer: (answer: string[]) => void;
+  addAnswer: (answer: string[]) => void;
+  resetGame: () => void;
+  decrementLives: () => void;
+}
+
+export const useSentenceArrangementMiniGameStore =
+  create<SentenceArrangementGameState>()(
+    persist(
+      (set) => ({
+        correctAnswer: [],
+        parts: [],
+        answers: [],
+        currentAnswer: [],
+        lives: 3,
+
+        setCorrectAnswer: (answer: string[]) => set({ correctAnswer: answer }),
+
+        addAnswer: (answer: string[]) =>
+          set((state) => ({
+            answers: [...state.answers, [...answer]],
+          })),
+
+        resetGame: () =>
+          set(() => {
+            return {
+              letters: Array(5).fill(""),
+              guess: Array(5).fill(""),
+              usedIndices: Array(5).fill(-1),
+              correctAnswers: [],
+              incorrectAnswers: [],
+              streak: 0,
+              lives: 3,
+            };
+          }),
+
+        decrementLives: () => set((state) => ({ lives: state.lives - 1 })),
+      }),
+      {
+        name: "words-from-letters-store",
+        storage: {
+          getItem: async (name) => {
+            const value = await AsyncStorage.getItem(name);
+            return value ? JSON.parse(value) : null;
+          },
+          setItem: async (name, value) => {
             await AsyncStorage.setItem(name, JSON.stringify(value));
           },
           removeItem: async (name) => {
