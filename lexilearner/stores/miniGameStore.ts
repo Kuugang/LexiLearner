@@ -323,7 +323,6 @@ interface SentenceArrangementGameState {
   resetCurrentAnswer: () => void;
   addPartToCurrentAnswer: (part: string) => void;
   removePartFromCurrentAnswer: (index: number) => void;
-  resetGame: () => void;
   decrementLives: () => void;
   resetGameState: () => void;
 }
@@ -358,19 +357,6 @@ export const useSentenceArrangementMiniGameStore =
             return { currentAnswer: updated, parts: newParts };
           }),
 
-        resetGame: () =>
-          set(() => {
-            return {
-              letters: Array(5).fill(""),
-              guess: Array(5).fill(""),
-              usedIndices: Array(5).fill(-1),
-              correctAnswers: [],
-              incorrectAnswers: [],
-              streak: 0,
-              lives: 3,
-            };
-          }),
-
         decrementLives: () => set((state) => ({ lives: state.lives - 1 })),
 
         resetGameState: () =>
@@ -401,3 +387,68 @@ export const useSentenceArrangementMiniGameStore =
       },
     ),
   );
+
+interface FillInTheBlankGameState {
+  phrases: string | null;
+  correctAnswer: string | null;
+  choices: string[];
+  answers: string[];
+
+  lives: number;
+  setPhrases: (phrases: string) => void;
+  setCorrectAnswer: (answer: string) => void;
+  setChoices: (choices: string[]) => void;
+  addAnswer: (answer: string) => void;
+  resetAnswers: () => void;
+  decrementLives: () => void;
+  resetGameState: () => void;
+}
+
+export const useFillInTheBlankMiniGameStore = create<FillInTheBlankGameState>()(
+  persist(
+    (set) => ({
+      phrases: null,
+      correctAnswer: null,
+      choices: [],
+      answers: [],
+      lives: 3,
+
+      setPhrases: (phrases: string) => set({ phrases: phrases }),
+      setCorrectAnswer: (answer: string) => set({ correctAnswer: answer }),
+
+      setChoices: (choices: string[]) => set({ choices: choices }),
+      addAnswer: (answer: string) =>
+        set((state) => ({
+          answers: [...state.answers, answer],
+        })),
+      resetAnswers: () => set({ answers: [] }),
+
+      decrementLives: () => set((state) => ({ lives: state.lives - 1 })),
+
+      resetGameState: () =>
+        set((state) => {
+          return {
+            correctAnswer: null,
+            choices: [],
+            answers: [],
+            lives: 3,
+          };
+        }),
+    }),
+    {
+      name: "fill-in-the-blank-store",
+      storage: {
+        getItem: async (name) => {
+          const value = await AsyncStorage.getItem(name);
+          return value ? JSON.parse(value) : null;
+        },
+        setItem: async (name, value) => {
+          await AsyncStorage.setItem(name, JSON.stringify(value));
+        },
+        removeItem: async (name) => {
+          await AsyncStorage.removeItem(name);
+        },
+      },
+    },
+  ),
+);

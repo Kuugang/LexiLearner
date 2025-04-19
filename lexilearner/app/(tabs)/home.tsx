@@ -17,7 +17,7 @@ export default function HomeScreen({}: HomeScreenProps): JSX.Element {
   const { data: stories, isLoading: isStoriesLoading } = useStories();
 
   useEffect(() => {
-    router.push("/minigames/sentencearrangement");
+    router.push("/minigames/fillintheblanks");
   }, []);
 
   return (

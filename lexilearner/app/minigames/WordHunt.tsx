@@ -50,14 +50,14 @@ export default function WordHunt() {
   const setShuffled = useWordHuntGameStore((state) => state.setShuffled);
   const setAnswered = useWordHuntGameStore((state) => state.setAnswered);
   const setCorrectAnswers = useWordHuntGameStore(
-    (state) => state.setCorrectAnswers
+    (state) => state.setCorrectAnswers,
   );
   const setWrongAnswers = useWordHuntGameStore(
-    (state) => state.setWrongAnswers
+    (state) => state.setWrongAnswers,
   );
   const setAllWords = useWordHuntGameStore((state) => state.setAllWords);
   const incrementStreak = useWordHuntGameStore(
-    (state) => state.incrementStreak
+    (state) => state.incrementStreak,
   );
   const newGame = useWordHuntGameStore((state) => state.newGame);
   const resetStreak = useWordHuntGameStore((state) => state.resetStreak);
@@ -84,7 +84,7 @@ export default function WordHunt() {
       "hardwareBackPress",
       () => {
         return true;
-      }
+      },
     );
 
     return () => backHandler.remove();
@@ -105,7 +105,7 @@ export default function WordHunt() {
         resetStreak();
       }
     },
-    [lives, streak, answered]
+    [lives, streak, answered],
   );
 
   console.log(correctAnswers, lives, streak);
