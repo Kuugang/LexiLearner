@@ -8,9 +8,9 @@ namespace LexiLearner.Models
     {
         public Guid Id { get; set; } = Guid.NewGuid();
 
-        public required Guid GenreId { get; set; }
-        [ForeignKey("GenreId")]
-        public required Genre Genre { get; set; }
+        // public required Guid GenreId { get; set; }
+        // [ForeignKey("GenreId")]
+        // public required Genre Genre { get; set; }
         public required string Author { get; set; }
 
         [Required]
@@ -35,6 +35,7 @@ namespace LexiLearner.Models
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public required bool IsDepEd { get; set; }
         public int Grade_Level { get; set; }
+        public required ICollection<ReadingMaterialGenre> ReadingMaterialGenres { get; set; } = new List<ReadingMaterialGenre>();
     }
 }
 

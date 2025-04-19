@@ -23,7 +23,7 @@ namespace LexiLearner.Models.DTO
     public class Create
     {
       public required Guid Id { get; set; }
-      public required string Genre { get; set; }
+      public required List<string> Genres { get; set; }
       public required string Author { get; set; }
       public required string Title { get; set; }
       public required string Cover { get; set; }
@@ -35,7 +35,7 @@ namespace LexiLearner.Models.DTO
     public class Read()
     {
       public Guid? Id { get; set; }
-      public string? Genre { get; set; }
+      public List<string>? Genre { get; set; }
       public string? Title { get; set; }
     }
   }
@@ -43,7 +43,7 @@ namespace LexiLearner.Models.DTO
   public class ReadingMaterialResponseDTO(ReadingMaterial readingMaterial)
   {
     public Guid Id { get; set; } = readingMaterial.Id;
-    public Genre Genre { get; set; } = readingMaterial.Genre;
+    public List<string> Genres { get; set; } = [.. readingMaterial.ReadingMaterialGenres.Select(rg => rg.Genre.Name)];
     public string Author { get; set; } = readingMaterial.Author;
     public string Title { get; set; } = readingMaterial.Title;
     public string Cover { get; set; } = readingMaterial.Cover;

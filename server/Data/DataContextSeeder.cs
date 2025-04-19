@@ -53,15 +53,21 @@ namespace LexiLearner.Data
           var materials = materialsDTO.Select(dto => new ReadingMaterial
           {
             Grade_Level = (int)(dto.Grade_Level != null ? dto.Grade_Level : 6),
-            Genre = genre,
-            GenreId = genre.Id,
             Author = dto.Author,
             Title = dto.Title,
             Description = dto.Description,
             Content = dto.Passage,
             Difficulty = (float)readabilityService.CalculateFleschScore(dto.Passage),
             Cover = "",
-            IsDepEd = true
+            IsDepEd = true,
+            ReadingMaterialGenres = new List<ReadingMaterialGenre>
+            {
+              new ReadingMaterialGenre
+              {
+                GenreId = genre.Id,
+                Genre = genre
+              }
+            }
           });
 
           await context.ReadingMaterial.AddRangeAsync(materials);

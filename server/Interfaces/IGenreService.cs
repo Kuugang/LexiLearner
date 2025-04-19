@@ -4,7 +4,8 @@ namespace LexiLearner.Interfaces
 {
   public interface IGenreService
   {
-    Task<Genre> GetGenreByName(String name);
+    Task<Genre> GetGenreByName(string name);
     Task<Genre> Create(string genreName);
+    Task<List<Genre>> GetGenres (List<string> genreNames);
   }
 }

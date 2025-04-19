@@ -20,10 +20,16 @@ namespace LexiLearner.Repository
       return genre;
     }
 
-    public async Task<Genre?> GetGenreByName(string genre)
+    public async Task<Genre> GetGenreByName(string genre)
     {
       var g = await _dbContext.Genre.FirstOrDefaultAsync(g => g.Name == genre);
       return g;
+    }
+
+    public async Task<List<Genre>> GetGenres(List<string> genreNames)
+    {
+      var genres = await _dbContext.Genre.Where(g => genreNames.Contains(g.Name)).ToListAsync();
+      return genres;
     }
   }
 }

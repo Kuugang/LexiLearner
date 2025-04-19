@@ -1,4 +1,6 @@
+using System.Diagnostics;
 using System.Net.Mime;
+using LexiLearner.Exceptions;
 using LexiLearner.Interfaces;
 using LexiLearner.Models;
 using LexiLearner.Models.DTO;
@@ -23,19 +25,26 @@ namespace LexiLearner.Services
     
     public async Task<ReadingMaterial> Create(ReadingMaterialDTO.Create request)
     {
-      var genre = await _genreService.GetGenreByName(request.Genre);
+      var genres = await _genreService.GetGenres(request.Genres);
+      var missingGenres = request.Genres.Except(genres.Select(g => g.Name)).ToList();
+      if (missingGenres.Any())
+      {
+        throw new ApplicationExceptionBase("Genres are not registered in database.", $"Genres not found: {string.Join(", ", missingGenres)}", StatusCodes.Status400BadRequest);
+      }
       
       var readingMaterial = new ReadingMaterial
       {
-        GenreId = genre.Id,
-        Genre = genre,
         Author = request.Author,
         Title = request.Title,
         Description = request.Description,
         Cover = request.Cover,
         Content = request.Content,
         Difficulty = (float)_readabilityService.CalculateFleschScore(request.Content),
-        IsDepEd = request.IsDepEd
+        IsDepEd = request.IsDepEd,
+        ReadingMaterialGenres = genres.Select(g => new ReadingMaterialGenre
+        {
+          GenreId = g.Id
+        }).ToList()
       };
       
       return await _readingMaterialRepository.Create(readingMaterial);

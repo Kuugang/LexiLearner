@@ -27,8 +27,8 @@ namespace LexiLearner.Services
           );
       }
 
-      genre = new Genre { Name = genreName };
-      return await _genreRepository.Create(genre);
+      var newGenre = new Genre { Name = genreName };
+      return await _genreRepository.Create(newGenre);
     }
 
     public async Task<Genre> GetGenreByName(string name)
@@ -37,5 +37,9 @@ namespace LexiLearner.Services
       return g;
     }
 
+    public async Task<List<Genre>> GetGenres(List<string> genreNames)
+    {
+      return await _genreRepository.GetGenres(genreNames);
+    }
   }
 }

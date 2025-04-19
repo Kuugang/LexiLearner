@@ -41,11 +41,23 @@ namespace LexiLearner.Data
                 .IsRequired();
 
             // ReadingContent has 1 genre
-            modelBuilder.Entity<ReadingMaterial>()
-                .HasOne(rc => rc.Genre)
-                .WithMany()
-                .HasForeignKey(rc => rc.GenreId)
-                .IsRequired();
+            // modelBuilder.Entity<ReadingMaterial>()
+            //     .HasOne(rc => rc.Genre)
+            //     .WithMany()
+            //     .HasForeignKey(rc => rc.GenreId)
+            //     .IsRequired();
+            modelBuilder.Entity<ReadingMaterialGenre>()
+                .HasKey(rg => new { rg.ReadingMaterialId, rg.GenreId });
+                
+            modelBuilder.Entity<ReadingMaterialGenre>()
+                .HasOne(rg => rg.ReadingMaterial)
+                .WithMany(r => r.ReadingMaterialGenres)
+                .HasForeignKey(rg => rg.ReadingMaterialId);
+                
+            modelBuilder.Entity<ReadingMaterialGenre>()
+                .HasOne(rg => rg.Genre)
+                .WithMany(g => g.ReadingMaterialGenres)
+                .HasForeignKey(rg => rg.GenreId);
 
             modelBuilder.Entity<Classroom>()
                 .HasOne(c => c.Teacher)

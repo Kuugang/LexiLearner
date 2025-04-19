@@ -26,7 +26,7 @@ namespace LexiLearner.Repository
 
     public async Task<List<ReadingMaterial>> FilterReadingMaterial(ReadingMaterialDTO.Read filters)
     {
-      var query = _dataContext.ReadingMaterial.AsQueryable();
+      var query = _dataContext.ReadingMaterial.Include(r => r.ReadingMaterialGenres).ThenInclude(rmg => rmg.Genre).AsQueryable();
 
       if (filters.Id != null)
       {
@@ -38,12 +38,14 @@ namespace LexiLearner.Repository
         query = query.Where(r => r.Title.ToLower().Contains(filters.Title.ToLower()));
       }
 
-      if (!string.IsNullOrEmpty(filters.Genre))
+      if (filters.Genre != null && filters.Genre.Any())
       {
-        var genre = await _genreService.GetGenreByName(filters.Genre);
-        if (genre != null)
+        var genres = await _genreService.GetGenres(filters.Genre);
+        var genreIds = genres.Select(g => g.Id).ToList();
+        
+        if (genreIds != null)
         {
-          query = query.Where(r => r.Genre == genre);
+          query = query.Where(r => r.ReadingMaterialGenres.Any(rmg => genreIds.Contains(rmg.GenreId)));
         }
       }
 
