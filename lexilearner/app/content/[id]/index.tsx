@@ -1,13 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { router } from "expo-router";
-import {
-  StyleSheet,
-  View,
-  Text,
-  ScrollView,
-  Image,
-  ActivityIndicator,
-} from "react-native";
+import { View, Text, ScrollView, Image, ActivityIndicator } from "react-native";
 import { useLocalSearchParams } from "expo-router";
 import { useBooks } from "@/context/ReadingContentProvider";
 import { ReadingContentType } from "@/models/ReadingContent";
