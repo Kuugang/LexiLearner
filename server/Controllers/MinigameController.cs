@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace LexiLearner.Controllers
 {
-  [Route("api/minigame")]
+  [Route("api/minigames")]
   [ApiController]
   public class MinigameController : ControllerBase
   {
