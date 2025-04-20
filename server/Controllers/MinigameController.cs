@@ -15,7 +15,7 @@ namespace LexiLearner.Controllers
       _minigameService = minigameService;
     }
 
-    [HttpPost("new/wordhunt")]
+    [HttpPost("wordhunt")]
     public async Task<IActionResult> CreateWordHunt([FromBody] MinigameDTO.WordHuntGame request)
     {
       var minigame = await _minigameService.Create(MinigameType.WordHunt, request);
@@ -23,7 +23,7 @@ namespace LexiLearner.Controllers
         new SuccessResponseDTO("WordHunt minigame created successfully.", minigame));
     }
 
-    [HttpPost("new/wordsfromletters")]
+    [HttpPost("wordsfromletters")]
     public async Task<IActionResult> CreateWordsFromLetters([FromBody] MinigameDTO.WordsFromLettersGame request)
     {
       var minigame = await _minigameService.Create(MinigameType.WordsFromLetters, request);
@@ -31,7 +31,7 @@ namespace LexiLearner.Controllers
         new SuccessResponseDTO("WordsFromLetters minigame created successfully.", minigame));
     }
 
-    [HttpPost("new/fillintheblanks")]
+    [HttpPost("fillintheblanks")]
     public async Task<IActionResult> CreateFillInTheBlanks([FromBody] MinigameDTO.FillInTheBlanksGame request)
     {
       var minigame = await _minigameService.Create(MinigameType.FillInTheBlanks, request);
@@ -39,7 +39,7 @@ namespace LexiLearner.Controllers
         new SuccessResponseDTO("FillInTheBlanks minigame created successfully.", minigame));
     }
 
-    [HttpPost("new/twotruthsonelie")]
+    [HttpPost("twotruthsonelie")]
     public async Task<IActionResult> CreateTwoTruthsOneLie([FromBody] MinigameDTO.TwoTruthsOneLieGame request)
     {
       var minigame = await _minigameService.Create(MinigameType.TwoTruthsOneLie, request);
@@ -47,7 +47,7 @@ namespace LexiLearner.Controllers
         new SuccessResponseDTO("TwoTruthsOneLie minigame created successfully.", minigame));
     }
 
-    [HttpPost("new/sentencerearrangement")]
+    [HttpPost("sentencerearrangement")]
     public async Task<IActionResult> CreateSentenceRearrangement([FromBody] MinigameDTO.SentenceRearrangementGame request)
     {
       var minigame = await _minigameService.Create(MinigameType.SentenceRearrangement, request);

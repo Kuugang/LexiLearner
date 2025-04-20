@@ -16,7 +16,7 @@ namespace LexiLearner.Controllers
       _minigameLogService = minigameLogService;
     }
 
-    [HttpPost("new/wordhunt")]
+    [HttpPost("wordhunt")]
     public async Task<IActionResult> CreateLogWordHunt([FromBody] MinigameLogDTO.WordHuntLog request)
     {
       var minigamelog = await _minigameLogService.Create(MinigameType.WordHunt, request);
@@ -24,7 +24,7 @@ namespace LexiLearner.Controllers
         new SuccessResponseDTO("WordHunt minigame log created successfully.", minigamelog));
     }
 
-    [HttpPost("new/wordsfromletters")]
+    [HttpPost("wordsfromletters")]
     public async Task<IActionResult> CreateLogWordsFromLetters([FromBody] MinigameLogDTO.WordsFromLettersLog request)
     {
       var minigamelog = await _minigameLogService.Create(MinigameType.WordsFromLetters, request);
@@ -32,7 +32,7 @@ namespace LexiLearner.Controllers
         new SuccessResponseDTO("WordsFromLetters minigame log created successfully.", minigamelog));
     }
 
-    [HttpPost("new/fillintheblanks")]
+    [HttpPost("fillintheblanks")]
     public async Task<IActionResult> CreateLogFillInTheBlanks([FromBody] MinigameLogDTO.FillInTheBlanksLog request)
     {
       var minigamelog = await _minigameLogService.Create(MinigameType.FillInTheBlanks, request);
@@ -40,7 +40,7 @@ namespace LexiLearner.Controllers
         new SuccessResponseDTO("FillInTheBlanks minigame log created successfully.", minigamelog));
     }
 
-    [HttpPost("new/twotruthsonelie")]
+    [HttpPost("twotruthsonelie")]
     public async Task<IActionResult> CreateLogTwoTruthsOneLie([FromBody] MinigameLogDTO.TwoTruthsOneLieLog request)
     {
       var minigamelog = await _minigameLogService.Create(MinigameType.TwoTruthsOneLie, request);
@@ -48,7 +48,7 @@ namespace LexiLearner.Controllers
         new SuccessResponseDTO("TwoTruthsOneLie minigame log created successfully.", minigamelog));
     }
 
-    [HttpPost("new/sentencerearrangement")]
+    [HttpPost("sentencerearrangement")]
     public async Task<IActionResult> CreateLogSentenceRearrangement([FromBody] MinigameLogDTO.SentenceRearrangementLog request)
     {
       var minigamelog = await _minigameLogService.Create(MinigameType.SentenceRearrangement, request);
