@@ -7,5 +7,7 @@ namespace LexiLearner.Interfaces
   {
     Task<MinigameDTO> Create(MinigameType minigameType, MinigameDTO.Create request);
     Task<MinigameDTO> GetMinigameById(Guid id);
+    Task<List<MinigameDTO>> GetMinigames();
+    Task<List<MinigameDTO>> GetMinigamesByRMId(Guid readingMatId);
   }
 }

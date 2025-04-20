@@ -87,6 +87,7 @@ namespace LexiLearner
                 {
                     options.JsonSerializerOptions.DefaultIgnoreCondition =
                         System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull;
+                    options.AllowInputFormatterExceptionMessages = true;
                 });
 
             services.ConfigureApplicationCookie(options =>
@@ -108,7 +109,6 @@ namespace LexiLearner
             services.AddSingleton<IJWTService, JWTService>();
             services.AddSingleton<IAuthorizationMiddlewareResultHandler, CustomAuthorizationMiddlewareResultHandler>();
 
-
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             services.AddScoped<IUserService, UserService>();
@@ -119,12 +119,16 @@ namespace LexiLearner
             services.AddScoped<IReadabilityService, ReadabilityService>();
             services.AddScoped<IReadingMaterialService,  ReadingMaterialService>();
             services.AddScoped<IFileUploadService, FileUploadService>();
-
+            services.AddScoped<IPupilService, PupilService>();
+            services.AddScoped<IMinigameService, MinigameService>();
+            services.AddScoped<IMinigameLogService, MinigameLogService>();
 
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IGenreRepository, GenreRepository>();
             services.AddScoped<IReadingMaterialRepository, ReadingMaterialRepository>();
-
+            services.AddScoped<IPupilRepository, PupilRepository>();
+            services.AddScoped<IMinigameRepository, MinigameRepository>();
+            services.AddScoped<IMinigameLogRepository, MinigameLogRepository>();
 
             // Configure Entity Framework with PostgreSQL
             services.AddDbContext<DataContext>(options =>

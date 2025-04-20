@@ -3,20 +3,12 @@
   "WorkspaceRootPath": "C:\\Users\\Acer\\Desktop\\LexiLearner\\server\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{47A9B7DB-6DBA-46D4-89B3-BF1FB62FB9AC}|LexiLearner.csproj|c:\\users\\acer\\desktop\\lexilearner\\server\\services\\minigameservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{47A9B7DB-6DBA-46D4-89B3-BF1FB62FB9AC}|LexiLearner.csproj|solutionrelative:services\\minigameservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{47A9B7DB-6DBA-46D4-89B3-BF1FB62FB9AC}|LexiLearner.csproj|c:\\users\\acer\\desktop\\lexilearner\\server\\services\\minigamelogservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{47A9B7DB-6DBA-46D4-89B3-BF1FB62FB9AC}|LexiLearner.csproj|solutionrelative:services\\minigamelogservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{47A9B7DB-6DBA-46D4-89B3-BF1FB62FB9AC}|LexiLearner.csproj|c:\\users\\acer\\desktop\\lexilearner\\server\\controllers\\minigamecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{47A9B7DB-6DBA-46D4-89B3-BF1FB62FB9AC}|LexiLearner.csproj|solutionrelative:controllers\\minigamecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{47A9B7DB-6DBA-46D4-89B3-BF1FB62FB9AC}|LexiLearner.csproj|c:\\users\\acer\\desktop\\lexilearner\\server\\models\\dto\\minigamedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{47A9B7DB-6DBA-46D4-89B3-BF1FB62FB9AC}|LexiLearner.csproj|solutionrelative:models\\dto\\minigamedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{47A9B7DB-6DBA-46D4-89B3-BF1FB62FB9AC}|LexiLearner.csproj|c:\\users\\acer\\desktop\\lexilearner\\server\\controllers\\minigamecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{47A9B7DB-6DBA-46D4-89B3-BF1FB62FB9AC}|LexiLearner.csproj|solutionrelative:controllers\\minigamecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{47A9B7DB-6DBA-46D4-89B3-BF1FB62FB9AC}|LexiLearner.csproj|c:\\users\\acer\\desktop\\lexilearner\\server\\models\\minigame.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -47,6 +39,10 @@
       "RelativeMoniker": "D:0:0:{47A9B7DB-6DBA-46D4-89B3-BF1FB62FB9AC}|LexiLearner.csproj|solutionrelative:controllers\\readingmaterialscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{47A9B7DB-6DBA-46D4-89B3-BF1FB62FB9AC}|LexiLearner.csproj|c:\\users\\acer\\desktop\\lexilearner\\server\\services\\minigamelogservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{47A9B7DB-6DBA-46D4-89B3-BF1FB62FB9AC}|LexiLearner.csproj|solutionrelative:services\\minigamelogservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{47A9B7DB-6DBA-46D4-89B3-BF1FB62FB9AC}|LexiLearner.csproj|c:\\users\\acer\\desktop\\lexilearner\\server\\models\\minigamelog.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{47A9B7DB-6DBA-46D4-89B3-BF1FB62FB9AC}|LexiLearner.csproj|solutionrelative:models\\minigamelog.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -69,6 +65,10 @@
     {
       "AbsoluteMoniker": "D:0:0:{47A9B7DB-6DBA-46D4-89B3-BF1FB62FB9AC}|LexiLearner.csproj|c:\\users\\acer\\desktop\\lexilearner\\server\\interfaces\\iminigamelogrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{47A9B7DB-6DBA-46D4-89B3-BF1FB62FB9AC}|LexiLearner.csproj|solutionrelative:interfaces\\iminigamelogrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{47A9B7DB-6DBA-46D4-89B3-BF1FB62FB9AC}|LexiLearner.csproj|c:\\users\\acer\\desktop\\lexilearner\\server\\services\\minigameservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{47A9B7DB-6DBA-46D4-89B3-BF1FB62FB9AC}|LexiLearner.csproj|solutionrelative:services\\minigameservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{47A9B7DB-6DBA-46D4-89B3-BF1FB62FB9AC}|LexiLearner.csproj|c:\\users\\acer\\desktop\\lexilearner\\server\\services\\pupilservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -106,17 +106,17 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 24,
+          "SelectedChildIndex": 7,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 1,
               "Title": "MinigameDTO.cs",
               "DocumentMoniker": "C:\\Users\\Acer\\Desktop\\LexiLearner\\server\\Models\\DTO\\MinigameDTO.cs",
               "RelativeDocumentMoniker": "Models\\DTO\\MinigameDTO.cs",
               "ToolTip": "C:\\Users\\Acer\\Desktop\\LexiLearner\\server\\Models\\DTO\\MinigameDTO.cs",
               "RelativeToolTip": "Models\\DTO\\MinigameDTO.cs",
-              "ViewState": "AgIAABEAAAAAAAAAAAAAABkAAAAVAAAAAAAAAA==",
+              "ViewState": "AgIAABEAAAAAAAAAAAAAABUAAAAgAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-04-20T04:32:38.188Z",
               "IsPinned": true,
@@ -132,7 +132,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 4,
               "Title": "MinigameLogController.cs",
               "DocumentMoniker": "C:\\Users\\Acer\\Desktop\\LexiLearner\\server\\Controllers\\MinigameLogController.cs",
               "RelativeDocumentMoniker": "Controllers\\MinigameLogController.cs",
@@ -144,7 +144,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 6,
               "Title": "UsersController.cs",
               "DocumentMoniker": "C:\\Users\\Acer\\Desktop\\LexiLearner\\server\\Controllers\\UsersController.cs",
               "RelativeDocumentMoniker": "Controllers\\UsersController.cs",
@@ -156,7 +156,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 8,
               "Title": "ReadingMaterialsController.cs",
               "DocumentMoniker": "C:\\Users\\Acer\\Desktop\\LexiLearner\\server\\Controllers\\ReadingMaterialsController.cs",
               "RelativeDocumentMoniker": "Controllers\\ReadingMaterialsController.cs",
@@ -168,7 +168,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 7,
               "Title": "AuthController.cs",
               "DocumentMoniker": "C:\\Users\\Acer\\Desktop\\LexiLearner\\server\\Controllers\\AuthController.cs",
               "RelativeDocumentMoniker": "Controllers\\AuthController.cs",
@@ -180,20 +180,20 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 0,
               "Title": "MinigameController.cs",
               "DocumentMoniker": "C:\\Users\\Acer\\Desktop\\LexiLearner\\server\\Controllers\\MinigameController.cs",
               "RelativeDocumentMoniker": "Controllers\\MinigameController.cs",
               "ToolTip": "C:\\Users\\Acer\\Desktop\\LexiLearner\\server\\Controllers\\MinigameController.cs",
               "RelativeToolTip": "Controllers\\MinigameController.cs",
-              "ViewState": "AgIAAAoAAAAAAAAAAAAqwEMAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAACgAAAAAAAAAAAAQwEMAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-04-20T05:44:18.534Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 11,
+              "DocumentIndex": 10,
               "Title": "MinigameLog.cs",
               "DocumentMoniker": "C:\\Users\\Acer\\Desktop\\LexiLearner\\server\\Models\\MinigameLog.cs",
               "RelativeDocumentMoniker": "Models\\MinigameLog.cs",
@@ -289,7 +289,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 5,
               "Title": "UserService.cs",
               "DocumentMoniker": "C:\\Users\\Acer\\Desktop\\LexiLearner\\server\\Services\\UserService.cs",
               "RelativeDocumentMoniker": "Services\\UserService.cs",
@@ -301,7 +301,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 3,
               "Title": "MinigameLogDTO.cs",
               "DocumentMoniker": "C:\\Users\\Acer\\Desktop\\LexiLearner\\server\\Models\\DTO\\MinigameLogDTO.cs",
               "RelativeDocumentMoniker": "Models\\DTO\\MinigameLogDTO.cs",
@@ -313,7 +313,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 2,
               "Title": "Minigame.cs",
               "DocumentMoniker": "C:\\Users\\Acer\\Desktop\\LexiLearner\\server\\Models\\Minigame.cs",
               "RelativeDocumentMoniker": "Models\\Minigame.cs",
@@ -325,7 +325,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 14,
+              "DocumentIndex": 13,
               "Title": "ReadingMaterialService.cs",
               "DocumentMoniker": "C:\\Users\\Acer\\Desktop\\LexiLearner\\server\\Services\\ReadingMaterialService.cs",
               "RelativeDocumentMoniker": "Services\\ReadingMaterialService.cs",
@@ -337,7 +337,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 15,
+              "DocumentIndex": 14,
               "Title": "MinigameLogRepository.cs",
               "DocumentMoniker": "C:\\Users\\Acer\\Desktop\\LexiLearner\\server\\Repository\\MinigameLogRepository.cs",
               "RelativeDocumentMoniker": "Repository\\MinigameLogRepository.cs",
@@ -349,7 +349,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 16,
+              "DocumentIndex": 15,
               "Title": "IMinigameLogRepository.cs",
               "DocumentMoniker": "C:\\Users\\Acer\\Desktop\\LexiLearner\\server\\Interfaces\\IMinigameLogRepository.cs",
               "RelativeDocumentMoniker": "Interfaces\\IMinigameLogRepository.cs",
@@ -361,7 +361,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 13,
+              "DocumentIndex": 12,
               "Title": "IMinigameRepository.cs",
               "DocumentMoniker": "C:\\Users\\Acer\\Desktop\\LexiLearner\\server\\Interfaces\\IMinigameRepository.cs",
               "RelativeDocumentMoniker": "Interfaces\\IMinigameRepository.cs",
@@ -373,7 +373,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 12,
+              "DocumentIndex": 11,
               "Title": "MinigameRepository.cs",
               "DocumentMoniker": "C:\\Users\\Acer\\Desktop\\LexiLearner\\server\\Repository\\MinigameRepository.cs",
               "RelativeDocumentMoniker": "Repository\\MinigameRepository.cs",
@@ -385,20 +385,19 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 16,
               "Title": "MinigameService.cs",
               "DocumentMoniker": "C:\\Users\\Acer\\Desktop\\LexiLearner\\server\\Services\\MinigameService.cs",
               "RelativeDocumentMoniker": "Services\\MinigameService.cs",
               "ToolTip": "C:\\Users\\Acer\\Desktop\\LexiLearner\\server\\Services\\MinigameService.cs",
               "RelativeToolTip": "Services\\MinigameService.cs",
-              "ViewState": "AgIAABMAAAAAAAAAAAAiwCIAAAAuAAAAAAAAAA==",
+              "ViewState": "AgIAABMAAAAAAAAAAAAiwB4AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-20T04:19:43.441Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-04-20T04:19:43.441Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 9,
               "Title": "MinigameLogService.cs",
               "DocumentMoniker": "C:\\Users\\Acer\\Desktop\\LexiLearner\\server\\Services\\MinigameLogService.cs",
               "RelativeDocumentMoniker": "Services\\MinigameLogService.cs",
@@ -406,8 +405,7 @@
               "RelativeToolTip": "Services\\MinigameLogService.cs",
               "ViewState": "AgIAADIAAAAAAAAAAAAUwEEAAAAYAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-20T04:27:16.904Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-04-20T04:27:16.904Z"
             }
           ]
         }
