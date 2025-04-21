@@ -1,7 +1,6 @@
 import "~/global.css";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { SplashScreen, Stack } from "expo-router";
-import { ReadingContentProvider } from "@/context/ReadingContentProvider";
 import Toast from "react-native-toast-message";
 
 import React from "react";
@@ -67,42 +66,40 @@ export default function RootLayout() {
   return (
     <ThemeProvider value={isDarkColorScheme ? DARK_THEME : LIGHT_THEME}>
       <QueryClientProvider client={queryClient}>
-        <ReadingContentProvider>
-          {isLoading && (
-            <View
-              style={{
-                position: "absolute",
-                top: 0,
-                left: 0,
-                width: "100%",
-                height: "100%",
-                backgroundColor: "rgba(0,0,0,0.2)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                zIndex: 999,
-              }}
-            >
-              <ActivityIndicator size="large" color="#ffffff" />
-            </View>
-          )}
+        {isLoading && (
+          <View
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              width: "100%",
+              height: "100%",
+              backgroundColor: "rgba(0,0,0,0.2)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              zIndex: 999,
+            }}
+          >
+            <ActivityIndicator size="large" color="#ffffff" />
+          </View>
+        )}
 
-          <StatusBar style={"dark"} />
-          <SafeAreaView className="flex-1 bg-background">
-            <GestureHandlerRootView style={{ flex: 1 }}>
-              <Stack screenOptions={{ headerShown: false }}>
-                <Stack.Screen name="index" />
-                <Stack.Screen name="(tabs)" />
-                <Stack.Screen name="(auth)" />
-                <Stack.Screen name="profile" />
-                <Stack.Screen name="content" />
-                <Stack.Screen name="minigames" />
-              </Stack>
-              <PortalHost />
-              <Toast />
-            </GestureHandlerRootView>
-          </SafeAreaView>
-        </ReadingContentProvider>
+        <StatusBar style={"dark"} />
+        <SafeAreaView className="flex-1 bg-background">
+          <GestureHandlerRootView style={{ flex: 1 }}>
+            <Stack screenOptions={{ headerShown: false }}>
+              <Stack.Screen name="index" />
+              <Stack.Screen name="(tabs)" />
+              <Stack.Screen name="(auth)" />
+              <Stack.Screen name="profile" />
+              <Stack.Screen name="content" />
+              <Stack.Screen name="minigames" />
+            </Stack>
+            <PortalHost />
+            <Toast />
+          </GestureHandlerRootView>
+        </SafeAreaView>
       </QueryClientProvider>
     </ThemeProvider>
   );
