@@ -1,28 +1,16 @@
-import React from "react";
+import { memo } from "react";
 import { View, Text, Image, TouchableOpacity } from "react-native";
-import { useRouter } from "expo-router";
-import { useBooks } from "../context/ReadingContentProvider";
+import { router } from "expo-router";
+import { ReadingContentType } from "@/models/ReadingContent";
+import { useReadingContentStore } from "@/stores/readingContentStore";
 
-interface ReadingContentProps {
-  Type: string;
-  Id: string;
-  Title: string;
-  Author?: string;
-  Description?: string;
-  Cover: string;
-  Content: string;
-  Genre: string[];
-  Difficulty: number;
-}
-
-function ReadingContent(props: ReadingContentProps) {
-  const router = useRouter();
-  const { selectBook } = useBooks();
+function ReadingContent(props: ReadingContentType) {
+  const setSelectedContent = useReadingContentStore(
+    (state) => state.setSelectedContent,
+  );
 
   const onPress = () => {
-    // Store all book details in context
-    selectBook(props);
-    // Navigate with just the ID
+    setSelectedContent(props);
     router.push(`/content/${props.Id}`);
   };
 
@@ -107,4 +95,4 @@ function ReadingContent(props: ReadingContentProps) {
   return null;
 }
 
-export default ReadingContent;
+export default memo(ReadingContent);
