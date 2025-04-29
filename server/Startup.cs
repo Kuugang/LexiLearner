@@ -115,6 +115,8 @@ namespace LexiLearner
             services.AddHttpClient<IAuthService, AuthService>();
 
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IClassroomRepository, ClassroomRepository>();
+            services.AddScoped<IClassroomService, ClassroomService>();
 
             // Configure Entity Framework with PostgreSQL
             services.AddDbContext<DataContext>(options =>
