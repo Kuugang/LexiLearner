@@ -1,5 +1,6 @@
 import { router } from "expo-router";
 import { useStories } from "@/services/ReadingMaterial";
+import { memo } from "react";
 import ReadingContent from "@/components/ReadingContent";
 
 //Components
@@ -9,24 +10,19 @@ import { Text } from "~/components/ui/text";
 import { Input } from "~/components/ui/input";
 
 import { CircleUser, Search, Flame } from "lucide-react-native";
-import { useEffect } from "react";
 
-interface HomeScreenProps {}
-
-export default function HomeScreen({}: HomeScreenProps): JSX.Element {
+function HomeScreen() {
   const { data: stories, isLoading: isStoriesLoading } = useStories();
 
-  console.log("wtf!");
-
   // useEffect(() => {
-  //   router.push("/");
+  //   router.push("/minigames/fillintheblanks");
   // }, []);
 
   return (
     <ScrollView className="bg-background">
       {/* TODO: MAKE THIS INTO COMPONENT*/}
       <View className="flex flex-row gap-2 items-center w-full p-4">
-        <TouchableOpacity onPress={() => router.push("/profile")}>
+        <TouchableOpacity onPress={() => router.push("/(tabs)/profile")}>
           <CircleUser color="#FFD43B" size={30} />
         </TouchableOpacity>
 
@@ -79,7 +75,10 @@ export default function HomeScreen({}: HomeScreenProps): JSX.Element {
         <ReadingContent
           Type={"Recommended"}
           Id={"123"}
-          Content={`This edition is part of the Beginner Books collection, which aims to encourage early readers with its simple language and visual storytelling. It’s a perfect book for both independent reading and family read-aloud sessions!
+          Content={`
+    This edition is part of the Beginner Books collection, which aims to encourage early readers with its simple language and visual storytelling. It’s a perfect book for both independent reading and family read-aloud sessions!
+
+
     "Cat in the Hat" is a delightful and whimsical story by Dr. Seuss, packed with fun and chaos. The plot revolves around a young brother and sister who are stuck indoors on a rainy day. Their boredom is quickly turned upside down when the mischievous Cat in the Hat shows up, bringing along his troublesome friends, Thing 1 and Thing 2. Together, they cause mayhem and mess, but they also help turn the day into an unforgettable adventure. 
 
     The Cat’s antics and the antics of his companions are a source of laughter and imagination, all while teaching important lessons about responsibility and the consequences of causing trouble. This story is known for its simple rhymes and repetitive words, making it perfect for young readers to follow along with and build their reading skills. Whether it’s parents, teachers, or kids, "Cat in the Hat" has earned a lasting spot in the hearts of many for its playful nature and engaging characters.
@@ -141,3 +140,5 @@ Originally created by Dr. Seuss himself, Beginner Books are fun, funny, and easy
     </ScrollView>
   );
 }
+
+export default memo(HomeScreen);

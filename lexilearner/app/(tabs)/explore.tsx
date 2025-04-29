@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, memo } from "react";
 import { useStories } from "@/services/ReadingMaterial";
 import { router } from "expo-router";
 
@@ -24,7 +24,7 @@ import {
   Flame,
 } from "lucide-react-native";
 
-export default function Explore() {
+function Explore() {
   const { data: stories, isLoading: isStoriesLoading } = useStories();
   const [query, setQuery] = useState<string>("");
 
@@ -186,3 +186,4 @@ export default function Explore() {
     </ScrollView>
   );
 }
+export default memo(Explore);

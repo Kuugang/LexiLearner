@@ -1,148 +1,84 @@
-import React, {
-  useState,
-  useMemo,
-  useCallback,
-  useRef,
-  useEffect,
-} from "react";
+import React, { useState, useMemo, useCallback, memo } from "react";
 import cheerio from "react-native-cheerio";
 import RenderHtml from "react-native-render-html";
+import Tts from "react-native-tts";
+import axios from "axios";
+import { useReadingContentStore } from "@/stores/readingContentStore";
+
+import { useDefinitionStore } from "@/stores/definitionStore";
+import { useTranslationStore } from "@/stores/translationStore";
+
+//Components
 import {
+  useWindowDimensions,
   View,
   Text,
-  FlatList,
   Pressable,
   Modal,
-  useWindowDimensions,
   ScrollView,
   ActivityIndicator,
 } from "react-native";
-import Tts from "react-native-tts";
-import axios from "axios";
+import { FlashList } from "@shopify/flash-list";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import { faVolumeUp } from "@fortawesome/free-solid-svg-icons";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useBooks } from "@/context/ReadingContentProvider";
 import { Input } from "~/components/ui/input";
-
-// Storage keys
-const DEFINITION_CACHE_KEY = "definition_cache";
-const TRANSLATION_CACHE_KEY = "translation_cache";
+import { faVolumeUp } from "@fortawesome/free-solid-svg-icons";
 
 export default function Read() {
   const { width } = useWindowDimensions();
-  const { selectedBook } = useBooks();
-  const averageWordWidth = 60;
-  const numColumns = Math.floor(width / averageWordWidth);
-
-  // Add reference to cancel token
-  const cancelTokenRef = useRef(null);
+  const selectedContent = useReadingContentStore(
+    (state) => state.selectedContent,
+  );
 
   const [selectedWord, setSelectedWord] = useState("");
   const [isDefinitionLoading, setIsDefinitionLoading] = useState(false);
   const [definitionVisible, setDefinitionVisible] = useState(false);
-  const [definitionCache, setDefinitionCache] = useState({});
-  const [translationCache, setTranslationCache] = useState({});
   const [html, setHtml] = useState("");
+  const [translation, setTranslation] = useState("");
 
-  // Load cached definitions and translations from AsyncStorage on component mount
-  useEffect(() => {
-    const loadCachedData = async () => {
-      try {
-        const definitionData = await AsyncStorage.getItem(DEFINITION_CACHE_KEY);
-        const translationData = await AsyncStorage.getItem(
-          TRANSLATION_CACHE_KEY,
-        );
+  const getDefinition = useDefinitionStore((state) => state.getDefinition);
+  const storeDefinition = useDefinitionStore((state) => state.storeDefinition);
 
-        if (definitionData) {
-          setDefinitionCache(JSON.parse(definitionData));
-        }
-
-        if (translationData) {
-          setTranslationCache(JSON.parse(translationData));
-        }
-      } catch (error) {
-        console.error("Error loading cached data:", error);
-      }
-    };
-
-    loadCachedData();
-  }, []);
-
-  // Save definition cache to AsyncStorage whenever it changes
-  useEffect(() => {
-    const saveCacheToStorage = async () => {
-      try {
-        if (Object.keys(definitionCache).length > 0) {
-          await AsyncStorage.setItem(
-            DEFINITION_CACHE_KEY,
-            JSON.stringify(definitionCache),
-          );
-        }
-      } catch (error) {
-        console.error("Error saving definition cache:", error);
-      }
-    };
-
-    saveCacheToStorage();
-  }, [definitionCache]);
-
-  // Save translation cache to AsyncStorage whenever it changes
-  useEffect(() => {
-    const saveCacheToStorage = async () => {
-      try {
-        if (Object.keys(translationCache).length > 0) {
-          await AsyncStorage.setItem(
-            TRANSLATION_CACHE_KEY,
-            JSON.stringify(translationCache),
-          );
-        }
-      } catch (error) {
-        console.error("Error saving translation cache:", error);
-      }
-    };
-
-    saveCacheToStorage();
-  }, [translationCache]);
-
-  // Optimize the splitting - use memoization with proper dependency
-  const words = useMemo(() => {
-    return selectedBook?.Content ? selectedBook.Content.split(" ") : [];
-  }, [selectedBook?.Content]);
-
-  const getTranslation = useCallback(
-    async (word) => {
-      // Check if translation is already in cache
-      if (translationCache[word]) {
-        return { result: translationCache[word] };
-      }
-
-      try {
-        const formData = new URLSearchParams();
-        formData.append("from", "en_US");
-        formData.append("to", "ceb_PH");
-        formData.append("text", word);
-        formData.append("platform", "dp");
-
-        const { data } = await axios.post(
-          "https://corsproxy.io/?url=https://lingvanex.com/translation/translate",
-          formData,
-          {
-            headers: {
-              "Content-Type": "application/x-www-form-urlencoded",
-            },
-          },
-        );
-        return data;
-      } catch (error) {
-        console.error("Translation error:", error);
-        return { result: "Translation failed" };
-      }
-    },
-    [translationCache],
+  const getTranslation = useTranslationStore((state) => state.getTranslation);
+  const storeTranslation = useTranslationStore(
+    (state) => state.storeTranslation,
   );
 
-  const getDefinition = useCallback(async (word: string) => {
+  if (!selectedContent) {
+    return null;
+  }
+
+  const fetchTranslation = async (word: string) => {
+    const translation = getTranslation(word);
+    if (translation != undefined) {
+      setTranslation(translation);
+      return;
+    }
+
+    try {
+      const formData = new URLSearchParams();
+      formData.append("from", "en_US");
+      formData.append("to", "ceb_PH");
+      formData.append("text", word);
+      formData.append("platform", "dp");
+
+      const { data } = await axios.post(
+        "https://corsproxy.io/?url=https://lingvanex.com/translation/translate",
+        formData,
+        {
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+        },
+      );
+      storeTranslation(word, data.result);
+      setTranslation(data.result);
+    } catch (error) {
+      console.error("Translation error:", error);
+      return { result: "Translation failed" };
+    }
+  };
+
+  const fetchDefinition = useCallback(async (word: string) => {
     try {
       const { data } = await axios.get(
         `https://corsproxy.io/?url=https://googledictionary.freecollocation.com/meaning?word=${word}`,
@@ -158,21 +94,17 @@ export default function Read() {
     async (word: string) => {
       if (!word.trim()) return;
 
-      // Cancel previous request if it exists
-      if (cancelTokenRef.current) {
-        cancelTokenRef.current.cancel("Operation canceled due to new request.");
-      }
-      cancelTokenRef.current = axios.CancelToken.source();
-
-      // Return cached definition if available
-      if (definitionCache[word]) {
-        setHtml(definitionCache[word]);
+      setTranslation("");
+      let definition = getDefinition(word);
+      if (definition !== undefined) {
+        setHtml(definition);
+        fetchTranslation(word);
         return;
       }
 
       try {
         setIsDefinitionLoading(true);
-        const data = await getDefinition(word);
+        const data = await fetchDefinition(word);
 
         if (!data) {
           const notFoundHtml = `
@@ -181,7 +113,7 @@ export default function Read() {
           </div>
           `;
           setHtml(notFoundHtml);
-          setDefinitionCache((prev) => ({ ...prev, [word]: notFoundHtml }));
+          storeDefinition(word, notFoundHtml);
           setIsDefinitionLoading(false);
           return;
         }
@@ -199,20 +131,11 @@ export default function Read() {
           </div>
           `;
           setHtml(notFoundHtml);
-          setDefinitionCache((prev) => ({ ...prev, [word]: notFoundHtml }));
+          storeDefinition(word, notFoundHtml);
         } else {
           setHtml(html);
-          setDefinitionCache((prev) => ({ ...prev, [word]: html }));
-
-          // Get translation in parallel
-          getTranslation(word).then((translation) => {
-            if (translation && translation.result) {
-              setTranslationCache((prev) => ({
-                ...prev,
-                [word]: translation.result,
-              }));
-            }
-          });
+          storeDefinition(word, html);
+          fetchTranslation(word);
         }
       } catch (error) {
         if (!axios.isCancel(error)) {
@@ -223,18 +146,16 @@ export default function Read() {
           </div>
           `;
           setHtml(errorHtml);
-          // Don't cache errors
         }
       } finally {
         setIsDefinitionLoading(false);
       }
     },
-    [definitionCache, getDefinition, getTranslation],
+    [fetchDefinition, fetchTranslation],
   );
 
   const handleWordPress = useCallback(
     (word: string) => {
-      // Clean the word by removing punctuation
       const cleanedWord = word.replace(/[^\w\s]/gi, "");
       setSelectedWord(cleanedWord);
       setDefinitionVisible(true);
@@ -249,44 +170,96 @@ export default function Read() {
     }
   }, [selectedWord]);
 
-  // Memoize renderItem to prevent unnecessary re-renders
-  const renderItem = useCallback(
-    ({ item }) => (
-      <Pressable onPress={() => handleWordPress(item)} className="mr-1 mb-1">
-        <Text>{item}</Text>
+  const WordComponent = memo(
+    ({ word, onPress }: { word: string; onPress: () => void }) => (
+      <Pressable onPress={onPress} className="mr-1 mb-1">
+        <Text className="text-black">{word}</Text>
       </Pressable>
     ),
+  );
+
+  const getWordPressHandler = useCallback(
+    (word: string) => () => handleWordPress(word),
     [handleWordPress],
   );
 
-  // Use getItemLayout for fixed height items to improve performance
-  const getItemLayout = useCallback(
-    (data, index) => {
-      const height = 25; // Approximate height of each item
-      return {
-        length: height,
-        offset: height * Math.floor(index / numColumns),
-        index,
-      };
-    },
-    [numColumns],
-  );
+  const paragraphs: string[] = useMemo(() => {
+    if (typeof selectedContent.Content !== "string") return [];
+    return selectedContent.Content.split("\n\n").filter(
+      (paragraph) => paragraph.trim().length > 0,
+    );
+  }, [selectedContent.Content]);
+
+  const paragraphWordsArray = useMemo(() => {
+    return paragraphs.map((p) =>
+      p.split(" ").filter((word) => word.trim().length > 0),
+    );
+  }, [paragraphs]);
+
+  const renderParagraph = ({
+    item,
+    index,
+  }: {
+    item: string;
+    index: number;
+  }) => {
+    const words = paragraphWordsArray[index];
+
+    return (
+      <View className="flex-row flex-wrap mb-2">
+        {words.map((word, index) => (
+          <WordComponent
+            key={index}
+            word={word}
+            onPress={getWordPressHandler(word)}
+          />
+        ))}
+
+        {/* <FlashList */}
+        {/*   className="p-2 bg-background " */}
+        {/*   data={words} */}
+        {/*   renderItem={({ item }) => <Text>{item}</Text>} */}
+        {/*   estimatedItemSize={estimatedItemSize} */}
+        {/*   contentContainerStyle={{ paddingHorizontal: 20 }} */}
+        {/* /> */}
+      </View>
+    );
+  };
+
+  const estimatedItemSize = useMemo(() => {
+    if (paragraphs.length === 0) return 100;
+    const averageLength =
+      paragraphs.reduce((sum, p) => sum + p.length, 0) / paragraphs.length;
+    return Math.max(50, Math.min(300, averageLength / 4));
+  }, [paragraphs]);
 
   return (
     <>
-      <FlatList
-        className="p-6 bg-background h-screen"
-        data={words}
-        keyExtractor={(_, idx) => idx.toString()}
-        numColumns={numColumns}
-        renderItem={renderItem}
-        getItemLayout={getItemLayout}
-        maxToRenderPerBatch={50}
-        windowSize={10}
-        removeClippedSubviews={true}
-        initialNumToRender={100}
-        updateCellsBatchingPeriod={50}
-      />
+      <View style={{ flex: 1 }} className="bg-background">
+        <FlashList
+          className="p-2 bg-background "
+          data={paragraphs}
+          renderItem={renderParagraph}
+          estimatedItemSize={estimatedItemSize}
+          contentContainerStyle={{ paddingHorizontal: 20 }}
+        />
+
+        {/* {paragraphs.map((p, pIndex) => { */}
+        {/*   const words = paragraphWordsArray[pIndex]; */}
+        {/*   return ( */}
+        {/*     <View key={`${pIndex}`} className="flex flex-wrap"> */}
+        {/*       {words.map((word, wIndex) => ( */}
+        {/*         <WordComponent */}
+        {/*           key={`${pIndex} "" + ""+ ${wIndex}`} */}
+        {/*           word={word} */}
+        {/*           onPress={() => getWordPressHandler(word)} */}
+        {/*         /> */}
+        {/*       ))} */}
+        {/*     </View> */}
+        {/*   ); */}
+        {/* })} */}
+      </View>
+
       <Modal
         visible={definitionVisible}
         animationType="slide"
@@ -299,12 +272,7 @@ export default function Read() {
             onChangeText={setSelectedWord}
             onBlur={() => handleDisplayDefinition(selectedWord)}
           />
-
-          {translationCache[selectedWord] && (
-            <Text className="mb-2 text-lg font-medium">
-              {translationCache[selectedWord]}
-            </Text>
-          )}
+          <Text className="mb-2 text-lg font-medium">{translation}</Text>
 
           <View className="flex-row justify-between mb-4">
             <View className="flex-row">
