@@ -13,12 +13,16 @@ namespace LexiLearner.Models.DTO
       public required string Title { get; set; }
       [JsonPropertyName("author")]
       public required string Author { get; set; }
+      [JsonPropertyName("genre")]
+      public required List<string> Genre { get; set; }
       [JsonPropertyName("description")]
       public required string Description { get; set; }
       [JsonPropertyName("word_count")]
       public int? Word_Count { get; set; }
       [JsonPropertyName("passage")]
       public required string Passage { get; set; }
+     [JsonPropertyName("questions")]
+      public required List<object> Questions { get; set; } 
     }
     public class Create
     {
