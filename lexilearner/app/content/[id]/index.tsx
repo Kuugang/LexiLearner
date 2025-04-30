@@ -47,16 +47,16 @@ function ContentIndex() {
 
         <Image
           source={{
-            uri: selectedContent.Cover,
+            uri: selectedContent.cover,
           }}
           className="rounded-lg mr-4"
           style={{ width: 130, height: 185 }}
           alt=""
         />
 
-        <Text className="text-2xl font-bold">{selectedContent.Title}</Text>
-        {selectedContent.Author && (
-          <Text className="text-lg mb-2">{selectedContent.Author}</Text>
+        <Text className="text-2xl font-bold">{selectedContent.title}</Text>
+        {selectedContent.author && (
+          <Text className="text-lg mb-2">{selectedContent.author}</Text>
         )}
         <View className="flex flex-row w-full justify-center gap-6">
           <View className="flex flex-col justify-center items-center gap-2">
@@ -65,7 +65,7 @@ function ContentIndex() {
               className="bg-primary"
               variant={"default"}
               onPress={() => {
-                router.push(`/content/${selectedContent.Id}/read`);
+                router.push(`/content/${selectedContent.id}/read`);
               }}
             >
               <FontAwesomeIcon size={30} icon={faBookOpen} />
@@ -85,14 +85,14 @@ function ContentIndex() {
           </View>
         </View>
 
-        {selectedContent.Description && (
+        {selectedContent.description && (
           <Text className="text-sm mb-4 italic text-center">
-            {selectedContent.Description}
+            {selectedContent.description}
           </Text>
         )}
         <View className="mt-4 flex-row justify-between">
-          <Text>Genre: {selectedContent.Genre}</Text>
-          <Text>Difficulty: {selectedContent.Difficulty}</Text>
+          <Text>Genre: {selectedContent.genres}</Text>
+          <Text>Difficulty: {selectedContent.difficulty}</Text>
         </View>
       </ScrollView>
     </>

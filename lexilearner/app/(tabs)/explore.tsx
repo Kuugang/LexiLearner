@@ -1,5 +1,9 @@
-import { useState, memo } from "react";
-import { useStories } from "@/services/ReadingMaterial";
+import { useState, memo, useEffect } from "react";
+import {
+  useStories,
+  getFilteredStories,
+  ReadingMaterialFilters,
+} from "@/services/ReadingMaterial";
 import { router } from "expo-router";
 
 // Components
@@ -23,12 +27,13 @@ import {
   CircleUser,
   Flame,
 } from "lucide-react-native";
+import { ReadingContentType } from "@/models/ReadingContent";
 
 function Explore() {
   const { data: stories, isLoading: isStoriesLoading } = useStories();
   const [query, setQuery] = useState<string>("");
-
   const [selectedGenres, setSelectedGenres] = useState<Set<string>>(new Set());
+
   const toggleGenre = (genre: string) => {
     setSelectedGenres((prev) => {
       const newSet = new Set(prev);
@@ -37,6 +42,7 @@ function Explore() {
       } else {
         newSet.add(genre);
       }
+
       return newSet;
     });
   };
@@ -57,7 +63,36 @@ function Explore() {
     "Adventure",
     "Comedy",
     "Metafiction",
+    "Passage",
   ];
+
+  // useEffect(() => {
+  //   if (hasUserInteracted || query.trim() !== "") {
+  //     const fetchFiltered = async () => {
+  //       setIsFilterLoading(true);
+  //       setFilterError(null);
+
+  //       const filters: ReadingMaterialFilters = {
+  //         Genre: Array.from(selectedGenres),
+  //         Title: query.trim(),
+  //       };
+
+  //       try {
+  //         const data = await getFilteredStories(filters);
+  //         setFilteredStories(data);
+  //       } catch (error) {
+  //         setFilterError(error);
+  //         setFilteredStories(null);
+  //       } finally {
+  //         setIsFilterLoading(false);
+  //       }
+  //     };
+
+  //     fetchFiltered();
+  //   } else {
+  //     setFilteredStories(null);
+  //   }
+  // }, [selectedGenres, query, hasUserInteracted]);
 
   const filteredStories =
     selectedGenres.size === 0 && query.trim() === ""
@@ -65,15 +100,14 @@ function Explore() {
       : stories?.filter((story) => {
           const matchesGenre =
             selectedGenres.size === 0 ||
-            selectedGenres.has(story.Genre) ||
-            (Array.isArray(story.Genre) &&
-              story.Genre.some((genre) => selectedGenres.has(genre)));
+            (Array.isArray(story.genres) &&
+              story.genres.some((genre) => selectedGenres.has(genre)));
 
           const matchesQuery =
             query.trim() === "" ||
-            story.Title.toLowerCase().includes(query.trim().toLowerCase()) ||
-            (story.Author &&
-              story.Author.toLowerCase().includes(query.trim().toLowerCase()));
+            story.title.toLowerCase().includes(query.trim().toLowerCase()) ||
+            (story.author &&
+              story.author.toLowerCase().includes(query.trim().toLowerCase()));
 
           return matchesGenre && matchesQuery;
         });
@@ -165,20 +199,20 @@ function Explore() {
         </View>
       )}
 
-      {filteredStories?.length > 0 && (
+      {filteredStories && filteredStories.length > 0 && (
         <View className="flex flex-col gap-2">
           {filteredStories?.map((item) => (
             <ReadingContent
-              key={item.Id}
-              Type="QueryView"
-              Id={item.Id}
-              Title={item.Title}
-              Author={item.Author}
-              Description={item.Description}
-              Cover={item.Cover}
-              Content={item.Content}
-              Genre={item.Genre}
-              Difficulty={item.Difficulty}
+              key={item.id}
+              type="QueryView"
+              id={item.id}
+              title={item.title}
+              author={item.author}
+              description={item.description}
+              cover={item.cover}
+              content={item.content}
+              genres={item.genres}
+              difficulty={item.difficulty}
             />
           ))}
         </View>
