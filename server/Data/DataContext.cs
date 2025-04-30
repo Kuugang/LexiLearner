@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using LexiLearner.Models;
+using Npgsql.Internal;
 
 namespace LexiLearner.Data
 {
@@ -40,11 +41,23 @@ namespace LexiLearner.Data
                 .IsRequired();
 
             // ReadingContent has 1 genre
-            modelBuilder.Entity<ReadingMaterial>()
-                .HasOne(rc => rc.Genre)
-                .WithMany()
-                .HasForeignKey(rc => rc.GenreId)
-                .IsRequired();
+            // modelBuilder.Entity<ReadingMaterial>()
+            //     .HasOne(rc => rc.Genre)
+            //     .WithMany()
+            //     .HasForeignKey(rc => rc.GenreId)
+            //     .IsRequired();
+            modelBuilder.Entity<ReadingMaterialGenre>()
+                .HasKey(rg => new { rg.ReadingMaterialId, rg.GenreId });
+                
+            modelBuilder.Entity<ReadingMaterialGenre>()
+                .HasOne(rg => rg.ReadingMaterial)
+                .WithMany(r => r.ReadingMaterialGenres)
+                .HasForeignKey(rg => rg.ReadingMaterialId);
+                
+            modelBuilder.Entity<ReadingMaterialGenre>()
+                .HasOne(rg => rg.Genre)
+                .WithMany(g => g.ReadingMaterialGenres)
+                .HasForeignKey(rg => rg.GenreId);
 
             modelBuilder.Entity<Classroom>()
                 .HasOne(c => c.Teacher)
@@ -85,6 +98,28 @@ namespace LexiLearner.Data
                 .HasOne(rs => rs.ReadingMaterial)
                 .WithMany()
                 .HasForeignKey(rs => rs.ReadingMaterialId);
+
+    //   modelBuilder.Entity<Genre>()
+    //        .HasData(
+    //          new Genre { Name = "Science Fiction" },
+    //          new Genre { Name = "Mystery" },
+    //          new Genre { Name = "Supernatural" },
+    //          new Genre { Name = "Fantasy" },
+    //          new Genre { Name = "Political Intrigue" },
+    //          new Genre { Name = "Paranormal" },
+    //          new Genre { Name = "Romance" },
+    //          new Genre { Name = "Horror" },
+    //          new Genre { Name = "Thriller" },
+    //          new Genre { Name = "Coming of Age" },
+    //          new Genre { Name = "Historical Fiction" },
+    //          new Genre { Name = "Drama" },
+    //          new Genre { Name = "Adventure" },
+    //          new Genre { Name = "Comedy" },
+    //          new Genre { Name = "Metafiction" },
+    //          new Genre { Name = "Short story" },
+    //          new Genre { Name = "Passage" },
+    //          new Genre { Name = "Novel" }
+    //         );
         }
     }
 }
