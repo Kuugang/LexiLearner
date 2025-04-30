@@ -3,6 +3,7 @@ using System;
 using LexiLearner.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace LexiLearner.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20250418114958_EditReadingMaterial")]
+    partial class EditReadingMaterial
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -263,6 +266,9 @@ namespace LexiLearner.Migrations
                     b.Property<float>("Difficulty")
                         .HasColumnType("real");
 
+                    b.Property<Guid>("GenreId")
+                        .HasColumnType("uuid");
+
                     b.Property<int>("Grade_Level")
                         .HasColumnType("integer");
 
@@ -276,25 +282,9 @@ namespace LexiLearner.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ReadingMaterial");
-                });
-
-            modelBuilder.Entity("LexiLearner.Models.ReadingMaterialGenre", b =>
-                {
-                    b.Property<Guid>("ReadingMaterialId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("GenreId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("ReadingMaterialId", "GenreId");
-
                     b.HasIndex("GenreId");
 
-                    b.ToTable("ReadingMaterialGenre");
+                    b.ToTable("ReadingMaterial");
                 });
 
             modelBuilder.Entity("LexiLearner.Models.ReadingSession", b =>
@@ -647,23 +637,15 @@ namespace LexiLearner.Migrations
                     b.Navigation("Pupil");
                 });
 
-            modelBuilder.Entity("LexiLearner.Models.ReadingMaterialGenre", b =>
+            modelBuilder.Entity("LexiLearner.Models.ReadingMaterial", b =>
                 {
                     b.HasOne("LexiLearner.Models.Genre", "Genre")
-                        .WithMany("ReadingMaterialGenres")
+                        .WithMany()
                         .HasForeignKey("GenreId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("LexiLearner.Models.ReadingMaterial", "ReadingMaterial")
-                        .WithMany("ReadingMaterialGenres")
-                        .HasForeignKey("ReadingMaterialId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Genre");
-
-                    b.Navigation("ReadingMaterial");
                 });
 
             modelBuilder.Entity("LexiLearner.Models.ReadingSession", b =>
@@ -745,16 +727,6 @@ namespace LexiLearner.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("LexiLearner.Models.Genre", b =>
-                {
-                    b.Navigation("ReadingMaterialGenres");
-                });
-
-            modelBuilder.Entity("LexiLearner.Models.ReadingMaterial", b =>
-                {
-                    b.Navigation("ReadingMaterialGenres");
                 });
 
             modelBuilder.Entity("LexiLearner.Models.User", b =>

@@ -5,7 +5,7 @@ namespace LexiLearner.Models
 
     public class MinigameLog
     {
-        public required Guid Id { get; set; } = Guid.NewGuid();
+        public Guid Id { get; set; } = Guid.NewGuid();
 
         public required Guid MinigameId { get; set; }
         [ForeignKey("MinigameId")]
