@@ -3,38 +3,50 @@ using Microsoft.AspNetCore.Mvc;
 
 using LexiLearner.Models.DTO;
 using LexiLearner.Interfaces;
-using LexiLearner.Exceptions;
 
 [ApiController]
-[Route("api/readingMaterials")]
+[Route("api/[controller]")]
 
 public class ReadingMaterialsController : ControllerBase
 {
-  private readonly IReadingMaterialService _readingMaterialService;
-  public ReadingMaterialsController(IReadingMaterialService readingMaterialService)
-  {
-    _readingMaterialService = readingMaterialService;
-  }
+    private readonly IReadingMaterialService _readingMaterialService;
+    public ReadingMaterialsController(IReadingMaterialService readingMaterialService)
+    {
+        _readingMaterialService = readingMaterialService;
+    }
 
-  [HttpPost]
-  public async Task<IActionResult> Create([FromBody] ReadingMaterialDTO.Create request)
-  {
-    var readingMat = await _readingMaterialService.Create(request);
-    return StatusCode(StatusCodes.Status201Created,
-      new SuccessResponseDTO("Reading Material successfully created.", readingMat));
-  }
+    [HttpPost]
+    public async Task<IActionResult> Create([FromBody] ReadingMaterialDTO.Create request)
+    {
+        var readingMat = await _readingMaterialService.Create(request);
+        return StatusCode(StatusCodes.Status201Created,
+          new SuccessResponseDTO("Reading Material successfully created.", readingMat));
+    }
 
-  [HttpGet("")]
-  public async Task<IActionResult> Get([FromQuery] ReadingMaterialDTO.Read filters)
-  {
-    var ReadingMaterials = await _readingMaterialService.FilterReadingMaterials(filters);
+    [HttpGet("")]
+    public async Task<IActionResult> Get([FromQuery] ReadingMaterialDTO.Read filters)
+    {
+        var ReadingMaterials = await _readingMaterialService.FilterReadingMaterials(filters);
 
-    return StatusCode(StatusCodes.Status200OK,
-      new SuccessResponseDTO(
-        "Reading Materials found.",
-        ReadingMaterials.Select(r => new ReadingMaterialResponseDTO(r))
-        )
-      );
-  }
-   
+        return StatusCode(StatusCodes.Status200OK,
+          new SuccessResponseDTO(
+            "Reading Materials found.",
+            ReadingMaterials.Select(r => new ReadingMaterialResponseDTO(r))
+            )
+          );
+    }
+
+    [HttpGet("recommendations")]
+    [Authorize]
+    public async Task<IActionResult> GetRecommendations()
+    {
+        var ReadingMaterials = await _readingMaterialService.GetRecommendations(User);
+
+        return StatusCode(StatusCodes.Status200OK,
+          new SuccessResponseDTO(
+            "Reading Materials recommendations found.",
+            ReadingMaterials.Select(r => new ReadingMaterialResponseDTO(r))
+            )
+          );
+    }
 }

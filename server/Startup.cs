@@ -17,7 +17,6 @@ using LexiLearner.Interfaces;
 using LexiLearner.Services;
 using LexiLearner.Repository;
 using LexiLearner.Validators;
-using System.Threading.Tasks;
 using LexiLearner.Extensions;
 
 
