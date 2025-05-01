@@ -3,16 +3,18 @@ using System.Text.Json;
 using LexiLearner.Interfaces;
 using LexiLearner.Models;
 using LexiLearner.Models.DTO;
+using LexiLearner.Services;
+using Microsoft.EntityFrameworkCore;
 
 namespace LexiLearner.Data
 {
-  public class DataContextSeeder
-  {
-    public static async Task LoadMaterialsAsync(DataContext context, IGenreService genreService, IReadabilityService readabilityService)
+    public class DataContextSeeder
     {
-      if (!context.Genre.Any())
-      {
-        var genres = new List<Genre>()
+        public static async Task LoadMaterialsAsync(DataContext context, IGenreService genreService, IReadabilityService readabilityService)
+        {
+            if (!context.Genre.Any())
+            {
+                var genres = new List<Genre>()
         {
           new Genre { Name = "Science Fiction" },
           new Genre { Name = "Mystery" },
@@ -31,50 +33,90 @@ namespace LexiLearner.Data
           new Genre { Name = "Metafiction" },
           new Genre { Name = "Short story" },
           new Genre { Name = "Passage" },
-          new Genre { Name = "Novel" }
+          new Genre { Name = "Novel" },
         };
-        
-        await context.Genre.AddRangeAsync(genres);
-      }
-      
-      if (!context.ReadingMaterial.Any())
-      {
-        var json = File.ReadAllText(".\\Data\\Seed\\all_passages.json");
-        var materialsDTO = JsonSerializer.Deserialize<List<ReadingMaterialDTO.FromJson>>(json);
 
-        if (materialsDTO != null) 
-        {
-          var genre = await genreService.GetGenreByName("Passage");
-          if (genre == null)
-          {
-            genre = await genreService.Create("Passage");
-          }
-
-          var materials = materialsDTO.Select(dto => new ReadingMaterial
-          {
-            Grade_Level = (int)(dto.Grade_Level != null ? dto.Grade_Level : 6),
-            Author = dto.Author,
-            Title = dto.Title,
-            Description = dto.Description,
-            Content = dto.Passage,
-            Difficulty = (float)readabilityService.CalculateFleschScore(dto.Passage),
-            Cover = "",
-            IsDepEd = true,
-            ReadingMaterialGenres = new List<ReadingMaterialGenre>
-            {
-              new ReadingMaterialGenre
-              {
-                GenreId = genre.Id,
-                Genre = genre
-              }
+                await context.Genre.AddRangeAsync(genres);
             }
-          });
 
-          await context.ReadingMaterial.AddRangeAsync(materials);
+            if (!context.ReadingMaterial.Any())
+            {
+                var path = Path.Combine("Data", "Seed", "all_passages.json");
+                var json = File.ReadAllText(path);
+                var materialsDTO = JsonSerializer.Deserialize<List<ReadingMaterialDTO.FromJson>>(json);
+
+                if (materialsDTO != null)
+                {
+                    var passageGenre = await genreService.GetGenreByName("Passage");
+                    if (passageGenre == null)
+                    {
+                        passageGenre = await genreService.Create("Passage");
+                    }
+
+                    // Use a dictionary to track genres by name
+                    var genreDictionary = new Dictionary<string, Genre>();
+
+                    // Load all existing genres into the dictionary
+                    foreach (var existingGenre in await context.Genre.AsQueryable().ToListAsync())
+                    {
+                        genreDictionary[existingGenre.Name] = existingGenre;
+                    }
+
+                    var materials = new List<ReadingMaterial>();
+                    foreach (var dto in materialsDTO)
+                    {
+                        var readingMaterial = new ReadingMaterial
+                        {
+                            Grade_Level = (int)(dto.Grade_Level != null ? dto.Grade_Level : 6),
+                            Author = dto.Author,
+                            Title = dto.Title,
+                            Description = dto.Description,
+                            Content = dto.Passage,
+                            Difficulty = (float)readabilityService.CalculateFleschScore(dto.Passage),
+                            Cover = "",
+                            IsDepEd = true,
+                            ReadingMaterialGenres = new List<ReadingMaterialGenre>()
+                        };
+
+                        if (dto.Genre != null && dto.Genre.Any())
+                        {
+                            foreach (var genreName in dto.Genre.Distinct())
+                            {
+                                Genre genre;
+                                if (!genreDictionary.TryGetValue(genreName, out genre))
+                                {
+                                    // Genre doesn't exist, create and add to dictionary
+                                    var newGenre = await genreService.GetGenreByName(genreName);
+                                    if (newGenre == null)
+                                    {
+                                        newGenre = await genreService.Create(genreName);
+                                    }
+                                    genre = newGenre;
+                                    genreDictionary[genreName] = genre;
+                                }
+
+                                readingMaterial.ReadingMaterialGenres.Add(new ReadingMaterialGenre
+                                {
+                                    GenreId = genre.Id,
+                                    Genre = genre
+                                });
+                            }
+                        }
+                        // Add the "Passage" genre
+                        readingMaterial.ReadingMaterialGenres.Add(new ReadingMaterialGenre
+                        {
+                            GenreId = passageGenre.Id,
+                            Genre = passageGenre
+                        });
+                        materials.Add(readingMaterial);
+                    }
+
+                    await context.ReadingMaterial.AddRangeAsync(materials);
+                    await context.SaveChangesAsync();
+                }
+            }
+
+            if (context.ChangeTracker.HasChanges()) await context.SaveChangesAsync();
         }
-      }
-
-      if (context.ChangeTracker.HasChanges()) await context.SaveChangesAsync();
     }
-  }
 }

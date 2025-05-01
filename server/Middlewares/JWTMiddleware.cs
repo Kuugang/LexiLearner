@@ -20,17 +20,17 @@ namespace LexiLearner.Middlewares
     {
         private readonly RequestDelegate _next;
         private readonly IJWTService _jwtService;
-        
+
         public JWTMiddleware(RequestDelegate next, IJWTService jwtService)
         {
             _next = next;
             _jwtService = jwtService;
         }
-        
+
         public async Task InvokeAsync(HttpContext context)
         {
             var token = context.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
-            
+
             if (!string.IsNullOrEmpty(token))
             {
                 var principal = _jwtService.ValidateToken(token);
@@ -39,7 +39,7 @@ namespace LexiLearner.Middlewares
                     context.User = principal;  // Sets the User on HttpContext
                 }
             }
-            
+
             await _next(context);  // Continue to the next middleware
         }
     }

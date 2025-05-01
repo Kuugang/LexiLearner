@@ -1,11 +1,11 @@
 export interface ReadingContentType {
-  Id: string;
-  Type?: string;
-  Title: string;
-  Author?: string;
-  Description: string;
-  Cover: string;
-  Content: string;
-  Genre: string[];
-  Difficulty: number;
+  id: string;
+  type?: string;
+  title: string;
+  author?: string;
+  description: string;
+  cover: string;
+  content: string;
+  genres: string[];
+  difficulty: number;
 }
