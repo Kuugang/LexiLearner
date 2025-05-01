@@ -117,7 +117,7 @@ namespace LexiLearner
             services.AddHttpClient<IAuthService, AuthService>();
             services.AddScoped<IGenreService, GenreService>();
             services.AddScoped<IReadabilityService, ReadabilityService>();
-            services.AddScoped<IReadingMaterialService,  ReadingMaterialService>();
+            services.AddScoped<IReadingMaterialService, ReadingMaterialService>();
             services.AddScoped<IFileUploadService, FileUploadService>();
             services.AddScoped<IPupilService, PupilService>();
             services.AddScoped<IMinigameService, MinigameService>();
