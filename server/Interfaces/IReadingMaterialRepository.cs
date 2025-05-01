@@ -5,8 +5,9 @@ namespace LexiLearner.Interfaces
 {
     public interface IReadingMaterialRepository
     {
-      Task<ReadingMaterial> Create(ReadingMaterial readingMaterial);
-      Task<ReadingMaterial?> GetByIdAsync(Guid id);
-      Task<List<ReadingMaterial>> FilterReadingMaterial(ReadingMaterialDTO.Read filters);
+        Task<ReadingMaterial> Create(ReadingMaterial readingMaterial);
+        Task<ReadingMaterial?> GetByIdAsync(Guid id);
+        Task<List<ReadingMaterial>> FilterReadingMaterial(ReadingMaterialDTO.Read filters);
+        Task<List<ReadingMaterial>> GetRecommendations(Guid PupilId);
     }
 }

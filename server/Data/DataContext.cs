@@ -14,6 +14,7 @@ namespace LexiLearner.Data
         public DbSet<Pupil> Pupil { get; set; }
         public DbSet<Teacher> Teacher { get; set; }
         public DbSet<Genre> Genre { get; set; }
+        public DbSet<ReadingMaterialGenre> ReadingMaterialGenre { get; set; }
         public DbSet<ReadingMaterial> ReadingMaterial { get; set; }
         public DbSet<Classroom> Classroom { get; set; }
         public DbSet<ClassroomEnrollment> ClassroomEnrollment { get; set; }
@@ -48,12 +49,12 @@ namespace LexiLearner.Data
             //     .IsRequired();
             modelBuilder.Entity<ReadingMaterialGenre>()
                 .HasKey(rg => new { rg.ReadingMaterialId, rg.GenreId });
-                
+
             modelBuilder.Entity<ReadingMaterialGenre>()
                 .HasOne(rg => rg.ReadingMaterial)
                 .WithMany(r => r.ReadingMaterialGenres)
                 .HasForeignKey(rg => rg.ReadingMaterialId);
-                
+
             modelBuilder.Entity<ReadingMaterialGenre>()
                 .HasOne(rg => rg.Genre)
                 .WithMany(g => g.ReadingMaterialGenres)
@@ -99,27 +100,18 @@ namespace LexiLearner.Data
                 .WithMany()
                 .HasForeignKey(rs => rs.ReadingMaterialId);
 
-    //   modelBuilder.Entity<Genre>()
-    //        .HasData(
-    //          new Genre { Name = "Science Fiction" },
-    //          new Genre { Name = "Mystery" },
-    //          new Genre { Name = "Supernatural" },
-    //          new Genre { Name = "Fantasy" },
-    //          new Genre { Name = "Political Intrigue" },
-    //          new Genre { Name = "Paranormal" },
-    //          new Genre { Name = "Romance" },
-    //          new Genre { Name = "Horror" },
-    //          new Genre { Name = "Thriller" },
-    //          new Genre { Name = "Coming of Age" },
-    //          new Genre { Name = "Historical Fiction" },
-    //          new Genre { Name = "Drama" },
-    //          new Genre { Name = "Adventure" },
-    //          new Genre { Name = "Comedy" },
-    //          new Genre { Name = "Metafiction" },
-    //          new Genre { Name = "Short story" },
-    //          new Genre { Name = "Passage" },
-    //          new Genre { Name = "Novel" }
-    //         );
+            modelBuilder.Entity<ReadingMaterialGenre>()
+                 .HasKey(rmg => new { rmg.ReadingMaterialId, rmg.GenreId });
+
+            modelBuilder.Entity<ReadingMaterialGenre>()
+                .HasOne(rmg => rmg.ReadingMaterial)
+                .WithMany(rm => rm.ReadingMaterialGenres)
+                .HasForeignKey(rmg => rmg.ReadingMaterialId);
+
+            modelBuilder.Entity<ReadingMaterialGenre>()
+                .HasOne(rmg => rmg.Genre)
+                .WithMany(g => g.ReadingMaterialGenres)
+                .HasForeignKey(rmg => rmg.GenreId);
         }
     }
 }
