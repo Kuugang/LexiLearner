@@ -41,7 +41,7 @@ namespace LexiLearner.Data
 
             if (!context.ReadingMaterial.Any())
             {
-                var path = Path.Combine("Data", "Seed", "all_passages.json");
+                var path = Path.Combine("Data", "Seed", "all_complete_data.json");
                 var json = File.ReadAllText(path);
                 var materialsDTO = JsonSerializer.Deserialize<List<ReadingMaterialDTO.FromJson>>(json);
 
