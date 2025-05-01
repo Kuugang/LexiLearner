@@ -12,7 +12,7 @@ import { Input } from "~/components/ui/input";
 import { CircleUser, Search, Flame } from "lucide-react-native";
 
 function HomeScreen() {
-  const { data: stories, isLoading: isStoriesLoading } = useStories();
+  const { data: stories, isLoading: isStoriesLoading} = useStories();
 
   // useEffect(() => {
   //   router.push("/minigames/fillintheblanks");
@@ -73,9 +73,9 @@ function HomeScreen() {
         <Text className="text-2xl font-bold">Recommended</Text>
 
         <ReadingContent
-          Type={"Recommended"}
-          Id={"123"}
-          Content={`
+          type={"Recommended"}
+          id={"123"}
+          content={`
     This edition is part of the Beginner Books collection, which aims to encourage early readers with its simple language and visual storytelling. It’s a perfect book for both independent reading and family read-aloud sessions!
 
 
@@ -98,17 +98,17 @@ function HomeScreen() {
     This edition is part of the Beginner Books collection, which aims to encourage early readers with its simple language and visual storytelling. It’s a perfect book for both independent reading and family read-aloud sessions!
     This edition is part of the Beginner Books collection, which aims to encourage early readers with its simple language and visual storytelling. It’s a perfect book for both independent reading and family read-aloud sessions!
   `}
-          Title={"Cat In The Hat"}
-          Author={"Dr. Seuss"}
-          Description="Have a ball with Dr. Seuss and the Cat in the Hat in this classic picture book...but don't forget to clean up your mess!
+          title={"Cat In The Hat"}
+          author={"Dr. Seuss"}
+          description="Have a ball with Dr. Seuss and the Cat in the Hat in this classic picture book...but don't forget to clean up your mess!
 Then he said That is that.
 And then he was gone
 With a tip of his hat.
 A dreary day turns into a wild romp when this beloved story introduces readers to the Cat in the Hat and his troublemaking friends, Thing 1 and Thing 2 – And don't forget Fish! A favorite among kids, parents and teachers, this story uses simple words and basic rhyme to encourage and delight beginning readers.
 Originally created by Dr. Seuss himself, Beginner Books are fun, funny, and easy to read. These unjacketed hardcover early readers encourage children to read all on their own, using simple words and illustrations. Smaller than the classic large format Seuss picture books like The Lorax and Oh, The Places You'll Go!, these portable packages are perfect for practicing readers ages 3-7, and lucky parents too!"
-          Cover="https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1468890477i/233093.jpg"
-          Genre={["Fiction"]}
-          Difficulty={10}
+          cover="https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1468890477i/233093.jpg"
+          genres={["Fiction"]}
+          difficulty={10}
         />
       </View>
 
@@ -119,22 +119,26 @@ Originally created by Dr. Seuss himself, Beginner Books are fun, funny, and easy
           showsHorizontalScrollIndicator={false}
           className="p-2"
         >
-          {!isStoriesLoading &&
-            stories?.map((item) => (
-              <View key={item.Id} className="mr-4">
-                <ReadingContent
-                  Type="ScrollView"
-                  Id={item.Id}
-                  Title={item.Title}
-                  Author={item.Author}
-                  Description={item.Description}
-                  Cover={item.Cover}
-                  Content={item.Content}
-                  Genre={item.Genre}
-                  Difficulty={item.Difficulty}
-                />
-              </View>
-            ))}
+          {isStoriesLoading && <Text>Loading stories...</Text>}
+          {!isStoriesLoading && Array.isArray(stories) && stories?.length > 0
+            ? stories?.map((item) => (
+                <View key={item.id} className="mr-4">
+                  <ReadingContent
+                    type="ScrollView"
+                    id={item.id}
+                    title={item.title}
+                    author={item.author}
+                    description={item.description}
+                    cover={item.cover}
+                    content={item.content}
+                    genres={item.genres}
+                    difficulty={item.difficulty}
+                  />
+                </View>
+              ))
+            : !isStoriesLoading && (
+                <Text className="text-gray-500">No stories available.</Text>
+              )}
         </ScrollView>
       </View>
     </ScrollView>

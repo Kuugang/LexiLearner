@@ -11,10 +11,10 @@ function ReadingContent(props: ReadingContentType) {
 
   const onPress = () => {
     setSelectedContent(props);
-    router.push(`/content/${props.Id}`);
+    router.push(`/content/${props.id}`);
   };
 
-  if (props.Type === "Recommended") {
+  if (props.type === "Recommended") {
     return (
       <TouchableOpacity
         onPress={onPress}
@@ -23,24 +23,24 @@ function ReadingContent(props: ReadingContentType) {
       >
         <Image
           source={{
-            uri: props.Cover,
+            uri: props.cover,
           }}
           className="rounded-lg mr-4"
           style={{ width: 100, height: 140 }}
           alt=""
         />
         <View className="flex-1">
-          <Text className="font-bold text-lg">{props.Title}</Text>
-          <Text className="text-base">By {props.Author}</Text>
+          <Text className="font-bold text-lg">{props.title}</Text>
+          <Text className="text-base">By {props.author}</Text>
           <Text className="text-sm" numberOfLines={5} ellipsizeMode="tail">
-            {props.Description}
+            {props.description}
           </Text>
         </View>
       </TouchableOpacity>
     );
   }
 
-  if (props.Type === "ScrollView") {
+  if (props.type === "ScrollView") {
     return (
       <TouchableOpacity
         onPress={onPress}
@@ -50,20 +50,20 @@ function ReadingContent(props: ReadingContentType) {
       >
         <Image
           source={{
-            uri: props.Cover,
+            uri: props.cover,
           }}
           style={{ width: "100%", height: 140 }}
           resizeMode="contain"
           alt=""
         />
         <View className="flex-1">
-          <Text className="font-bold">{props.Title}</Text>
+          <Text className="font-bold">{props.title}</Text>
         </View>
       </TouchableOpacity>
     );
   }
 
-  if (props.Type === "QueryView") {
+  if (props.type === "QueryView") {
     return (
       <TouchableOpacity
         onPress={onPress}
@@ -72,20 +72,20 @@ function ReadingContent(props: ReadingContentType) {
       >
         <Image
           source={{
-            uri: props.Cover,
+            uri: props.cover,
           }}
           style={{ width: 100, height: 140 }}
           resizeMode="contain"
         />
 
         <View className="flex-1 flex flex-col gap-2 w-full p-2">
-          <Text className="font-bold">{props.Title}</Text>
+          <Text className="font-bold">{props.title}</Text>
           <Text
             className="text-sm text-gray-700"
             numberOfLines={5}
             ellipsizeMode="tail"
           >
-            {props.Description}
+            {props.description}
           </Text>
         </View>
       </TouchableOpacity>
