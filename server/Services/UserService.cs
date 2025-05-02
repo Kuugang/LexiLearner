@@ -18,14 +18,15 @@ namespace LexiLearner.Services
         // private readonly CachedUserRepository _userRepository;
         private readonly ITwoFactorAuthService _twoFactorAuthService;
         private readonly IJWTService _jwtService;
+        private readonly IFileUploadService _fileUploadService;
 
-        public UserService(UserManager<User> userManager, IUserRepository userRepository, ITwoFactorAuthService twoFactorAuthService, IJWTService jwtService)
+        public UserService(UserManager<User> userManager, IUserRepository userRepository, ITwoFactorAuthService twoFactorAuthService, IJWTService jwtService, IFileUploadService fileUploadService)
         {
             _userManager = userManager;
             _userRepository = userRepository;
             _twoFactorAuthService = twoFactorAuthService;
             _jwtService = jwtService;
-
+            _fileUploadService = fileUploadService;
         }
 
         public async Task<string> GetRole(User user)
@@ -41,6 +42,17 @@ namespace LexiLearner.Services
         {
             return await _userRepository.GetUserByIdAsync(userId);
         }
+
+        public async Task<Pupil?> GetPupilByUserId(string userId)
+        {
+            return await _userRepository.GetPupilByUserId(userId);
+        }
+
+        public async Task<Teacher?> GetTeacherByUserId(string userId)
+        {
+            return await _userRepository.GetTeacherByUserId(userId);
+        }
+
         public async Task<User?> GetUserByEmail(string email)
         {
             return await _userRepository.GetUserByEmail(email);
@@ -98,13 +110,13 @@ namespace LexiLearner.Services
 
             if (role == "Pupil")
             {
-                Pupil? pupil = await _userRepository.GetPupilByUserId(user.Id);
+                Pupil? pupil = await GetPupilByUserId(user.Id);
                 response.Data = new ProfileDTO(user, pupil);
             }
 
             else if (role == "Teacher")
             {
-                Teacher? teacher = await _userRepository.GetTeacherByUserId(user.Id);
+                Teacher? teacher = await GetTeacherByUserId(user.Id);
                 response.Data = new ProfileDTO(user, teacher);
             }
             else
@@ -135,7 +147,7 @@ namespace LexiLearner.Services
 
             if (role == "Pupil")
             {
-                Pupil? pupil = await _userRepository.GetPupilByUserId(user.Id);
+                Pupil? pupil = await GetPupilByUserId(user.Id);
                 if (pupil == null)
                 {
                     throw new ApplicationExceptionBase(
@@ -150,7 +162,7 @@ namespace LexiLearner.Services
 
             else if (role == "Teacher")
             {
-                Teacher? teacher = await _userRepository.GetTeacherByUserId(user.Id);
+                Teacher? teacher = await GetTeacherByUserId(user.Id);
                 if (teacher == null)
                 {
                     throw new ApplicationExceptionBase(
@@ -225,6 +237,11 @@ namespace LexiLearner.Services
                 update = true;
             }
 
+            if (UpdateProfileDTO.Avatar != null)
+            {
+                user.Avatar = _fileUploadService.Upload(UpdateProfileDTO.Avatar, "Avatar\\");
+            }
+
             if (update) //TODO: should use entity state
             {
                 user.UpdatedAt = DateTime.UtcNow;
@@ -262,7 +279,7 @@ namespace LexiLearner.Services
 
             if (role == "Pupil")
             {
-                Pupil? pupil = await _userRepository.GetPupilByUserId(user.Id);
+                Pupil? pupil = await GetPupilByUserId(user.Id);
 
                 if (UpdateProfileDTO.Age != null)
                     pupil.Age = UpdateProfileDTO.Age;
@@ -275,7 +292,7 @@ namespace LexiLearner.Services
             }
             else if (role == "Teacher")
             {
-                Teacher? teacher = await _userRepository.GetTeacherByUserId(user.Id);
+                Teacher? teacher = await GetTeacherByUserId(user.Id);
 
                 await _userRepository.Update(teacher);
                 response.Data = new ProfileDTO(user, teacher);

@@ -6,6 +6,7 @@ namespace LexiLearner.Models.DTO
         public string? FirstName { get; set; }
         public string? LastName { get; set; }
         public string? PhoneNumber { get; set; }
+        public IFormFile? Avatar { get; set; }
         public int? Age { get; set; }
         public int? GradeLevel { get; set; }
         public bool? TwoFactorEnabled { get; set; }
@@ -23,6 +24,7 @@ namespace LexiLearner.Models.DTO
         public string UserName { get; set; }
         public bool? TwoFactorEnabled { get; set; }
         public string? PhoneNumber { get; set; }
+        public string? Avatar { get; set; }
         public string Role { get; set; }
 
         public int? Age { get; set; }
@@ -49,6 +51,7 @@ namespace LexiLearner.Models.DTO
         private void SetupFields(User user, bool Public)
         {
             UserName = user.UserName;
+            Avatar = user.Avatar;
 
             if (Public) return;
 

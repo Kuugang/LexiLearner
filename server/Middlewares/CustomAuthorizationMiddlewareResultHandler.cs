@@ -14,7 +14,7 @@ public class CustomAuthorizationMiddlewareResultHandler : IAuthorizationMiddlewa
         {
             context.Response.StatusCode = StatusCodes.Status403Forbidden;
             context.Response.ContentType = "application/json";
-            
+
             var problemDetails = new
             {
                 message = "Authorization failed",
@@ -22,9 +22,9 @@ public class CustomAuthorizationMiddlewareResultHandler : IAuthorizationMiddlewa
             };
 
             await context.Response.WriteAsync(
-                JsonSerializer.Serialize(problemDetails, new JsonSerializerOptions 
-                { 
-                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase 
+                JsonSerializer.Serialize(problemDetails, new JsonSerializerOptions
+                {
+                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase
                 })
             );
             return;

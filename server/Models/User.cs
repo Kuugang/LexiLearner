@@ -14,6 +14,8 @@ namespace LexiLearner.Models
         public Pupil? Pupil { get; set; }
         public Teacher? Teacher { get; set; }
 
+        public string? Avatar { get; set; }
+
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime UpdatedAt { get; set; }
     }
