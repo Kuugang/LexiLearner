@@ -22,13 +22,13 @@ namespace LexiLearner
         }
 
 
-        public string GenerateJWTToken(string userId, string username)
+        public string GenerateJWTToken(string userId, string username, string role)
         {
             var claims = new List<Claim>
             {
                 // new Claim(ClaimTypes.Name, username),  // Username as 'Name' claim (optional, for better readability)
                 new Claim(ClaimTypes.NameIdentifier, userId), // Use ClaimTypes.NameIdentifier for user ID
-                // new Claim(ClaimTypes.Role, role), // Role as a ClaimTypes.Role claim
+                new Claim(ClaimTypes.Role, role), // Role as a ClaimTypes.Role claim
                 // new Claim(ClaimTypes.Sid, userId), // This can also be used for user ID (alternative)
                 // new Claim(ClaimTypes.Upn, username), // UserPrincipalName for the username (if needed)
 
