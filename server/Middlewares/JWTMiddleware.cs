@@ -30,6 +30,7 @@ namespace LexiLearner.Middlewares
         public async Task InvokeAsync(HttpContext context)
         {
             var token = context.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
+            Console.WriteLine("TOKEN:"+token);
 
             if (!string.IsNullOrEmpty(token))
             {

@@ -9,34 +9,41 @@ namespace LexiLearner.Repository{
     {
         private readonly DataContext _context;
 
-        public ClassroomRepository(DataContext contenxt) {
-            _context = contenxt;
+        public ClassroomRepository(DataContext context) {
+            _context = context;
         }
+
         public async Task Create(Classroom classroom)
         {
             // throw new NotImplementedException();
             await _context.Classroom.AddAsync(classroom);
             await _context.SaveChangesAsync();
         }
-
-        public Task Delete(Classroom classroom)
+        public async Task<Classroom> GetById(Guid Id)
         {
-            throw new NotImplementedException();
+            return await _context.Classroom.FindAsync(Id);
         }
 
-        public Task<Classroom?> GetById(Guid Id)
+        public async Task<List<Classroom>> GetByTeacherId(Guid Id)
         {
-            throw new NotImplementedException();
+            return await _context.Classroom.Where(c => c.TeacherId == Id).ToListAsync();
         }
 
-        public Task<Classroom?> GetByIdWithTeacherId(Guid Id)
+        public async Task Update(Classroom classroom)
         {
-            throw new NotImplementedException();
+            _context.Classroom.Update(classroom);
+            await _context.SaveChangesAsync();
+        }
+        public async Task Delete(Classroom classroom)
+        {
+            _context.Classroom.Remove(classroom);
+            await _context.SaveChangesAsync();
         }
 
-        public Task Update(Classroom classroom)
+        public async Task<bool> DoesJoinCodeExist(string code)
         {
-            throw new NotImplementedException();
+            return await _context.Classroom.AnyAsync(c => c.JoinCode == code);
         }
+
     }
 }

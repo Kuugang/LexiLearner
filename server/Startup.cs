@@ -122,7 +122,9 @@ namespace LexiLearner
             services.AddScoped<IPupilService, PupilService>();
             services.AddScoped<IMinigameService, MinigameService>();
             services.AddScoped<IMinigameLogService, MinigameLogService>();
+            services.AddScoped<IClassroomService, ClassroomService>();
 
+            services.AddScoped<IClassroomRepository, ClassroomRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IGenreRepository, GenreRepository>();
             services.AddScoped<IReadingMaterialRepository, ReadingMaterialRepository>();
@@ -169,20 +171,19 @@ namespace LexiLearner
             });
 
 
-
             services.AddAuthorization(options =>
             {
-                options.AddPolicy("OwnerPolicy", policy =>
-                    policy.RequireClaim("http://schemas.microsoft.com/ws/2008/06/identity/claims/role", "Owner"));
+                options.AddPolicy("TeacherPolicy", policy =>
+                    policy.RequireClaim("http://schemas.microsoft.com/ws/2008/06/identity/claims/role", "Teacher"));
 
-                options.AddPolicy("CustomerPolicy", policy =>
-                    policy.RequireClaim("http://schemas.microsoft.com/ws/2008/06/identity/claims/role", "Customer"));
+                options.AddPolicy("PupilPolicy", policy =>
+                    policy.RequireClaim("http://schemas.microsoft.com/ws/2008/06/identity/claims/role", "Pupil"));
 
                 options.AddPolicy("AdminPolicy", policy =>
                     policy.RequireClaim("http://schemas.microsoft.com/ws/2008/06/identity/claims/role", "Admin"));
 
-                options.AddPolicy("OwnerCustomerPolicy", policy =>
-                    policy.RequireClaim("http://schemas.microsoft.com/ws/2008/06/identity/claims/role", "Customer", "Owner"));
+                options.AddPolicy("TeacherPupilPolicy", policy =>
+                    policy.RequireClaim("http://schemas.microsoft.com/ws/2008/06/identity/claims/role", "Teacher", "Pupil"));
             });
 
 

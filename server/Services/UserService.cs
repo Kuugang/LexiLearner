@@ -75,7 +75,7 @@ namespace LexiLearner.Services
             user = await _userRepository.Create(user, RegisterRequest.Password);
             await _userRepository.CreateProfile(user, RegisterRequest.Role);
 
-            var token = _jwtService.GenerateJWTToken(user.Id, user.UserName!);
+            var token = _jwtService.GenerateJWTToken(user.Id, user.UserName!, RegisterRequest.Role);
 
             return new SuccessResponseDTO("User created successfully", new JWTDTO(token));
         }

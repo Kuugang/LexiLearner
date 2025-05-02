@@ -1,10 +1,11 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 
 namespace LexiLearner.Models
 {
-
+    [Index(nameof(JoinCode), IsUnique = true)]
     public class Classroom
     {
         public Guid Id { get; set; } = Guid.NewGuid();
@@ -13,6 +14,7 @@ namespace LexiLearner.Models
 
         [ForeignKey("TeacherId")]
         public required Teacher Teacher { get; set; }
+        public required string JoinCode { get; set; }
 
         [StringLength(64, MinimumLength = 10)]
         public required string Name { get; set; }

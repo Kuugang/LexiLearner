@@ -60,9 +60,12 @@ namespace LexiLearner.Data
                 .HasForeignKey(rg => rg.GenreId);
 
             modelBuilder.Entity<Classroom>()
+            // TODO: has unique join code constraint add
                 .HasOne(c => c.Teacher)
                 .WithMany()
+                // .HasIndex(c => c.JoinCode).IsUnique()
                 .HasForeignKey(c => c.TeacherId);
+                
 
             modelBuilder.Entity<ClassroomEnrollment>()
                 .HasOne(ce => ce.Pupil)
