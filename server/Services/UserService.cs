@@ -18,14 +18,15 @@ namespace LexiLearner.Services
         // private readonly CachedUserRepository _userRepository;
         private readonly ITwoFactorAuthService _twoFactorAuthService;
         private readonly IJWTService _jwtService;
+        private readonly IFileUploadService _fileUploadService;
 
-        public UserService(UserManager<User> userManager, IUserRepository userRepository, ITwoFactorAuthService twoFactorAuthService, IJWTService jwtService)
+        public UserService(UserManager<User> userManager, IUserRepository userRepository, ITwoFactorAuthService twoFactorAuthService, IJWTService jwtService, IFileUploadService fileUploadService)
         {
             _userManager = userManager;
             _userRepository = userRepository;
             _twoFactorAuthService = twoFactorAuthService;
             _jwtService = jwtService;
-
+            _fileUploadService = fileUploadService;
         }
 
         public async Task<string> GetRole(User user)
@@ -234,6 +235,11 @@ namespace LexiLearner.Services
             {
                 user.PhoneNumber = UpdateProfileDTO.PhoneNumber;
                 update = true;
+            }
+
+            if (UpdateProfileDTO.Avatar != null)
+            {
+                user.Avatar = _fileUploadService.Upload(UpdateProfileDTO.Avatar, "Avatar\\");
             }
 
             if (update) //TODO: should use entity state
