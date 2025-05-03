@@ -120,22 +120,23 @@ namespace LexiLearner.Services{
                 );
             }
 
-            if(user.Id != teacher.UserId) {
-                throw new ApplicationExceptionBase(
-                    $"User is not the owner of classroom",
-                    "Getting classrooms failed",
-                    StatusCodes.Status404NotFound
-                );
-            }
+            // gihandle nmn nis authorize shit dba hahsah
+            // if(user.Id != teacher.UserId) {
+            //     throw new ApplicationExceptionBase(
+            //         $"User is not the owner of classroom",
+            //         "Getting classrooms failed",
+            //         StatusCodes.Status404NotFound
+            //     );
+            // }
 
             Guid teacherId = teacher.Id;
 
             return await _classroomRepository.GetByTeacherId(teacherId);
         }
 
-
         public async Task<Classroom> Update(Guid ClassroomId, ClassroomDTO.UpdateClassroom request, ClaimsPrincipal User)
         {
+            Console.WriteLine("EDIT REQUEST:"+request);
             User? user = await _userService.GetUserFromToken(User);
             if(user == null) {
                 throw new ApplicationExceptionBase(
@@ -154,13 +155,23 @@ namespace LexiLearner.Services{
                 );
             }
 
-            if(Guid.Parse(user.Id) != classroom.TeacherId) {
+            Teacher? teacher = await _userService.GetTeacherByUserId(user.Id);
+
+            if(teacher == null) {
+                throw new ApplicationExceptionBase(
+                    $"Teacher with not found",
+                    "Updating classroom failed",
+                    StatusCodes.Status404NotFound
+                );
+            }
+
+            if(teacher.Id != classroom.TeacherId) {
                 throw new ApplicationExceptionBase(
                     $"User is not the classroom owner",
                     "Updating classroom failed",
                     StatusCodes.Status401Unauthorized
                 );
-            } 
+            }   
 
             DateTime update = DateTime.UtcNow;
 
@@ -196,8 +207,17 @@ namespace LexiLearner.Services{
                 );
             }   
        
-            // shit mani nga paagi ata o
-            if(Guid.Parse(user.Id) != classroom.TeacherId) {
+            Teacher? teacher = await _userService.GetTeacherByUserId(user.Id);
+
+            if(teacher == null) {
+                throw new ApplicationExceptionBase(
+                    $"Teacher with not found",
+                    "Deleting classroom failed",
+                    StatusCodes.Status404NotFound
+                );
+            }
+
+            if(teacher.Id != classroom.TeacherId) {
                 throw new ApplicationExceptionBase(
                     $"User is not the classroom owner",
                     "Deleting classroom failed",

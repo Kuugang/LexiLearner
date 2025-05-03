@@ -15,7 +15,6 @@ namespace LexiLearner.Repository{
 
         public async Task Create(Classroom classroom)
         {
-            // throw new NotImplementedException();
             await _context.Classroom.AddAsync(classroom);
             await _context.SaveChangesAsync();
         }
@@ -24,9 +23,9 @@ namespace LexiLearner.Repository{
             return await _context.Classroom.FindAsync(Id);
         }
 
-        public async Task<List<Classroom>> GetByTeacherId(Guid Id)
+        public async Task<List<Classroom>> GetByTeacherId(Guid TeacherId)
         {
-            return await _context.Classroom.Where(c => c.TeacherId == Id).ToListAsync();
+            return await _context.Classroom.Where(c => c.TeacherId == TeacherId).ToListAsync();
         }
 
         public async Task Update(Classroom classroom)

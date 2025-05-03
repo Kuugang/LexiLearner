@@ -38,8 +38,7 @@ namespace LexiLearner.Models.DTO{
             public string? Name{get;set;}
 
             public string? Description { get; set; }
-            [Required]
-            public required DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+            public DateTime? UpdatedAt { get; set; } = DateTime.UtcNow;
         }
 
     }
