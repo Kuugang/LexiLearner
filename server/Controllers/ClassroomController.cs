@@ -10,11 +10,13 @@ using Microsoft.AspNetCore.Mvc;
 [Route("api/[controller]")]
 public class ClassroomController : ControllerBase {
     private readonly IClassroomService _classroomService;
-        private readonly IUserService _userService;
+    private readonly IUserService _userService;
+    private readonly IClassroomEnrollmentService _classroomEnrollmentService;
 
-    public ClassroomController(IClassroomService classroomService,IUserService userService) {
+    public ClassroomController(IClassroomService classroomService, IUserService userService, IClassroomEnrollmentService classroomEnrollmentService) {
         _classroomService = classroomService;
         _userService = userService;
+        _classroomEnrollmentService = classroomEnrollmentService;
     }
 
     [HttpPost("create")]
@@ -28,12 +30,10 @@ public class ClassroomController : ControllerBase {
 		);
     }
 
-    // [Httppost(joincode)]
-
     [HttpPut("{ClassroomId}")]
     [Authorize("TeacherPolicy")]
-    public async Task<IActionResult> EditClassroom([FromRoute] Guid ClassroomId, [FromForm] ClassroomDTO.UpdateClassroom updateClassroom, ClaimsPrincipal User) {
-        var classroom = await _classroomService.Update(ClassroomId, updateClassroom, User);
+    public async Task<IActionResult> EditClassroom([FromRoute] Guid ClassroomId, [FromForm] ClassroomDTO.UpdateClassroom request) {
+        var classroom = await _classroomService.Update(ClassroomId, request, User);
 
         return StatusCode(
 			StatusCodes.Status200OK,
@@ -62,11 +62,6 @@ public class ClassroomController : ControllerBase {
             new SuccessResponseDTO("Get teacher's classroom success",Classrooms)
         );
     }
-
-    // [HttpPost("edit")]
-    // public async Task<IActionResult> Edit() {
-
-    // }
 
     [HttpDelete("{ClassroomId}")]
     [Authorize("TeacherPolicy")]
