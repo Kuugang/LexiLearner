@@ -5,12 +5,14 @@ using Microsoft.AspNetCore.Mvc;
 
 [ApiController]
 [Route("api/[controller]")]
-public class ClassroomEnrollmentController : ControllerBase{
+public class ClassroomEnrollmentController : ControllerBase
+{
     private readonly IClassroomService _classroomService;
     private readonly IUserService _userService;
     private readonly IClassroomEnrollmentService _classroomEnrollmentService;
 
-    public ClassroomEnrollmentController(IClassroomService classroomService, IUserService userService, IClassroomEnrollmentService classroomEnrollmentService) {
+    public ClassroomEnrollmentController(IClassroomService classroomService, IUserService userService, IClassroomEnrollmentService classroomEnrollmentService)
+    {
         _classroomService = classroomService;
         _userService = userService;
         _classroomEnrollmentService = classroomEnrollmentService;
@@ -18,8 +20,9 @@ public class ClassroomEnrollmentController : ControllerBase{
 
     [HttpPost("{JoinCode}")]
     [Authorize("PupilPolicy")]
-    public async Task<IActionResult> JoinClassroom([FromRoute] string JoinCode){
-        var classroom = await _classroomEnrollmentService.JoinClassroom(JoinCode,User);
+    public async Task<IActionResult> JoinClassroom([FromRoute] string JoinCode)
+    {
+        var classroom = await _classroomEnrollmentService.JoinClassroom(JoinCode, User);
 
         return StatusCode(StatusCodes.Status201Created,
         new SuccessResponseDTO("Joined Classroom successfully", classroom))
@@ -28,7 +31,8 @@ public class ClassroomEnrollmentController : ControllerBase{
 
     [HttpGet("me")]
     [Authorize("PupilPolicy")]
-    public async Task<IActionResult> GetByPupilId() {
+    public async Task<IActionResult> GetByPupilId()
+    {
         var classrooms = await _classroomEnrollmentService.GetByPupilId(User);
 
         return StatusCode(StatusCodes.Status201Created,
@@ -38,7 +42,8 @@ public class ClassroomEnrollmentController : ControllerBase{
 
     [HttpDelete("{ClassroomId}")]
     [Authorize("PupilPolicy")]
-    public async Task<IActionResult> LeaveClassroom([FromRoute] Guid ClassroomId) {
+    public async Task<IActionResult> LeaveClassroom([FromRoute] Guid ClassroomId)
+    {
         await _classroomEnrollmentService.LeaveClassroom(ClassroomId, User);
 
         return StatusCode(StatusCodes.Status200OK,

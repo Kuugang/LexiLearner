@@ -66,7 +66,7 @@ namespace LexiLearner.Data
                 .WithMany()
                 // .HasIndex(c => c.JoinCode).IsUnique()
                 .HasForeignKey(c => c.TeacherId);
-                
+
 
             modelBuilder.Entity<ClassroomEnrollment>()
                 .HasOne(ce => ce.Pupil)
