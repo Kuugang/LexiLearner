@@ -77,7 +77,7 @@ namespace LexiLearner.Services
             }
 
             // Count sentence endings (period, exclamation, question mark followed by space or end of string)
-            var sentenceEndings = Regex.Matches(text, @"[.!?]+(?=\s|$)");
+            var sentenceEndings = Regex.Matches(text, @"[.!?]+(?=\s|$)|\n+");
             int count = sentenceEndings.Count;
 
             // Restore original abbreviations

@@ -38,12 +38,14 @@ namespace LexiLearner.Services
             var jsonOptions = new JsonSerializerOptions { WriteIndented = true, PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
             string metadata = JsonSerializer.Serialize(request, request.GetType(), jsonOptions);
 
+            int maxScore = GetMaxScore(minigameType, request);
             var minigame = new Minigame
             {
                 ReadingMaterialId = readingMaterialId,
                 ReadingMaterial = readingMaterial,
                 MinigameType = minigameType,
-                MetaData = metadata
+                MetaData = metadata,
+                MaxScore = maxScore
             };
 
             return new MinigameDTO(await _minigameRepository.Create(minigame));
@@ -256,7 +258,7 @@ namespace LexiLearner.Services
                 );
             }
 
-            var minigames = await _minigameRepository.GetMinigamesByRMId(readingSession.Id);
+            var minigames = await _minigameRepository.GetMinigamesByRMId(readingSession.ReadingMaterialId);
 
             if (minigames == null || !minigames.Any())
             {
@@ -281,5 +283,22 @@ namespace LexiLearner.Services
 
             return minigames.Select(mg => new MinigameDTO(mg)).ToList();
 		}
-	}
+
+        private static int GetMaxScore(MinigameType type, MinigameDTO.Create request)
+        {
+            switch (type)
+            {
+                case MinigameType.FillInTheBlanks:
+                case MinigameType.SentenceRearrangement:
+                case MinigameType.TwoTruthsOneLie:
+                    return 1;
+                case MinigameType.WordsFromLetters:
+                    return ((MinigameDTO.WordsFromLettersGame) request).words.Count;
+                case MinigameType.WordHunt:
+                    return ((MinigameDTO.WordHuntGame) request).correct.Count;
+            }
+            
+            return 0;
+        }
+    }
 }

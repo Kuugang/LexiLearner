@@ -95,27 +95,27 @@
           "TwoTruthsOneLie": [
             {
               "choices": [
-                { "choice1": "Chameleons can change their color to send messages.", "answer": true },
-                { "choice2": "All chameleons are brown regardless of where they live.", "answer": false },
-                { "choice3": "Chameleons that live in trees are often green.", "answer": true }
+                { "choice": "Chameleons can change their color to send messages.", "answer": true },
+                { "choice": "All chameleons are brown regardless of where they live.", "answer": false },
+                { "choice": "Chameleons that live in trees are often green.", "answer": true }
               ],
               "answer": "All chameleons are brown regardless of where they live.",
               "explanation": "Only some chameleons are brown depending on their environment; others, like tree-dwellers, are green."
             },
             {
               "choices": [
-                { "choice1": "Changing color helps chameleons stay warm.", "answer": true },
-                { "choice2": "Chameleons eat leaves to change color.", "answer": false },
-                { "choice3": "Color change can serve as camouflage.", "answer": true }
+                { "choice": "Changing color helps chameleons stay warm.", "answer": true },
+                { "choice": "Chameleons eat leaves to change color.", "answer": false },
+                { "choice": "Color change can serve as camouflage.", "answer": true }
               ],
               "answer": "Chameleons eat leaves to change color.",
               "explanation": "The passage does not mention eating leaves as a reason for color change."
             },
             {
               "choices": [
-                { "choice1": "Bright colors can attract other chameleons.", "answer": true },
-                { "choice2": "Chameleons change colors only at night.", "answer": false },
-                { "choice3": "Chameleons use color change as a warning signal.", "answer": true }
+                { "choice": "Bright colors can attract other chameleons.", "answer": true },
+                { "choice": "Chameleons change colors only at night.", "answer": false },
+                { "choice": "Chameleons use color change as a warning signal.", "answer": true }
               ],
               "answer": "Chameleons change colors only at night.",
               "explanation": "The passage does not limit color change to night; it's for communication, camouflage, and temperature regulation."
@@ -223,27 +223,27 @@
           "TwoTruthsOneLie": [
             {
               "choices": [
-                { "choice1": "The Philippine Eagle replaced the maya as the national bird.", "answer": true },
-                { "choice2": "Pag-asa was the first eagle to be bred in captivity.", "answer": true },
-                { "choice3": "Pag-asa is already living in the wild.", "answer": false }
+                { "choice": "The Philippine Eagle replaced the maya as the national bird.", "answer": true },
+                { "choice": "Pag-asa was the first eagle to be bred in captivity.", "answer": true },
+                { "choice": "Pag-asa is already living in the wild.", "answer": false }
               ],
               "answer": "Pag-asa is already living in the wild.",
               "explanation": "Pag-asa is still in captivity due to her dependency on her keeper."
             },
             {
               "choices": [
-                { "choice1": "The Philippine Eagle is one of the smallest eagle species.", "answer": false },
-                { "choice2": "The eagle is in danger due to hunting and deforestation.", "answer": true },
-                { "choice3": "Scientists are trying to save the eagles through breeding.", "answer": true }
+                { "choice": "The Philippine Eagle is one of the smallest eagle species.", "answer": false },
+                { "choice": "The eagle is in danger due to hunting and deforestation.", "answer": true },
+                { "choice": "Scientists are trying to save the eagles through breeding.", "answer": true }
               ],
               "answer": "The Philippine Eagle is one of the smallest eagle species.",
               "explanation": "The passage states it is one of the largest, not smallest, eagles."
             },
             {
               "choices": [
-                { "choice1": "Pag-asa is dependent on her human keeper.", "answer": true },
-                { "choice2": "The Philippine Eagle is commonly found in every Filipino household.", "answer": false },
-                { "choice3": "Deforestation affects the population of Philippine Eagles.", "answer": true }
+                { "choice": "Pag-asa is dependent on her human keeper.", "answer": true },
+                { "choice": "The Philippine Eagle is commonly found in every Filipino household.", "answer": false },
+                { "choice": "Deforestation affects the population of Philippine Eagles.", "answer": true }
               ],
               "answer": "The Philippine Eagle is commonly found in every Filipino household.",
               "explanation": "This statement is false; the eagle is endangered and rare."
@@ -350,27 +350,27 @@
   "TwoTruthsOneLie": [
     {
       "choices": [
-        { "choice1": "Coral reefs are found in tropical waters.", "answer": true },
-        { "choice2": "Coral reefs help small fish escape predators.", "answer": true },
-        { "choice3": "Coral reefs grow in freshwater lakes.", "answer": false }
+        { "choice": "Coral reefs are found in tropical waters.", "answer": true },
+        { "choice": "Coral reefs help small fish escape predators.", "answer": true },
+        { "choice": "Coral reefs grow in freshwater lakes.", "answer": false }
       ],
       "answer": "Coral reefs grow in freshwater lakes.",
       "explanation": "Reefs grow in salty ocean waters, not freshwater lakes."
     },
     {
       "choices": [
-        { "choice1": "Tourism has no effect on coral reefs.", "answer": false },
-        { "choice2": "Pollution harms coral reefs.", "answer": true },
-        { "choice3": "Reefs are like underwater gardens.", "answer": true }
+        { "choice": "Tourism has no effect on coral reefs.", "answer": false },
+        { "choice": "Pollution harms coral reefs.", "answer": true },
+        { "choice": "Reefs are like underwater gardens.", "answer": true }
       ],
       "answer": "Tourism has no effect on coral reefs.",
       "explanation": "The passage says tourism harms coral reefs."
     },
     {
       "choices": [
-        { "choice1": "Losing coral reefs can mean losing beautiful fish.", "answer": true },
-        { "choice2": "Millions of fish live in reefs.", "answer": true },
-        { "choice3": "Coral reefs are not important to marine life.", "answer": false }
+        { "choice": "Losing coral reefs can mean losing beautiful fish.", "answer": true },
+        { "choice": "Millions of fish live in reefs.", "answer": true },
+        { "choice": "Coral reefs are not important to marine life.", "answer": false }
       ],
       "answer": "Coral reefs are not important to marine life.",
       "explanation": "Coral reefs are crucial as homes and protection for marine life."
@@ -478,27 +478,27 @@
   "TwoTruthsOneLie": [
     {
       "choices": [
-        { "choice1": "Yawning is something we can control.", "answer": false },
-        { "choice2": "Even babies yawn in the womb.", "answer": true },
-        { "choice3": "Yawning might help cool the brain.", "answer": true }
+        { "choice": "Yawning is something we can control.", "answer": false },
+        { "choice": "Even babies yawn in the womb.", "answer": true },
+        { "choice": "Yawning might help cool the brain.", "answer": true }
       ],
       "answer": "Yawning is something we can control.",
       "explanation": "The passage states yawning is something we cannot control."
     },
     {
       "choices": [
-        { "choice1": "Athletes yawn before a sports event.", "answer": true },
-        { "choice2": "Dogs never yawn before attacking.", "answer": false },
-        { "choice3": "Yawning can make us more alert.", "answer": true }
+        { "choice": "Athletes yawn before a sports event.", "answer": true },
+        { "choice": "Dogs never yawn before attacking.", "answer": false },
+        { "choice": "Yawning can make us more alert.", "answer": true }
       ],
       "answer": "Dogs never yawn before attacking.",
       "explanation": "The passage says dogs do yawn before an attack."
     },
     {
       "choices": [
-        { "choice1": "Yawning is caused by lack of oxygen and excess carbon dioxide.", "answer": true },
-        { "choice2": "We yawn more when competing for air.", "answer": true },
-        { "choice3": "No one knows any theory about why we yawn.", "answer": false }
+        { "choice": "Yawning is caused by lack of oxygen and excess carbon dioxide.", "answer": true },
+        { "choice": "We yawn more when competing for air.", "answer": true },
+        { "choice": "No one knows any theory about why we yawn.", "answer": false }
       ],
       "answer": "No one knows any theory about why we yawn.",
       "explanation": "The passage gives multiple theories about why we yawn."
@@ -607,27 +607,27 @@
   "TwoTruthsOneLie": [
     {
       "choices": [
-        { "choice1": "Laughter can help improve health.", "answer": true },
-        { "choice2": "Only animals can laugh naturally.", "answer": false },
-        { "choice3": "Laughter can relieve stress and tension.", "answer": true }
+        { "choice": "Laughter can help improve health.", "answer": true },
+        { "choice": "Only animals can laugh naturally.", "answer": false },
+        { "choice": "Laughter can relieve stress and tension.", "answer": true }
       ],
       "answer": "Only animals can laugh naturally.",
       "explanation": "The passage says not many species can laugh, but humans can."
     },
     {
       "choices": [
-        { "choice1": "Laughter improves blood vessel function.", "answer": true },
-        { "choice2": "Laughter weakens the immune system.", "answer": false },
-        { "choice3": "Laughter uses multiple body systems.", "answer": true }
+        { "choice": "Laughter improves blood vessel function.", "answer": true },
+        { "choice": "Laughter weakens the immune system.", "answer": false },
+        { "choice": "Laughter uses multiple body systems.", "answer": true }
       ],
       "answer": "Laughter weakens the immune system.",
       "explanation": "Laughter strengthens, not weakens, the immune system."
     },
     {
       "choices": [
-        { "choice1": "Laughter involves rhythmic and involuntary movements.", "answer": true },
-        { "choice2": "Laughter uses only facial muscles.", "answer": false },
-        { "choice3": "Laughter increases blood flow.", "answer": true }
+        { "choice": "Laughter involves rhythmic and involuntary movements.", "answer": true },
+        { "choice": "Laughter uses only facial muscles.", "answer": false },
+        { "choice": "Laughter increases blood flow.", "answer": true }
       ],
       "answer": "Laughter uses only facial muscles.",
       "explanation": "The passage says it also uses the respiratory system and sometimes tear ducts."
@@ -736,27 +736,27 @@
   "TwoTruthsOneLie": [
     {
       "choices": [
-        { "choice1": "Anger only affects the person feeling it.", "answer": false },
-        { "choice2": "Heavy breathing and increased heart rate are effects of anger.", "answer": true },
-        { "choice3": "Anger can help signal that something is wrong.", "answer": true }
+        { "choice": "Anger only affects the person feeling it.", "answer": false },
+        { "choice": "Heavy breathing and increased heart rate are effects of anger.", "answer": true },
+        { "choice": "Anger can help signal that something is wrong.", "answer": true }
       ],
       "answer": "Anger only affects the person feeling it.",
       "explanation": "The passage explains that anger affects both the individual and those around them."
     },
     {
       "choices": [
-        { "choice1": "Anger always leads to harmful actions.", "answer": false },
-        { "choice2": "Anger can lead to positive change if handled properly.", "answer": true },
-        { "choice3": "Expressing anger can help others understand you.", "answer": true }
+        { "choice": "Anger always leads to harmful actions.", "answer": false },
+        { "choice": "Anger can lead to positive change if handled properly.", "answer": true },
+        { "choice": "Expressing anger can help others understand you.", "answer": true }
       ],
       "answer": "Anger always leads to harmful actions.",
       "explanation": "The passage encourages using anger for helpful, not harmful, actions."
     },
     {
       "choices": [
-        { "choice1": "People often feel guilty about being angry.", "answer": true },
-        { "choice2": "Clenched hands and red faces are signs of anger.", "answer": true },
-        { "choice3": "Anger lowers blood pressure and slows the heartbeat.", "answer": false }
+        { "choice": "People often feel guilty about being angry.", "answer": true },
+        { "choice": "Clenched hands and red faces are signs of anger.", "answer": true },
+        { "choice": "Anger lowers blood pressure and slows the heartbeat.", "answer": false }
       ],
       "answer": "Anger lowers blood pressure and slows the heartbeat.",
       "explanation": "The passage states that anger increases blood pressure and heart rate."
@@ -866,27 +866,27 @@
   "TwoTruthsOneLie": [
     {
       "choices": [
-        { "choice1": "Some believe dreaming helps sort out problems.", "answer": true },
-        { "choice2": "Dreams occur only when we are completely awake.", "answer": false },
-        { "choice3": "Dreams may be a way for the brain to organize information.", "answer": true }
+        { "choice": "Some believe dreaming helps sort out problems.", "answer": true },
+        { "choice": "Dreams occur only when we are completely awake.", "answer": false },
+        { "choice": "Dreams may be a way for the brain to organize information.", "answer": true }
       ],
       "answer": "Dreams occur only when we are completely awake.",
       "explanation": "Dreams happen during sleep, not while we are awake."
     },
     {
       "choices": [
-        { "choice1": "Dreams can be a way for the brain to cool down physically.", "answer": false },
-        { "choice2": "Some believe dreaming is a brain workout.", "answer": true },
-        { "choice3": "Dreams may help us solve problems left unresolved during the day.", "answer": true }
+        { "choice": "Dreams can be a way for the brain to cool down physically.", "answer": false },
+        { "choice": "Some believe dreaming is a brain workout.", "answer": true },
+        { "choice": "Dreams may help us solve problems left unresolved during the day.", "answer": true }
       ],
       "answer": "Dreams can be a way for the brain to cool down physically.",
       "explanation": "The passage does not mention cooling down as a purpose of dreams."
     },
     {
       "choices": [
-        { "choice1": "Dreams may be another form of thinking.", "answer": true },
-        { "choice2": "We always remember our dreams in the morning.", "answer": false },
-        { "choice3": "Some people think dreams help keep our brain's pathways active.", "answer": true }
+        { "choice": "Dreams may be another form of thinking.", "answer": true },
+        { "choice": "We always remember our dreams in the morning.", "answer": false },
+        { "choice": "Some people think dreams help keep our brain's pathways active.", "answer": true }
       ],
       "answer": "We always remember our dreams in the morning.",
       "explanation": "Not all dreams are remembered; this is not discussed as a guarantee in the passage."
@@ -996,27 +996,27 @@
   "TwoTruthsOneLie": [
     {
       "choices": [
-        { "choice1": "A meteoroid is a piece of matter moving in space.", "answer": true },
-        { "choice2": "Most meteoroids are larger than a grain of sand.", "answer": false },
-        { "choice3": "If a meteoroid falls to the ground, it is called a meteorite.", "answer": true }
+        { "choice": "A meteoroid is a piece of matter moving in space.", "answer": true },
+        { "choice": "Most meteoroids are larger than a grain of sand.", "answer": false },
+        { "choice": "If a meteoroid falls to the ground, it is called a meteorite.", "answer": true }
       ],
       "answer": "Most meteoroids are larger than a grain of sand.",
       "explanation": "The passage mentions that most meteoroids are smaller than a grain of sand."
     },
     {
       "choices": [
-        { "choice1": "Meteoroids move as fast as 40 miles a second.", "answer": true },
-        { "choice2": "The flash of light from a meteoroid is called a meteor.", "answer": true },
-        { "choice3": "A meteorite burns up before it hits the Earth.", "answer": false }
+        { "choice": "Meteoroids move as fast as 40 miles a second.", "answer": true },
+        { "choice": "The flash of light from a meteoroid is called a meteor.", "answer": true },
+        { "choice": "A meteorite burns up before it hits the Earth.", "answer": false }
       ],
       "answer": "A meteorite burns up before it hits the Earth.",
       "explanation": "Meteorites are pieces of meteoroids that survive the burn and reach the Earth."
     },
     {
       "choices": [
-        { "choice1": "Spacecrafts may be covered with a metal skin that will seal itself.", "answer": true },
-        { "choice2": "Meteoroids are always larger than a grain of sand.", "answer": false },
-        { "choice3": "Researchers are trying to keep meteoroids from making holes in spacecrafts.", "answer": true }
+        { "choice": "Spacecrafts may be covered with a metal skin that will seal itself.", "answer": true },
+        { "choice": "Meteoroids are always larger than a grain of sand.", "answer": false },
+        { "choice": "Researchers are trying to keep meteoroids from making holes in spacecrafts.", "answer": true }
       ],
       "answer": "Meteoroids are always larger than a grain of sand.",
       "explanation": "The passage states that most meteoroids are smaller than a grain of sand."
@@ -1127,27 +1127,27 @@
   "TwoTruthsOneLie": [
     {
       "choices": [
-        { "choice1": "Beetles have tough front wings that protect their hind wings.", "answer": true },
-        { "choice2": "Beetles only feed on other insects.", "answer": false },
-        { "choice3": "Beetles can adapt to any kind of environment.", "answer": true }
+        { "choice": "Beetles have tough front wings that protect their hind wings.", "answer": true },
+        { "choice": "Beetles only feed on other insects.", "answer": false },
+        { "choice": "Beetles can adapt to any kind of environment.", "answer": true }
       ],
       "answer": "Beetles only feed on other insects.",
       "explanation": "The passage explains that beetles feed on a variety of food, including plants, cloth, and animal dung."
     },
     {
       "choices": [
-        { "choice1": "Beetles have bodies that help them survive in difficult places.", "answer": true },
-        { "choice2": "Beetles only fly to find food.", "answer": false },
-        { "choice3": "Beetles can be found in nearly all environments except the ocean.", "answer": true }
+        { "choice": "Beetles have bodies that help them survive in difficult places.", "answer": true },
+        { "choice": "Beetles only fly to find food.", "answer": false },
+        { "choice": "Beetles can be found in nearly all environments except the ocean.", "answer": true }
       ],
       "answer": "Beetles only fly to find food.",
       "explanation": "Beetles fly for various reasons, not just to find food."
     },
     {
       "choices": [
-        { "choice1": "Beetles can survive in the ocean.", "answer": false },
-        { "choice2": "Beetles use their wings for protection and flight.", "answer": true },
-        { "choice3": "Beetles are known for their colorful wings.", "answer": true }
+        { "choice": "Beetles can survive in the ocean.", "answer": false },
+        { "choice": "Beetles use their wings for protection and flight.", "answer": true },
+        { "choice": "Beetles are known for their colorful wings.", "answer": true }
       ],
       "answer": "Beetles can survive in the ocean.",
       "explanation": "The passage states that beetles cannot survive in the ocean."
@@ -1258,27 +1258,27 @@
   "TwoTruthsOneLie": [
     {
       "choices": [
-        { "choice1": "A hydroplane moves at nearly 300 miles per hour.", "answer": true },
-        { "choice2": "The Earth moves around the sun at 600,000 miles per hour.", "answer": false },
-        { "choice3": "Light moves faster than sound.", "answer": true }
+        { "choice": "A hydroplane moves at nearly 300 miles per hour.", "answer": true },
+        { "choice": "The Earth moves around the sun at 600,000 miles per hour.", "answer": false },
+        { "choice": "Light moves faster than sound.", "answer": true }
       ],
       "answer": "The Earth moves around the sun at 600,000 miles per hour.",
       "explanation": "The correct speed is 67,000 miles per hour, not 600,000."
     },
     {
       "choices": [
-        { "choice1": "Glaciers move less than one foot per day.", "answer": true },
-        { "choice2": "A tornado can have winds moving at 600 miles per hour.", "answer": true },
-        { "choice3": "A racing car travels at 200 miles per hour.", "answer": false }
+        { "choice": "Glaciers move less than one foot per day.", "answer": true },
+        { "choice": "A tornado can have winds moving at 600 miles per hour.", "answer": true },
+        { "choice": "A racing car travels at 200 miles per hour.", "answer": false }
       ],
       "answer": "A racing car travels at 200 miles per hour.",
       "explanation": "Racing cars can travel more than 500 miles per hour, not 200."
     },
     {
       "choices": [
-        { "choice1": "Sound waves move faster than tornado winds.", "answer": true },
-        { "choice2": "The fastest speed recorded for any living creature is 90 miles per hour.", "answer": false },
-        { "choice3": "The Earth moves at a speed of 67,000 miles per hour.", "answer": true }
+        { "choice": "Sound waves move faster than tornado winds.", "answer": true },
+        { "choice": "The fastest speed recorded for any living creature is 90 miles per hour.", "answer": false },
+        { "choice": "The Earth moves at a speed of 67,000 miles per hour.", "answer": true }
       ],
       "answer": "The fastest speed recorded for any living creature is 90 miles per hour.",
       "explanation": "The fastest speed recorded is for a hydroplane, moving at nearly 300 miles per hour."
@@ -1389,27 +1389,27 @@
   "TwoTruthsOneLie": [
     {
       "choices": [
-        { "choice1": "Asteroids are found in the Asteroid Belt between Mars and Jupiter.", "answer": true },
-        { "choice2": "Meteoroids orbit the sun like asteroids.", "answer": false },
-        { "choice3": "The faint flashes of light made by burning meteoroids are called shooting stars.", "answer": true }
+        { "choice": "Asteroids are found in the Asteroid Belt between Mars and Jupiter.", "answer": true },
+        { "choice": "Meteoroids orbit the sun like asteroids.", "answer": false },
+        { "choice": "The faint flashes of light made by burning meteoroids are called shooting stars.", "answer": true }
       ],
       "answer": "Meteoroids orbit the sun like asteroids.",
       "explanation": "Meteoroids do not orbit the sun; they are small rocky bodies that cross the Earth's orbit."
     },
     {
       "choices": [
-        { "choice1": "The largest asteroid is over 1000 kilometers across.", "answer": true },
-        { "choice2": "Apollo Asteroids are meteoroids that burn up in the Earth's atmosphere.", "answer": false },
-        { "choice3": "The largest asteroid is located in the Asteroid Belt.", "answer": true }
+        { "choice": "The largest asteroid is over 1000 kilometers across.", "answer": true },
+        { "choice": "Apollo Asteroids are meteoroids that burn up in the Earth's atmosphere.", "answer": false },
+        { "choice": "The largest asteroid is located in the Asteroid Belt.", "answer": true }
       ],
       "answer": "Apollo Asteroids are meteoroids that burn up in the Earth's atmosphere.",
       "explanation": "Apollo Asteroids are large asteroids with paths that bring them close to Earth, not meteoroids."
     },
     {
       "choices": [
-        { "choice1": "Some asteroids don't move along the Asteroid Belt.", "answer": true },
-        { "choice2": "Meteoroids never burn up in the Earth's atmosphere.", "answer": false },
-        { "choice3": "Asteroids are large rocky bodies that didn't form planets.", "answer": true }
+        { "choice": "Some asteroids don't move along the Asteroid Belt.", "answer": true },
+        { "choice": "Meteoroids never burn up in the Earth's atmosphere.", "answer": false },
+        { "choice": "Asteroids are large rocky bodies that didn't form planets.", "answer": true }
       ],
       "answer": "Meteoroids never burn up in the Earth's atmosphere.",
       "explanation": "Meteoroids burn up in the Earth's atmosphere and are seen as shooting stars."
@@ -1520,27 +1520,27 @@
   "TwoTruthsOneLie": [
     {
       "choices": [
-        { "choice1": "A seashell is a palace where many echoes dwell.", "answer": true },
-        { "choice2": "The echoes in a seashell are caused by the wind.", "answer": false },
-        { "choice3": "The sea is always salty because of the echoes.", "answer": true }
+        { "choice": "A seashell is a palace where many echoes dwell.", "answer": true },
+        { "choice": "The echoes in a seashell are caused by the wind.", "answer": false },
+        { "choice": "The sea is always salty because of the echoes.", "answer": true }
       ],
       "answer": "The echoes in a seashell are caused by the wind.",
       "explanation": "The passage does not mention the wind; instead, it speaks of echoes within the seashell itself."
     },
     {
       "choices": [
-        { "choice1": "Spooky shadows creep in the sea.", "answer": true },
-        { "choice2": "Echoes in the seashell are loud and clear.", "answer": false },
-        { "choice3": "The sea is salty because of buried sea shells.", "answer": true }
+        { "choice": "Spooky shadows creep in the sea.", "answer": true },
+        { "choice": "Echoes in the seashell are loud and clear.", "answer": false },
+        { "choice": "The sea is salty because of buried sea shells.", "answer": true }
       ],
       "answer": "Echoes in the seashell are loud and clear.",
       "explanation": "The passage describes the echoes as familiar, but not loud and clear."
     },
     {
       "choices": [
-        { "choice1": "A seashell may help explain why the sea is salty.", "answer": true },
-        { "choice2": "All echoes from seashells are created by the ocean's roar.", "answer": false },
-        { "choice3": "The ocean's roar is similar to the sound of the seashell's echo.", "answer": true }
+        { "choice": "A seashell may help explain why the sea is salty.", "answer": true },
+        { "choice": "All echoes from seashells are created by the ocean's roar.", "answer": false },
+        { "choice": "The ocean's roar is similar to the sound of the seashell's echo.", "answer": true }
       ],
       "answer": "All echoes from seashells are created by the ocean's roar.",
       "explanation": "The passage compares the echoes to the ocean's roar but does not say they are created by it."
@@ -1557,7 +1557,7 @@
     "genre": ["Descriptive Poetry"],
     "description": "a lyrical portrait of childhood innocence",
     "word_count": 111,
-    "passage": "She is little, she is dimpledHer hair is yellow cornOn her cheeks are many smudgesAnd her pinafore is torn.Her eyes are dancing watersOn a deep, midsummer day,Yet her mouth will turn to poutingIn a most capricious way.But her laughter is as joyousAs the little winds that runOn amber feet across the seasOf wheat fields in the sun.And her laughter is as delightfulAs a carillon of bellsIn an ancient, wooded towerWhere a charming fairy dwells.Hers is the laughter from the spiritMelodious and mildAll the angels pause a momentFor the laughter of a child.",
+    "passage": "She is little, she is dimpled\nHer hair is yellow corn\nOn her cheeks are many smudges\nAnd her pinafore is torn.\nHer eyes are dancing waters\nOn a deep, midsummer day,\nYet her mouth will turn to pouting\nIn a most capricious way.\nBut her laughter is as joyous\nAs the little winds that run\nOn amber feet across the seas\nOf wheat fields in the sun.\nAnd her laughter is as delightful\nAs a carillon of bells\nIn an ancient, wooded tower\nWhere a charming fairy dwells.\nHers is the laughter from the spirit\nMelodious and mild\nAll the angels pause a moment\nFor the laughter of a child.",
     "minigames": {
   "WordsFromLetters": [
     {
@@ -1653,27 +1653,27 @@
   "TwoTruthsOneLie": [
     {
       "choices": [
-        { "choice1": "Her laughter is as delightful as a carillon of bells.", "answer": true },
-        { "choice2": "Her mouth will turn to pouting in a most joyful way.", "answer": false },
-        { "choice3": "She has yellow corn-colored hair.", "answer": true }
+        { "choice": "Her laughter is as delightful as a carillon of bells.", "answer": true },
+        { "choice": "Her mouth will turn to pouting in a most joyful way.", "answer": false },
+        { "choice": "She has yellow corn-colored hair.", "answer": true }
       ],
       "answer": "Her mouth will turn to pouting in a most joyful way.",
       "explanation": "The passage describes her mouth turning to pouting in a capricious way, not joyful."
     },
     {
       "choices": [
-        { "choice1": "Her laughter is like the little winds that run across the seas.", "answer": true },
-        { "choice2": "Her laughter is as quiet as a whisper.", "answer": false },
-        { "choice3": "Her pinafore is torn.", "answer": true }
+        { "choice": "Her laughter is like the little winds that run across the seas.", "answer": true },
+        { "choice": "Her laughter is as quiet as a whisper.", "answer": false },
+        { "choice": "Her pinafore is torn.", "answer": true }
       ],
       "answer": "Her laughter is as quiet as a whisper.",
       "explanation": "The passage describes her laughter as joyful and delightful, not quiet."
     },
     {
       "choices": [
-        { "choice1": "Her laughter is melodious and mild.", "answer": true },
-        { "choice2": "She is always smiling and never frowning.", "answer": false },
-        { "choice3": "Her eyes are dancing waters on a deep, midsummer day.", "answer": true }
+        { "choice": "Her laughter is melodious and mild.", "answer": true },
+        { "choice": "She is always smiling and never frowning.", "answer": false },
+        { "choice": "Her eyes are dancing waters on a deep, midsummer day.", "answer": true }
       ],
       "answer": "She is always smiling and never frowning.",
       "explanation": "The passage notes that her mouth will turn to pouting, indicating she does not always smile."
@@ -1690,7 +1690,7 @@
     "genre": ["Nature Poetry"],
     "description": "nature's delicate morning artwork",
     "word_count": 89,
-    "passage": "The spiders were busy last night,From every fence and treeThey hung their lacy websFor all the world to see.The mist was busy too;In the stillness of the nightIt strung the spider webs with pearlsTo catch the morning light.One spider wove a webLike frost on a window pane;Another one spun a single threadThat looks like jeweled chain.Motionless hang the webs,By the quiet sunbeam kissed;A fairy world was made last nightBy the spiders and the mist.",
+    "passage": "The spiders were busy last night,\nFrom every fence and tree\nThey hung their lacy webs\nFor all the world to see.\nThe mist was busy too;\nIn the stillness of the night\nIt strung the spider webs with pearls\nTo catch the morning light.\nOne spider wove a web\nLike frost on a window pane;\nAnother one spun a single thread\nThat looks like jeweled chain.\nMotionless hang the webs,\nBy the quiet sunbeam kissed;\nA fairy world was made last night\nBy the spiders and the mist.",
     "minigames": {
   "WordsFromLetters": [
     {
@@ -1783,27 +1783,27 @@
   "TwoTruthsOneLie": [
     {
       "choices": [
-        { "choice1": "The spiders wove webs for all the world to see.", "answer": true },
-        { "choice2": "The mist strung spider webs with pearls to catch the morning light.", "answer": true },
-        { "choice3": "The spiders wove their webs during the day.", "answer": false }
+        { "choice": "The spiders wove webs for all the world to see.", "answer": true },
+        { "choice": "The mist strung spider webs with pearls to catch the morning light.", "answer": true },
+        { "choice": "The spiders wove their webs during the day.", "answer": false }
       ],
       "answer": "The spiders wove their webs during the day.",
       "explanation": "The passage mentions the spiders were busy last night, not during the day."
     },
     {
       "choices": [
-        { "choice1": "The webs were kissed by the quiet sunbeam.", "answer": true },
-        { "choice2": "A spider's web looks like a jeweled chain.", "answer": true },
-        { "choice3": "The spiders' webs were created by the fog.", "answer": false }
+        { "choice": "The webs were kissed by the quiet sunbeam.", "answer": true },
+        { "choice": "A spider's web looks like a jeweled chain.", "answer": true },
+        { "choice": "The spiders' webs were created by the fog.", "answer": false }
       ],
       "answer": "The spiders' webs were created by the fog.",
       "explanation": "The passage mentions that mist strung the webs with pearls, not fog."
     },
     {
       "choices": [
-        { "choice1": "A fairy world was made last night.", "answer": true },
-        { "choice2": "The spiders spun webs for the sun to catch.", "answer": true },
-        { "choice3": "The spiders lived in trees and rocks.", "answer": false }
+        { "choice": "A fairy world was made last night.", "answer": true },
+        { "choice": "The spiders spun webs for the sun to catch.", "answer": true },
+        { "choice": "The spiders lived in trees and rocks.", "answer": false }
       ],
       "answer": "The spiders lived in trees and rocks.",
       "explanation": "The passage does not mention where the spiders lived, only that they were spinning webs."
@@ -1910,27 +1910,27 @@
   "TwoTruthsOneLie": [
     {
       "choices": [
-        { "choice1": "Jasmine likes lambs.", "answer": true },
-        { "choice2": "Jasmine's mother enjoys TV shows about animals.", "answer": true },
-        { "choice3": "Jasmine's father was a weak man.", "answer": false }
+        { "choice": "Jasmine likes lambs.", "answer": true },
+        { "choice": "Jasmine's mother enjoys TV shows about animals.", "answer": true },
+        { "choice": "Jasmine's father was a weak man.", "answer": false }
       ],
       "answer": "Jasmine's father was a weak man.",
       "explanation": "Jasmine's father is described as a brave man, not weak."
     },
     {
       "choices": [
-        { "choice1": "Jasmine is curious about lambs.", "answer": true },
-        { "choice2": "Jasmine's mother says sheep's fur is used for clothes.", "answer": true },
-        { "choice3": "Jasmine doesn't believe in the importance of science.", "answer": false }
+        { "choice": "Jasmine is curious about lambs.", "answer": true },
+        { "choice": "Jasmine's mother says sheep's fur is used for clothes.", "answer": true },
+        { "choice": "Jasmine doesn't believe in the importance of science.", "answer": false }
       ],
       "answer": "Jasmine doesn't believe in the importance of science.",
       "explanation": "Jasmine is inquisitive, and her mother explains science-related concepts to her."
     },
     {
       "choices": [
-        { "choice1": "Jasmine's mother explains sacrifices for a better life.", "answer": true },
-        { "choice2": "Jasmine's father fought for his country.", "answer": true },
-        { "choice3": "Jasmine's mother talks about her schoolwork.", "answer": false }
+        { "choice": "Jasmine's mother explains sacrifices for a better life.", "answer": true },
+        { "choice": "Jasmine's father fought for his country.", "answer": true },
+        { "choice": "Jasmine's mother talks about her schoolwork.", "answer": false }
       ],
       "answer": "Jasmine's mother talks about her schoolwork.",
       "explanation": "The mother talks about sacrifices and bravery, not schoolwork."
@@ -2038,27 +2038,27 @@
     "TwoTruthsOneLie": [
       {
         "choices": [
-          { "choice1": "The Owl drove all the animals away with harsh words.", "answer": true },
-          { "choice2": "The Owl was disturbed by the sound of Little Rabbit's drum.", "answer": true },
-          { "choice3": "The Owl happily welcomed the animals that passed by.", "answer": false }
+          { "choice": "The Owl drove all the animals away with harsh words.", "answer": true },
+          { "choice": "The Owl was disturbed by the sound of Little Rabbit's drum.", "answer": true },
+          { "choice": "The Owl happily welcomed the animals that passed by.", "answer": false }
         ],
         "answer": "The Owl happily welcomed the animals that passed by.",
         "explanation": "The Owl drove the animals away with harsh words, not welcomed them."
       },
       {
         "choices": [
-          { "choice1": "The animals eventually cursed the Owl for her behavior.", "answer": true },
-          { "choice2": "The Owl enjoyed her hunting activities at night.", "answer": true },
-          { "choice3": "The Owl apologized for her actions to the animals.", "answer": false }
+          { "choice": "The animals eventually cursed the Owl for her behavior.", "answer": true },
+          { "choice": "The Owl enjoyed her hunting activities at night.", "answer": true },
+          { "choice": "The Owl apologized for her actions to the animals.", "answer": false }
         ],
         "answer": "The Owl apologized for her actions to the animals.",
         "explanation": "The Owl never apologized for her behavior and was instead driven away."
       },
       {
         "choices": [
-          { "choice1": "The Owl slept during the day and hunted at night.", "answer": true },
-          { "choice2": "The Owl was disturbed by the monkeys playing in the trees.", "answer": true },
-          { "choice3": "The Owl invited all animals to join her during the day.", "answer": false }
+          { "choice": "The Owl slept during the day and hunted at night.", "answer": true },
+          { "choice": "The Owl was disturbed by the monkeys playing in the trees.", "answer": true },
+          { "choice": "The Owl invited all animals to join her during the day.", "answer": false }
         ],
         "answer": "The Owl invited all animals to join her during the day.",
         "explanation": "The Owl was annoyed by the animals and drove them away, not inviting them."
@@ -2166,27 +2166,27 @@
           "TwoTruthsOneLie": [
             {
               "choices": [
-                { "choice1": "Ming protected her kittens from Doggie.", "answer": true },
-                { "choice2": "Ming let the mouse go after it begged for its life.", "answer": true },
-                { "choice3": "Doggie helped Ming find her kittens.", "answer": false }
+                { "choice": "Ming protected her kittens from Doggie.", "answer": true },
+                { "choice": "Ming let the mouse go after it begged for its life.", "answer": true },
+                { "choice": "Doggie helped Ming find her kittens.", "answer": false }
               ],
               "answer": "Doggie helped Ming find her kittens.",
               "explanation": "Doggie did not help Ming find her kittens; the children did."
             },
             {
               "choices": [
-                { "choice1": "Ming went hunting for mice to regain her strength.", "answer": true },
-                { "choice2": "Ming found her kittens cuddled by the children.", "answer": true },
-                { "choice3": "Ming ate the mouse for its beggary.", "answer": false }
+                { "choice": "Ming went hunting for mice to regain her strength.", "answer": true },
+                { "choice": "Ming found her kittens cuddled by the children.", "answer": true },
+                { "choice": "Ming ate the mouse for its beggary.", "answer": false }
               ],
               "answer": "Ming ate the mouse for its beggary.",
               "explanation": "Ming showed empathy and let the mouse go, rather than eating it."
             },
             {
               "choices": [
-                { "choice1": "Ming was angry when she couldn't find her kittens.", "answer": true },
-                { "choice2": "Ming scratched Doggie when she thought he took her kittens.", "answer": true },
-                { "choice3": "Ming found her kittens on the kitchen table.", "answer": false }
+                { "choice": "Ming was angry when she couldn't find her kittens.", "answer": true },
+                { "choice": "Ming scratched Doggie when she thought he took her kittens.", "answer": true },
+                { "choice": "Ming found her kittens on the kitchen table.", "answer": false }
               ],
               "answer": "Ming found her kittens on the kitchen table.",
               "explanation": "Ming found her kittens with the children, not on the table."
@@ -2293,27 +2293,27 @@
           "TwoTruthsOneLie": [
             {
               "choices": [
-                { "choice1": "Drago had pinkish-red skin and light green scales.", "answer": true },
-                { "choice2": "The emperor was driven by greed to seek out the dragon treasure.", "answer": true },
-                { "choice3": "Drago's fire was extinguished when he was struck by arrows.", "answer": false }
+                { "choice": "Drago had pinkish-red skin and light green scales.", "answer": true },
+                { "choice": "The emperor was driven by greed to seek out the dragon treasure.", "answer": true },
+                { "choice": "Drago's fire was extinguished when he was struck by arrows.", "answer": false }
               ],
               "answer": "Drago's fire was extinguished when he was struck by arrows.",
               "explanation": "Drago's fiery breath was not extinguished by arrows, but he was ultimately killed by them."
             },
             {
               "choices": [
-                { "choice1": "Celestine felt guilty about Drago's death.", "answer": true },
-                { "choice2": "The emperor ordered his soldiers to bring Drago's treasures back to the palace.", "answer": true },
-                { "choice3": "Drago survived the attack and returned to the palace with the treasures.", "answer": false }
+                { "choice": "Celestine felt guilty about Drago's death.", "answer": true },
+                { "choice": "The emperor ordered his soldiers to bring Drago's treasures back to the palace.", "answer": true },
+                { "choice": "Drago survived the attack and returned to the palace with the treasures.", "answer": false }
               ],
               "answer": "Drago survived the attack and returned to the palace with the treasures.",
               "explanation": "Drago did not survive the attack and never returned to the palace."
             },
             {
               "choices": [
-                { "choice1": "Drago was killed by a dagger thrown by the emperor.", "answer": true },
-                { "choice2": "The dragons left the empire after Drago's death.", "answer": true },
-                { "choice3": "Celestine became the new ruler of the empire after her father's death.", "answer": false }
+                { "choice": "Drago was killed by a dagger thrown by the emperor.", "answer": true },
+                { "choice": "The dragons left the empire after Drago's death.", "answer": true },
+                { "choice": "Celestine became the new ruler of the empire after her father's death.", "answer": false }
               ],
               "answer": "Celestine became the new ruler of the empire after her father's death.",
               "explanation": "Celestine did not become the ruler; the empire was left without the emperor after his death."
@@ -2419,27 +2419,27 @@
           "TwoTruthsOneLie": [
             {
               "choices": [
-                { "choice1": "Little Octopus saved the sea animals by squirting ink at the shark.", "answer": true },
-                { "choice2": "The shark was scared of the sea animals and left immediately.", "answer": false },
-                { "choice3": "Little Octopus was bullied by her classmates before she saved them.", "answer": true }
+                { "choice": "Little Octopus saved the sea animals by squirting ink at the shark.", "answer": true },
+                { "choice": "The shark was scared of the sea animals and left immediately.", "answer": false },
+                { "choice": "Little Octopus was bullied by her classmates before she saved them.", "answer": true }
               ],
               "answer": "The shark was scared of the sea animals and left immediately.",
               "explanation": "The shark was deterred by the ink and did not leave because it was scared, but because it was confused."
             },
             {
               "choices": [
-                { "choice1": "Goldfish, Seahorse, and others apologized to Little Octopus after she saved them.", "answer": true },
-                { "choice2": "Little Octopus was never bullied in school.", "answer": false },
-                { "choice3": "Little Octopus did not want to be a hero, but ended up saving everyone.", "answer": true }
+                { "choice": "Goldfish, Seahorse, and others apologized to Little Octopus after she saved them.", "answer": true },
+                { "choice": "Little Octopus was never bullied in school.", "answer": false },
+                { "choice": "Little Octopus did not want to be a hero, but ended up saving everyone.", "answer": true }
               ],
               "answer": "Little Octopus was never bullied in school.",
               "explanation": "Little Octopus was bullied by her classmates before saving them."
             },
             {
               "choices": [
-                { "choice1": "Little Octopus learned from her mother to be friendly and avoid fights.", "answer": true },
-                { "choice2": "Little Octopus was angry and fought back against the bullies.", "answer": false },
-                { "choice3": "Little Octopus did not mind being bullied and stayed silent in class.", "answer": true }
+                { "choice": "Little Octopus learned from her mother to be friendly and avoid fights.", "answer": true },
+                { "choice": "Little Octopus was angry and fought back against the bullies.", "answer": false },
+                { "choice": "Little Octopus did not mind being bullied and stayed silent in class.", "answer": true }
               ],
               "answer": "Little Octopus was angry and fought back against the bullies.",
               "explanation": "Little Octopus was taught to avoid fights and stayed calm instead of fighting."
@@ -2543,27 +2543,27 @@
           "TwoTruthsOneLie": [
             {
               "choices": [
-                { "choice1": "Emmanuel worked hard and became a successful manager.", "answer": true },
-                { "choice2": "Emmanuel forgot to thank God after becoming successful.", "answer": true },
-                { "choice3": "Emmanuel became successful by only relying on his own effort.", "answer": false }
+                { "choice": "Emmanuel worked hard and became a successful manager.", "answer": true },
+                { "choice": "Emmanuel forgot to thank God after becoming successful.", "answer": true },
+                { "choice": "Emmanuel became successful by only relying on his own effort.", "answer": false }
               ],
               "answer": "Emmanuel became successful by only relying on his own effort.",
               "explanation": "Emmanuel's success was a combination of his hard work and God's grace, not just his own effort."
             },
             {
               "choices": [
-                { "choice1": "Emmanuel returned to the church to give thanks to God.", "answer": true },
-                { "choice2": "Emmanuel gave all his wealth to the poor after realizing his mistake.", "answer": false },
-                { "choice3": "Emmanuel prayed and realized everything was temporary.", "answer": true }
+                { "choice": "Emmanuel returned to the church to give thanks to God.", "answer": true },
+                { "choice": "Emmanuel gave all his wealth to the poor after realizing his mistake.", "answer": false },
+                { "choice": "Emmanuel prayed and realized everything was temporary.", "answer": true }
               ],
               "answer": "Emmanuel gave all his wealth to the poor after realizing his mistake.",
               "explanation": "Emmanuel realized his mistake and returned to God, but he did not give away all his wealth."
             },
             {
               "choices": [
-                { "choice1": "Emmanuel learned that his success was temporary without God.", "answer": true },
-                { "choice2": "Emmanuel's business continued to succeed even after he forgot to thank God.", "answer": false },
-                { "choice3": "Emmanuel became depressed when his business failed, realizing his mistake.", "answer": true }
+                { "choice": "Emmanuel learned that his success was temporary without God.", "answer": true },
+                { "choice": "Emmanuel's business continued to succeed even after he forgot to thank God.", "answer": false },
+                { "choice": "Emmanuel became depressed when his business failed, realizing his mistake.", "answer": true }
               ],
               "answer": "Emmanuel's business continued to succeed even after he forgot to thank God.",
               "explanation": "Emmanuel's business failed after he neglected to acknowledge God and his blessings."
@@ -2667,27 +2667,27 @@
           "TwoTruthsOneLie": [
             {
               "choices": [
-                { "choice1": "Reddy was the newest car in the neighborhood.", "answer": true },
-                { "choice2": "Reddy always listened to the advice of other cars.", "answer": false },
-                { "choice3": "Reddy’s reckless speeding led to his crash.", "answer": true }
+                { "choice": "Reddy was the newest car in the neighborhood.", "answer": true },
+                { "choice": "Reddy always listened to the advice of other cars.", "answer": false },
+                { "choice": "Reddy’s reckless speeding led to his crash.", "answer": true }
               ],
               "answer": "Reddy always listened to the advice of other cars.",
               "explanation": "Reddy was too proud to listen to anyone’s advice, which contributed to his downfall."
             },
             {
               "choices": [
-                { "choice1": "Reddy's pride made him reject the kindness of the other cars.", "answer": true },
-                { "choice2": "Reddy always followed the rules of the road.", "answer": false },
-                { "choice3": "Reddy’s crash caused him severe damage to his body.", "answer": true }
+                { "choice": "Reddy's pride made him reject the kindness of the other cars.", "answer": true },
+                { "choice": "Reddy always followed the rules of the road.", "answer": false },
+                { "choice": "Reddy’s crash caused him severe damage to his body.", "answer": true }
               ],
               "answer": "Reddy always followed the rules of the road.",
               "explanation": "Reddy’s reckless driving and pride caused him to ignore safety and road rules."
             },
             {
               "choices": [
-                { "choice1": "Reddy's behavior changed after he crashed.", "answer": true },
-                { "choice2": "Reddy became more cautious and humble after his crash.", "answer": true },
-                { "choice3": "Reddy was praised for his high-tech features after the crash.", "answer": false }
+                { "choice": "Reddy's behavior changed after he crashed.", "answer": true },
+                { "choice": "Reddy became more cautious and humble after his crash.", "answer": true },
+                { "choice": "Reddy was praised for his high-tech features after the crash.", "answer": false }
               ],
               "answer": "Reddy was praised for his high-tech features after the crash.",
               "explanation": "After the crash, Reddy’s features were irrelevant; his actions were the focus."
@@ -2792,27 +2792,27 @@
           "TwoTruthsOneLie": [
             {
               "choices": [
-                { "choice1": "Archie’s addiction to gaming affected his studies.", "answer": true },
-                { "choice2": "Archie ate nutritious meals and stayed healthy.", "answer": false },
-                { "choice3": "Archie’s mother sought medical help for his gaming addiction.", "answer": true }
+                { "choice": "Archie’s addiction to gaming affected his studies.", "answer": true },
+                { "choice": "Archie ate nutritious meals and stayed healthy.", "answer": false },
+                { "choice": "Archie’s mother sought medical help for his gaming addiction.", "answer": true }
               ],
               "answer": "Archie ate nutritious meals and stayed healthy.",
               "explanation": "Archie’s addiction caused him to neglect his meals and physical health."
             },
             {
               "choices": [
-                { "choice1": "Archie played Mobile Legends every day, even late into the night.", "answer": true },
-                { "choice2": "Archie was always on time for school.", "answer": false },
-                { "choice3": "Archie’s mother struggled to stop his gaming addiction.", "answer": true }
+                { "choice": "Archie played Mobile Legends every day, even late into the night.", "answer": true },
+                { "choice": "Archie was always on time for school.", "answer": false },
+                { "choice": "Archie’s mother struggled to stop his gaming addiction.", "answer": true }
               ],
               "answer": "Archie was always on time for school.",
               "explanation": "Archie’s gaming addiction led him to be late for school and disregard his studies."
             },
             {
               "choices": [
-                { "choice1": "Archie’s gaming addiction caused severe health issues.", "answer": true },
-                { "choice2": "Archie was diagnosed with gaming addiction and received treatment.", "answer": true },
-                { "choice3": "Archie enjoyed spending time with his family more than gaming.", "answer": false }
+                { "choice": "Archie’s gaming addiction caused severe health issues.", "answer": true },
+                { "choice": "Archie was diagnosed with gaming addiction and received treatment.", "answer": true },
+                { "choice": "Archie enjoyed spending time with his family more than gaming.", "answer": false }
               ],
               "answer": "Archie enjoyed spending time with his family more than gaming.",
               "explanation": "Archie’s addiction led him to prioritize gaming over family and other responsibilities."
@@ -2918,27 +2918,27 @@
           "TwoTruthsOneLie": [
             {
               "choices": [
-                { "choice1": "Marian admitted her failure to her parents.", "answer": true },
-                { "choice2": "Marian's parents were angry at her for failing.", "answer": false },
-                { "choice3": "Marian's parents were supportive and loving.", "answer": true }
+                { "choice": "Marian admitted her failure to her parents.", "answer": true },
+                { "choice": "Marian's parents were angry at her for failing.", "answer": false },
+                { "choice": "Marian's parents were supportive and loving.", "answer": true }
               ],
               "answer": "Marian's parents were angry at her for failing.",
               "explanation": "Marian’s parents understood and reassured her, instead of showing anger."
             },
             {
               "choices": [
-                { "choice1": "Marian was afraid to tell her parents about her poor grades.", "answer": true },
-                { "choice2": "Marian’s parents always ignored her school performance.", "answer": false },
-                { "choice3": "Marian eventually told the truth to her parents.", "answer": true }
+                { "choice": "Marian was afraid to tell her parents about her poor grades.", "answer": true },
+                { "choice": "Marian’s parents always ignored her school performance.", "answer": false },
+                { "choice": "Marian eventually told the truth to her parents.", "answer": true }
               ],
               "answer": "Marian’s parents always ignored her school performance.",
               "explanation": "Marian’s parents cared deeply about her well-being and academic success."
             },
             {
               "choices": [
-                { "choice1": "Marian’s parents encouraged her to engage with her friends.", "answer": true },
-                { "choice2": "Marian was punished for her failure in school.", "answer": false },
-                { "choice3": "Marian's parents reassured her that they would always love her.", "answer": true }
+                { "choice": "Marian’s parents encouraged her to engage with her friends.", "answer": true },
+                { "choice": "Marian was punished for her failure in school.", "answer": false },
+                { "choice": "Marian's parents reassured her that they would always love her.", "answer": true }
               ],
               "answer": "Marian was punished for her failure in school.",
               "explanation": "Instead of punishment, Marian’s parents showed love and support."
@@ -3043,27 +3043,27 @@
           "TwoTruthsOneLie": [
             {
               "choices": [
-                { "choice1": "The boy worked hard to sell the salt and earn money.", "answer": true },
-                { "choice2": "The boy did not want to sell salt and gave up early.", "answer": false },
-                { "choice3": "The boy’s father encouraged him to work hard for a reward.", "answer": true }
+                { "choice": "The boy worked hard to sell the salt and earn money.", "answer": true },
+                { "choice": "The boy did not want to sell salt and gave up early.", "answer": false },
+                { "choice": "The boy’s father encouraged him to work hard for a reward.", "answer": true }
               ],
               "answer": "The boy did not want to sell salt and gave up early.",
               "explanation": "The boy was determined to sell the salt and worked hard despite the challenges."
             },
             {
               "choices": [
-                { "choice1": "The boy discovered a magical pouch filled with coins.", "answer": true },
-                { "choice2": "The boy’s family failed to sell any salt.", "answer": false },
-                { "choice3": "The boy’s kindness led to the magic pouch.", "answer": true }
+                { "choice": "The boy discovered a magical pouch filled with coins.", "answer": true },
+                { "choice": "The boy’s family failed to sell any salt.", "answer": false },
+                { "choice": "The boy’s kindness led to the magic pouch.", "answer": true }
               ],
               "answer": "The boy’s family failed to sell any salt.",
               "explanation": "Though the boy faced misfortune, his kindness led to an unexpected reward."
             },
             {
               "choices": [
-                { "choice1": "The boy hoped to buy clothes by selling salt.", "answer": true },
-                { "choice2": "The boy wanted to buy a car with the money from salt.", "answer": false },
-                { "choice3": "The boy worked hard to earn money for food and clothes.", "answer": true }
+                { "choice": "The boy hoped to buy clothes by selling salt.", "answer": true },
+                { "choice": "The boy wanted to buy a car with the money from salt.", "answer": false },
+                { "choice": "The boy worked hard to earn money for food and clothes.", "answer": true }
               ],
               "answer": "The boy wanted to buy a car with the money from salt.",
               "explanation": "The boy’s main hope was to buy clothes, not something extravagant like a car."
@@ -3168,27 +3168,27 @@
           "TwoTruthsOneLie": [
             {
               "choices": [
-                { "choice1": "Parents today are often busy at work and spend little time with their children.", "answer": true },
-                { "choice2": "Parents today spend all their time with their children and never work.", "answer": false },
-                { "choice3": "Parents today use cellphones while eating, instead of talking to their children.", "answer": true }
+                { "choice": "Parents today are often busy at work and spend little time with their children.", "answer": true },
+                { "choice": "Parents today spend all their time with their children and never work.", "answer": false },
+                { "choice": "Parents today use cellphones while eating, instead of talking to their children.", "answer": true }
               ],
               "answer": "Parents today spend all their time with their children and never work.",
               "explanation": "The reality is that parents often struggle to balance work and family life."
             },
             {
               "choices": [
-                { "choice1": "Parents in the past were more strict about disciplining their children.", "answer": true },
-                { "choice2": "Parents today are more strict than those in the past.", "answer": false },
-                { "choice3": "In the past, children were taught to respect elders and follow rules.", "answer": true }
+                { "choice": "Parents in the past were more strict about disciplining their children.", "answer": true },
+                { "choice": "Parents today are more strict than those in the past.", "answer": false },
+                { "choice": "In the past, children were taught to respect elders and follow rules.", "answer": true }
               ],
               "answer": "Parents today are more strict than those in the past.",
               "explanation": "Today's parents are less likely to impose strict discipline compared to previous generations."
             },
             {
               "choices": [
-                { "choice1": "Children today are often criticized for being lazy and disrespectful.", "answer": true },
-                { "choice2": "Children today are admired for their respect and discipline.", "answer": false },
-                { "choice3": "Children in the past were taught to respect elders and follow strict rules.", "answer": true }
+                { "choice": "Children today are often criticized for being lazy and disrespectful.", "answer": true },
+                { "choice": "Children today are admired for their respect and discipline.", "answer": false },
+                { "choice": "Children in the past were taught to respect elders and follow strict rules.", "answer": true }
               ],
               "answer": "Children today are admired for their respect and discipline.",
               "explanation": "While some children show respect, overall, the generation has faced criticism for a lack of discipline."
@@ -3269,27 +3269,27 @@
           "TwoTruthsOneLie": [
             {
               "choices": [
-                { "choice1": "Love is like a resting place, providing comfort and safety.", "answer": true },
-                { "choice2": "Love is always peaceful and free of conflict.", "answer": false },
-                { "choice3": "Love can be a shelter from the storm.", "answer": true }
+                { "choice": "Love is like a resting place, providing comfort and safety.", "answer": true },
+                { "choice": "Love is always peaceful and free of conflict.", "answer": false },
+                { "choice": "Love can be a shelter from the storm.", "answer": true }
               ],
               "answer": "Choice 2 is the lie.",
               "explanation": "Love can be challenging and full of conflict, as described in the passage. It is not always free of conflict."
             },
             {
               "choices": [
-                { "choice1": "Love can be compared to the ocean, full of conflict and pain.", "answer": true },
-                { "choice2": "Love can bring you home when you feel alone.", "answer": true },
-                { "choice3": "Love is always strong and unchanging, like steel.", "answer": false }
+                { "choice": "Love can be compared to the ocean, full of conflict and pain.", "answer": true },
+                { "choice": "Love can bring you home when you feel alone.", "answer": true },
+                { "choice": "Love is always strong and unchanging, like steel.", "answer": false }
               ],
               "answer": "Choice 3 is the lie.",
               "explanation": "The passage suggests that love can change and be vulnerable, not always strong and unchanging."
             },
             {
               "choices": [
-                { "choice1": "Love is like a window, inviting you to come closer.", "answer": true },
-                { "choice2": "Love is like a cloud, always light and comforting.", "answer": false },
-                { "choice3": "Love is compared to thunder, a powerful force.", "answer": true }
+                { "choice": "Love is like a window, inviting you to come closer.", "answer": true },
+                { "choice": "Love is like a cloud, always light and comforting.", "answer": false },
+                { "choice": "Love is compared to thunder, a powerful force.", "answer": true }
               ],
               "answer": "Choice 2 is the lie.",
               "explanation": "The passage compares love to a cloud, but it also describes love as a powerful and sometimes tumultuous force, like thunder."
@@ -3388,27 +3388,27 @@
           "TwoTruthsOneLie": [
             {
               "choices": [
-                { "choice1": "Her aura lingers as warm as a summer breeze.", "answer": true },
-                { "choice2": "Her eyes spark azure like the sky after the passing storm.", "answer": true },
-                { "choice3": "Her laughter is as loud as thunder.", "answer": false }
+                { "choice": "Her aura lingers as warm as a summer breeze.", "answer": true },
+                { "choice": "Her eyes spark azure like the sky after the passing storm.", "answer": true },
+                { "choice": "Her laughter is as loud as thunder.", "answer": false }
               ],
               "answer": "Her laughter is as loud as thunder.",
               "explanation": "The passage describes her laughter as sweet, not loud like thunder."
             },
             {
               "choices": [
-                { "choice1": "Her hands are as smooth as satin when you touch its form.", "answer": true },
-                { "choice2": "She explodes like a volcano when angry.", "answer": true },
-                { "choice3": "Her temper is as calm as a gentle breeze.", "answer": false }
+                { "choice": "Her hands are as smooth as satin when you touch its form.", "answer": true },
+                { "choice": "She explodes like a volcano when angry.", "answer": true },
+                { "choice": "Her temper is as calm as a gentle breeze.", "answer": false }
               ],
               "answer": "Her temper is as calm as a gentle breeze.",
               "explanation": "The passage describes her temper as explosive, not calm like a gentle breeze."
             },
             {
               "choices": [
-                { "choice1": "She is as strong-willed as a bull in the grazing land.", "answer": true },
-                { "choice2": "She is as soft as a marshmallow when you grab her hand.", "answer": true },
-                { "choice3": "She is as stubborn as a tree in the forest.", "answer": false }
+                { "choice": "She is as strong-willed as a bull in the grazing land.", "answer": true },
+                { "choice": "She is as soft as a marshmallow when you grab her hand.", "answer": true },
+                { "choice": "She is as stubborn as a tree in the forest.", "answer": false }
               ],
               "answer": "She is as stubborn as a tree in the forest.",
               "explanation": "The passage does not describe her as stubborn like a tree; instead, she is determined and strong-willed."
@@ -3507,27 +3507,27 @@
           "TwoTruthsOneLie": [
             {
               "choices": [
-                { "choice1": "M. Hamel announced the last lesson in a grave tone.", "answer": true },
-                { "choice2": "The new master will teach only French.", "answer": false },
-                { "choice3": "The narrator felt anxious about being late for school.", "answer": true }
+                { "choice": "M. Hamel announced the last lesson in a grave tone.", "answer": true },
+                { "choice": "The new master will teach only French.", "answer": false },
+                { "choice": "The narrator felt anxious about being late for school.", "answer": true }
               ],
               "answer": "The new master will teach only French.",
               "explanation": "The passage states that the new master will teach only German, not French."
             },
             {
               "choices": [
-                { "choice1": "The village people attended the last lesson out of respect for M. Hamel.", "answer": true },
-                { "choice2": "The narrator had no concerns about not learning his lessons.", "answer": false },
-                { "choice3": "The teacher wore special clothes for the last lesson.", "answer": true }
+                { "choice": "The village people attended the last lesson out of respect for M. Hamel.", "answer": true },
+                { "choice": "The narrator had no concerns about not learning his lessons.", "answer": false },
+                { "choice": "The teacher wore special clothes for the last lesson.", "answer": true }
               ],
               "answer": "The narrator had no concerns about not learning his lessons.",
               "explanation": "The narrator deeply regrets not learning his lessons, especially the participles."
             },
             {
               "choices": [
-                { "choice1": "The town hall bulletin always contained bad news.", "answer": true },
-                { "choice2": "The blacksmith encouraged the narrator to hurry to school.", "answer": false },
-                { "choice3": "The narrator was able to recite all the lessons perfectly.", "answer": true }
+                { "choice": "The town hall bulletin always contained bad news.", "answer": true },
+                { "choice": "The blacksmith encouraged the narrator to hurry to school.", "answer": false },
+                { "choice": "The narrator was able to recite all the lessons perfectly.", "answer": true }
               ],
               "answer": "The blacksmith encouraged the narrator to hurry to school.",
               "explanation": "The blacksmith told the narrator to slow down, not to hurry, while reading the bulletin."
@@ -3634,27 +3634,27 @@
           "TwoTruthsOneLie": [
             {
               "choices": [
-                { "choice1": "Christopher enjoyed camping in the woods behind his house.", "answer": true },
-                { "choice2": "Christopher's friends loved outdoor activities as much as he did.", "answer": false },
-                { "choice3": "Christopher's mother suggested he join the Boy Scouts.", "answer": true }
+                { "choice": "Christopher enjoyed camping in the woods behind his house.", "answer": true },
+                { "choice": "Christopher's friends loved outdoor activities as much as he did.", "answer": false },
+                { "choice": "Christopher's mother suggested he join the Boy Scouts.", "answer": true }
               ],
               "answer": "Christopher's friends loved outdoor activities as much as he did.",
               "explanation": "The passage states most of Christopher's friends preferred indoor activities, so the statement about them loving outdoor activities is false."
             },
             {
               "choices": [
-                { "choice1": "The Boy Scouts were meeting in the school cafeteria.", "answer": true },
-                { "choice2": "Christopher immediately joined the Boy Scouts after hearing about camping.", "answer": false },
-                { "choice3": "The Scouts discussed needing cables and helmets for rock climbing.", "answer": true }
+                { "choice": "The Boy Scouts were meeting in the school cafeteria.", "answer": true },
+                { "choice": "Christopher immediately joined the Boy Scouts after hearing about camping.", "answer": false },
+                { "choice": "The Scouts discussed needing cables and helmets for rock climbing.", "answer": true }
               ],
               "answer": "Christopher immediately joined the Boy Scouts after hearing about camping.",
               "explanation": "Christopher did not join immediately; he initially thought the Boy Scouts only met in the cafeteria and didn't want to join."
             },
             {
               "choices": [
-                { "choice1": "The Boy Scouts rented equipment at a wilderness store downtown.", "answer": true },
-                { "choice2": "Christopher often camped alone because he had no friends.", "answer": false },
-                { "choice3": "The Scouts referred to their manuals during their meeting.", "answer": true }
+                { "choice": "The Boy Scouts rented equipment at a wilderness store downtown.", "answer": true },
+                { "choice": "Christopher often camped alone because he had no friends.", "answer": false },
+                { "choice": "The Scouts referred to their manuals during their meeting.", "answer": true }
               ],
               "answer": "Christopher often camped alone because he had no friends.",
               "explanation": "Christopher persuaded some friends occasionally to camp with him, so he did have friends, making this statement false."
@@ -3776,27 +3776,27 @@
           "TwoTruthsOneLie": [
             {
               "choices": [
-                { "choice1": "Mang Ricardo's family moved to Solano because their home was damaged by a typhoon.", "answer": true },
-                { "choice2": "Christine's mother saved coins to enroll her children in school.", "answer": true },
-                { "choice3": "Christine visited the fast food store every week.", "answer": false }
+                { "choice": "Mang Ricardo's family moved to Solano because their home was damaged by a typhoon.", "answer": true },
+                { "choice": "Christine's mother saved coins to enroll her children in school.", "answer": true },
+                { "choice": "Christine visited the fast food store every week.", "answer": false }
               ],
               "answer": "Christine visited the fast food store every week.",
               "explanation": "Christine only dreamed of visiting the fast food store; she did not go there regularly."
             },
             {
               "choices": [
-                { "choice1": "Christine was known for being friendly and helpful at school.", "answer": true },
-                { "choice2": "Christine's teacher surprised her with a visit to the fast food store.", "answer": true },
-                { "choice3": "Christine did not want her siblings to join her at the fast food store.", "answer": false }
+                { "choice": "Christine was known for being friendly and helpful at school.", "answer": true },
+                { "choice": "Christine's teacher surprised her with a visit to the fast food store.", "answer": true },
+                { "choice": "Christine did not want her siblings to join her at the fast food store.", "answer": false }
               ],
               "answer": "Christine did not want her siblings to join her at the fast food store.",
               "explanation": "Christine wished her siblings could join her, so this statement is false."
             },
             {
               "choices": [
-                { "choice1": "Aling Maring accepted laundry work from neighbors.", "answer": true },
-                { "choice2": "Christine received new clothes as a holiday gift from her teacher.", "answer": true },
-                { "choice3": "Mang Ricardo worked as a chef in a restaurant.", "answer": false }
+                { "choice": "Aling Maring accepted laundry work from neighbors.", "answer": true },
+                { "choice": "Christine received new clothes as a holiday gift from her teacher.", "answer": true },
+                { "choice": "Mang Ricardo worked as a chef in a restaurant.", "answer": false }
               ],
               "answer": "Mang Ricardo worked as a chef in a restaurant.",
               "explanation": "Mang Ricardo did car repairs for a living, not restaurant work."
@@ -3926,27 +3926,27 @@
           "TwoTruthsOneLie": [
             {
               "choices": [
-                { "choice1": "The narrator's nose starts sniffling like a dog.", "answer": true },
-                { "choice2": "The mashed potatoes were described as mountains to climb.", "answer": false },
-                { "choice3": "The feast included a Himalayas of turkey and ham.", "answer": true }
+                { "choice": "The narrator's nose starts sniffling like a dog.", "answer": true },
+                { "choice": "The mashed potatoes were described as mountains to climb.", "answer": false },
+                { "choice": "The feast included a Himalayas of turkey and ham.", "answer": true }
               ],
               "answer": "The mashed potatoes were described as mountains to climb.",
               "explanation": "The passage describes the mashed potatoes as hills to snowboard down, not mountains to climb."
             },
             {
               "choices": [
-                { "choice1": "The children were screaming in the gargantuan house.", "answer": true },
-                { "choice2": "The narrator felt hungry after the feast.", "answer": false },
-                { "choice3": "The bread rolls tasted like they were made by the best chef.", "answer": true }
+                { "choice": "The children were screaming in the gargantuan house.", "answer": true },
+                { "choice": "The narrator felt hungry after the feast.", "answer": false },
+                { "choice": "The bread rolls tasted like they were made by the best chef.", "answer": true }
               ],
               "answer": "The narrator felt hungry after the feast.",
               "explanation": "The narrator was stuffed after the feast, not hungry."
             },
             {
               "choices": [
-                { "choice1": "The feast included oceans of macaroni.", "answer": false },
-                { "choice2": "The narrator compared the mashed potatoes to hills.", "answer": true },
-                { "choice3": "The feast was described as fit for a king.", "answer": true }
+                { "choice": "The feast included oceans of macaroni.", "answer": false },
+                { "choice": "The narrator compared the mashed potatoes to hills.", "answer": true },
+                { "choice": "The feast was described as fit for a king.", "answer": true }
               ],
               "answer": "The feast included oceans of macaroni.",
               "explanation": "The passage does not mention macaroni; it mentions turkey, ham, mashed potatoes, bread rolls."

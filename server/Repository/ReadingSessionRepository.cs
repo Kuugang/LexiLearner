@@ -18,8 +18,12 @@ namespace LexiLearner.Repository
 
 		public async Task<ReadingSession> Create(ReadingSession ReadingSession)
 		{
+            _context.Attach(ReadingSession.Pupil);
+            _context.Attach(ReadingSession.ReadingMaterial);
+            
 			await _context.ReadingSession.AddAsync(ReadingSession);
             await _context.SaveChangesAsync();
+        
             return ReadingSession;
 		}
 
