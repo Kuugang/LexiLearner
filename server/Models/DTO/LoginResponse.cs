@@ -10,6 +10,7 @@ namespace LexiLearner.Models.DTO
         public required string Email { get; set; }
         public required bool EmailConfirmed { get; set; }
         public required string PhoneNumber { get; set; }
+        public int streak { get; set; }
         public bool PhoneNumberConfirmed { get; set; }
         public bool TwoFactorEnabled { get; set; }
     }

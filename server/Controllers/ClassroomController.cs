@@ -74,4 +74,35 @@ public class ClassroomController : ControllerBase {
         );
     }
 
+	[HttpPost("{JoinCode}")]
+	[Authorize("PupilPolicy")]
+	public async Task<IActionResult> JoinClassroom([FromRoute] string JoinCode)
+	{
+		var classroom = await _classroomEnrollmentService.JoinClassroom(JoinCode, User);
+
+		return StatusCode(StatusCodes.Status201Created,
+		new SuccessResponseDTO("Joined Classroom successfully", classroom))
+		;
+	}
+
+	[HttpGet("me")]
+	[Authorize("PupilPolicy")]
+	public async Task<IActionResult> GetByPupilId()
+	{
+		var classrooms = await _classroomEnrollmentService.GetByPupilId(User);
+
+		return StatusCode(StatusCodes.Status201Created,
+		new SuccessResponseDTO("Get pupil classrooms successfully", classrooms))
+		;
+	}
+
+	[HttpDelete("me/{ClassroomId}")]
+	[Authorize("PupilPolicy")]
+	public async Task<IActionResult> LeaveClassroom([FromRoute] Guid ClassroomId)
+	{
+		await _classroomEnrollmentService.LeaveClassroom(ClassroomId, User);
+
+		return StatusCode(StatusCodes.Status200OK,
+		new SuccessResponseDTO("Leave classroom successfully"));
+	}
 }   

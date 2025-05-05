@@ -169,5 +169,26 @@ namespace LexiLearner.Repository
             return deletedUser;
         }
 
+        public async Task<LoginStreak?> GetLoginStreak(string userId)
+        {
+            var cacheKey = $"LoginStreak_{userId}";
+            var streak = await GetFromCacheAsync<LoginStreak>(cacheKey);
+
+            if (streak is null)
+            {
+                streak = await _decorated.GetLoginStreak(userId);
+                if (streak is not null)
+                {
+                    await SetCacheAsync(cacheKey, streak, TimeSpan.FromMinutes(30));
+                }
+            }
+
+            return streak;
+        }
+
+        public async Task<LoginStreak> CreateLoginStreak(LoginStreak streak)
+        {
+            return await _decorated.CreateLoginStreak(streak);
+        }
     }
 }

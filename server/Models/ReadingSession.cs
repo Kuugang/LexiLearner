@@ -5,7 +5,7 @@ namespace LexiLearner.Models
 {
     public class ReadingSession
     {
-        public required Guid Id { set; get; } = Guid.NewGuid();
+        public Guid Id { set; get; } = Guid.NewGuid();
 
         public required Guid PupilId { get; set; }
         [ForeignKey("PupilId")]
@@ -18,7 +18,7 @@ namespace LexiLearner.Models
         public required float CompletionPercentage { get; set; }
 
         //To get the duration CompletedAt - StartedAt
-        public required DateTime StartedAt { get; set; } = DateTime.UtcNow;
-        public required DateTime CompletedAt { get; set; }
+        public DateTime StartedAt { get; set; } = DateTime.UtcNow;
+        public DateTime CompletedAt { get; set; }
     }
 }

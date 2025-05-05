@@ -59,6 +59,8 @@ namespace LexiLearner.Services
             string role = await _userService.GetRole(user);
 
             var token = _jwtService.GenerateJWTToken(user.Id, user.UserName!,role);
+            
+            await _userService.RecordLoginAsync(user.Id);
 
             return new SuccessResponseDTO("Login successful", new JWTDTO(token));
         }

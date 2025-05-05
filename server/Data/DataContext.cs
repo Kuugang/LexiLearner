@@ -23,6 +23,8 @@ namespace LexiLearner.Data
         public DbSet<ReadingSession> ReadingSession { get; set; }
         public DbSet<Minigame> Minigame { get; set; }
         public DbSet<MinigameLog> MinigameLog { get; set; }
+        public DbSet<Session> Session { get; set; }
+        public DbSet<LoginStreak> LoginStreak { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -47,9 +49,7 @@ namespace LexiLearner.Data
             //     .WithMany()
             //     .HasForeignKey(rc => rc.GenreId)
             //     .IsRequired();
-            modelBuilder.Entity<ReadingMaterialGenre>()
-                .HasKey(rg => new { rg.ReadingMaterialId, rg.GenreId });
-
+           
             modelBuilder.Entity<ReadingMaterialGenre>()
                 .HasOne(rg => rg.ReadingMaterial)
                 .WithMany(r => r.ReadingMaterialGenres)

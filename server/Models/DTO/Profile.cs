@@ -1,3 +1,5 @@
+using Org.BouncyCastle.Utilities.Zlib;
+
 namespace LexiLearner.Models.DTO
 {
     public class UpdateProfileDTO
@@ -61,6 +63,24 @@ namespace LexiLearner.Models.DTO
             Email = user.Email;
             TwoFactorEnabled = user.TwoFactorEnabled;
             PhoneNumber = user.PhoneNumber;
+        }
+    }
+    
+    public class LoginStreakDTO
+    {
+        public Guid Id { get; set; }
+        public string UserId { get; set; }
+        public int CurrentStreak { get; set; }
+        public int LongestStreak { get; set; }
+        public DateTime LastLoginDate { get; set; }
+        
+        public LoginStreakDTO(LoginStreak streak)
+        {
+          Id = streak.Id;
+          UserId = streak.UserId;
+          CurrentStreak = streak.CurrentStreak;
+          LongestStreak = streak.LongestStreak;
+          LastLoginDate = streak.LastLoginDate;
         }
     }
 }

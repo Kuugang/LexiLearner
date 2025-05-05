@@ -13,5 +13,7 @@ namespace LexiLearner.Interfaces{
         Task<Teacher?> GetTeacherByUserId(string UserId);
 
         Task Update<T>(T entity) where T : class;
+        Task<LoginStreak?> GetLoginStreak(string userId);
+        Task<LoginStreak> CreateLoginStreak(LoginStreak streak);
 	}
 }
