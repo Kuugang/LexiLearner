@@ -13,5 +13,9 @@ namespace LexiLearner.Interfaces
         Task<MinigameLog> Create(MinigameLog minigameLog);
         Task<List<MinigameLog>> GetMinigameLogs();
         Task<List<MinigameLog>> GetMinigameLogsByRMId(Guid readingMatId);
+
+        Task<List<MinigameLog>> GetMinigameLogByReadingSessionId(Guid SessionId);
+
+        Task Complete(Pupil Pupil);
     }
 }

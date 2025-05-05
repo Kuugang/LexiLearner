@@ -5,12 +5,12 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace LexiLearner.Controllers
 {
-    [Route("api/minigames")]
+    [Route("api/[controller]")]
     [ApiController]
-    public class MinigameController : ControllerBase
+    public class MinigamesController : ControllerBase
     {
         private readonly IMinigameService _minigameService;
-        public MinigameController(IMinigameService minigameService)
+        public MinigamesController(IMinigameService minigameService)
         {
             _minigameService = minigameService;
         }
@@ -72,7 +72,14 @@ namespace LexiLearner.Controllers
             );
         }
 
-
+        [HttpPost("{SessionId}/complete")]
+        public async Task<IActionResult> Complete([FromRoute] Guid SessionId)
+        {
+            await _minigameService.Complete(SessionId);
+            return StatusCode(StatusCodes.Status200OK,
+              new SuccessResponseDTO("Session score recorded successfully.")
+            );
+        }
 
         [HttpPost("logs/wordhunt")]
         public async Task<IActionResult> CreateLogWordHunt([FromBody] MinigameLogDTO.WordHuntLog request)
