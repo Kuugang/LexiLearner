@@ -29,9 +29,9 @@ export default function Profile() {
         style={{
           height: 150,
           width: "100%",
-          borderBottomLeftRadius: "300px",
+          borderBottomLeftRadius: 40,
         }}
-        className="bg-lightGrayOrange p-4 shadow-lg w-full"
+        className="bg-yellowOrange p-4 shadow-lg w-full"
       >
         <View className="flex flex-row justify-between">
           <BackHeader />
@@ -39,7 +39,7 @@ export default function Profile() {
           <Button
             className="self-end bg-transparent"
             onPress={async () => {
-              router.push("profile/settings");
+              router.push("/profile/settings");
             }}
           >
             <Settings color="black" />
@@ -119,7 +119,7 @@ export default function Profile() {
                 <Text
                   className="underline"
                   onPress={async () => {
-                    router.push("/profile/achievements");
+                    router.push("/profile/achievementslist");
                   }}
                 >
                   View All

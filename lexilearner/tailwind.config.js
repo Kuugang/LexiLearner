@@ -8,10 +8,18 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        orange: "rgb(255, 103, 64)",
-        yellowOrange: "rgb(255, 212, 42)",
+        black: "rgb(47,30,56)",
+        white: "rgb(254,253,248)",
+        gray: "rgb(69,55,81)",
+        lightGray: "rgb(221,230,234)",
+
+        orange: "rgb(255, 102, 62)",
+        lightYellow: "rgb(254,216,93)",
+        yellowOrange: "rgb(255, 205, 55)",
+        mutedYellowOrange: "rgb(180,174,149)",
         lightGrayOrange: "rgb(255, 233, 173)",
-        lightGray: "#E5DDEA",
+        lightBlue: "rgb(153,214,233)",
+        blue: "rgb(103,152,192)",
 
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -49,7 +57,8 @@ module.exports = {
           foreground: "hsl(var(--card-foreground))",
         },
       },
-      boxShadow: { main: "0px 3px 1px 0px rgba(48, 27, 68, 0.25)" },
+
+      dropShadow: { custom: ["0px 3px 1px rgba(48, 27, 44, 0.25)"] },
       borderWidth: {
         hairline: hairlineWidth(),
       },
@@ -66,6 +75,9 @@ module.exports = {
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+      },
+      fontFamily: {
+        poppins: "Poppins-Regular",
       },
     },
   },
