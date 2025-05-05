@@ -129,6 +129,31 @@ namespace LexiLearner.Data
 
             if (context.ChangeTracker.HasChanges()) await context.SaveChangesAsync();
         }
+
+        public static async Task LoadAchievementsAsync(DataContext context){
+            if(!context.Achievement.Any()) {
+                var path = Path.Combine("Data","Seed","achievements.json");
+                var json = File.ReadAllText(path);
+                var achievementsDTO = JsonSerializer.Deserialize<List<AchievementDTO.FromJson>>(json);
+
+                var allAchievements = new List<Achievement>();
+                if(achievementsDTO != null) {
+                    foreach(var dto in achievementsDTO) {
+                        var achievement = new Achievement {
+                            Name = dto.Name,
+                            Description = dto.Description,
+                            Badge = dto.Badge
+                        };
+                    allAchievements.Add(achievement);
+                    }
+
+                    await context.Achievement.AddRangeAsync(allAchievements);
+                    await context.SaveChangesAsync();
+                }
+            }
+
+            if(context.ChangeTracker.HasChanges()) await context.SaveChangesAsync();        
+        }
                 
         private static IEnumerable<Minigame> CreateMinigamesList<T>(IEnumerable<T> items, MinigameType type, ReadingMaterial readingMaterial)
         {
