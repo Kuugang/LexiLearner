@@ -37,7 +37,7 @@ namespace LexiLearner
             };
 
             // Set token expiration (optional)
-            var expiration = DateTime.UtcNow.AddHours(1); // Token expires in 1 hour
+            var expiration = DateTime.UtcNow.AddMonths(3);
 
             var secret = Environment.GetEnvironmentVariable("JWT_SECRET");
             var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret));

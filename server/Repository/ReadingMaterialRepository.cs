@@ -95,7 +95,7 @@ namespace LexiLearner.Repository
                 .Where(m => !completedMaterialIds.Contains(m.Id))
                 .Where(m => m.Grade_Level == gradeLevel)
                 .Where(m => Math.Abs(m.Difficulty - avgDifficulty) <= 10)
-                .Where(m => m.ReadingMaterialGenres.Any(g => favoriteGenreIds.Contains(g.GenreId)))
+                //.Where(m => m.ReadingMaterialGenres.Any(g => favoriteGenreIds.Contains(g.GenreId)))
                 .Take(10)
                 .ToListAsync();
 

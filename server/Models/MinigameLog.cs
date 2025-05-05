@@ -15,6 +15,10 @@ namespace LexiLearner.Models
         [ForeignKey("PupilId")]
         public required Pupil Pupil { get; set; }
 
+        public required Guid ReadingSessionId { get; set; }
+        [ForeignKey("ReadingSessionId")]
+        public required ReadingSession ReadingSession { get; set; }
+
         public required string Result { get; set; }
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
