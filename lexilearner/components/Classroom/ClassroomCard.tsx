@@ -20,11 +20,12 @@ export default function ClassroomCard(props: classroomProps) {
 
   return (
     <Pressable onPress={onPress}>
-      <View className="border-2 rounded-xl border-gray-300 my-3 bg-yellow-500 shadow-main">
-        <View className="p-10"></View>
-        <View className="p-3 px-5 flex-row justify-between bg-white">
-          <Text className="font-bold">{props.sectionName}</Text>
-          <Text>
+      <View className="rounded-xl overflow-hidden shadow-main border-b-4 border-lightGray bg-white my-2">
+        <View className="bg-yellowOrange h-24 w-full" />
+
+        <View className="flex-row justify-between items-center px-5 py-4 bg-white">
+          <Text className="font-bold text-lg">{props.sectionName}</Text>
+          <Text className="text-gray-700">
             {props.studentCount}
             {props.studentCount > 1 ? " Students" : " Student"}
           </Text>

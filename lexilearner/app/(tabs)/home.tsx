@@ -12,7 +12,7 @@ import { Input } from "~/components/ui/input";
 import { CircleUser, Search, Flame } from "lucide-react-native";
 
 function HomeScreen() {
-  const { data: stories, isLoading: isStoriesLoading} = useStories();
+  const { data: stories, isLoading: isStoriesLoading } = useStories();
 
   // useEffect(() => {
   //   router.push("/minigames/fillintheblanks");
@@ -54,9 +54,14 @@ function HomeScreen() {
         </View>
       </View>
 
-      <View className="flex flex-row items-center px-4 py-4 bg-yellowOrange">
+      <View
+        className="flex flex-row items-center px-4 py-4 bg-yellowOrange"
+        style={{
+          borderBottomLeftRadius: 40,
+        }}
+      >
         <View className="flex-1 pr-2">
-          <Text className="text-orange text-4xl font-bold text-wrap">
+          <Text className="p-3 text-orange text-3xl font-bold text-wrap">
             Ready for a Journey?
           </Text>
         </View>

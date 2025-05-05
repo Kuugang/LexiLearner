@@ -10,7 +10,7 @@ interface ProfileStatsProps {
 
 function ProfileStats({ level, description, icon }: ProfileStatsProps) {
   return (
-    <View className="flex flex-row gap-3 items-center p-3 border-2 rounded-xl border-gray-300">
+    <View className="flex flex-row gap-3 items-center p-3 border-2 rounded-xl border-lightGray">
       <View>{icon}</View>
       <View>
         <Text className="text-md font-bold">{level}</Text>
