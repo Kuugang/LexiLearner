@@ -14,6 +14,7 @@ namespace LexiLearner.Extensions
             var readabilityService = scope.ServiceProvider.GetRequiredService<IReadabilityService>();
 
             await DataContextSeeder.LoadMaterialsAsync(context, genreService, readabilityService);
+            await DataContextSeeder.LoadAchievementsAsync(context);
         }
     }
 }
