@@ -8,7 +8,7 @@ interface AchievementProp {
 
 export default function Achievement({ title, description }: AchievementProp) {
   return (
-    <View className="p-5 mb-5 bg-background-yellowOrange rounded-xl">
+    <View className="p-5 mb-4 w-[325px] bg-lightBlue rounded-xl shadow-main">
       <Text className="font-bold text-lg">{title}</Text>
       <Text className="text-sm">{description}</Text>
     </View>

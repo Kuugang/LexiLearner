@@ -15,10 +15,10 @@ const Index = () => {
   if (user) {
     if (game) {
       // return <Redirect href={game as RelativePathString} />;
-      // return <Redirect href="/minigames/wordsfromletters" />;
     } else {
     }
-    return <Redirect href="/home" />;
+    // return <Redirect href="/home" />;
+    return <Redirect href="/classroom" />;
   }
 
   return (
