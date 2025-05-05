@@ -10,6 +10,7 @@ namespace LexiLearner.Models.DTO
     public Guid PupilId { get; set; }
     public string Result { get; set; }
     public DateTime CreatedAt { get; set; }
+    public Guid ReadingSessionId { get; set; }
 
     public MinigameLogDTO() { }
     public MinigameLogDTO(MinigameLog minigameLog) { 
@@ -18,6 +19,7 @@ namespace LexiLearner.Models.DTO
       PupilId = minigameLog.PupilId;
       Result = minigameLog.Result;
       CreatedAt = minigameLog.CreatedAt;
+      ReadingSessionId = minigameLog.ReadingSessionId;
     }
 
     public class Create
@@ -36,6 +38,14 @@ namespace LexiLearner.Models.DTO
       [JsonPropertyName("MinigameId")]
       public required Guid MinigameIdSetter{
         set => MinigameId = value;
+      }
+      
+      [JsonIgnore]
+      public Guid ReadingSessionId { get; set; }
+      [JsonPropertyName("ReadingSessionId")]
+      public required Guid ReadingSessionIdSetter
+      {
+        set => ReadingSessionId = value;
       }
       public required int duration { get; set; }
       public required int score { get; set; }

@@ -12,12 +12,14 @@ namespace LexiLearner.Services
         private readonly IReadingMaterialService _readingMaterialService;
         private readonly IPupilService _pupilService;
         private readonly IReadingSessionService _readingSessionService;
+        private readonly Random _random;
         public MinigameService(IMinigameRepository minigameRepository, IReadingMaterialService readingMaterialService, IPupilService pupilService, IReadingSessionService readingSessionService)
         {
             _minigameRepository = minigameRepository;
             _readingMaterialService = readingMaterialService;
             _pupilService = pupilService;
             _readingSessionService = readingSessionService;
+            _random = new Random();
         }
         public async Task<MinigameDTO> Create(MinigameType minigameType, MinigameDTO.Create request)
         {
@@ -97,6 +99,18 @@ namespace LexiLearner.Services
                     StatusCodes.Status404NotFound
                   );
             }
+            
+            var readingSessionId = request.ReadingSessionId;
+            var readingSession = await _readingSessionService.GetReadingSessionById(readingSessionId);
+            
+            if (readingSession == null)
+            {
+              throw new ApplicationExceptionBase(
+                $"ReadingSession with id = {readingSessionId} not found.",
+                "MinigameLog creation failed.",
+                StatusCodes.Status404NotFound
+              );
+            }
 
             string result = JsonSerializer.Serialize(request, request.GetType(), new JsonSerializerOptions { WriteIndented = true, PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
 
@@ -104,11 +118,8 @@ namespace LexiLearner.Services
             {
                 Minigame = minigame,
                 MinigameId = minigameid,
-
-                //TODO: THIS ONE
-                ReadingSessionId = Guid.NewGuid(),
-                ReadingSession = null,
-
+                ReadingSessionId = readingSessionId,
+                ReadingSession = readingSession,
                 Pupil = pupil,
                 PupilId = pupilid,
                 Result = result,
@@ -231,5 +242,44 @@ namespace LexiLearner.Services
             Pupil.Level += FinalScore;
             await _minigameRepository.Complete(Pupil);
         }
-    }
+
+		public async Task<List<MinigameDTO>> GetRandomMinigames(Guid readingSessionId)
+		{
+			var readingSession = await _readingSessionService.GetReadingSessionById(readingSessionId);
+
+            if (readingSession == null)
+            {
+                throw new ApplicationExceptionBase(
+                    "Reading Session not found.",
+                    "Fetching minigames for the reading session failed.",
+                    StatusCodes.Status404NotFound
+                );
+            }
+
+            var minigames = await _minigameRepository.GetMinigamesByRMId(readingSession.Id);
+
+            if (minigames == null || !minigames.Any())
+            {
+                throw new ApplicationExceptionBase(
+                    "No minigames found for reading material.",
+                    "Fetching minigames for the reading session failed.",
+                    StatusCodes.Status404NotFound
+                );
+            }
+
+            // getting 3 minigames with distinct types
+            minigames = minigames
+                .GroupBy(m => m.MinigameType)
+                .OrderBy(_ => _random.Next())
+                .Take(Math.Min(3, minigames.GroupBy(m => m.MinigameType).Count()))
+                .Select(group =>
+                {
+                    var minigamesOfType = group.ToList();
+                    return minigamesOfType[_random.Next(minigamesOfType.Count)];
+                })
+                .ToList();
+
+            return minigames.Select(mg => new MinigameDTO(mg)).ToList();
+		}
+	}
 }

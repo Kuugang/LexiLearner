@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using LexiLearner.Models;
 using LexiLearner.Data;
 using LexiLearner.Interfaces;
+using System.Security.Claims;
 
 namespace LexiLearner.Repository
 {
@@ -15,7 +16,14 @@ namespace LexiLearner.Repository
             _context = context;
         }
 
-        public async Task<ReadingSession?> GetReadingSessionById(Guid ReadingSessionId)
+		public async Task<ReadingSession> Create(ReadingSession ReadingSession)
+		{
+			await _context.ReadingSession.AddAsync(ReadingSession);
+            await _context.SaveChangesAsync();
+            return ReadingSession;
+		}
+
+		public async Task<ReadingSession?> GetReadingSessionById(Guid ReadingSessionId)
         {
             return await _context.ReadingSession.FirstOrDefaultAsync(rs => rs.Id == ReadingSessionId);
         }
@@ -24,5 +32,11 @@ namespace LexiLearner.Repository
         {
             return await _context.ReadingSession.Where(rs => rs.ReadingMaterialId == ReadingMaterialId).ToListAsync();
         }
-    }
+
+		public async Task Update(ReadingSession ReadingSession)
+		{
+			_context.ReadingSession.Update(ReadingSession);
+            await _context.SaveChangesAsync();
+		}
+	}
 }

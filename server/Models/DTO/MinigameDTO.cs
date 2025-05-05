@@ -53,6 +53,7 @@ namespace LexiLearner.Models.DTO
             public required List<string> phrases { get; set; }
             public required string correctAnswer { get; set; }
             public required List<string> choices { get; set; }
+            public required string explanation { get; set; }
         }
 
         public class SentenceRearrangementGame : MinigameDTO.Create
@@ -60,12 +61,14 @@ namespace LexiLearner.Models.DTO
             //public MinigameType MinigameType { get; set; } = MinigameType.SentenceRearrangement;
             public required List<string> correctAnswer { get; set; }
             public required List<string> parts { get; set; }
+            public required string explanation { get; set; }
         }
 
         public class TwoTruthsOneLieGame : MinigameDTO.Create
         {
             //public MinigameType MinigameType { get; set; } = MinigameType.TwoTruthsOneLie;
             public required List<TwoTruthsOneLieChoiceObj> choices { get; set; }
+            public required string explanation { get; set; }
         }
 
         public class TwoTruthsOneLieChoiceObj
