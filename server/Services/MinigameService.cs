@@ -101,17 +101,17 @@ namespace LexiLearner.Services
                     StatusCodes.Status404NotFound
                   );
             }
-            
+
             var readingSessionId = request.ReadingSessionId;
             var readingSession = await _readingSessionService.GetReadingSessionById(readingSessionId);
-            
+
             if (readingSession == null)
             {
-              throw new ApplicationExceptionBase(
-                $"ReadingSession with id = {readingSessionId} not found.",
-                "MinigameLog creation failed.",
-                StatusCodes.Status404NotFound
-              );
+                throw new ApplicationExceptionBase(
+                  $"ReadingSession with id = {readingSessionId} not found.",
+                  "MinigameLog creation failed.",
+                  StatusCodes.Status404NotFound
+                );
             }
 
             string result = JsonSerializer.Serialize(request, request.GetType(), new JsonSerializerOptions { WriteIndented = true, PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
@@ -182,17 +182,18 @@ namespace LexiLearner.Services
 
             foreach (var minigame in Minigames)
             {
-                if (!string.IsNullOrEmpty(minigame.MetaData))
-                {
-                    // Parse JSON string into a dynamic object using System.Text.Json
-                    var MetaData = JsonSerializer.Deserialize<JsonElement>(minigame.MetaData);
-
-                    // Example: Access a field called "score"
-                    if (MetaData.TryGetProperty("maxScore", out var maxScore))
-                    {
-                        TotalMaxScore += maxScore.GetInt32();
-                    }
-                }
+                //TODO: put it metadata instead
+                TotalMaxScore += minigame.MaxScore;
+                // if (!string.IsNullOrEmpty(minigame.MetaData))
+                // {
+                //     // Parse JSON string into a dynamic object using System.Text.Json
+                //     var MetaData = JsonSerializer.Deserialize<JsonElement>(minigame.MetaData);
+                //
+                //     // Example: Access a field called "score"
+                //     if (MetaData.TryGetProperty("maxScore", out var maxScore))
+                //     {
+                //     }
+                // }
             }
 
             foreach (var log in Logs)
@@ -245,9 +246,9 @@ namespace LexiLearner.Services
             await _minigameRepository.Complete(Pupil);
         }
 
-		public async Task<List<MinigameDTO>> GetRandomMinigames(Guid readingSessionId)
-		{
-			var readingSession = await _readingSessionService.GetReadingSessionById(readingSessionId);
+        public async Task<List<MinigameDTO>> GetRandomMinigames(Guid readingSessionId)
+        {
+            var readingSession = await _readingSessionService.GetReadingSessionById(readingSessionId);
 
             if (readingSession == null)
             {
@@ -282,7 +283,7 @@ namespace LexiLearner.Services
                 .ToList();
 
             return minigames.Select(mg => new MinigameDTO(mg)).ToList();
-		}
+        }
 
         private static int GetMaxScore(MinigameType type, MinigameDTO.Create request)
         {
@@ -293,11 +294,11 @@ namespace LexiLearner.Services
                 case MinigameType.TwoTruthsOneLie:
                     return 1;
                 case MinigameType.WordsFromLetters:
-                    return ((MinigameDTO.WordsFromLettersGame) request).words.Count;
+                    return ((MinigameDTO.WordsFromLettersGame)request).words.Count;
                 case MinigameType.WordHunt:
-                    return ((MinigameDTO.WordHuntGame) request).correct.Count;
+                    return ((MinigameDTO.WordHuntGame)request).correct.Count;
             }
-            
+
             return 0;
         }
     }
