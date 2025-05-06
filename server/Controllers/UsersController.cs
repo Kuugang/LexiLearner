@@ -76,14 +76,24 @@ public class UsersController : ControllerBase
 
         return Ok(new SuccessResponseDTO("User exists."));
     }
-    
+
     [HttpGet("me/streak")]
     [Authorize]
     public async Task<IActionResult> GetLoginStreak()
     {
-      var loginStreak = await _userService.GetLoginStreak(User);
-      
-      return StatusCode(StatusCodes.Status200OK,
-        new SuccessResponseDTO("Login streak fetched successfully.", new LoginStreakDTO(loginStreak)));
+        var loginStreak = await _userService.GetLoginStreak(User);
+
+        return StatusCode(StatusCodes.Status200OK,
+          new SuccessResponseDTO("Login streak fetched successfully.", new LoginStreakDTO(loginStreak)));
+    }
+
+    [HttpGet("leaderboard")]
+    [Authorize]
+    public async Task<IActionResult> GetLeaderBoard()
+    {
+        var loginStreak = await _userService.GetLoginStreak(User);
+
+        return StatusCode(StatusCodes.Status200OK,
+          new SuccessResponseDTO("Login streak fetched successfully.", new LoginStreakDTO(loginStreak)));
     }
 }

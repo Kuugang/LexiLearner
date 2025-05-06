@@ -125,6 +125,7 @@ namespace LexiLearner
             services.AddScoped<IClassroomService, ClassroomService>();
             services.AddScoped<IClassroomEnrollmentService, ClassroomEnrollmentService>();
             services.AddScoped<IReadingSessionService, ReadingSessionService>();
+            services.AddScoped<IAchievementService, AchievementService>();
 
             services.AddScoped<IClassroomEnrollmentRepository, ClassroomEnrollmentRepository>();
             services.AddScoped<IClassroomRepository, ClassroomRepository>();
@@ -134,6 +135,7 @@ namespace LexiLearner
             services.AddScoped<IPupilRepository, PupilRepository>();
             services.AddScoped<IMinigameRepository, MinigameRepository>();
             services.AddScoped<IReadingSessionRepository, ReadingSessionRepository>();
+            services.AddScoped<IAchievementRepository, AchievementRepository>();
 
             // Configure Entity Framework with PostgreSQL
             services.AddDbContext<DataContext>(options =>
