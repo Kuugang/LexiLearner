@@ -188,10 +188,11 @@ namespace LexiLearner.Services
                 // {
                 //     // Parse JSON string into a dynamic object using System.Text.Json
                 //     var MetaData = JsonSerializer.Deserialize<JsonElement>(minigame.MetaData);
-                //
+
                 //     // Example: Access a field called "score"
                 //     if (MetaData.TryGetProperty("maxScore", out var maxScore))
                 //     {
+                //         TotalMaxScore += maxScore.GetInt32();
                 //     }
                 // }
             }
