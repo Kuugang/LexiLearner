@@ -7,5 +7,8 @@ namespace LexiLearner.Interfaces{
         Task Create(Classroom classroom);
         Task Update(Classroom classroom);
         Task Delete(Classroom classroom);
-    }
+		Task JoinClassroom(ClassroomEnrollment classroom);
+		Task LeaveClassroom(ClassroomEnrollment classroom);
+		Task<List<Classroom>> GetClassroomsByPupilId(Guid PupilId);
+	}
 }

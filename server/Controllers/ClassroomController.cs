@@ -11,12 +11,10 @@ using Microsoft.AspNetCore.Mvc;
 public class ClassroomController : ControllerBase {
     private readonly IClassroomService _classroomService;
     private readonly IUserService _userService;
-    private readonly IClassroomEnrollmentService _classroomEnrollmentService;
 
-    public ClassroomController(IClassroomService classroomService, IUserService userService, IClassroomEnrollmentService classroomEnrollmentService) {
+    public ClassroomController(IClassroomService classroomService, IUserService userService) {
         _classroomService = classroomService;
         _userService = userService;
-        _classroomEnrollmentService = classroomEnrollmentService;
     }
 
     [HttpPost("create")]
@@ -89,7 +87,7 @@ public class ClassroomController : ControllerBase {
 	[Authorize("PupilPolicy")]
 	public async Task<IActionResult> GetByPupilId()
 	{
-		var classrooms = await _classroomEnrollmentService.GetByPupilId(User);
+		var classrooms = await _classroomEnrollmentService.GetClassroomsByPupilId(User);
 
 		return StatusCode(StatusCodes.Status201Created,
 		new SuccessResponseDTO("Get pupil classrooms successfully", classrooms))
