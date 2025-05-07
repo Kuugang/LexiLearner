@@ -13,11 +13,12 @@ import { Text } from "~/components/ui/text";
 import { Heart, Shuffle } from "lucide-react-native";
 import { CorrectSound } from "@/utils/sounds";
 import { Progress } from "@/components/ui/progress";
+import { Minigame } from "@/models/Minigame";
 
-export default function WordsFromLetters() {
+export default function WordsFromLetters(props: Minigame) {
   const wordsFromLetters = {
-    letters: ["A", "E", "T", "C", "R"],
-    words: ["CATER", "CRATE", "REACT", "TRACE", "RECTA", "CARTE"],
+    letters: JSON.parse(props.metaData).letters,
+    words: JSON.parse(props.metaData).words,
   };
 
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
@@ -171,31 +172,33 @@ export default function WordsFromLetters() {
             </Text>
           </View>
 
-          <GuessContainer
-            guess={guess}
-            isCorrect={isCorrect}
-            removeLetterFromGuess={removeLetterFromGuess}
-          />
+          <View className="flex flex-col gap-6">
+            <GuessContainer
+              guess={guess}
+              isCorrect={isCorrect}
+              removeLetterFromGuess={removeLetterFromGuess}
+            />
 
-          <View className="flex flex-row gap-4">
-            <View className="flex flex-row gap-6 justify-center">
-              {letters && letters.length > 0 ? (
-                letters.map((letter: string, i: number) => (
-                  <LetterButton
-                    key={`letter-${i}`}
-                    letter={letter}
-                    disabled={usedIndices.includes(i)}
-                    onPress={() => addLetterToGuess(letter, i)}
-                  />
-                ))
-              ) : (
-                <Text>Loading letters...</Text>
-              )}
+            <View className="flex flex-col gap-2 justify-center items-center">
+              <TouchableOpacity onPress={shuffleLetters}>
+                <Shuffle size={30} color="black" />
+              </TouchableOpacity>
+
+              <View className="flex-row flex-wrap justify-center gap-6">
+                {letters && letters.length > 0 ? (
+                  letters.map((letter: string, i: number) => (
+                    <LetterButton
+                      key={`letter-${i}`}
+                      letter={letter}
+                      disabled={usedIndices.includes(i)}
+                      onPress={() => addLetterToGuess(letter, i)}
+                    />
+                  ))
+                ) : (
+                  <Text>Loading letters...</Text>
+                )}
+              </View>
             </View>
-
-            <TouchableOpacity onPress={shuffleLetters}>
-              <Shuffle size={50} color="black" />
-            </TouchableOpacity>
           </View>
         </View>
       </View>

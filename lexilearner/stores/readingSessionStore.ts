@@ -7,10 +7,10 @@ interface ReadingSessionStore {
   sessions: ReadingSession[] | null;
 
   addSession: (session: ReadingSession) => void;
-  getPastSession: (readingMaterialId: string) => ReadingSession | undefined;
+  getPastSession: (readingMaterialId: string) => ReadingSession | null;
 
   updateReadingSessionProgress: (
-    readingMaterialId: string,
+    readingSessionId: string,
     percentage: number,
   ) => void;
 }
@@ -27,21 +27,23 @@ export const useReadingSessionStore = create<ReadingSessionStore>()(
 
       getPastSession: (readingMaterialId: string) => {
         const sessions = get().sessions ?? [];
-        return sessions.find(
-          (session) =>
-            session.readingMaterialId === readingMaterialId &&
-            session.completionPercentage < 100,
+        return (
+          sessions.find(
+            (session) =>
+              session.readingMaterialId === readingMaterialId &&
+              session.completionPercentage < 100,
+          ) ?? null
         );
       },
 
       updateReadingSessionProgress: (
-        readingMaterialId: string,
+        readingSessionId: string,
         percentage: number,
       ) =>
         set((state) => ({
           sessions:
             state.sessions?.map((session) =>
-              session.readingMaterialId === readingMaterialId
+              session.id === readingSessionId
                 ? {
                     ...session,
                     completionPercentage: percentage,

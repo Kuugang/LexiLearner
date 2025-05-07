@@ -1,6 +1,6 @@
 import { router } from "expo-router";
 import { useStories } from "@/services/ReadingMaterialService";
-import { memo } from "react";
+import { memo, useEffect } from "react";
 import ReadingContent from "@/components/ReadingContent";
 
 //Components
@@ -14,9 +14,12 @@ import { CircleUser, Search, Flame } from "lucide-react-native";
 function HomeScreen() {
   const { data: stories, isLoading: isStoriesLoading } = useStories();
 
-  // useEffect(() => {
-  //   router.push("/minigames/fillintheblanks");
-  // }, []);
+  router.push({
+    pathname: "/minigames/play",
+    params: {
+      readingSessionId: "4eccdaae-cbb9-442c-9091-1eb958ce5493",
+    },
+  });
 
   return (
     <ScrollView className="bg-background">

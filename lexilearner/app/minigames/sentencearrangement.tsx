@@ -10,11 +10,12 @@ import Animated, {
 } from "react-native-reanimated";
 import { useSentenceArrangementMiniGameStore } from "@/stores/miniGameStore";
 import { useMiniGameStore } from "@/stores/miniGameStore";
-import { View, ScrollView, TouchableOpacity, BackHandler } from "react-native";
+import { View, ScrollView, TouchableOpacity } from "react-native";
 import { Text } from "~/components/ui/text";
 import { Heart, Shuffle } from "lucide-react-native";
+import { Minigame } from "@/models/Minigame";
 
-export default function SentenceArrangement() {
+export default function SentenceArrangement(props: Minigame) {
   const sentenceArrangementData = {
     correctAnswer: [
       "The Dodo was",
