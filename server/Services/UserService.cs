@@ -329,50 +329,54 @@ namespace LexiLearner.Services
 
             return await _userRepository.GetLoginStreak(User.Id);
         }
-    
+
         public async Task<LoginStreak> RecordLoginAsync(string userId)
         {
             var loginStreak = await _userRepository.GetLoginStreak(userId);
             var today = DateTime.UtcNow.Date;
-            
+
             if (loginStreak == null)
             {
                 var user = await _userRepository.GetUserByIdAsync(userId);
-                
+
                 if (user == null)
                 {
-                throw new ApplicationExceptionBase("User not found.", "Recording login failed.");
+                    throw new ApplicationExceptionBase("User not found.", "Recording login failed.");
                 }
-                
+
                 loginStreak = new LoginStreak
                 {
-                UserId = userId,
-                User = user,
-                CurrentStreak = 1,
-                LastLoginDate = today,
-                LongestStreak = 1
+                    UserId = userId,
+                    User = user,
+                    CurrentStreak = 1,
+                    LastLoginDate = today,
+                    LongestStreak = 1
                 };
-                
+
                 loginStreak = await _userRepository.CreateLoginStreak(loginStreak);
-            } else {
+            }
+            else
+            {
                 var daysSinceLastLogin = (today - loginStreak.LastLoginDate.Date).Days;
                 if (daysSinceLastLogin == 0)
                 {
                     loginStreak.CurrentStreak++;
-                    
-                    if (loginStreak.CurrentStreak > loginStreak.LongestStreak){
+
+                    if (loginStreak.CurrentStreak > loginStreak.LongestStreak)
+                    {
                         loginStreak.LongestStreak = loginStreak.CurrentStreak;
                     }
-                } else
+                }
+                else
                 {
                     loginStreak.CurrentStreak = 1;
                 }
-                
+
                 loginStreak.LastLoginDate = today;
-                
+
                 await _userRepository.Update(loginStreak);
             }
-            
+
             return loginStreak;
         }
 
@@ -381,5 +385,5 @@ namespace LexiLearner.Services
             return await _userRepository.GetPupilByPupilId(pupilId);
         }
     }
-    
+
 }

@@ -55,12 +55,12 @@ namespace LexiLearner.Services
                     Message = "Two Factor Authentication Code was sent to your email.",
                 };
             }
-            
+
             string role = await _userService.GetRole(user);
 
-            var token = _jwtService.GenerateJWTToken(user.Id, user.UserName!,role);
-            
-            await _userService.RecordLoginAsync(user.Id);
+            var token = _jwtService.GenerateJWTToken(user.Id, user.UserName!, role);
+
+            //await _userService.RecordLoginAsync(user.Id);
 
             return new SuccessResponseDTO("Login successful", new JWTDTO(token));
         }
@@ -102,7 +102,7 @@ namespace LexiLearner.Services
             await _userManager.AddLoginAsync(user, new UserLoginInfo("Google", GoogleId, "Google"));
 
             string role = await _userService.GetRole(user);
-            var jwtToken = _jwtService.GenerateJWTToken(user.Id, user.UserName!,role);
+            var jwtToken = _jwtService.GenerateJWTToken(user.Id, user.UserName!, role);
 
             return new SuccessResponseDTO("Google authentication successful", new JWTDTO(jwtToken));
         }
@@ -143,7 +143,7 @@ namespace LexiLearner.Services
             await _userManager.AddLoginAsync(user, new UserLoginInfo("Facebook", FacebookId, "Facebook"));
 
             string role = await _userService.GetRole(user);
-            var jwtToken = _jwtService.GenerateJWTToken(user.Id, user.UserName!,role);
+            var jwtToken = _jwtService.GenerateJWTToken(user.Id, user.UserName!, role);
 
             return new SuccessResponseDTO("Login successful", new JWTDTO(jwtToken));
         }
@@ -173,7 +173,7 @@ namespace LexiLearner.Services
             if (await _userManager.VerifyTwoFactorTokenAsync(user, "Email", request.Token))
             {
                 string role = await _userService.GetRole(user);
-                return new SuccessResponseDTO("Two Factor Authentication successful", new JWTDTO(_jwtService.GenerateJWTToken(user.Id, user.UserName!,role)));
+                return new SuccessResponseDTO("Two Factor Authentication successful", new JWTDTO(_jwtService.GenerateJWTToken(user.Id, user.UserName!, role)));
             }
 
             return new ErrorResponseDTO("Invalid or expired two-factor authentication token.", "TokenMismatch", 400);
