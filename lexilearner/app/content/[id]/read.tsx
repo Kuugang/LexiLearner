@@ -26,7 +26,7 @@ import { faVolumeUp } from "@fortawesome/free-solid-svg-icons";
 export default function Read() {
   const { width } = useWindowDimensions();
   const selectedContent = useReadingContentStore(
-    (state) => state.selectedContent,
+    (state) => state.selectedContent
   );
 
   const [selectedWord, setSelectedWord] = useState("");
@@ -40,7 +40,7 @@ export default function Read() {
 
   const getTranslation = useTranslationStore((state) => state.getTranslation);
   const storeTranslation = useTranslationStore(
-    (state) => state.storeTranslation,
+    (state) => state.storeTranslation
   );
 
   if (!selectedContent) {
@@ -68,7 +68,7 @@ export default function Read() {
           headers: {
             "Content-Type": "application/x-www-form-urlencoded",
           },
-        },
+        }
       );
       storeTranslation(word, data.result);
       setTranslation(data.result);
@@ -81,7 +81,7 @@ export default function Read() {
   const fetchDefinition = useCallback(async (word: string) => {
     try {
       const { data } = await axios.get(
-        `https://corsproxy.io/?url=https://googledictionary.freecollocation.com/meaning?word=${word}`,
+        `https://corsproxy.io/?url=https://googledictionary.freecollocation.com/meaning?word=${word}`
       );
       return data;
     } catch (error) {
@@ -151,7 +151,7 @@ export default function Read() {
         setIsDefinitionLoading(false);
       }
     },
-    [fetchDefinition, fetchTranslation],
+    [fetchDefinition, fetchTranslation]
   );
 
   const handleWordPress = useCallback(
@@ -161,7 +161,7 @@ export default function Read() {
       setDefinitionVisible(true);
       handleDisplayDefinition(cleanedWord);
     },
-    [handleDisplayDefinition],
+    [handleDisplayDefinition]
   );
 
   const handlePronounce = useCallback(() => {
@@ -175,56 +175,60 @@ export default function Read() {
       <Pressable onPress={onPress} className="mr-1 mb-1">
         <Text className="text-black">{word}</Text>
       </Pressable>
-    ),
+    )
   );
 
   const getWordPressHandler = useCallback(
     (word: string) => () => handleWordPress(word),
-    [handleWordPress],
+    [handleWordPress]
   );
 
   const paragraphs: string[] = useMemo(() => {
-    if (typeof selectedContent.Content !== "string") return [];
-    return selectedContent.Content.split("\n\n").filter(
-      (paragraph) => paragraph.trim().length > 0,
-    );
-  }, [selectedContent.Content]);
+    if (typeof selectedContent.content !== "string") return [];
+    return selectedContent.content
+      .split("\n\n")
+      .filter((paragraph) => paragraph.trim().length > 0);
+  }, [selectedContent.content]);
 
   const paragraphWordsArray = useMemo(() => {
     return paragraphs.map((p) =>
-      p.split(" ").filter((word) => word.trim().length > 0),
+      p.split(" ").filter((word) => word.trim().length > 0)
     );
   }, [paragraphs]);
 
-  const renderParagraph = ({
-    item,
-    index,
-  }: {
-    item: string;
-    index: number;
-  }) => {
-    const words = paragraphWordsArray[index];
+  const renderParagraph = useCallback(
+    ({ item, index }: { item: string; index: number }) => {
+      const words = paragraphWordsArray[index];
 
-    return (
-      <View className="flex-row flex-wrap mb-2">
-        {words.map((word, index) => (
-          <WordComponent
-            key={index}
-            word={word}
-            onPress={getWordPressHandler(word)}
-          />
-        ))}
+      // Memoize the WordComponent instances
+      const memoizedWordComponents = useMemo(
+        () =>
+          words.map((word, wordIndex) => (
+            <WordComponent
+              key={wordIndex}
+              word={word}
+              onPress={getWordPressHandler(word)}
+            />
+          )),
+        [words, getWordPressHandler] // Dependencies
+      );
 
-        {/* <FlashList */}
-        {/*   className="p-2 bg-background " */}
-        {/*   data={words} */}
-        {/*   renderItem={({ item }) => <Text>{item}</Text>} */}
-        {/*   estimatedItemSize={estimatedItemSize} */}
-        {/*   contentContainerStyle={{ paddingHorizontal: 20 }} */}
-        {/* /> */}
-      </View>
-    );
-  };
+      return (
+        <View className="flex-row flex-wrap mb-2">
+          {memoizedWordComponents}
+
+          {/* <FlashList */}
+          {/*   className="p-2 bg-background " */}
+          {/*   data={words} */}
+          {/*   renderItem={({ item }) => <Text>{item}</Text>} */}
+          {/*   estimatedItemSize={estimatedItemSize} */}
+          {/*   contentContainerStyle={{ paddingHorizontal: 20 }} */}
+          {/* /> */}
+        </View>
+      );
+    },
+    [paragraphWordsArray, getWordPressHandler] // Dependencies
+  );
 
   const estimatedItemSize = useMemo(() => {
     if (paragraphs.length === 0) return 100;

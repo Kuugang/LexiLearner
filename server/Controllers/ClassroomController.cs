@@ -41,7 +41,7 @@ public class ClassroomController : ControllerBase {
 
     [HttpGet("{ClassroomId}")]
     public async Task<IActionResult> GetById([FromRoute] Guid ClassroomId) {
-        var classroom = await _classroomService.GetById(ClassroomId);
+        var classroom = await _classroomService.GetByClassroomId(ClassroomId);
 
         return StatusCode(
 			StatusCodes.Status200OK,
@@ -53,7 +53,7 @@ public class ClassroomController : ControllerBase {
     [HttpGet("teacher/me")]
     [Authorize("TeacherPolicy")]
     public async Task<IActionResult> GetByTeacherId() {
-        var Classrooms = await _classroomService.GetByTeacherId(User);
+        var Classrooms = await _classroomService.GetClassroomsByTeacherId(User);
 
         return StatusCode(
             StatusCodes.Status200OK,
@@ -76,7 +76,7 @@ public class ClassroomController : ControllerBase {
 	[Authorize("PupilPolicy")]
 	public async Task<IActionResult> JoinClassroom([FromRoute] string JoinCode)
 	{
-		var classroom = await _classroomEnrollmentService.JoinClassroom(JoinCode, User);
+		var classroom = await _classroomService.JoinClassroom(JoinCode, User);
 
 		return StatusCode(StatusCodes.Status201Created,
 		new SuccessResponseDTO("Joined Classroom successfully", classroom))
@@ -87,7 +87,7 @@ public class ClassroomController : ControllerBase {
 	[Authorize("PupilPolicy")]
 	public async Task<IActionResult> GetByPupilId()
 	{
-		var classrooms = await _classroomEnrollmentService.GetClassroomsByPupilId(User);
+		var classrooms = await _classroomService.GetClassroomsByPupilId(User);
 
 		return StatusCode(StatusCodes.Status201Created,
 		new SuccessResponseDTO("Get pupil classrooms successfully", classrooms))
@@ -98,7 +98,7 @@ public class ClassroomController : ControllerBase {
 	[Authorize("PupilPolicy")]
 	public async Task<IActionResult> LeaveClassroom([FromRoute] Guid ClassroomId)
 	{
-		await _classroomEnrollmentService.LeaveClassroom(ClassroomId, User);
+		await _classroomService.LeaveClassroom(ClassroomId, User);
 
 		return StatusCode(StatusCodes.Status200OK,
 		new SuccessResponseDTO("Leave classroom successfully"));

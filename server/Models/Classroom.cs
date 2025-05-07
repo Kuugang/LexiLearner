@@ -25,5 +25,6 @@ namespace LexiLearner.Models
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
         public DateTime UpdatedAt { get; set; }
-    }
+		public required ICollection<ClassroomEnrollment> ClassroomEnrollments { get; set; } = new List<ClassroomEnrollment>();
+	}
 }

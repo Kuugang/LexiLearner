@@ -190,5 +190,22 @@ namespace LexiLearner.Repository
         {
             return await _decorated.CreateLoginStreak(streak);
         }
+        
+        public async Task<Pupil?> GetPupilByPupilId(Guid pupilId)
+        {
+            var cacheKey = $"Pupil_{pupilId}";
+            var pupil = await GetFromCacheAsync<Pupil>(cacheKey);
+
+            if (pupil is null)
+            {
+                pupil = await _decorated.GetPupilByPupilId(pupilId);
+                if (pupil is not null)
+                {
+                    await SetCacheAsync(cacheKey, pupil, TimeSpan.FromMinutes(30));
+                }
+            }
+
+            return pupil;
+        }
     }
 }

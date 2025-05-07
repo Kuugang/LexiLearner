@@ -123,11 +123,9 @@ namespace LexiLearner
             services.AddScoped<IPupilService, PupilService>();
             services.AddScoped<IMinigameService, MinigameService>();
             services.AddScoped<IClassroomService, ClassroomService>();
-            services.AddScoped<IClassroomEnrollmentService, ClassroomEnrollmentService>();
             services.AddScoped<IReadingSessionService, ReadingSessionService>();
             services.AddScoped<IAchievementService, AchievementService>();
 
-            services.AddScoped<IClassroomEnrollmentRepository, ClassroomEnrollmentRepository>();
             services.AddScoped<IClassroomRepository, ClassroomRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IGenreRepository, GenreRepository>();

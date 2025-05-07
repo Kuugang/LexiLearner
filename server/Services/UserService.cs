@@ -367,17 +367,22 @@ namespace LexiLearner.Services
                         loginStreak.LongestStreak = loginStreak.CurrentStreak;
                     }
                 }
-                else
-                {
-                    loginStreak.CurrentStreak = 1;
-                }
-
-                loginStreak.LastLoginDate = today;
-
-                await _userRepository.Update(loginStreak);
+            } else
+            {
+                loginStreak.CurrentStreak = 1;
             }
-
-            return loginStreak;
+            
+            loginStreak.LastLoginDate = today;
+            
+            await _userRepository.Update(loginStreak);
         }
+        
+        return loginStreak;
     }
+
+    public async Task<Pupil?> GetPupilByPupilId(Guid pupilId)
+    {
+        return await _userRepository.GetPupilByPupilId(pupilId);
+    }
+    
 }

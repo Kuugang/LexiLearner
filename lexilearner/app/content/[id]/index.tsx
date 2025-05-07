@@ -11,7 +11,7 @@ import BackHeader from "@/components/BackHeader";
 
 function ContentIndex() {
   const selectedContent = useReadingContentStore(
-    (state) => state.selectedContent,
+    (state) => state.selectedContent
   );
 
   if (!selectedContent) {
