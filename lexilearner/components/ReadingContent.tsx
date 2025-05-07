@@ -6,7 +6,7 @@ import { useReadingContentStore } from "@/stores/readingContentStore";
 
 function ReadingContent(props: ReadingContentType) {
   const setSelectedContent = useReadingContentStore(
-    (state) => state.setSelectedContent,
+    (state) => state.setSelectedContent
   );
 
   const onPress = () => {
