@@ -114,18 +114,23 @@ namespace LexiLearner.Repository
             await _context.SaveChangesAsync();
         }
 
-    public async Task<LoginStreak?> GetLoginStreak(string userId)
-    {
-      return await _context.LoginStreak.AsNoTracking().FirstOrDefaultAsync(l => l.UserId == userId);
-    }
+        public async Task<LoginStreak?> GetLoginStreak(string userId)
+        {
+            return await _context.LoginStreak.AsNoTracking().FirstOrDefaultAsync(l => l.UserId == userId);
+        }
 
 
-    public async Task<LoginStreak> CreateLoginStreak(LoginStreak streak)
-    {
-      await _context.LoginStreak.AddAsync(streak);
-      await _context.SaveChangesAsync();
-      
-      return streak;
+        public async Task<LoginStreak> CreateLoginStreak(LoginStreak streak)
+        {
+            await _context.LoginStreak.AddAsync(streak);
+            await _context.SaveChangesAsync();
+            
+            return streak;
+        }
+
+        public async Task<Pupil?> GetPupilByPupilId(Guid pupilId)
+        {
+            return await _context.Pupil.FirstOrDefaultAsync(p => p.Id == pupilId);
+        }
     }
-  }
 }

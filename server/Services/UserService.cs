@@ -375,5 +375,10 @@ namespace LexiLearner.Services
         
         return loginStreak;
     }
-  }
+
+        public async Task<Pupil?> GetPupilByPupilId(Guid pupilId)
+        {
+            return await _userRepository.GetPupilByPupilId(pupilId);
+        }
+    }
 }

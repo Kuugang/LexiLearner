@@ -43,14 +43,17 @@ namespace LexiLearner.Data
                 .HasForeignKey<Teacher>(t => t.UserId)
                 .IsRequired();
 
-            // ReadingContent has 1 genre
-            // modelBuilder.Entity<ReadingMaterial>()
-            //     .HasOne(rc => rc.Genre)
-            //     .WithMany()
-            //     .HasForeignKey(rc => rc.GenreId)
-            //     .IsRequired();
-           
-            modelBuilder.Entity<ReadingMaterialGenre>()
+			// ReadingContent has 1 genre
+			// modelBuilder.Entity<ReadingMaterial>()
+			//     .HasOne(rc => rc.Genre)
+			//     .WithMany()
+			//     .HasForeignKey(rc => rc.GenreId)
+			//     .IsRequired();
+
+			modelBuilder.Entity<ReadingMaterialGenre>()
+			 .HasKey(rmg => new { rmg.ReadingMaterialId, rmg.GenreId });
+
+			modelBuilder.Entity<ReadingMaterialGenre>()
                 .HasOne(rg => rg.ReadingMaterial)
                 .WithMany(r => r.ReadingMaterialGenres)
                 .HasForeignKey(rg => rg.ReadingMaterialId);
@@ -67,6 +70,8 @@ namespace LexiLearner.Data
                 // .HasIndex(c => c.JoinCode).IsUnique()
                 .HasForeignKey(c => c.TeacherId);
 
+            modelBuilder.Entity<ClassroomEnrollment>()
+                .HasKey(ce => new { ce.ClassroomId, ce.PupilId });
 
             modelBuilder.Entity<ClassroomEnrollment>()
                 .HasOne(ce => ce.Pupil)
@@ -103,18 +108,6 @@ namespace LexiLearner.Data
                 .WithMany()
                 .HasForeignKey(rs => rs.ReadingMaterialId);
 
-            modelBuilder.Entity<ReadingMaterialGenre>()
-                 .HasKey(rmg => new { rmg.ReadingMaterialId, rmg.GenreId });
-
-            modelBuilder.Entity<ReadingMaterialGenre>()
-                .HasOne(rmg => rmg.ReadingMaterial)
-                .WithMany(rm => rm.ReadingMaterialGenres)
-                .HasForeignKey(rmg => rmg.ReadingMaterialId);
-
-            modelBuilder.Entity<ReadingMaterialGenre>()
-                .HasOne(rmg => rmg.Genre)
-                .WithMany(g => g.ReadingMaterialGenres)
-                .HasForeignKey(rmg => rmg.GenreId);
         }
     }
 }

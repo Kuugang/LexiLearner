@@ -19,5 +19,5 @@ namespace LexiLearner.Models
         public int? GradeLevel { get; set; }
 
         public int? Level { get; set; }
-    }
+	}
 }

@@ -7,8 +7,64 @@
       "RelativeMoniker": "D:0:0:{47A9B7DB-6DBA-46D4-89B3-BF1FB62FB9AC}|LexiLearner.csproj|solutionrelative:services\\classroomservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{47A9B7DB-6DBA-46D4-89B3-BF1FB62FB9AC}|LexiLearner.csproj|c:\\users\\acer\\desktop\\lexilearner\\server\\interfaces\\iclassroomservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{47A9B7DB-6DBA-46D4-89B3-BF1FB62FB9AC}|LexiLearner.csproj|solutionrelative:interfaces\\iclassroomservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{47A9B7DB-6DBA-46D4-89B3-BF1FB62FB9AC}|LexiLearner.csproj|c:\\users\\acer\\desktop\\lexilearner\\server\\services\\userservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{47A9B7DB-6DBA-46D4-89B3-BF1FB62FB9AC}|LexiLearner.csproj|solutionrelative:services\\userservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{47A9B7DB-6DBA-46D4-89B3-BF1FB62FB9AC}|LexiLearner.csproj|c:\\users\\acer\\desktop\\lexilearner\\server\\controllers\\classroomcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{47A9B7DB-6DBA-46D4-89B3-BF1FB62FB9AC}|LexiLearner.csproj|solutionrelative:controllers\\classroomcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{47A9B7DB-6DBA-46D4-89B3-BF1FB62FB9AC}|LexiLearner.csproj|c:\\users\\acer\\desktop\\lexilearner\\server\\models\\pupil.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{47A9B7DB-6DBA-46D4-89B3-BF1FB62FB9AC}|LexiLearner.csproj|solutionrelative:models\\pupil.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{47A9B7DB-6DBA-46D4-89B3-BF1FB62FB9AC}|LexiLearner.csproj|c:\\users\\acer\\desktop\\lexilearner\\server\\models\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{47A9B7DB-6DBA-46D4-89B3-BF1FB62FB9AC}|LexiLearner.csproj|solutionrelative:models\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{47A9B7DB-6DBA-46D4-89B3-BF1FB62FB9AC}|LexiLearner.csproj|c:\\users\\acer\\desktop\\lexilearner\\server\\repository\\classroomrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{47A9B7DB-6DBA-46D4-89B3-BF1FB62FB9AC}|LexiLearner.csproj|solutionrelative:repository\\classroomrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{47A9B7DB-6DBA-46D4-89B3-BF1FB62FB9AC}|LexiLearner.csproj|c:\\users\\acer\\desktop\\lexilearner\\server\\repository\\readingmaterialrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{47A9B7DB-6DBA-46D4-89B3-BF1FB62FB9AC}|LexiLearner.csproj|solutionrelative:repository\\readingmaterialrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{47A9B7DB-6DBA-46D4-89B3-BF1FB62FB9AC}|LexiLearner.csproj|c:\\users\\acer\\desktop\\lexilearner\\server\\interfaces\\iclassroomrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{47A9B7DB-6DBA-46D4-89B3-BF1FB62FB9AC}|LexiLearner.csproj|solutionrelative:interfaces\\iclassroomrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{47A9B7DB-6DBA-46D4-89B3-BF1FB62FB9AC}|LexiLearner.csproj|c:\\users\\acer\\desktop\\lexilearner\\server\\models\\readingmaterial.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{47A9B7DB-6DBA-46D4-89B3-BF1FB62FB9AC}|LexiLearner.csproj|solutionrelative:models\\readingmaterial.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{47A9B7DB-6DBA-46D4-89B3-BF1FB62FB9AC}|LexiLearner.csproj|c:\\users\\acer\\desktop\\lexilearner\\server\\data\\datacontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{47A9B7DB-6DBA-46D4-89B3-BF1FB62FB9AC}|LexiLearner.csproj|solutionrelative:data\\datacontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{47A9B7DB-6DBA-46D4-89B3-BF1FB62FB9AC}|LexiLearner.csproj|c:\\users\\acer\\desktop\\lexilearner\\server\\models\\classroom.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{47A9B7DB-6DBA-46D4-89B3-BF1FB62FB9AC}|LexiLearner.csproj|solutionrelative:models\\classroom.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{47A9B7DB-6DBA-46D4-89B3-BF1FB62FB9AC}|LexiLearner.csproj|c:\\users\\acer\\desktop\\lexilearner\\server\\models\\readingmaterialgenre.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{47A9B7DB-6DBA-46D4-89B3-BF1FB62FB9AC}|LexiLearner.csproj|solutionrelative:models\\readingmaterialgenre.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{47A9B7DB-6DBA-46D4-89B3-BF1FB62FB9AC}|LexiLearner.csproj|c:\\users\\acer\\desktop\\lexilearner\\server\\models\\readingmaterialassignment.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{47A9B7DB-6DBA-46D4-89B3-BF1FB62FB9AC}|LexiLearner.csproj|solutionrelative:models\\readingmaterialassignment.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{47A9B7DB-6DBA-46D4-89B3-BF1FB62FB9AC}|LexiLearner.csproj|c:\\users\\acer\\desktop\\lexilearner\\server\\models\\classroomenrollment.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{47A9B7DB-6DBA-46D4-89B3-BF1FB62FB9AC}|LexiLearner.csproj|solutionrelative:models\\classroomenrollment.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{47A9B7DB-6DBA-46D4-89B3-BF1FB62FB9AC}|LexiLearner.csproj|c:\\users\\acer\\desktop\\lexilearner\\server\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{47A9B7DB-6DBA-46D4-89B3-BF1FB62FB9AC}|LexiLearner.csproj|solutionrelative:controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -21,12 +77,32 @@
           "SelectedChildIndex": 2,
           "Children": [
             {
-              "$type": "Bookmark",
-              "Name": "ST:128:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "ClassroomController.cs",
+              "DocumentMoniker": "C:\\Users\\Acer\\Desktop\\LexiLearner\\server\\Controllers\\ClassroomController.cs",
+              "RelativeDocumentMoniker": "Controllers\\ClassroomController.cs",
+              "ToolTip": "C:\\Users\\Acer\\Desktop\\LexiLearner\\server\\Controllers\\ClassroomController.cs",
+              "RelativeToolTip": "Controllers\\ClassroomController.cs",
+              "ViewState": "AgIAAEQAAAAAAAAAAAAmwCsAAABAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-06T16:20:25.66Z",
+              "IsPinned": true,
+              "EditorCaption": ""
             },
             {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{b1e99781-ab81-11d0-b683-00aa00a3ee26}"
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "IClassroomService.cs",
+              "DocumentMoniker": "C:\\Users\\Acer\\Desktop\\LexiLearner\\server\\Interfaces\\IClassroomService.cs",
+              "RelativeDocumentMoniker": "Interfaces\\IClassroomService.cs",
+              "ToolTip": "C:\\Users\\Acer\\Desktop\\LexiLearner\\server\\Interfaces\\IClassroomService.cs",
+              "RelativeToolTip": "Interfaces\\IClassroomService.cs",
+              "ViewState": "AgIAAAoAAAAAAAAAAAAkwAwAAAAXAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-06T16:20:33.469Z",
+              "IsPinned": true,
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
@@ -36,23 +112,179 @@
               "RelativeDocumentMoniker": "Services\\ClassroomService.cs",
               "ToolTip": "C:\\Users\\Acer\\Desktop\\LexiLearner\\server\\Services\\ClassroomService.cs",
               "RelativeToolTip": "Services\\ClassroomService.cs",
-              "ViewState": "AgIAAFgBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAB4BAAAAAAAAAAAYwCsBAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-06T15:58:20.194Z",
+              "WhenOpened": "2025-05-06T16:20:43.425Z",
+              "IsPinned": true,
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 6,
+              "Title": "ClassroomRepository.cs",
+              "DocumentMoniker": "C:\\Users\\Acer\\Desktop\\LexiLearner\\server\\Repository\\ClassroomRepository.cs",
+              "RelativeDocumentMoniker": "Repository\\ClassroomRepository.cs",
+              "ToolTip": "C:\\Users\\Acer\\Desktop\\LexiLearner\\server\\Repository\\ClassroomRepository.cs",
+              "RelativeToolTip": "Repository\\ClassroomRepository.cs",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAowDEAAABxAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-06T16:20:45.466Z",
+              "IsPinned": true
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "Pupil.cs",
+              "DocumentMoniker": "C:\\Users\\Acer\\Desktop\\LexiLearner\\server\\Models\\Pupil.cs",
+              "RelativeDocumentMoniker": "Models\\Pupil.cs",
+              "ToolTip": "C:\\Users\\Acer\\Desktop\\LexiLearner\\server\\Models\\Pupil.cs",
+              "RelativeToolTip": "Models\\Pupil.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABUAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-06T16:25:40.936Z",
+              "IsPinned": true,
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "UserService.cs",
+              "DocumentMoniker": "C:\\Users\\Acer\\Desktop\\LexiLearner\\server\\Services\\UserService.cs",
+              "RelativeDocumentMoniker": "Services\\UserService.cs",
+              "ToolTip": "C:\\Users\\Acer\\Desktop\\LexiLearner\\server\\Services\\UserService.cs",
+              "RelativeToolTip": "Services\\UserService.cs",
+              "ViewState": "AgIAAGEAAAAAAAAAAADwv3EAAAA5AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-07T03:52:46.724Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{b1e99781-ab81-11d0-b683-00aa00a3ee26}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "User.cs",
+              "DocumentMoniker": "C:\\Users\\Acer\\Desktop\\LexiLearner\\server\\Models\\User.cs",
+              "RelativeDocumentMoniker": "Models\\User.cs",
+              "ToolTip": "C:\\Users\\Acer\\Desktop\\LexiLearner\\server\\Models\\User.cs",
+              "RelativeToolTip": "Models\\User.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-06T16:49:39.89Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "ReadingMaterialRepository.cs",
+              "DocumentMoniker": "C:\\Users\\Acer\\Desktop\\LexiLearner\\server\\Repository\\ReadingMaterialRepository.cs",
+              "RelativeDocumentMoniker": "Repository\\ReadingMaterialRepository.cs",
+              "ToolTip": "C:\\Users\\Acer\\Desktop\\LexiLearner\\server\\Repository\\ReadingMaterialRepository.cs",
+              "RelativeToolTip": "Repository\\ReadingMaterialRepository.cs",
+              "ViewState": "AgIAABUAAAAAAAAAAAAYwCYAAAANAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-06T16:36:02.328Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "DataContext.cs",
+              "DocumentMoniker": "C:\\Users\\Acer\\Desktop\\LexiLearner\\server\\Data\\DataContext.cs",
+              "RelativeDocumentMoniker": "Data\\DataContext.cs",
+              "ToolTip": "C:\\Users\\Acer\\Desktop\\LexiLearner\\server\\Data\\DataContext.cs",
+              "RelativeToolTip": "Data\\DataContext.cs",
+              "ViewState": "AgIAACkAAAAAAAAAAAAawDAAAAAMAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-06T16:26:09.784Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "ReadingMaterialGenre.cs",
+              "DocumentMoniker": "C:\\Users\\Acer\\Desktop\\LexiLearner\\server\\Models\\ReadingMaterialGenre.cs",
+              "RelativeDocumentMoniker": "Models\\ReadingMaterialGenre.cs",
+              "ToolTip": "C:\\Users\\Acer\\Desktop\\LexiLearner\\server\\Models\\ReadingMaterialGenre.cs",
+              "RelativeToolTip": "Models\\ReadingMaterialGenre.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-06T16:24:33.985Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "ReadingMaterialAssignment.cs",
+              "DocumentMoniker": "C:\\Users\\Acer\\Desktop\\LexiLearner\\server\\Models\\ReadingMaterialAssignment.cs",
+              "RelativeDocumentMoniker": "Models\\ReadingMaterialAssignment.cs",
+              "ToolTip": "C:\\Users\\Acer\\Desktop\\LexiLearner\\server\\Models\\ReadingMaterialAssignment.cs",
+              "RelativeToolTip": "Models\\ReadingMaterialAssignment.cs",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-06T16:24:29.79Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "ReadingMaterial.cs",
+              "DocumentMoniker": "C:\\Users\\Acer\\Desktop\\LexiLearner\\server\\Models\\ReadingMaterial.cs",
+              "RelativeDocumentMoniker": "Models\\ReadingMaterial.cs",
+              "ToolTip": "C:\\Users\\Acer\\Desktop\\LexiLearner\\server\\Models\\ReadingMaterial.cs",
+              "RelativeToolTip": "Models\\ReadingMaterial.cs",
+              "ViewState": "AgIAAA8AAAAAAAAAAAA9wBkAAAASAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-06T16:24:26.233Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "ClassroomEnrollment.cs",
+              "DocumentMoniker": "C:\\Users\\Acer\\Desktop\\LexiLearner\\server\\Models\\ClassroomEnrollment.cs",
+              "RelativeDocumentMoniker": "Models\\ClassroomEnrollment.cs",
+              "ToolTip": "C:\\Users\\Acer\\Desktop\\LexiLearner\\server\\Models\\ClassroomEnrollment.cs",
+              "RelativeToolTip": "Models\\ClassroomEnrollment.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAA5AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-06T16:23:54.067Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "IClassroomRepository.cs",
+              "DocumentMoniker": "C:\\Users\\Acer\\Desktop\\LexiLearner\\server\\Interfaces\\IClassroomRepository.cs",
+              "RelativeDocumentMoniker": "Interfaces\\IClassroomRepository.cs",
+              "ToolTip": "C:\\Users\\Acer\\Desktop\\LexiLearner\\server\\Interfaces\\IClassroomRepository.cs",
+              "RelativeToolTip": "Interfaces\\IClassroomRepository.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAuwAYAAAANAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-06T16:20:34.421Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "AuthController.cs",
+              "DocumentMoniker": "C:\\Users\\Acer\\Desktop\\LexiLearner\\server\\Controllers\\AuthController.cs",
+              "RelativeDocumentMoniker": "Controllers\\AuthController.cs",
+              "ToolTip": "C:\\Users\\Acer\\Desktop\\LexiLearner\\server\\Controllers\\AuthController.cs",
+              "RelativeToolTip": "Controllers\\AuthController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-06T16:20:24.607Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
               "Title": "Classroom.cs",
               "DocumentMoniker": "C:\\Users\\Acer\\Desktop\\LexiLearner\\server\\Models\\Classroom.cs",
               "RelativeDocumentMoniker": "Models\\Classroom.cs",
               "ToolTip": "C:\\Users\\Acer\\Desktop\\LexiLearner\\server\\Models\\Classroom.cs",
               "RelativeToolTip": "Models\\Classroom.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAoAAAAAAAAAAAAzwBsAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-06T15:58:13.293Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-05-06T15:58:13.293Z"
             }
           ]
         }
