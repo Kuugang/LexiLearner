@@ -118,6 +118,10 @@ namespace LexiLearner.Repository
         {
             return await _context.LoginStreak.AsNoTracking().FirstOrDefaultAsync(l => l.UserId == userId);
         }
+        public async Task<LoginStreak?> GetLoginStreak(string userId)
+        {
+            return await _context.LoginStreak.AsNoTracking().FirstOrDefaultAsync(l => l.UserId == userId);
+        }
 
 
         public async Task<LoginStreak> CreateLoginStreak(LoginStreak streak)

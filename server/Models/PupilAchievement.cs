@@ -5,7 +5,7 @@ namespace LexiLearner.Models
 
     public class PupilAchievement
     {
-        public required Guid Id { get; set; } = Guid.NewGuid();
+        public Guid Id { get; set; } = Guid.NewGuid();
 
         public required Guid PupilId { get; set; }
         [ForeignKey("PupilId")]
