@@ -5,7 +5,6 @@ import { useGlobalStore } from "./globalStore";
 import { persist } from "zustand/middleware";
 import { User } from "../models/User";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { setAuthToken } from "@/utils/axiosInstance";
 
 import {
   login as apiLogin,
@@ -33,7 +32,7 @@ export const useAuthStore = create<AuthStore>()(
         try {
           let response = await apiLogin(email, password);
 
-          setAuthToken(response.data.token);
+          await AsyncStorage.setItem("bearerToken", response.data.token);
 
           response = await getProfile();
 
@@ -83,7 +82,9 @@ export const useAuthStore = create<AuthStore>()(
       signup: async (registerForm: Record<string, any>) => {
         try {
           let response = await apiSignUp(registerForm);
-          setAuthToken(response.data.token);
+
+          await AsyncStorage.setItem("bearerToken", response.data.token);
+
           response = await getProfile();
 
           const {
@@ -119,9 +120,10 @@ export const useAuthStore = create<AuthStore>()(
           );
         }
       },
-      logout: () => {
+      logout: async () => {
         setUser(null);
-        setAuthToken(null);
+
+        await AsyncStorage.removeItem("bearerToken");
       },
 
       providerAuth: async (provider: number) => {
@@ -152,7 +154,8 @@ export const useAuthStore = create<AuthStore>()(
           }
 
           setIsLoading(true);
-          setAuthToken(response.data.token);
+          await AsyncStorage.setItem("bearerToken", response.data.token);
+
           let userProfileResponse = await getProfile();
 
           const userData = userProfileResponse.data;

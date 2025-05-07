@@ -3,7 +3,7 @@ import {
   useStories,
   getFilteredStories,
   ReadingMaterialFilters,
-} from "@/services/ReadingMaterial";
+} from "@/services/ReadingMaterialService";
 import { router } from "expo-router";
 
 // Components

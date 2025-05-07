@@ -1,4 +1,11 @@
-import React, { useState, useMemo, useCallback, memo } from "react";
+import React, {
+  useState,
+  useMemo,
+  useCallback,
+  memo,
+  useEffect,
+  useRef,
+} from "react";
 import cheerio from "react-native-cheerio";
 import RenderHtml from "react-native-render-html";
 import Tts from "react-native-tts";
@@ -17,40 +24,90 @@ import {
   Modal,
   ScrollView,
   ActivityIndicator,
+  BackHandler,
 } from "react-native";
 import { FlashList } from "@shopify/flash-list";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { Input } from "~/components/ui/input";
 import { faVolumeUp } from "@fortawesome/free-solid-svg-icons";
+import { useReadingSessionStore } from "@/stores/readingSessionStore";
+import { useCreateReadingSession } from "@/services/ReadingSessionService";
 
 export default function Read() {
   const { width } = useWindowDimensions();
   const selectedContent = useReadingContentStore(
-    (state) => state.selectedContent
+    (state) => state.selectedContent,
   );
 
+  const scrollPercentageRef = useRef(0);
+  const lastOffsetY = useRef(0);
+  const flashListRef = useRef<FlashList<any>>(null);
+
+  const [contentHeight, setContentHeight] = useState(0);
+  const [visibleHeight, setVisibleHeight] = useState(0);
+  const [isScrollEndReached, setScrollEndReached] = useState(false);
+  const [initialLoad, setInitialLoad] = useState(true);
   const [selectedWord, setSelectedWord] = useState("");
   const [isDefinitionLoading, setIsDefinitionLoading] = useState(false);
   const [definitionVisible, setDefinitionVisible] = useState(false);
   const [html, setHtml] = useState("");
   const [translation, setTranslation] = useState("");
+  const [isContentReady, setIsContentReady] = useState(false);
 
   const getDefinition = useDefinitionStore((state) => state.getDefinition);
   const storeDefinition = useDefinitionStore((state) => state.storeDefinition);
 
   const getTranslation = useTranslationStore((state) => state.getTranslation);
   const storeTranslation = useTranslationStore(
-    (state) => state.storeTranslation
+    (state) => state.storeTranslation,
   );
 
-  if (!selectedContent) {
-    return null;
-  }
+  const getPastSession = useReadingSessionStore(
+    (state) => state.getPastSession,
+  );
+  const updateReadingSessionProgress = useReadingSessionStore(
+    (state) => state.updateReadingSessionProgress,
+  );
+
+  const {
+    mutate: createReadingSession,
+    // isPending,
+    // error,
+  } = useCreateReadingSession();
+
+  const paragraphs = useMemo(() => {
+    if (!selectedContent || typeof selectedContent.content !== "string")
+      return [];
+    return selectedContent.content
+      .split("\n\n")
+      .filter((paragraph) => paragraph.trim().length > 0);
+  }, [selectedContent]);
+
+  useEffect(() => {
+    if (!selectedContent) return;
+
+    const backAction = () => {
+      updateReadingSessionProgress(
+        selectedContent.id,
+        scrollPercentageRef.current,
+      );
+      return false;
+    };
+
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      backAction,
+    );
+
+    return () => {
+      backHandler.remove();
+    };
+  }, [selectedContent, isContentReady]);
 
   const fetchTranslation = async (word: string) => {
-    const translation = getTranslation(word);
-    if (translation != undefined) {
-      setTranslation(translation);
+    const existingTranslation = getTranslation(word);
+    if (existingTranslation !== undefined) {
+      setTranslation(existingTranslation);
       return;
     }
 
@@ -68,20 +125,20 @@ export default function Read() {
           headers: {
             "Content-Type": "application/x-www-form-urlencoded",
           },
-        }
+        },
       );
       storeTranslation(word, data.result);
       setTranslation(data.result);
     } catch (error) {
       console.error("Translation error:", error);
-      return { result: "Translation failed" };
+      setTranslation("Translation failed");
     }
   };
 
   const fetchDefinition = useCallback(async (word: string) => {
     try {
       const { data } = await axios.get(
-        `https://corsproxy.io/?url=https://googledictionary.freecollocation.com/meaning?word=${word}`
+        `https://corsproxy.io/?url=https://googledictionary.freecollocation.com/meaning?word=${word}`,
       );
       return data;
     } catch (error) {
@@ -151,7 +208,7 @@ export default function Read() {
         setIsDefinitionLoading(false);
       }
     },
-    [fetchDefinition, fetchTranslation]
+    [fetchDefinition, getDefinition, storeDefinition],
   );
 
   const handleWordPress = useCallback(
@@ -161,7 +218,7 @@ export default function Read() {
       setDefinitionVisible(true);
       handleDisplayDefinition(cleanedWord);
     },
-    [handleDisplayDefinition]
+    [handleDisplayDefinition],
   );
 
   const handlePronounce = useCallback(() => {
@@ -170,64 +227,31 @@ export default function Read() {
     }
   }, [selectedWord]);
 
-  const WordComponent = memo(
-    ({ word, onPress }: { word: string; onPress: () => void }) => (
-      <Pressable onPress={onPress} className="mr-1 mb-1">
-        <Text className="text-black">{word}</Text>
-      </Pressable>
-    )
-  );
-
-  const getWordPressHandler = useCallback(
-    (word: string) => () => handleWordPress(word),
-    [handleWordPress]
-  );
-
-  const paragraphs: string[] = useMemo(() => {
-    if (typeof selectedContent.content !== "string") return [];
-    return selectedContent.content
-      .split("\n\n")
-      .filter((paragraph) => paragraph.trim().length > 0);
-  }, [selectedContent.content]);
-
-  const paragraphWordsArray = useMemo(() => {
-    return paragraphs.map((p) =>
-      p.split(" ").filter((word) => word.trim().length > 0)
-    );
+  const processedParagraphs = useMemo(() => {
+    return paragraphs.map((paragraph) => ({
+      words: paragraph.split(" ").filter((word) => word.trim().length > 0),
+    }));
   }, [paragraphs]);
 
+  const ParagraphItem = memo(({ words }: { words: string[] }) => {
+    return (
+      <View className="flex-row flex-wrap mb-2">
+        {words.map((word, wordIndex) => (
+          <Pressable
+            key={wordIndex}
+            onPress={() => handleWordPress(word)}
+            className="mr-1 mb-1"
+          >
+            <Text className="text-black">{word}</Text>
+          </Pressable>
+        ))}
+      </View>
+    );
+  });
+
   const renderParagraph = useCallback(
-    ({ item, index }: { item: string; index: number }) => {
-      const words = paragraphWordsArray[index];
-
-      // Memoize the WordComponent instances
-      const memoizedWordComponents = useMemo(
-        () =>
-          words.map((word, wordIndex) => (
-            <WordComponent
-              key={wordIndex}
-              word={word}
-              onPress={getWordPressHandler(word)}
-            />
-          )),
-        [words, getWordPressHandler] // Dependencies
-      );
-
-      return (
-        <View className="flex-row flex-wrap mb-2">
-          {memoizedWordComponents}
-
-          {/* <FlashList */}
-          {/*   className="p-2 bg-background " */}
-          {/*   data={words} */}
-          {/*   renderItem={({ item }) => <Text>{item}</Text>} */}
-          {/*   estimatedItemSize={estimatedItemSize} */}
-          {/*   contentContainerStyle={{ paddingHorizontal: 20 }} */}
-          {/* /> */}
-        </View>
-      );
-    },
-    [paragraphWordsArray, getWordPressHandler] // Dependencies
+    ({ item }: { item: any }) => <ParagraphItem words={item.words} />,
+    [],
   );
 
   const estimatedItemSize = useMemo(() => {
@@ -237,31 +261,108 @@ export default function Read() {
     return Math.max(50, Math.min(300, averageLength / 4));
   }, [paragraphs]);
 
+  const handleEndReached = () => {
+    if (initialLoad) {
+      setInitialLoad(false);
+    } else {
+      setScrollEndReached(true);
+    }
+  };
+
+  const handleScroll = (event: any) => {
+    const { contentOffset, contentSize, layoutMeasurement } = event.nativeEvent;
+
+    const scrollY = contentOffset.y;
+    const totalHeight = contentSize.height - layoutMeasurement.height;
+
+    const scrolled = totalHeight > 0 ? scrollY / totalHeight : 0;
+
+    scrollPercentageRef.current = Math.min(100, Math.round(scrolled * 100));
+
+    if (scrollY < lastOffsetY.current) {
+      setScrollEndReached(false);
+    }
+
+    lastOffsetY.current = scrollY;
+  };
+
+  if (!selectedContent) {
+    return null;
+  }
+
+  const currentSession = getPastSession(selectedContent.id);
+
+  if (!currentSession) {
+    createReadingSession(selectedContent.id);
+    return;
+  }
+
+  const [finalHeight, setFinalHeight] = useState(false);
+
+  useEffect(() => {
+    if (!isContentReady || contentHeight <= 0 || visibleHeight <= 0) return;
+
+    if (!finalHeight) {
+      // setFinalHeight(true);
+      // return;
+    }
+
+    const scrollableHeight = contentHeight - visibleHeight;
+    const percentage = currentSession?.completionPercentage ?? 0;
+    const offsetToScroll = Math.max(0, scrollableHeight * (percentage / 100));
+
+    const scrollTimer = setTimeout(() => {
+      flashListRef.current?.scrollToOffset({
+        offset: offsetToScroll,
+        animated: true,
+      });
+    }, 100);
+
+    return () => clearTimeout(scrollTimer);
+  }, [isContentReady, contentHeight, visibleHeight]);
+
   return (
     <>
       <View style={{ flex: 1 }} className="bg-background">
+        {!isContentReady && (
+          <View className="flex-1 justify-center items-center absolute inset-0 z-50">
+            <ActivityIndicator size="large" color="#0000ff" />
+            <Text className="mt-2">Preparing content...</Text>
+          </View>
+        )}
+
         <FlashList
-          className="p-2 bg-background "
-          data={paragraphs}
+          ref={flashListRef}
+          keyExtractor={(item, index) => item.id || index.toString()}
+          className="p-2 bg-background"
+          data={processedParagraphs}
           renderItem={renderParagraph}
           estimatedItemSize={estimatedItemSize}
-          contentContainerStyle={{ paddingHorizontal: 20 }}
+          contentContainerStyle={{
+            paddingHorizontal: 10,
+            paddingBottom: 80,
+          }}
+          onEndReachedThreshold={0.1}
+          onEndReached={handleEndReached}
+          onScroll={handleScroll}
+          scrollEventThrottle={16}
+          removeClippedSubviews={true}
+          onLayout={(e) => {
+            setVisibleHeight(e.nativeEvent.layout.height);
+          }}
+          onContentSizeChange={(w, h) => {
+            setContentHeight(h);
+          }}
+          onLoad={(elapsedTimeInMs) => {
+            setIsContentReady(true);
+          }}
         />
 
-        {/* {paragraphs.map((p, pIndex) => { */}
-        {/*   const words = paragraphWordsArray[pIndex]; */}
-        {/*   return ( */}
-        {/*     <View key={`${pIndex}`} className="flex flex-wrap"> */}
-        {/*       {words.map((word, wIndex) => ( */}
-        {/*         <WordComponent */}
-        {/*           key={`${pIndex} "" + ""+ ${wIndex}`} */}
-        {/*           word={word} */}
-        {/*           onPress={() => getWordPressHandler(word)} */}
-        {/*         /> */}
-        {/*       ))} */}
-        {/*     </View> */}
-        {/*   ); */}
-        {/* })} */}
+        {isScrollEndReached && (
+          <View className="absolute bottom-4 right-4">
+            <Text className="text-green-500 text-2xl">✅</Text>
+          </View>
+        )}
       </View>
 
       <Modal

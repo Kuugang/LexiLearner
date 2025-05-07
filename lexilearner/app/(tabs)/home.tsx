@@ -1,5 +1,5 @@
 import { router } from "expo-router";
-import { useStories } from "@/services/ReadingMaterial";
+import { useStories } from "@/services/ReadingMaterialService";
 import { memo } from "react";
 import ReadingContent from "@/components/ReadingContent";
 
