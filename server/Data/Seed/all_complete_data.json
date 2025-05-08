@@ -2226,7 +2226,8 @@
             "where many echoes",
             "dwell."
           ],
-          "parts": ["where many echoes", "A seashell", "dwell.", "is a palace"]
+          "parts": ["where many echoes", "A seashell", "dwell.", "is a palace"],
+          "explanation": "The sentence starts with the subject ('A seashell'), describes its metaphorical identity ('is a palace'), adds detail about its contents ('where many echoes'), and concludes with the action ('dwell')."
         },
         {
           "correctAnswer": [
@@ -2240,7 +2241,8 @@
             "They are",
             "where the sea shells",
             "like the ocean's roar"
-          ]
+          ],
+          "explanation": "The structure begins with the subject ('They are'), follows with a simile ('like the ocean's roar'), provides a location ('where the sea shells'), and ends with their state ('buried deep')."
         },
         {
           "correctAnswer": [
@@ -2256,7 +2258,8 @@
             "to them",
             "I listen",
             "quite well."
-          ]
+          ],
+          "explanation": "The sentence starts with a temporal clause ('And when'), moves to the action ('I listen to them'), and ends with the realization and confidence ('I know them quite well')."
         }
       ],
       "WordHunt": [
@@ -2427,7 +2430,8 @@
             "Her eyes",
             "on a deep,",
             "are dancing waters"
-          ]
+          ],
+          "explanation": "The sentence begins with the subject ('Her eyes'), followed by a poetic metaphor ('are dancing waters'), then adds descriptive imagery ('on a deep, midsummer day')."
         },
         {
           "correctAnswer": [
@@ -2441,7 +2445,8 @@
             "is as joyous",
             "But her laughter",
             "as the little winds"
-          ]
+          ],
+          "explanation": "The sentence starts with the contrasting subject ('But her laughter'), describes it vividly ('is as joyous as the little winds'), and concludes with the dynamic imagery ('that run')."
         },
         {
           "correctAnswer": [
@@ -2455,7 +2460,8 @@
             "All the angels",
             "for the laughter",
             "pause a moment"
-          ]
+          ],
+          "explanation": "The sentence opens with the subject ('All the angels'), follows with their action ('pause a moment'), and ends with the reason or focus ('for the laughter of a child')."
         }
       ],
       "WordHunt": [
@@ -2610,7 +2616,8 @@
       "SentenceRearrangement": [
         {
           "correctAnswer": ["The spiders", "were busy", "last night."],
-          "parts": ["last night.", "The spiders", "were busy"]
+          "parts": ["last night.", "The spiders", "were busy"],
+          "explanation": "The sentence starts with the subject ('The spiders'), follows with the action ('were busy'), and concludes with the time frame ('last night')."
         },
         {
           "correctAnswer": [
@@ -2626,7 +2633,8 @@
             "with pearls",
             "the spider webs",
             "to catch"
-          ]
+          ],
+          "explanation": "The sentence begins with the action ('It strung'), identifies the object ('the spider webs'), adds a descriptive detail ('with pearls'), and explains the purpose ('to catch the morning light')."
         },
         {
           "correctAnswer": [
@@ -2642,7 +2650,8 @@
             "and the mist.",
             "was made",
             "last night"
-          ]
+          ],
+          "explanation": "The sentence starts with the subject ('A fairy world'), describes the action ('was made'), provides the time frame ('last night'), and concludes with the creators ('by the spiders and the mist')."
         }
       ],
       "WordHunt": [
@@ -2808,12 +2817,12 @@
             "her mother if"
           ],
           "parts": ["Jasmine asked", "her mother if", "she liked lambs."],
-          "explanation": "Jasmine's question to her mother is about lambs while watching TV."
+          "explanation": "The sentence begins with Jasmine's action ('Jasmine asked'), followed by the context ('her mother if'), and ends with the subject of the question ('she liked lambs')."
         },
         {
           "correctAnswer": ["Sheep's fur is", "used to make clothes."],
           "parts": ["Sheep's fur is", "used to make clothes."],
-          "explanation": "The mother explains that sheep's fur is used in making clothes."
+          "explanation": "The sentence starts with the subject ('Sheep's fur is') and concludes with its purpose ('used to make clothes'), forming a clear and concise explanation."
         },
         {
           "correctAnswer": [
@@ -2826,7 +2835,7 @@
             "just to give others",
             "Many are sacrificing"
           ],
-          "explanation": "The mother talks about sacrifices made by others for the betterment of society."
+          "explanation": "The sentence begins with the subject and action ('Many are sacrificing'), elaborates on the purpose ('just to give others'), and ends with the outcome ('a better life')."
         }
       ],
       "WordHunt": [
@@ -3002,7 +3011,8 @@
             "was annoyed",
             "The Owl",
             "and shouted"
-          ]
+          ],
+          "explanation": "The Owl' starts as the subject, followed by 'was annoyed' and 'and shouted' to describe its reaction, with 'at the three mice' specifying the target, matching the passage's narrative."
         },
         {
           "correctAnswer": [
@@ -3018,7 +3028,8 @@
             "in perfect rhythm.",
             "from his hole",
             "and started"
-          ]
+          ],
+          "explanation": "He' (Little Rabbit) begins the sentence, with 'went out from his hole' and 'and started beating his drum in perfect rhythm' describing his actions in order, as per the passage."
         },
         {
           "correctAnswer": [
@@ -3027,7 +3038,13 @@
             "and went out",
             "of their homes."
           ],
-          "parts": ["of their homes.", "All animals", "woke up", "and went out"]
+          "parts": [
+            "of their homes.",
+            "All animals",
+            "woke up",
+            "and went out"
+          ],
+          "explanation": "'All animals' is the subject, followed by 'woke up and went out of their homes,' reflecting the passage's sequence of their response to the Owl's hooting."
         }
       ],
       "WordHunt": [
@@ -3204,11 +3221,13 @@
             "was pure white",
             "with blue eyes."
           ],
-          "parts": ["was pure white", "The first one", "with blue eyes."]
+          "parts": ["was pure white", "The first one", "with blue eyes."],
+          "explanation": "'The first one' is the subject, referring to the first kitten, followed by 'was pure white' to describe its color, and 'with blue eyes' adds further detail, matching the passage's description."
         },
         {
           "correctAnswer": ["She ran after it", "and grabbed", "its tail."],
-          "parts": ["its tail.", "She ran after it", "and grabbed"]
+          "parts": ["its tail.", "She ran after it", "and grabbed"],
+          "explanation": "'She ran after it' starts with Ming's action toward the mouse, followed by 'and grabbed' to continue the action, and 'its tail' specifies what was caught, aligning with the passage."
         },
         {
           "correctAnswer": [
@@ -3224,7 +3243,8 @@
             "her master's children",
             "through the slightly opened door",
             "and saw"
-          ]
+          ],
+          "explanation": "'She peered' begins with Ming's action, 'through the slightly opened door' describes how, 'and saw' continues the action, followed by 'her master's children cuddling her kittens' as the object, per the passage."
         }
       ],
       "WordHunt": [
@@ -3420,7 +3440,8 @@
             "the imperial palace.",
             "served the emperor",
             "and was often seen"
-          ]
+          ],
+          "explanation": "'Drago' is the subject, followed by 'served the emperor' to describe his role, with 'and was often seen flying over the imperial palace' adding further detail, as stated in the passage."
         },
         {
           "correctAnswer": [
@@ -3438,7 +3459,8 @@
             "an ancient dragon.",
             "from a mountain",
             "of treasure,"
-          ]
+          ],
+          "explanation": "'Inside,' sets the scene, followed by 'golden light gleamed from a mountain of treasure,' describing the cave, and 'guarded by an ancient dragon' completes the description, matching the passage."
         },
         {
           "correctAnswer": [
@@ -3454,7 +3476,8 @@
             "It had",
             "thick skin",
             "and green scale-like ridges,"
-          ]
+          ],
+          "explanation": "'It had' introduces the plant's characteristics, followed by 'thick skin with pinkish-red hues and green scale-like ridges,' with 'just like Drago' linking it to Drago, per the passage."
         }
       ],
       "WordHunt": [
@@ -3658,7 +3681,8 @@
             "Little Octopus,",
             "in front.",
             "who was"
-          ]
+          ],
+          "explanation": "'Little Octopus,' is the subject, followed by 'who was an eager learner,' describing her character, and 'wanted to sit in front' states her desire, aligning with the passage."
         },
         {
           "correctAnswer": [
@@ -3672,7 +3696,8 @@
             "Sea Turtle,",
             "The principal,",
             "around the school campus."
-          ]
+          ],
+          "explanation": "'The principal, Sea Turtle,' identifies the subject, followed by 'immediately swam around the school campus,' describing his urgent action, as per the passage."
         },
         {
           "correctAnswer": [
@@ -3690,7 +3715,8 @@
             "Suddenly,",
             "bravely appeared",
             "and squirted"
-          ]
+          ],
+          "explanation": "'Suddenly,' sets the dramatic moment, followed by 'Little Octopus bravely appeared in front of them and squirted a cloud of dark ink,' detailing her heroic action, matching the passage."
         }
       ],
       "WordHunt": [
@@ -3866,7 +3892,8 @@
             "always dreamt",
             "a poor young boy",
             "while praying in church."
-          ]
+          ],
+          "explanation": "'Emmanuel' is the subject, followed by 'a poor young boy' as a descriptive appositive, with 'always dreamt of living a comfortable life while praying in church' detailing his aspirations, matching the passage."
         },
         {
           "correctAnswer": [
@@ -3882,7 +3909,8 @@
             "his own successful company.",
             "Emmanuel was hired",
             "and later owned"
-          ]
+          ],
+          "explanation": "'After graduating with honors' sets the timeline, followed by 'Emmanuel was hired as a manager and later owned his own successful company,' describing his career progression, as per the passage."
         },
         {
           "correctAnswer": [
@@ -3898,7 +3926,8 @@
             "and resubmitted himself to the Lord.",
             "Emmanuel heard",
             "God's voice saying"
-          ]
+          ],
+          "explanation": "'Kneeling before the altar' establishes the scene, followed by 'Emmanuel heard God's voice saying everything is temporary and resubmitted himself to the Lord,' detailing his spiritual experience, aligning with the passage."
         }
       ],
       "WordHunt": [
@@ -4074,7 +4103,8 @@
             "found a new owner",
             "a sleek brand new red car",
             "after being displayed"
-          ]
+          ],
+          "explanation": "'Reddy' is the subject, followed by 'a sleek brand new red car' as a descriptive appositive, with 'found a new owner after being displayed in the Show Room for a month' detailing the event, matching the passage."
         },
         {
           "correctAnswer": [
@@ -4090,7 +4120,8 @@
             "thinking other cars were shabby.",
             "as he entered the subdivision",
             "did not reply"
-          ]
+          ],
+          "explanation": "'Everyone greeted him' starts the action, followed by 'as he entered the subdivision' for context, with 'but Reddy did not reply thinking other cars were shabby' showing his response, as per the passage."
         },
         {
           "correctAnswer": [
@@ -4106,7 +4137,8 @@
             "and crashed into a post",
             "while driving drunk",
             "leaving his sleek body"
-          ]
+          ],
+          "explanation": "'Reddy lost control' begins the incident, followed by 'while driving drunk' for cause, with 'and crashed into a post leaving his sleek body torn and unrecognizable' describing the outcome, aligning with the passage."
         }
       ],
       "WordHunt": [
@@ -4280,7 +4312,8 @@
             "It was his daily routine",
             "or sometimes until early morning.",
             "and play until midnight"
-          ]
+          ],
+          "explanation": "'It was his daily routine' introduces the subject, followed by 'after school to lock himself in his room' for context, with 'and play until midnight or sometimes until early morning' detailing the activity, matching the passage."
         },
         {
           "correctAnswer": [
@@ -4294,7 +4327,8 @@
             "I will bring you to the hospital.\"",
             "Her mother gently touched his face",
             "then said,"
-          ]
+          ],
+          "explanation": "'Her mother gently touched his face' starts the action, followed by 'then said,' introducing the dialogue, with '\"Oh darling, you have a high fever. I will bring you to the hospital.\"' completing the statement, as per the passage."
         },
         {
           "correctAnswer": [
@@ -4306,7 +4340,8 @@
             "stress and insufficient sleep and rest.",
             "due to skipped meals,",
             "His physical and mental health declined"
-          ]
+          ],
+          "explanation": "'His physical and mental health declined' states the outcome, followed by 'due to skipped meals,' and 'stress and insufficient sleep and rest' explaining the causes, aligning with the passage."
         }
       ],
       "WordHunt": [
@@ -4480,7 +4515,8 @@
             "and happy children,",
             "one child chose",
             "to stay inside the house."
-          ]
+          ],
+          "explanation": "'Despite the good weather and happy children,' sets the contrasting context, followed by 'one child chose to stay inside the house,' describing the child's decision, matching the passage."
         },
         {
           "correctAnswer": [
@@ -4492,7 +4528,8 @@
             "She continued to sob",
             "in the trash bin.",
             "and threw the pieces of paper"
-          ]
+          ],
+          "explanation": "'She continued to sob' starts with her emotional state, followed by 'and threw the pieces of paper in the trash bin,' detailing her action, as per the passage."
         },
         {
           "correctAnswer": [
@@ -4504,7 +4541,8 @@
             "Marian gathered courage",
             "to her parents.",
             "to tell the truth"
-          ]
+          ],
+          "explanation": "'Marian gathered courage' introduces her resolve, followed by 'to tell the truth to her parents,' specifying her action and recipients, aligning with the passage."
         }
       ],
       "WordHunt": [
@@ -4678,7 +4716,8 @@
             "a young boy",
             "There was once",
             "who was the son"
-          ]
+          ],
+          "explanation": "'There was once' starts the story, followed by 'a young boy' to introduce the character, then 'who was the son' connects to his background, and 'of a poor farmer.' completes the introduction in a clear, chronological order."
         },
         {
           "correctAnswer": [
@@ -4692,7 +4731,8 @@
             "can I buy new clothes",
             "for myself?\"",
             "this sack of salt,"
-          ]
+          ],
+          "explanation": "'\"Papa, if we sell' begins the boy’s question, followed by 'this sack of salt,' specifying what to sell, then 'can I buy new clothes' stating the request, and 'for myself?\"' closing the direct speech naturally."
         },
         {
           "correctAnswer": [
@@ -4710,7 +4750,9 @@
             "The day ended",
             "one for every call.",
             "coins magically filled the pouch—"
-          ]
+          ],
+
+          "explanation": "'The day ended' sets the time frame, followed by 'with no sale.' showing the result, then 'But when the boy returned' and 'and shouted again the next day,' indicating repeated action, and finally 'coins magically filled the pouch-' and 'one for every call.' describing the magical outcome in sequence."
         }
       ],
       "WordHunt": [
@@ -4888,7 +4930,8 @@
             "Nowadays,",
             "always at work",
             "rather than"
-          ]
+          ],
+          "explanation": "'Nowadays,' sets the time context, followed by 'parents are' introducing the subject, then 'always at work' describing their activity, 'rather than' contrasting the next action, and 'spending time with their children.' completing the thought logically."
         },
         {
           "correctAnswer": [
@@ -4902,7 +4945,8 @@
             "are busy",
             "with their cellphones.",
             "both children and parents"
-          ]
+          ],
+          "explanation": "'Around the dining table,' sets the scene, followed by 'both children and parents' identifying who, then 'are busy' describing their state, and 'with their cellphones.' specifying the activity, forming a clear and natural sentence."
         },
         {
           "correctAnswer": [
@@ -4920,7 +4964,8 @@
             "to respect",
             "and eat",
             "in front of us."
-          ]
+          ],
+          "explanation": "'We were taught' introduces the lesson, followed by 'to respect' stating the action, 'our elders' specifying whom, then 'and eat' continuing the lesson, and 'what was served in front of us.' completing the instruction clearly."
         }
       ],
       "WordHunt": [
@@ -5124,7 +5169,7 @@
             "is like a resting place",
             "a shelter from the storm."
           ],
-          "explanation": "This sentence describes how love can provide comfort and shelter during hard times."
+          "explanation": "The first line, 'Perhaps love', is a clear and direct statement about the nature of love. The following lines, 'is like a resting place' and 'a shelter from the storm,' further elaborate on this idea by comparing love to a safe haven that provides comfort during difficult times."
         },
         {
           "correctAnswer": [
@@ -5141,7 +5186,7 @@
             "The memory of love",
             "will bring you home."
           ],
-          "explanation": "This sentence expresses the comforting and supportive nature of love during difficult times."
+          "explanation": "The first line, 'Perhaps love', is a clear and direct statement about the nature of love. The following lines, 'is like the ocean,' are an abstract comparison that may not be as clear or direct as the other correct answers."
         },
         {
           "correctAnswer": [
@@ -5156,7 +5201,7 @@
             "full of conflict",
             "full of pain."
           ],
-          "explanation": "Here, love is compared to the ocean, representing its challenging and painful aspects."
+          "explanation": "The first line, 'Perhaps love', is a clear and direct statement about the nature of love. The following lines may lack clarity compared to the other options"
         }
       ],
       "TwoTruthsOneLie": [
@@ -5390,7 +5435,7 @@
             "Rich of lofty ideas",
             "and as famous as you."
           ],
-          "explanation": "This sentence introduces the person being described, showcasing their rich and lofty ideas."
+          "explanation": "The correct arrangement starts with addressing the audience ('Folks'), follows with the narrator's intent ('I want to tell you'), and builds a structured flow of information about the subject ('of this I know', 'Rich of lofty ideas', 'and as famous as you')."
         },
         {
           "correctAnswer": [
@@ -5405,7 +5450,7 @@
             "like the sky",
             "after the passing storm."
           ],
-          "explanation": "This sentence uses a simile to describe her eyes, comparing them to the sky after a storm."
+          "explanation": "The correct sequence begins with the subject ('Her eyes'), describes their quality ('spark azure'), provides a simile for clarity ('like the sky'), and concludes with a visual context ('after the passing storm')."
         },
         {
           "correctAnswer": [
@@ -5422,7 +5467,7 @@
             "in the grazing land",
             "Striving to get what she wants."
           ],
-          "explanation": "This sentence emphasizes her determination and strength, comparing her willpower to that of a bull."
+          "explanation": "The proper order starts by identifying the subject ('She is'), elaborates her trait ('as strong-willed', 'as a bull'), specifies the setting ('in the grazing land'), and ends with her determination ('Striving to get what she wants')."
         }
       ],
       "TwoTruthsOneLie": [
@@ -5668,7 +5713,7 @@
             "and was in great dread",
             "of a scolding."
           ],
-          "explanation": "This sentence talks about the narrator's anxiety about being late for school and facing punishment."
+          "explanation": "The sequence starts with the action ('I started for school very late'), adds the time ('that morning'), and builds the emotional context ('and was in great dread') leading to the reason ('of a scolding')."
         },
         {
           "correctAnswer": [
@@ -5683,7 +5728,7 @@
             "out of doors",
             "but I had the strength to resist."
           ],
-          "explanation": "This sentence reflects the narrator's temptation to escape school but choosing to go despite the temptation."
+          "explanation": "The arrangement follows a logical progression of thought: considering an escape ('I thought of running away'), elaborating on the intent ('and spending the day out of doors'), and ending with a resolution ('but I had the strength to resist')."
         },
         {
           "correctAnswer": [
@@ -5698,7 +5743,7 @@
             "he said: 'My children'",
             "this is the last lesson I shall give you."
           ],
-          "explanation": "This sentence marks the poignant announcement of the last lesson, delivered by M. Hamel with a serious tone."
+          "explanation": "The order reflects a natural narrative: the teacher's action ('M. Hamel mounted his chair'), his demeanor ('and in the same grave and gentle tone'), addressing the students ('he said: 'My children''), and delivering the impactful news ('this is the last lesson I shall give you')."
         }
       ],
       "TwoTruthsOneLie": [
@@ -5964,7 +6009,7 @@
             "adventurous",
             "person."
           ],
-          "explanation": "The correct sentence order is 'Christopher considered himself quite an adventurous person.'"
+          "explanation": "The correct sentence begins with the subject ('Christopher'), followed by the action ('considered'), and proceeds in a logical sequence to describe his self-perception ('himself quite an adventurous person')."
         },
         {
           "correctAnswer": [
@@ -5997,7 +6042,7 @@
             "We'll",
             "heard"
           ],
-          "explanation": "The sentence should read: 'He heard one of the Scouts say, \"We'll need cables too, and helmets.\"'"
+          "explanation": "The sentence starts with the subject ('He'), followed by the action ('heard'), and continues with a direct quotation of dialogue structured logically and grammatically ('one of the Scouts say, \"We'll need cables too, and helmets.\"')."
         },
         {
           "correctAnswer": [
@@ -6034,7 +6079,7 @@
             "passed",
             "the"
           ],
-          "explanation": "Correct order: 'Christopher passed through the school cafeteria while the Boy Scouts were having one of their meetings.'"
+          "explanation": "The sentence begins with the subject ('Christopher'), describes the action ('passed through the school cafeteria'), and concludes with the ongoing context involving the Boy Scouts ('while the Boy Scouts were having one of their meetings')."
         }
       ],
       "WordHunt": [
@@ -6321,7 +6366,7 @@
             "earned a living",
             "by doing simple car repairs"
           ],
-          "explanation": "This sentence describes how Mang Ricardo and his wife earned a living."
+          "explanation": "The sentence starts with the subject ('Mang Ricardo'), describes his livelihood ('earned a living by doing simple car repairs'), and adds how his wife contributed ('while his wife accepted laundry work from neighbors and friends')."
         },
         {
           "correctAnswer": [
@@ -6334,7 +6379,7 @@
             "met new friends",
             "since she was a very friendly and helpful girl."
           ],
-          "explanation": "This sentence explains how Christine made new friends."
+          "explanation": "The sentence begins with the subject ('Christine'), describes her action ('met new friends'), and concludes with the reason behind it ('since she was a very friendly and helpful girl')."
         },
         {
           "correctAnswer": [
@@ -6349,7 +6394,7 @@
             "on the day scheduled for a class program.",
             "The teacher"
           ],
-          "explanation": "This sentence tells when Christine received the letter from her teacher."
+          "explanation": "The sentence starts with the subject ('The teacher'), describes the action ('handed a letter to Christine'), and provides the context of the event ('on the day scheduled for a class program')."
         }
       ],
       "WordHunt": [
@@ -6650,7 +6695,8 @@
             "is finally ready.",
             "an eternity",
             "of waiting"
-          ]
+          ],
+          "explanation": "The sentence logically begins with the time marker ('After an eternity of waiting'), transitions to the subject ('the food'), and concludes with the action ('is finally ready')."
         },
         {
           "correctAnswer": [
@@ -6670,7 +6716,8 @@
             "and",
             "smelling the great big turkey.",
             "like a dog"
-          ]
+          ],
+          "explanation": "The sentence starts with the subject and action ('I come in and'), follows with the sensory reaction ('my nose starts sniffling'), and ends with a vivid simile and description ('like a dog smelling the great big turkey')."
         },
         {
           "correctAnswer": [
@@ -6686,7 +6733,8 @@
             "and the taste",
             "like the best chef made them.",
             "of bread rolls"
-          ]
+          ],
+          "explanation": "The sentence starts with the description ('The giant bumps of bread rolls and the taste'), transitions to the effect ('made it seem'), and concludes with a comparison ('like the best chef made them')."
         }
       ],
       "WordHunt": [
