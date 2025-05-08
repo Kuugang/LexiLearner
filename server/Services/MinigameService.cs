@@ -77,7 +77,7 @@ namespace LexiLearner.Services
             return minigames.Select(mg => new MinigameDTO(mg)).ToList();
         }
 
-        public async Task<MinigameLogDTO> Create(MinigameType minigameType, MinigameLogDTO.Create request)
+        public async Task<MinigameLogDTO> Create(MinigameType minigameType, MinigameLogDTO request)
         {
             var pupilid = request.PupilId;
             var pupil = await _pupilService.GetPupilById(pupilid);
@@ -114,8 +114,6 @@ namespace LexiLearner.Services
                 );
             }
 
-            string result = JsonSerializer.Serialize(request, request.GetType(), new JsonSerializerOptions { WriteIndented = true, PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
-
             var minigameLog = new MinigameLog
             {
                 Minigame = minigame,
@@ -124,7 +122,7 @@ namespace LexiLearner.Services
                 ReadingSession = readingSession,
                 Pupil = pupil,
                 PupilId = pupilid,
-                Result = result,
+                Result = JsonSerializer.Serialize(request.Result),
             };
 
             return new MinigameLogDTO(await _minigameRepository.Create(minigameLog));
