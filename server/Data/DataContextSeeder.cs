@@ -48,6 +48,8 @@ namespace LexiLearner.Data
                 var materialjson = File.ReadAllText(materialPath);
                 var materialsDTO = JsonSerializer.Deserialize<List<ReadingMaterialDTO.FromJson>>(materialjson);
 
+
+
                 if (materialsDTO != null)
                 {
                     var passageGenre = await genreService.GetGenreByName("Passage");
@@ -108,16 +110,16 @@ namespace LexiLearner.Data
                             Genre = passageGenre
                         });
                         materials.Add(readingMaterial);
-                                                
+
                         // Adding minigames for the readingmaterial
                         List<Minigame> minigamesList = [];
-                                    
+
                         minigamesList.AddRange(CreateMinigamesList(dto.Minigames.WordHunt, MinigameType.WordHunt, readingMaterial));
                         minigamesList.AddRange(CreateMinigamesList(dto.Minigames.FillInTheBlanks, MinigameType.FillInTheBlanks, readingMaterial));
                         minigamesList.AddRange(CreateMinigamesList(dto.Minigames.SentenceRearrangement, MinigameType.SentenceRearrangement, readingMaterial));
                         minigamesList.AddRange(CreateMinigamesList(dto.Minigames.TwoTruthsOneLie, MinigameType.TwoTruthsOneLie, readingMaterial));
                         minigamesList.AddRange(CreateMinigamesList(dto.Minigames.WordsFromLetters, MinigameType.WordsFromLetters, readingMaterial));
-                        
+
                         await context.AddRangeAsync(minigamesList);
                         await context.SaveChangesAsync();
                     }
@@ -130,21 +132,26 @@ namespace LexiLearner.Data
             if (context.ChangeTracker.HasChanges()) await context.SaveChangesAsync();
         }
 
-        public static async Task LoadAchievementsAsync(DataContext context){
-            if(!context.Achievement.Any()) {
-                var path = Path.Combine("Data","Seed","achievements.json");
+        public static async Task LoadAchievementsAsync(DataContext context)
+        {
+            if (!context.Achievement.Any())
+            {
+                var path = Path.Combine("Data", "Seed", "achievements.json");
                 var json = File.ReadAllText(path);
                 var achievementsDTO = JsonSerializer.Deserialize<List<AchievementDTO.FromJson>>(json);
 
                 var allAchievements = new List<Achievement>();
-                if(achievementsDTO != null) {
-                    foreach(var dto in achievementsDTO) {
-                        var achievement = new Achievement {
+                if (achievementsDTO != null)
+                {
+                    foreach (var dto in achievementsDTO)
+                    {
+                        var achievement = new Achievement
+                        {
                             Name = dto.Name,
                             Description = dto.Description,
                             Badge = dto.Badge
                         };
-                    allAchievements.Add(achievement);
+                        allAchievements.Add(achievement);
                     }
 
                     await context.Achievement.AddRangeAsync(allAchievements);
@@ -152,9 +159,9 @@ namespace LexiLearner.Data
                 }
             }
 
-            if(context.ChangeTracker.HasChanges()) await context.SaveChangesAsync();        
+            if (context.ChangeTracker.HasChanges()) await context.SaveChangesAsync();
         }
-                
+
         private static IEnumerable<Minigame> CreateMinigamesList<T>(IEnumerable<T> items, MinigameType type, ReadingMaterial readingMaterial)
         {
             var jsonOptions = new JsonSerializerOptions { WriteIndented = true, PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
@@ -172,11 +179,11 @@ namespace LexiLearner.Data
         private static List<int> GetMaxScore<T>(MinigameType type, IEnumerable<T> items)
         {
             List<int> maxScores = [];
-            
+
             foreach (var item in items)
             {
                 int score = 0;
-                
+
                 switch (type)
                 {
                     case MinigameType.FillInTheBlanks:
@@ -186,26 +193,27 @@ namespace LexiLearner.Data
                         break;
                     case MinigameType.WordsFromLetters:
                         var wfl = item as WordsFromLettersGame;
-                        
+
                         if (wfl != null)
                         {
                             score = wfl.words.Count;
                         }
-                        
+
                         break;
                     case MinigameType.WordHunt:
                         var wh = item as WordHuntGame;
-                        
-                        if (wh != null){
+
+                        if (wh != null)
+                        {
                             score = wh.correct.Count;
                         }
-                        
+
                         break;
                 }
-                
+
                 maxScores.Add(score);
             }
-            
+
             return maxScores;
         }
     }

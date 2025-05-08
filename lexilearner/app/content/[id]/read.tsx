@@ -30,8 +30,16 @@ import { FlashList } from "@shopify/flash-list";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { Input } from "~/components/ui/input";
 import { faVolumeUp } from "@fortawesome/free-solid-svg-icons";
+
+import { Check } from "lucide-react-native";
+
 import { useReadingSessionStore } from "@/stores/readingSessionStore";
-import { useCreateReadingSession } from "@/services/ReadingSessionService";
+import {
+  useCreateReadingSession,
+  useUpdateReadingSession,
+} from "@/services/ReadingSessionService";
+import { ReadingSession } from "@/models/ReadingSession";
+import { router } from "expo-router";
 
 export default function Read() {
   const { width } = useWindowDimensions();
@@ -42,7 +50,9 @@ export default function Read() {
   const scrollPercentageRef = useRef(0);
   const lastOffsetY = useRef(0);
   const flashListRef = useRef<FlashList<any>>(null);
+  const currentSessionRef = useRef<ReadingSession | null>(null);
 
+  const [onCheckpoint, setOnCheckpoint] = useState(false);
   const [contentHeight, setContentHeight] = useState(0);
   const [visibleHeight, setVisibleHeight] = useState(0);
   const [isScrollEndReached, setScrollEndReached] = useState(false);
@@ -69,26 +79,35 @@ export default function Read() {
     (state) => state.updateReadingSessionProgress,
   );
 
-  const {
-    mutate: createReadingSession,
-    // isPending,
-    // error,
-  } = useCreateReadingSession();
+  const { mutateAsync: createReadingSession } = useCreateReadingSession();
+  const { mutateAsync: updateReadingSession } = useUpdateReadingSession();
 
-  const paragraphs = useMemo(() => {
-    if (!selectedContent || typeof selectedContent.content !== "string")
-      return [];
-    return selectedContent.content
-      .split("\n\n")
-      .filter((paragraph) => paragraph.trim().length > 0);
-  }, [selectedContent]);
+  if (!selectedContent) {
+    return null;
+  }
 
+  // useReadingSessionStore.setState(() => ({
+  //   sessions: null,
+  // }));
   useEffect(() => {
-    if (!selectedContent) return;
+    if (!isContentReady) return;
+
+    const initSession = async () => {
+      let pastSession = getPastSession(selectedContent.id);
+
+      console.log(pastSession);
+      if (!pastSession) {
+        const newSession = await createReadingSession(selectedContent.id);
+        currentSessionRef.current = newSession;
+      } else {
+        currentSessionRef.current = pastSession;
+      }
+    };
+    initSession();
 
     const backAction = () => {
       updateReadingSessionProgress(
-        selectedContent.id,
+        currentSessionRef.current!!.id,
         scrollPercentageRef.current,
       );
       return false;
@@ -102,7 +121,7 @@ export default function Read() {
     return () => {
       backHandler.remove();
     };
-  }, [selectedContent, isContentReady]);
+  }, [isContentReady]);
 
   const fetchTranslation = async (word: string) => {
     const existingTranslation = getTranslation(word);
@@ -227,6 +246,14 @@ export default function Read() {
     }
   }, [selectedWord]);
 
+  const paragraphs = useMemo(() => {
+    if (!selectedContent || typeof selectedContent.content !== "string")
+      return [];
+    return selectedContent.content
+      .split("\n\n")
+      .filter((paragraph) => paragraph.trim().length > 0);
+  }, [selectedContent]);
+
   const processedParagraphs = useMemo(() => {
     return paragraphs.map((paragraph) => ({
       words: paragraph.split(" ").filter((word) => word.trim().length > 0),
@@ -277,7 +304,7 @@ export default function Read() {
 
     const scrolled = totalHeight > 0 ? scrollY / totalHeight : 0;
 
-    scrollPercentageRef.current = Math.min(100, Math.round(scrolled * 100));
+    scrollPercentageRef.current = Math.min(99, Math.round(scrolled * 100));
 
     if (scrollY < lastOffsetY.current) {
       setScrollEndReached(false);
@@ -286,29 +313,17 @@ export default function Read() {
     lastOffsetY.current = scrollY;
   };
 
-  if (!selectedContent) {
-    return null;
-  }
-
-  const currentSession = getPastSession(selectedContent.id);
-
-  if (!currentSession) {
-    createReadingSession(selectedContent.id);
-    return;
-  }
-
-  const [finalHeight, setFinalHeight] = useState(false);
-
   useEffect(() => {
-    if (!isContentReady || contentHeight <= 0 || visibleHeight <= 0) return;
-
-    if (!finalHeight) {
-      // setFinalHeight(true);
-      // return;
-    }
+    if (
+      !isContentReady ||
+      contentHeight <= 0 ||
+      visibleHeight <= 0 ||
+      onCheckpoint
+    )
+      return;
 
     const scrollableHeight = contentHeight - visibleHeight;
-    const percentage = currentSession?.completionPercentage ?? 0;
+    const percentage = currentSessionRef.current?.completionPercentage ?? 0;
     const offsetToScroll = Math.max(0, scrollableHeight * (percentage / 100));
 
     const scrollTimer = setTimeout(() => {
@@ -316,10 +331,29 @@ export default function Read() {
         offset: offsetToScroll,
         animated: true,
       });
+      setOnCheckpoint(true);
     }, 100);
 
     return () => clearTimeout(scrollTimer);
-  }, [isContentReady, contentHeight, visibleHeight]);
+  }, [isContentReady, onCheckpoint, contentHeight, visibleHeight]);
+
+  const handleFinishReadingSession = async () => {
+    if (!currentSessionRef.current) return;
+
+    const updatedSession = {
+      ...currentSessionRef.current,
+      completionPercentage: 100,
+    };
+
+    updateReadingSession(updatedSession);
+
+    router.replace({
+      pathname: "/minigames/play",
+      params: {
+        readingMaterialId: currentSessionRef.current.id,
+      },
+    });
+  };
 
   return (
     <>
@@ -340,18 +374,26 @@ export default function Read() {
           estimatedItemSize={estimatedItemSize}
           contentContainerStyle={{
             paddingHorizontal: 10,
-            paddingBottom: 80,
+            paddingBottom: 50,
           }}
-          onEndReachedThreshold={0.1}
+          onEndReachedThreshold={0.3}
           onEndReached={handleEndReached}
           onScroll={handleScroll}
           scrollEventThrottle={16}
           removeClippedSubviews={true}
           onLayout={(e) => {
-            setVisibleHeight(e.nativeEvent.layout.height);
+            const height = e.nativeEvent.layout.height;
+            setVisibleHeight(height);
+
+            if (contentHeight > 0 && contentHeight <= height) {
+              setScrollEndReached(true);
+            }
           }}
           onContentSizeChange={(w, h) => {
             setContentHeight(h);
+            if (visibleHeight > 0 && h <= visibleHeight) {
+              setScrollEndReached(true);
+            }
           }}
           onLoad={(elapsedTimeInMs) => {
             setIsContentReady(true);
@@ -360,7 +402,9 @@ export default function Read() {
 
         {isScrollEndReached && (
           <View className="absolute bottom-4 right-4">
-            <Text className="text-green-500 text-2xl">✅</Text>
+            <Pressable onPress={handleFinishReadingSession}>
+              <Check color="#00FF00" size={30} />
+            </Pressable>
           </View>
         )}
       </View>

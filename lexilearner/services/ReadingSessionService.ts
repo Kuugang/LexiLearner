@@ -27,11 +27,47 @@ export const useCreateReadingSession = () => {
     mutationFn: (readingMaterialId: string) =>
       createReadingSession(readingMaterialId),
     onSuccess: (data) => {
-      console.log("Session created:", data);
+      console.log("Raeding session created:", data);
       addSession(data);
     },
     onError: (error) => {
       console.error("Error creating session:", error);
+    },
+  });
+};
+
+const updateReadingSession = async (
+  ReadingSession: ReadingSession,
+): Promise<ReadingSession> => {
+  try {
+    const response = await axiosInstance.put(
+      `${API_URL}/readingsessions/${ReadingSession.id}`,
+      ReadingSession,
+    );
+
+    return response.data.data;
+  } catch (error: any) {
+    console.error("Failed to update reading session.", error);
+    throw new Error(
+      error?.response?.data?.message || "Failed to update reading session.",
+    );
+  }
+};
+
+export const useUpdateReadingSession = () => {
+  const updateReadingSessionProgress = useReadingSessionStore(
+    (state) => state.updateReadingSessionProgress,
+  );
+
+  return useMutation({
+    mutationFn: (readingSession: ReadingSession) =>
+      updateReadingSession(readingSession),
+    onSuccess: (data) => {
+      console.log("Reading session updated:", data);
+      updateReadingSessionProgress(data.id, data.completionPercentage);
+    },
+    onError: (error) => {
+      console.error("Error updating session:", error);
     },
   });
 };

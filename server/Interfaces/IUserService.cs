@@ -7,24 +7,24 @@ namespace LexiLearner.Interfaces
 {
     public interface IUserService
     {
-        Task<string> GetRole(User user);
-        Task<User?> GetUserByIdAsync(string userId);
-        Task<Pupil?> GetPupilByUserId(string userId);
-        Task<Teacher?> GetTeacherByUserId(string userId);
-        Task<User?> GetUserByEmail(string email);
-        Task<User?> GetUserByUsername(string username);
+        Task<string> GetRole(User User);
+        Task<User?> GetUserByIdAsync(string UserId);
+        Task<Pupil?> GetPupilByUserId(string UserId);
+        Task<Teacher?> GetTeacherByUserId(string UserId);
+        Task<User?> GetUserByEmail(string Email);
+        Task<User?> GetUserByUsername(string Username);
 
         Task<SuccessResponseDTO> Register(RegisterRequest RegisterRequest);
 
-        Task<ResponseDTO> GetUserProfile(ClaimsPrincipal user);
+        Task<ResponseDTO> GetUserProfile(ClaimsPrincipal User);
         Task<ResponseDTO> GetPublicProfile(string Username);
 
-        Task<User?> GetUserFromToken(ClaimsPrincipal token);
+        Task<User?> GetUserFromToken(ClaimsPrincipal Token);
 
         Task<ResponseDTO> UpdateProfile(UpdateProfileDTO UpdateProfileDTO, ClaimsPrincipal User);
-        Task<ResponseDTO> DeleteAccount(ClaimsPrincipal user);
-        Task<LoginStreak?> GetLoginStreak(ClaimsPrincipal user);
-        Task<LoginStreak> RecordLoginAsync(User user);
-        Task<Pupil?> GetPupilByPupilId(Guid pupilId);
+        Task<ResponseDTO> DeleteAccount(ClaimsPrincipal User);
+        Task<LoginStreak?> GetLoginStreak(ClaimsPrincipal User);
+        Task<LoginStreak> RecordLoginAsync(String UserId);
+        Task<Pupil?> GetPupilByPupilId(Guid PupilId);
     }
 }
