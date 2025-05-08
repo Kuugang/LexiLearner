@@ -173,7 +173,7 @@ public class ClassroomController : ControllerBase {
     
     [HttpPut("readingAssignments/{ReadingAssignmentId}")]
     [Authorize("TeacherPolicy")]
-    public async Task<IActionResult> UpdateReadingAssignment([FromRoute] Guid ClassroomId, [FromRoute] Guid ReadingAssignmentId, [FromBody] ReadingMaterialAssignmentDTO.Update Request)
+    public async Task<IActionResult> UpdateReadingAssignment([FromRoute] Guid ReadingAssignmentId, [FromBody] ReadingMaterialAssignmentDTO.Update Request)
     {
         var readingAssignment = await _classroomService.UpdateReadingAssignment(ReadingAssignmentId, Request, User);
         return StatusCode(StatusCodes.Status200OK,

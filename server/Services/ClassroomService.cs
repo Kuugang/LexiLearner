@@ -749,7 +749,17 @@ namespace LexiLearner.Services{
                 );
             }
             
-            var classroom = await _classroomRepository.GetReadingAssignmentById(ReadingAssignmentId);
+             var readingAssignment = await GetReadingAssignmentById(ReadingAssignmentId);
+            if (readingAssignment == null)
+            {
+                throw new ApplicationExceptionBase(
+                    "Reading assignment not found.",
+                    "Updating reading assignment failed.",
+                    StatusCodes.Status404NotFound
+                );
+            }
+            
+            var classroom = await _classroomRepository.GetById(readingAssignment.ClassroomId);
             if (classroom == null)
             {
                 throw new ApplicationExceptionBase(
@@ -759,20 +769,10 @@ namespace LexiLearner.Services{
                 );
             }
             
-            if (teacher.Id != classroom.Classroom.TeacherId)
+            if (teacher.Id != classroom.TeacherId)
             {
                 throw new ApplicationExceptionBase(
                     "Teacher is not the teacher of the classroom.",
-                    "Updating reading assignment failed.",
-                    StatusCodes.Status404NotFound
-                );
-            }
-            
-            var readingAssignment = await GetReadingAssignmentById(ReadingAssignmentId);
-            if (readingAssignment == null)
-            {
-                throw new ApplicationExceptionBase(
-                    "Reading assignment not found.",
                     "Updating reading assignment failed.",
                     StatusCodes.Status404NotFound
                 );
@@ -822,11 +822,13 @@ namespace LexiLearner.Services{
                 }
                 
                 var random = new Random();
-                var minigame = minigames.OrderBy(m => random.NextDouble()).First();
+                var minigame = minigames.Where(mg => mg.MinigameType == Request.MinigameType).OrderBy(m => random.NextDouble()).First();
                 
                 readingAssignment.MinigameId = minigame.Id;
                 readingAssignment.Minigame = minigame;
             }
+            
+            readingAssignment.UpdatedAt = DateTime.UtcNow;
             
             return await _classroomRepository.UpdateReadingAssignment(readingAssignment);
         }
@@ -853,25 +855,6 @@ namespace LexiLearner.Services{
                 );
             }
             
-            var classroom = await _classroomRepository.GetReadingAssignmentById(ReadingAssignmentId);
-            if (classroom == null)
-            {
-                throw new ApplicationExceptionBase(
-                    "Classroom not found.",
-                    "Deleting reading assignment failed.",
-                    StatusCodes.Status404NotFound
-                );
-            }
-            
-            if (teacher.Id != classroom.Classroom.TeacherId)
-            {
-                throw new ApplicationExceptionBase(
-                    "Teacher is not the teacher of the classroom.",
-                    "Deleting reading assignment failed.",
-                    StatusCodes.Status404NotFound
-                );
-            }
-            
             var readingAssignment = await GetReadingAssignmentById(ReadingAssignmentId);
             if (readingAssignment == null)
             {
@@ -881,6 +864,26 @@ namespace LexiLearner.Services{
                     StatusCodes.Status404NotFound
                 );
             }
+            
+            var classroom = await _classroomRepository.GetById(readingAssignment.ClassroomId);
+            if (classroom == null)
+            {
+                throw new ApplicationExceptionBase(
+                    "Classroom not found.",
+                    "Deleting reading assignment failed.",
+                    StatusCodes.Status404NotFound
+                );
+            }
+            
+            if (teacher.Id != classroom.TeacherId)
+            {
+                throw new ApplicationExceptionBase(
+                    "Teacher is not the teacher of the classroom.",
+                    "Deleting reading assignment failed.",
+                    StatusCodes.Status404NotFound
+                );
+            }
+        
             
             await _classroomRepository.DeleteReadingAssignment(readingAssignment);
         }
