@@ -4,7 +4,9 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ReadingSession } from "@/models/ReadingSession";
 
 interface ReadingSessionStore {
+  currentSession: ReadingSession | null;
   sessions: ReadingSession[] | null;
+  setCurrentSession: (session: ReadingSession | null) => void;
 
   addSession: (session: ReadingSession) => void;
   getPastSession: (readingMaterialId: string) => ReadingSession | null;
@@ -18,8 +20,11 @@ interface ReadingSessionStore {
 export const useReadingSessionStore = create<ReadingSessionStore>()(
   persist(
     (set, get) => ({
+      currentSession: null,
       sessions: [],
 
+      setCurrentSession: (session: ReadingSession | null) =>
+        set({ currentSession: session }),
       addSession: (session: ReadingSession) =>
         set((state) => ({
           sessions: state.sessions ? [...state.sessions, session] : [session],

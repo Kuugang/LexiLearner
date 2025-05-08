@@ -3,7 +3,7 @@ import { create } from "zustand";
 import { useUserStore } from "./userStore";
 import { useGlobalStore } from "./globalStore";
 import { persist } from "zustand/middleware";
-import { User } from "../models/User";
+import { Pupil, User } from "../models/User";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import {
@@ -48,8 +48,7 @@ export const useAuthStore = create<AuthStore>()(
               twoFactorEnabled,
               phoneNumber,
               role,
-              age,
-              level,
+              pupil,
             } = userData;
 
             const user: User = {
@@ -61,9 +60,15 @@ export const useAuthStore = create<AuthStore>()(
               twoFactorEnabled: twoFactorEnabled,
               phoneNumber: phoneNumber,
               role: role,
-              age: age,
-              level: level ?? 0,
             };
+
+            if (role === "Pupil") {
+              user.pupil = {
+                id: pupil.id,
+                level: pupil.level,
+                age: pupil.age,
+              };
+            }
 
             setUser(user);
           } else {

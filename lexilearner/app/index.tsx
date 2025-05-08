@@ -9,17 +9,16 @@ import { Button } from "~/components/ui/button";
 import { Text } from "~/components/ui/text";
 
 const Index = () => {
-  const user = useUserStore((state) => state.user);
-  const game = useMiniGameStore((state) => state.game);
+  // const user = useUserStore((state) => state.user);
+  // const currentMinigame = useMiniGameStore((state) => state.currentMinigame);
 
-  if (user) {
-    if (game) {
-      return <Redirect href="/minigames/play" />;
-    } else {
-    }
-    // return <Redirect href="/home" />;
-    // return <Redirect href="/minigames/2Truths1Lie" />;
-  }
+  // if (user) {
+  //   if (currentMinigame) {
+  //     return <Redirect href="/minigames/play" />;
+  //   } else {
+  //   }
+  //   return <Redirect href="/home" />;
+  // }
 
   return (
     <ScrollView

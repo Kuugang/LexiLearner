@@ -1,17 +1,97 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Minigame, MinigameType } from "@/models/Minigame";
+import { MinigameLog } from "@/models/MinigameLog";
+import { useReadingSessionStore } from "./readingSessionStore";
+import { useUserStore } from "./userStore";
 
 interface MiniGameStore {
-  game: string | null;
-  setGame: (game: string) => void;
+  currentMinigame: Minigame | null;
+  setCurrentMinigame: (minigame: Minigame) => void;
+
+  minigames: Minigame[] | [];
+  gameStartTime: Date | null;
+
+  setMinigames: (minigames: Minigame[]) => void;
+
+  minigamesIndex: number;
+  setMinigamesIndex: (index: number) => void;
+  gameOver: (result: Record<string, any>) => MinigameLog | null;
+
+  incrementMinigamesIndex: () => void;
 }
 
 export const useMiniGameStore = create<MiniGameStore>()(
   persist(
-    (set) => ({
-      game: null,
-      setGame: (game: string) => set({ game: game }),
+    (set, get) => ({
+      currentMinigame: null,
+      minigames: [],
+      minigamesIndex: 0,
+      gameStartTime: null,
+
+      setCurrentMinigame: (minigame: Minigame) => {
+        set({ currentMinigame: minigame });
+        set({ gameStartTime: new Date() });
+      },
+
+      setMinigames: (minigames: Minigame[]) => set({ minigames: minigames }),
+      setMinigamesIndex: (index: number) => set({ minigamesIndex: index }),
+
+      gameOver: (result: Record<string, any>): MinigameLog | null => {
+        const currentMinigame = get().currentMinigame;
+        if (!currentMinigame) return null;
+
+        let logResult: Record<string, any> = {};
+
+        const startTime = get().gameStartTime;
+        if (!startTime) return null;
+        const duration: number = Math.floor(
+          (Date.now() - startTime.getTime()) / 1000,
+        );
+        logResult["duration"] = duration;
+
+        switch (currentMinigame.minigameType) {
+          case MinigameType.WordsFromLetters:
+            logResult["correctAnswers"] = result.correctAnswers;
+            logResult["incorrectAnswers"] = result.correctAnswers;
+            logResult["streak"] = result.streak;
+            logResult["score"] = logResult["correctAnswers"].length;
+            break;
+          case MinigameType.FillInTheBlanks:
+          case MinigameType.SentenceRearrangement:
+          case MinigameType.WordHunt:
+          case MinigameType.TwoTruthsOneLie:
+        }
+
+        const currentReadingSession =
+          useReadingSessionStore.getState().currentSession;
+
+        if (!currentReadingSession) {
+          return null;
+        }
+
+        const user = useUserStore.getState().user;
+
+        if (!user?.pupil?.id) {
+          return null;
+        }
+
+        let minigameLog: MinigameLog = {
+          minigameId: currentMinigame.id,
+          pupilId: user.pupil.id,
+          readingSessionId: currentReadingSession.id,
+          result: JSON.stringify(logResult),
+          createdAt: new Date().toString(),
+        };
+        set({ gameStartTime: null });
+        return minigameLog;
+      },
+
+      incrementMinigamesIndex: () =>
+        set((state) => ({
+          minigamesIndex: state.minigamesIndex + 1,
+        })),
     }),
     {
       name: "game-store",
@@ -190,7 +270,7 @@ export const useWordHuntGameStore = create<WordHuntGameState>()(
 export const useWordsFromLettersMiniGameStore =
   create<WordsFromLettersGameState>()(
     persist(
-      (set) => ({
+      (set, get) => ({
         letters: Array(5).fill(""),
         guess: Array(5).fill(""),
         usedIndices: Array(5).fill(-1),
@@ -288,7 +368,8 @@ export const useWordsFromLettersMiniGameStore =
             };
           }),
 
-        decrementLives: () => set((state) => ({ lives: state.lives - 1 })),
+        decrementLives: () =>
+          set((state) => ({ lives: Math.max(state.lives - 1, 0) })),
       }),
       {
         name: "words-from-letters-store",
@@ -308,7 +389,7 @@ export const useWordsFromLettersMiniGameStore =
     ),
   );
 
-interface SentenceArrangementGameState {
+interface SentenceRearrangementGameState {
   correctAnswer: string[];
   parts: string[];
   currentAnswer: string[];
@@ -327,8 +408,8 @@ interface SentenceArrangementGameState {
   resetGameState: () => void;
 }
 
-export const useSentenceArrangementMiniGameStore =
-  create<SentenceArrangementGameState>()(
+export const useSentenceRearrangementMiniGameStore =
+  create<SentenceRearrangementGameState>()(
     persist(
       (set) => ({
         correctAnswer: [],

@@ -15,11 +15,11 @@ import { Text } from "~/components/ui/text";
 import { Heart, Shuffle } from "lucide-react-native";
 import { Minigame } from "@/models/Minigame";
 
-export default function FillInTheBlank(props: Minigame) {
+export default function FillInTheBlank({ minigame }: { minigame: Minigame }) {
   const fillInTheBlankData = {
-    phrases: JSON.parse(props.metaData).question,
-    correctAnswer: JSON.parse(props.metaData).correctAnswer,
-    choices: JSON.parse(props.metaData).choices,
+    phrases: JSON.parse(minigame.metaData).question,
+    correctAnswer: JSON.parse(minigame.metaData).correctAnswer,
+    choices: JSON.parse(minigame.metaData).choices,
   };
 
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);

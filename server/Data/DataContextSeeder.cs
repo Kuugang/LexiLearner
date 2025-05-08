@@ -3,10 +3,7 @@ using LexiLearner.Data.DTO;
 using LexiLearner.Interfaces;
 using LexiLearner.Models;
 using LexiLearner.Models.DTO;
-using LexiLearner.Services;
-using Microsoft.AspNetCore.StaticAssets;
 using Microsoft.EntityFrameworkCore;
-using Org.BouncyCastle.Ocsp;
 
 namespace LexiLearner.Data
 {
