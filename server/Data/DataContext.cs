@@ -25,6 +25,7 @@ namespace LexiLearner.Data
         public DbSet<MinigameLog> MinigameLog { get; set; }
         public DbSet<Session> Session { get; set; }
         public DbSet<LoginStreak> LoginStreak { get; set; }
+        public DbSet<ReadingMaterialAssignment> ReadingMaterialAssignment { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -108,6 +109,20 @@ namespace LexiLearner.Data
                 .WithMany()
                 .HasForeignKey(rs => rs.ReadingMaterialId);
 
+            modelBuilder.Entity<ReadingMaterialAssignment>()
+                .HasOne(rma => rma.Classroom)
+                .WithMany()
+                .HasForeignKey(rma => rma.ClassroomId);
+            
+            modelBuilder.Entity<ReadingMaterialAssignment>()
+                .HasOne(rma => rma.Minigame)
+                .WithMany()
+                .HasForeignKey(rma => rma.MinigameId);
+            
+            modelBuilder.Entity<ReadingMaterialAssignment>()
+                .HasOne(rma => rma.ReadingMaterial)
+                .WithMany()
+                .HasForeignKey(rma => rma.ReadingMaterialId);
         }
     }
 }

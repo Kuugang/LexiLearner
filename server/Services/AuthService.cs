@@ -60,7 +60,7 @@ namespace LexiLearner.Services
 
             var token = _jwtService.GenerateJWTToken(user.Id, user.UserName!,role);
             
-            await _userService.RecordLoginAsync(user.Id);
+            await _userService.RecordLoginAsync(user);
 
             return new SuccessResponseDTO("Login successful", new JWTDTO(token));
         }

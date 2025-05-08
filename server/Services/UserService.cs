@@ -330,27 +330,20 @@ namespace LexiLearner.Services
             return await _userRepository.GetLoginStreak(User.Id);
         }
     
-        public async Task<LoginStreak> RecordLoginAsync(string userId)
+        public async Task<LoginStreak> RecordLoginAsync(User user)
         {
-            var loginStreak = await _userRepository.GetLoginStreak(userId);
+            var loginStreak = await _userRepository.GetLoginStreak(user.Id);
             var today = DateTime.UtcNow.Date;
             
             if (loginStreak == null)
-            {
-                var user = await _userRepository.GetUserByIdAsync(userId);
-                
-                if (user == null)
-                {
-                throw new ApplicationExceptionBase("User not found.", "Recording login failed.");
-                }
-                
+            {        
                 loginStreak = new LoginStreak
                 {
-                UserId = userId,
-                User = user,
-                CurrentStreak = 1,
-                LastLoginDate = today,
-                LongestStreak = 1
+                    UserId = user.Id,
+                    User = user,
+                    CurrentStreak = 1,
+                    LastLoginDate = today,
+                    LongestStreak = 1
                 };
                 
                 loginStreak = await _userRepository.CreateLoginStreak(loginStreak);

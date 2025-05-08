@@ -24,7 +24,7 @@ namespace LexiLearner.Interfaces
         Task<ResponseDTO> UpdateProfile(UpdateProfileDTO UpdateProfileDTO, ClaimsPrincipal User);
         Task<ResponseDTO> DeleteAccount(ClaimsPrincipal user);
         Task<LoginStreak?> GetLoginStreak(ClaimsPrincipal user);
-        Task<LoginStreak> RecordLoginAsync(string userId);
+        Task<LoginStreak> RecordLoginAsync(User user);
         Task<Pupil?> GetPupilByPupilId(Guid pupilId);
     }
 }
