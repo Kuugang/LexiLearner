@@ -103,4 +103,91 @@ public class ClassroomController : ControllerBase {
 		return StatusCode(StatusCodes.Status200OK,
 		new SuccessResponseDTO("Leave classroom successfully"));
 	}
-}   
+	
+	[HttpPost("{ClassroomId}/pupils")]
+	[Authorize("TeacherPolicy")]
+	public async Task<IActionResult> AddPupilToClassroom([FromRoute] Guid ClassroomId, [FromBody] Guid PupilId)
+	{
+        var classroomEnrollment = await _classroomService.AddPupil(PupilId, ClassroomId, User);
+        return StatusCode(StatusCodes.Status200OK,
+            new SuccessResponseDTO("Added pupil to classroom successfully.", classroomEnrollment)
+        );
+    }
+    
+    [HttpDelete("{ClassroomId}/pupils")]
+    [Authorize("TeacherPolicy")]
+    public async Task<IActionResult> RemovePupilFromClassroom([FromRoute] Guid ClassroomId, [FromBody] Guid PupilId)
+    {
+        await _classroomService.RemovePupil(PupilId, ClassroomId, User);
+        
+        return StatusCode(StatusCodes.Status200OK,
+            new SuccessResponseDTO("Removed pupil from classroom successfully.")
+        );
+    }
+    
+    [HttpGet("{ClassroomId}/pupils")]
+    [Authorize]
+    public async Task<IActionResult> GetPupilsFromClassroom([FromRoute] Guid ClassroomId)
+    {
+        var pupils = await _classroomService.GetPupilsByClassroomId(ClassroomId, User);
+        return StatusCode(StatusCodes.Status200OK,
+            new SuccessResponseDTO("Pupils fetched from classroom successfully.", pupils)
+        );
+    }
+    
+    [HttpPost("{ClassroomId}/readingAssignments")]
+    [Authorize("TeacherPolicy")]
+    public async Task<IActionResult> CreateReadingAssignment([FromRoute] Guid ClassroomId, [FromBody] ReadingMaterialAssignmentDTO.Create Request)
+    {
+        if (Request == null)
+        {
+            return BadRequest(new ErrorResponseDTO("Invalid request data."));
+        }
+        var readingAssignment = await _classroomService.CreateReadingAssignment(ClassroomId, Request, User);
+        return StatusCode(StatusCodes.Status201Created,
+            new SuccessResponseDTO("Created reading assignment successfully.", readingAssignment)
+        );
+    }
+    
+    [HttpGet("{ClassroomId}/readingAssignments")]
+    [Authorize]
+    public async Task<IActionResult> GetReadingAssignments([FromRoute] Guid ClassroomId)
+    {
+        var readingAssignments = await _classroomService.GetAllReadingAssignmentsByClassroomId(ClassroomId, User);
+        return StatusCode(StatusCodes.Status200OK,
+            new SuccessResponseDTO("Fetched reading assignments successfully.", 
+            readingAssignments.Select(ra => new ReadingMaterialAssignmentDTO(ra)).ToList())
+        );
+    }
+    
+    [HttpGet("{ClassroomId}/readingAssignments/active")]
+    [Authorize]
+    public async Task<IActionResult> GetActiveReadingAssignments([FromRoute] Guid ClassroomId)
+    {
+        var readingAssignments = await _classroomService.GetActiveReadingAssignmentsByClassroomId(ClassroomId, User);
+        return StatusCode(StatusCodes.Status200OK,
+            new SuccessResponseDTO("Fetched active reading assignments successfully.", 
+            readingAssignments.Select(ra => new ReadingMaterialAssignmentDTO(ra)).ToList())
+        );
+    }
+    
+    [HttpPut("readingAssignments/{ReadingAssignmentId}")]
+    [Authorize("TeacherPolicy")]
+    public async Task<IActionResult> UpdateReadingAssignment([FromRoute] Guid ReadingAssignmentId, [FromBody] ReadingMaterialAssignmentDTO.Update Request)
+    {
+        var readingAssignment = await _classroomService.UpdateReadingAssignment(ReadingAssignmentId, Request, User);
+        return StatusCode(StatusCodes.Status200OK,
+            new SuccessResponseDTO("Updated reading assignment successfully.", new ReadingMaterialAssignmentDTO(readingAssignment))
+        );
+    }
+    
+    [HttpDelete("readingAssignments/{ReadingAssignmentId}")]
+    [Authorize("TeacherPolicy")]
+    public async Task<IActionResult> DeleteReadingAssignment([FromRoute] Guid ReadingAssignmentId)
+    {
+        await _classroomService.DeleteReadingAssignment(ReadingAssignmentId, User);
+        return StatusCode(StatusCodes.Status200OK,
+            new SuccessResponseDTO("Deleted reading assignment successfully.")
+        );
+    }
+}
