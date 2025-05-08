@@ -15,11 +15,15 @@ namespace LexiLearner.Services{
         private readonly IUserService _userService;
         private readonly IUserRepository _userRepository;
         private readonly DataContext _context;
+        private readonly IMinigameRepository _minigameRepository;
+        private readonly IReadingMaterialRepository _readingMaterialRepository;
 
-        public ClassroomService(IClassroomRepository classroomRepository, IUserService userService, IUserRepository userRepository,DataContext context){
+        public ClassroomService(IClassroomRepository classroomRepository, IUserService userService, IUserRepository userRepository,DataContext context, IMinigameRepository minigameRepository, IReadingMaterialRepository readingMaterialRepository) {
             _classroomRepository = classroomRepository;
             _userService = userService;
             _userRepository = userRepository;
+            _readingMaterialRepository = readingMaterialRepository;
+            _minigameRepository = minigameRepository;
             _context = context;
         }
 
@@ -43,7 +47,7 @@ namespace LexiLearner.Services{
         }
 
 
-        public async Task<ClassroomDTO> Create(ClassroomDTO.CreateClassroom request, ClaimsPrincipal User)
+        public async Task<ClassroomDTO> Create(ClassroomDTO.CreateClassroom Request, ClaimsPrincipal User)
         {
             User? user = await _userService.GetUserFromToken(User);
             if(user == null) {
@@ -85,21 +89,22 @@ namespace LexiLearner.Services{
                 JoinCode = code,
                 Teacher = teacher,
                 TeacherId = teacher.Id,
-                Name = request.Name,
-                Description = request.Description,
-                ClassroomEnrollments = new List<ClassroomEnrollment>()
+                Name = Request.Name,
+                Description = Request.Description,
+                ClassroomEnrollments = new List<ClassroomEnrollment>(),
+                ReadingMaterialAssignments = new List<ReadingMaterialAssignment>()
             };
 
             await _classroomRepository.Create(classroom);
             return new ClassroomDTO(classroom);
         }
-        public async Task<ClassroomDTO> GetByClassroomId(Guid id)
+        public async Task<ClassroomDTO> GetByClassroomId(Guid Id)
         {
-            var classroom = await _classroomRepository.GetById(id);
+            var classroom = await _classroomRepository.GetById(Id);
 
             if(classroom == null) {
                 throw new ApplicationExceptionBase(
-                    $"Classroom with ID {id} not found",
+                    $"Classroom with ID {Id} not found",
                     "Getting classroom failed",
                     StatusCodes.Status404NotFound
                 );
@@ -146,9 +151,9 @@ namespace LexiLearner.Services{
             return classroooms.Select(c => new ClassroomDTO(c)).ToList();
         }
 
-        public async Task<ClassroomDTO> Update(Guid classroomId, ClassroomDTO.UpdateClassroom request, ClaimsPrincipal User)
+        public async Task<ClassroomDTO> Update(Guid ClassroomId, ClassroomDTO.UpdateClassroom Request, ClaimsPrincipal User)
         {
-            Console.WriteLine("EDIT REQUEST:"+request);
+            Console.WriteLine("EDIT REQUEST:"+Request);
             User? user = await _userService.GetUserFromToken(User);
             if(user == null) {
                 throw new ApplicationExceptionBase(
@@ -158,7 +163,7 @@ namespace LexiLearner.Services{
                 );
             }
 
-            Classroom? classroom = await _classroomRepository.GetById(classroomId);
+            Classroom? classroom = await _classroomRepository.GetById(ClassroomId);
             if(classroom == null) {
                 throw new ApplicationExceptionBase(
                     $"Classroom with not found",
@@ -187,11 +192,11 @@ namespace LexiLearner.Services{
 
             DateTime update = DateTime.UtcNow;
 
-            if(request.Name != null) {
-                classroom.Name = request.Name;
+            if(Request.Name != null) {
+                classroom.Name = Request.Name;
                 classroom.UpdatedAt = update;
-            } if(request.Description != null) {
-                classroom.Description = request.Description;
+            } if(Request.Description != null) {
+                classroom.Description = Request.Description;
                 classroom.UpdatedAt = update;
             }
 
@@ -199,7 +204,7 @@ namespace LexiLearner.Services{
             return new ClassroomDTO(classroom);
         }
 
-        public async Task Delete(Guid classroomId, ClaimsPrincipal User)
+        public async Task Delete(Guid ClassroomId, ClaimsPrincipal User)
         {
             User? user = await _userService.GetUserFromToken(User);
             if(user == null) {
@@ -210,7 +215,7 @@ namespace LexiLearner.Services{
                 );
             }
 
-            Classroom? classroom = await _classroomRepository.GetById(classroomId);
+            Classroom? classroom = await _classroomRepository.GetById(ClassroomId);
             if(classroom == null) {
                 throw new ApplicationExceptionBase(
                     $"Classroom with not found",
@@ -265,7 +270,7 @@ namespace LexiLearner.Services{
             return classrooms.Select(c => new ClassroomDTO(c)).ToList();
 		}
 
-		public async Task<ClassroomDTO> JoinClassroom(string joinCode, ClaimsPrincipal User)
+		public async Task<ClassroomDTO> JoinClassroom(string JoinCode, ClaimsPrincipal User)
 		{
 			User? user = await _userService.GetUserFromToken(User);
 			if (user == null)
@@ -284,7 +289,7 @@ namespace LexiLearner.Services{
 			}
 			_context.Attach(pupil);
 
-			Classroom? classroom = await _context.Classroom.FirstOrDefaultAsync(c => c.JoinCode == joinCode);
+			Classroom? classroom = await _context.Classroom.FirstOrDefaultAsync(c => c.JoinCode == JoinCode);
 			if (classroom == null)
 			{
 				throw new ApplicationExceptionBase("Invalid join code", "Join classroom failed", StatusCodes.Status404NotFound);
@@ -311,7 +316,7 @@ namespace LexiLearner.Services{
 			return new ClassroomDTO(classroom);
 		}
 
-		public async Task LeaveClassroom(Guid classroomId, ClaimsPrincipal User)
+		public async Task LeaveClassroom(Guid ClassroomId, ClaimsPrincipal User)
 		{
 			User? user = await _userService.GetUserFromToken(User);
 			if (user == null)
@@ -323,7 +328,7 @@ namespace LexiLearner.Services{
 					);
 			}
 
-			Classroom? classroom = await _classroomRepository.GetById(classroomId);
+			Classroom? classroom = await _classroomRepository.GetById(ClassroomId);
 			if (classroom == null)
 			{
 				throw new ApplicationExceptionBase(
@@ -349,15 +354,45 @@ namespace LexiLearner.Services{
 
 		}
 
-		public async Task<List<Pupil>> GetPupilsByClassroomId(Guid classroomId)
+		public async Task<List<Pupil>> GetPupilsByClassroomId(Guid ClassroomId, ClaimsPrincipal User)
 		{
-			return await _classroomRepository.GetPupilsByClassroomId(classroomId);
+            var user = await _userService.GetUserFromToken(User);
+            if (user == null)
+            {
+                throw new ApplicationExceptionBase(
+                    "User not found.",
+                    "Failed getting pupils from classroom.",
+                    StatusCodes.Status404NotFound
+                );
+            }
+            
+            var teacher = await _userService.GetTeacherByUserId(user.Id);
+            if (teacher == null)
+            {
+                throw new ApplicationExceptionBase(
+                    "Teacher is not found.",
+                    "Failed getting pupils from classroom.",
+                    StatusCodes.Status404NotFound
+                );
+            }
+            
+            var classroom = await GetByClassroomId(ClassroomId);
+            if (teacher.Id != classroom.TeacherId)
+            {
+                throw new ApplicationExceptionBase(
+                    "Teacher is not the teacher of the classroom.",
+                    "Failed getting pupils from classroom.",
+                    StatusCodes.Status404NotFound
+                );
+            }
+            
+			return await _classroomRepository.GetPupilsByClassroomId(ClassroomId);
 		}
 
-		public async Task<ClassroomEnrollmentDTO> AddPupil(Guid pupilId, Guid classroomId, ClaimsPrincipal user)
+		public async Task<ClassroomEnrollmentDTO> AddPupil(Guid PupilId, Guid ClassroomId, ClaimsPrincipal User)
 		{
-            User? User = await _userService.GetUserFromToken(user);
-            if (User == null)
+            User? user = await _userService.GetUserFromToken(User);
+            if (user == null)
             {
                 throw new ApplicationExceptionBase(
                     "User not found.",
@@ -366,7 +401,7 @@ namespace LexiLearner.Services{
                 );
             }
             
-            var teacher = await _userService.GetTeacherByUserId(User.Id);
+            var teacher = await _userService.GetTeacherByUserId(user.Id);
             if (teacher == null)
             {
                 throw new ApplicationExceptionBase(
@@ -376,7 +411,7 @@ namespace LexiLearner.Services{
                 );
             }
             
-            var classroom = await _classroomRepository.GetById(classroomId);
+            var classroom = await _classroomRepository.GetById(ClassroomId);
             
             if (classroom == null)
             {
@@ -396,7 +431,7 @@ namespace LexiLearner.Services{
                 );
             }
             
-            var pupil = await _userService.GetPupilByPupilId(pupilId);
+            var pupil = await _userService.GetPupilByPupilId(PupilId);
             
             if (pupil == null)
             {
@@ -411,8 +446,8 @@ namespace LexiLearner.Services{
             var classroomEnrollment = new ClassroomEnrollment
             {
                 Pupil = pupil,
-                PupilId = pupilId,
-                ClassroomId = classroomId,
+                PupilId = PupilId,
+                ClassroomId = ClassroomId,
                 Classroom = classroom
             };
             
@@ -420,10 +455,10 @@ namespace LexiLearner.Services{
             return new ClassroomEnrollmentDTO(classroomEnrollment);
 		}
 
-		public async Task RemovePupil(Guid pupilId, Guid classroomId, ClaimsPrincipal user)
+		public async Task RemovePupil(Guid PupilId, Guid ClassroomId, ClaimsPrincipal User)
 		{
-			User? User = await _userService.GetUserFromToken(user);
-            if (User == null)
+			User? user = await _userService.GetUserFromToken(User);
+            if (user == null)
             {
                 throw new ApplicationExceptionBase(
                     "User not found.",
@@ -432,7 +467,7 @@ namespace LexiLearner.Services{
                 );
             }
             
-            var teacher = await _userService.GetTeacherByUserId(User.Id);
+            var teacher = await _userService.GetTeacherByUserId(user.Id);
             if (teacher == null)
             {
                 throw new ApplicationExceptionBase(
@@ -441,13 +476,13 @@ namespace LexiLearner.Services{
                     StatusCodes.Status404NotFound
                 );
             }
-            
-            
+			
+			
 		}
 
-        public async Task<ClassroomEnrollment> GetClassroomEnrollmentByPupilAndClassId(Guid pupilId, Guid classroomId)
+        public async Task<ClassroomEnrollment> GetClassroomEnrollmentByPupilAndClassId(Guid PupilId, Guid ClassroomId)
         {
-            var classroomEnrollment = await _classroomRepository.GetClassroomEnrollmentByPupilandClassId(pupilId, classroomId);
+            var classroomEnrollment = await _classroomRepository.GetClassroomEnrollmentByPupilandClassId(PupilId, ClassroomId);
             
             if (classroomEnrollment == null)
             {
@@ -459,6 +494,398 @@ namespace LexiLearner.Services{
             }
             
             return classroomEnrollment;
+        }
+
+        public async Task<ReadingMaterialAssignmentDTO> CreateReadingAssignment(Guid ClassroomId, ReadingMaterialAssignmentDTO.Create Request, ClaimsPrincipal User)
+        {
+            User? user = await _userService.GetUserFromToken(User);
+            if (user == null)
+            {
+                throw new ApplicationExceptionBase(
+                    "User not found.",
+                    "Creating reading assignment failed.",
+                    StatusCodes.Status404NotFound
+                );
+            }
+            
+            var teacher = await _userService.GetTeacherByUserId(user.Id);
+            if (teacher == null)
+            {
+                throw new ApplicationExceptionBase(
+                    "Teacher not found.",
+                    "Creating reading assignment failed.",
+                    StatusCodes.Status404NotFound
+                );
+            }
+            
+            var classroom = await _classroomRepository.GetById(ClassroomId);
+            if (classroom == null)
+            {
+                throw new ApplicationExceptionBase(
+                    "Classroom not found.",
+                    "Creating reading assignment failed.",
+                    StatusCodes.Status404NotFound
+                );
+            }
+            
+            if (teacher.Id != classroom.TeacherId)
+            {
+                throw new ApplicationExceptionBase(
+                    "Teacher is not the teacher of the classroom.",
+                    "Creating reading assignment failed.",
+                    StatusCodes.Status404NotFound
+                );
+            }
+            
+            var readingMaterial = await _readingMaterialRepository.GetByIdAsync(Request.ReadingMaterialId);
+            if (readingMaterial == null)
+            {
+                throw new ApplicationExceptionBase(
+                    "Reading material not found.",
+                    "Creating reading assignment failed.",
+                    StatusCodes.Status404NotFound
+                );
+            }
+            
+            var minigames = await _minigameRepository.GetMinigamesByRMId(readingMaterial.Id);
+            if (minigames == null || !minigames.Any())
+            {
+                throw new ApplicationExceptionBase(
+                    "Minigames not found.",
+                    "Creating reading assignment failed.",
+                    StatusCodes.Status404NotFound
+                );
+            }
+            
+            var random = new Random();
+            var minigame = minigames.Where(m => m.MinigameType == Request.MinigameType).OrderBy(m => random.NextDouble()).First();
+            
+            var readingAssignment = new ReadingMaterialAssignment
+            {
+                Id = Guid.NewGuid(),
+                ClassroomId = ClassroomId,
+                Classroom = classroom,
+                Title = Request.Title,
+                Description = Request.Description,
+                ReadingMaterialId = Request.ReadingMaterialId,
+                ReadingMaterial = readingMaterial,
+                MinigameId = minigame.Id,
+                Minigame = minigame,
+                IsActive = true,
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow
+            };
+            
+            readingAssignment = await _classroomRepository.CreateReadingAssignment(readingAssignment);
+            return new ReadingMaterialAssignmentDTO(readingAssignment);
+        }
+
+        public async Task<ReadingMaterialAssignment?> GetReadingAssignmentById(Guid Id)
+        {
+            return await _classroomRepository.GetReadingAssignmentById(Id);
+        }
+
+        public async Task<List<ReadingMaterialAssignment>> GetAllReadingAssignmentsByClassroomId(Guid ClassroomId, ClaimsPrincipal User)
+        {
+            var user = await _userService.GetUserFromToken(User);
+            if (user == null)
+            {
+                throw new ApplicationExceptionBase(
+                    "User not found.",
+                    "Failed getting reading assignments from classroom.",
+                    StatusCodes.Status404NotFound
+                );
+            }
+            
+            var classroom = await _classroomRepository.GetById(ClassroomId);
+            if (classroom == null)
+            {
+                throw new ApplicationExceptionBase(
+                    "Classroom not found.",
+                    "Failed getting reading assignments from classroom.",
+                    StatusCodes.Status404NotFound
+                );
+            }
+            
+            var userRole = await _userService.GetRole(user);
+            
+            if (userRole == "Teacher")
+            {
+                var teacher = await _userService.GetTeacherByUserId(user.Id);
+                if (teacher == null)
+                {
+                    throw new ApplicationExceptionBase(
+                        "Teacher not found.",
+                        "Failed getting reading assignments from classroom.",
+                        StatusCodes.Status404NotFound
+                    );
+                }
+                
+                if (teacher.Id != classroom.TeacherId)
+                {
+                    throw new ApplicationExceptionBase(
+                        "Teacher is not the teacher of the classroom.",
+                        "Failed getting reading assignments from classroom.",
+                        StatusCodes.Status401Unauthorized
+                    );
+                }
+            }
+            else if (userRole == "Pupil")
+            {
+                var pupil = await _userService.GetPupilByUserId(user.Id);
+                if (pupil == null)
+                {
+                    throw new ApplicationExceptionBase(
+                        "Pupil not found.",
+                        "Failed getting reading assignments from classroom.",
+                        StatusCodes.Status404NotFound
+                    );
+                }
+                
+                var classroomEnrollment = await _classroomRepository.GetClassroomEnrollmentByPupilandClassId(pupil.Id, ClassroomId);
+                if (classroomEnrollment == null)
+                {
+                    throw new ApplicationExceptionBase(
+                        "Pupil is not enrolled in the classroom.",
+                        "Failed getting reading assignments from classroom.",
+                        StatusCodes.Status401Unauthorized
+                    );
+                }
+            }
+            
+            return await _classroomRepository.GetAllReadingAssignmentsByClassroomId(ClassroomId);
+        }
+
+        public async Task<List<ReadingMaterialAssignment>> GetActiveReadingAssignmentsByClassroomId(Guid ClassroomId, ClaimsPrincipal User)
+        {
+             var user = await _userService.GetUserFromToken(User);
+            if (user == null)
+            {
+                throw new ApplicationExceptionBase(
+                    "User not found.",
+                    "Failed getting reading assignments from classroom.",
+                    StatusCodes.Status404NotFound
+                );
+            }
+            
+            var classroom = await _classroomRepository.GetById(ClassroomId);
+            if (classroom == null)
+            {
+                throw new ApplicationExceptionBase(
+                    "Classroom not found.",
+                    "Failed getting reading assignments from classroom.",
+                    StatusCodes.Status404NotFound
+                );
+            }
+            
+            var userRole = await _userService.GetRole(user);
+            
+            if (userRole == "Teacher")
+            {
+                var teacher = await _userService.GetTeacherByUserId(user.Id);
+                if (teacher == null)
+                {
+                    throw new ApplicationExceptionBase(
+                        "Teacher not found.",
+                        "Failed getting reading assignments from classroom.",
+                        StatusCodes.Status404NotFound
+                    );
+                }
+                
+                if (teacher.Id != classroom.TeacherId)
+                {
+                    throw new ApplicationExceptionBase(
+                        "Teacher is not the teacher of the classroom.",
+                        "Failed getting reading assignments from classroom.",
+                        StatusCodes.Status401Unauthorized
+                    );
+                }
+            }
+            else if (userRole == "Pupil")
+            {
+                var pupil = await _userService.GetPupilByUserId(user.Id);
+                if (pupil == null)
+                {
+                    throw new ApplicationExceptionBase(
+                        "Pupil not found.",
+                        "Failed getting reading assignments from classroom.",
+                        StatusCodes.Status404NotFound
+                    );
+                }
+                
+                var classroomEnrollment = await _classroomRepository.GetClassroomEnrollmentByPupilandClassId(pupil.Id, ClassroomId);
+                if (classroomEnrollment == null)
+                {
+                    throw new ApplicationExceptionBase(
+                        "Pupil is not enrolled in the classroom.",
+                        "Failed getting reading assignments from classroom.",
+                        StatusCodes.Status401Unauthorized
+                    );
+                }
+            }
+            
+            return await _classroomRepository.GetActiveReadingAssignmentsByClassroomId(ClassroomId);
+        }
+
+        public async Task<ReadingMaterialAssignment> UpdateReadingAssignment(Guid ReadingAssignmentId, ReadingMaterialAssignmentDTO.Update Request, ClaimsPrincipal User)
+        {
+            User? user = await _userService.GetUserFromToken(User);
+            if (user == null)
+            {
+                throw new ApplicationExceptionBase(
+                    "User not found.",
+                    "Updating reading assignment failed.",
+                    StatusCodes.Status404NotFound
+                );
+            }
+            
+            var teacher = await _userService.GetTeacherByUserId(user.Id);
+            if (teacher == null)
+            {
+                throw new ApplicationExceptionBase(
+                    "Teacher not found.",
+                    "Updating reading assignment failed.",
+                    StatusCodes.Status404NotFound
+                );
+            }
+            
+             var readingAssignment = await GetReadingAssignmentById(ReadingAssignmentId);
+            if (readingAssignment == null)
+            {
+                throw new ApplicationExceptionBase(
+                    "Reading assignment not found.",
+                    "Updating reading assignment failed.",
+                    StatusCodes.Status404NotFound
+                );
+            }
+            
+            var classroom = await _classroomRepository.GetById(readingAssignment.ClassroomId);
+            if (classroom == null)
+            {
+                throw new ApplicationExceptionBase(
+                    "Classroom not found.",
+                    "Updating reading assignment failed.",
+                    StatusCodes.Status404NotFound
+                );
+            }
+            
+            if (teacher.Id != classroom.TeacherId)
+            {
+                throw new ApplicationExceptionBase(
+                    "Teacher is not the teacher of the classroom.",
+                    "Updating reading assignment failed.",
+                    StatusCodes.Status404NotFound
+                );
+            }
+            
+            if (Request.Title != null)
+            {
+                readingAssignment.Title = Request.Title;
+            }
+            
+            if (Request.Description != null)
+            {
+                readingAssignment.Description = Request.Description;
+            }
+            
+            if (Request.IsActive != null)
+            {
+                readingAssignment.IsActive = Request.IsActive.Value;
+            }
+            
+            if (Request.ReadingMaterialId != null)
+            {
+                var readingMaterial = await _readingMaterialRepository.GetByIdAsync(Request.ReadingMaterialId.Value);
+                if (readingMaterial == null)
+                {
+                    throw new ApplicationExceptionBase(
+                        "Reading material not found.",
+                        "Updating reading assignment failed.",
+                        StatusCodes.Status404NotFound
+                    );
+                }
+                
+                readingAssignment.ReadingMaterialId = Request.ReadingMaterialId.Value;
+                readingAssignment.ReadingMaterial = readingMaterial;
+            }
+            
+            if (Request.MinigameType != null)
+            {
+                var minigames = await _minigameRepository.GetMinigamesByRMId(readingAssignment.ReadingMaterialId);
+                if (minigames == null || !minigames.Any())
+                {
+                    throw new ApplicationExceptionBase(
+                        "Minigames not found.",
+                        "Updating reading assignment failed.",
+                        StatusCodes.Status404NotFound
+                    );
+                }
+                
+                var random = new Random();
+                var minigame = minigames.Where(mg => mg.MinigameType == Request.MinigameType).OrderBy(m => random.NextDouble()).First();
+                
+                readingAssignment.MinigameId = minigame.Id;
+                readingAssignment.Minigame = minigame;
+            }
+            
+            readingAssignment.UpdatedAt = DateTime.UtcNow;
+            
+            return await _classroomRepository.UpdateReadingAssignment(readingAssignment);
+        }
+        
+        public async Task DeleteReadingAssignment(Guid ReadingAssignmentId, ClaimsPrincipal User)
+        {
+            User? user = await _userService.GetUserFromToken(User);
+            if (user == null)
+            {
+                throw new ApplicationExceptionBase(
+                    "User not found.",
+                    "Deleting reading assignment failed.",
+                    StatusCodes.Status404NotFound
+                );
+            }
+            
+            var teacher = await _userService.GetTeacherByUserId(user.Id);
+            if (teacher == null)
+            {
+                throw new ApplicationExceptionBase(
+                    "Teacher not found.",
+                    "Deleting reading assignment failed.",
+                    StatusCodes.Status404NotFound
+                );
+            }
+            
+            var readingAssignment = await GetReadingAssignmentById(ReadingAssignmentId);
+            if (readingAssignment == null)
+            {
+                throw new ApplicationExceptionBase(
+                    "Reading assignment not found.",
+                    "Deleting reading assignment failed.",
+                    StatusCodes.Status404NotFound
+                );
+            }
+            
+            var classroom = await _classroomRepository.GetById(readingAssignment.ClassroomId);
+            if (classroom == null)
+            {
+                throw new ApplicationExceptionBase(
+                    "Classroom not found.",
+                    "Deleting reading assignment failed.",
+                    StatusCodes.Status404NotFound
+                );
+            }
+            
+            if (teacher.Id != classroom.TeacherId)
+            {
+                throw new ApplicationExceptionBase(
+                    "Teacher is not the teacher of the classroom.",
+                    "Deleting reading assignment failed.",
+                    StatusCodes.Status404NotFound
+                );
+            }
+        
+            
+            await _classroomRepository.DeleteReadingAssignment(readingAssignment);
         }
     }
 }

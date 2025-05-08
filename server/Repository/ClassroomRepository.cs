@@ -14,81 +14,115 @@ namespace LexiLearner.Repository{
             _context = context;
         }
 
-        public async Task Create(Classroom classroom)
+        public async Task Create(Classroom Classroom)
         {
-            await _context.Classroom.AddAsync(classroom);
+            await _context.Classroom.AddAsync(Classroom);
             await _context.SaveChangesAsync();
         }
-        public async Task<Classroom?> GetById(Guid id)
+        public async Task<Classroom?> GetById(Guid Id)
         {
-            return await _context.Classroom.FindAsync(id);
+            return await _context.Classroom.FindAsync(Id);
         }
 
-        public async Task<List<Classroom>> GetByTeacherId(Guid teacherId)
+        public async Task<List<Classroom>> GetByTeacherId(Guid TeacherId)
         {
-            return await _context.Classroom.Where(c => c.TeacherId == teacherId).ToListAsync();
+            return await _context.Classroom.Where(c => c.TeacherId == TeacherId).ToListAsync();
         }
 
-        public async Task Update(Classroom classroom)
+        public async Task Update(Classroom Classroom)
         {
-            _context.Classroom.Update(classroom);
+            _context.Classroom.Update(Classroom);
             await _context.SaveChangesAsync();
         }
-        public async Task Delete(Classroom classroom)
+        public async Task Delete(Classroom Classroom)
         {
-            _context.Classroom.Remove(classroom);
+            _context.Classroom.Remove(Classroom);
             await _context.SaveChangesAsync();
         }
 
-        public async Task<bool> DoesJoinCodeExist(string code)
+        public async Task<bool> DoesJoinCodeExist(string Code)
         {
-            return await _context.Classroom.AnyAsync(c => c.JoinCode == code);
+            return await _context.Classroom.AnyAsync(c => c.JoinCode == Code);
         }
 
-		public async Task<List<Classroom>> GetClassroomsByPupilId(Guid pupilId)
+		public async Task<List<Classroom>> GetClassroomsByPupilId(Guid PupilId)
 		{
             var query = _context.Classroom.Include(c => c.ClassroomEnrollments).AsQueryable();
-            return await query.Where(c => c.ClassroomEnrollments.Any(ce => ce.PupilId == pupilId)).ToListAsync();
+            return await query.Where(c => c.ClassroomEnrollments.Any(ce => ce.PupilId == PupilId)).ToListAsync();
 		}
 
-		public async Task JoinClassroom(ClassroomEnrollment classroom)
+		public async Task JoinClassroom(ClassroomEnrollment Classroom)
 		{
-			await _context.ClassroomEnrollment.AddAsync(classroom);
+			await _context.ClassroomEnrollment.AddAsync(Classroom);
 			await _context.SaveChangesAsync();
 		}
 
-        public async Task LeaveClassroom(ClassroomEnrollment classroom)
+        public async Task LeaveClassroom(ClassroomEnrollment Classroom)
         {
-            _context.ClassroomEnrollment.Remove(classroom);
+            _context.ClassroomEnrollment.Remove(Classroom);
             await _context.SaveChangesAsync();
         }
 
-        public async Task<List<Pupil>> GetPupilsByClassroomId(Guid classroomId)
+        public async Task<List<Pupil>> GetPupilsByClassroomId(Guid ClassroomId)
         {
             var classroom = await _context.Classroom
                 .Include(c => c.ClassroomEnrollments)
                 .ThenInclude(ce => ce.Pupil)
-                .FirstOrDefaultAsync(c => c.Id == classroomId);
+                .FirstOrDefaultAsync(c => c.Id == ClassroomId);
 
             return classroom?.ClassroomEnrollments.Select(ce => ce.Pupil).ToList() ?? [];
         }
 
-        public async Task RemovePupil(ClassroomEnrollment classroomEnrollment)
+        public async Task RemovePupil(ClassroomEnrollment ClassroomEnrollment)
         {
-            _context.ClassroomEnrollment.Remove(classroomEnrollment);
+            _context.ClassroomEnrollment.Remove(ClassroomEnrollment);
             await _context.SaveChangesAsync();
         }
 
-        public async Task<ClassroomEnrollment> AddPupil(ClassroomEnrollment classroomEnrollment)
+        public async Task<ClassroomEnrollment> AddPupil(ClassroomEnrollment ClassroomEnrollment)
         {
-            await _context.ClassroomEnrollment.AddAsync(classroomEnrollment);
+            await _context.ClassroomEnrollment.AddAsync(ClassroomEnrollment);
             await _context.SaveChangesAsync();
-            return classroomEnrollment;
+            return ClassroomEnrollment;
         }
 
-        public async Task<ClassroomEnrollment?> GetClassroomEnrollmentByPupilandClassId(Guid pupilId, Guid classroomId)
+        public async Task<ClassroomEnrollment?> GetClassroomEnrollmentByPupilandClassId(Guid PupilId, Guid ClassroomId)
         {
-            return await _context.ClassroomEnrollment.FirstOrDefaultAsync(ce => ce.PupilId == pupilId && ce.ClassroomId == classroomId);
+            return await _context.ClassroomEnrollment.FirstOrDefaultAsync(ce => ce.PupilId == PupilId && ce.ClassroomId == ClassroomId);
+        }
+
+        public async Task<ReadingMaterialAssignment> CreateReadingAssignment(ReadingMaterialAssignment ReadingMaterialAssignment)
+        {
+            await _context.ReadingMaterialAssignment.AddAsync(ReadingMaterialAssignment);
+            await _context.SaveChangesAsync();
+            return ReadingMaterialAssignment;
+        }
+
+        public Task<ReadingMaterialAssignment?> GetReadingAssignmentById(Guid Id)
+        {
+            return _context.ReadingMaterialAssignment.FirstOrDefaultAsync(r => r.Id == Id);
+        }
+
+        public Task<List<ReadingMaterialAssignment>> GetAllReadingAssignmentsByClassroomId(Guid ClassroomId)
+        {
+            return _context.ReadingMaterialAssignment.Where(r => r.ClassroomId == ClassroomId).ToListAsync();
+        }
+
+        public Task<List<ReadingMaterialAssignment>> GetActiveReadingAssignmentsByClassroomId(Guid ClassroomId)
+        {
+            return _context.ReadingMaterialAssignment.Where(r => r.ClassroomId == ClassroomId && r.IsActive).ToListAsync();
+        }
+
+        public Task<ReadingMaterialAssignment> UpdateReadingAssignment(ReadingMaterialAssignment ReadingMaterialAssignment)
+        {
+            _context.ReadingMaterialAssignment.Update(ReadingMaterialAssignment);
+            return _context.SaveChangesAsync().ContinueWith(_ => ReadingMaterialAssignment);
+        }
+        
+        public Task DeleteReadingAssignment(ReadingMaterialAssignment ReadingMaterialAssignment)
+        {
+            _context.ReadingMaterialAssignment.Remove(ReadingMaterialAssignment);
+            return _context.SaveChangesAsync();
         }
     }
 }

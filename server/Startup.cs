@@ -20,6 +20,7 @@ using LexiLearner.Services;
 using LexiLearner.Repository;
 using LexiLearner.Validators;
 using LexiLearner.Extensions;
+using System.Text.Json.Serialization;
 
 
 namespace LexiLearner
@@ -87,8 +88,14 @@ namespace LexiLearner
                 .AddJsonOptions(options =>
                 {
                     options.JsonSerializerOptions.DefaultIgnoreCondition =
-                        System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull;
+                        JsonIgnoreCondition.WhenWritingNull;
                     options.AllowInputFormatterExceptionMessages = true;
+                });
+                
+            services.AddControllers()
+                .AddJsonOptions(opt =>
+                {
+                    opt.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
                 });
 
             services.ConfigureApplicationCookie(options =>
