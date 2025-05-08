@@ -17,5 +17,8 @@ namespace LexiLearner.Interfaces
         Task<LoginStreak?> GetLoginStreak(string userId);
         Task<LoginStreak> CreateLoginStreak(LoginStreak streak);
         Task<Pupil?> GetPupilByPupilId(Guid pupilId);
+        Task<Session> CreateSession(Session session);
+        Task<Session?> GetSessionById(Guid sessionId);
+        Task<List<Session>> GetSessionsByUserId(string userId);
 	}
 }

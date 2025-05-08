@@ -1,5 +1,4 @@
 using System.Security.Claims;
-
 using LexiLearner.Models;
 using LexiLearner.Models.DTO;
 
@@ -26,5 +25,9 @@ namespace LexiLearner.Interfaces
         Task<LoginStreak?> GetLoginStreak(ClaimsPrincipal User);
         Task<LoginStreak> RecordLoginAsync(String UserId);
         Task<Pupil?> GetPupilByPupilId(Guid PupilId);
+        Task<SessionDTO> CreateSession(ClaimsPrincipal user);
+        Task<SessionDTO> EndSession(Guid sessionId, ClaimsPrincipal user);
+        Task<Session?> GetSessionById(Guid sessionId, ClaimsPrincipal user);
+        Task<List<Session>> GetSessionsByUserId(string userId);
     }
 }

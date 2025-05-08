@@ -207,5 +207,44 @@ namespace LexiLearner.Repository
 
             return pupil;
         }
+
+        public async Task<Session> CreateSession(Session session)
+        {
+            return await _decorated.CreateSession(session);
+        }
+
+        public async Task<Session?> GetSessionById(Guid sessionId)
+        {
+            var cacheKey = $"Session_{sessionId}";
+            var session = await GetFromCacheAsync<Session>(cacheKey);
+
+            if (session is null)
+            {
+                session = await _decorated.GetSessionById(sessionId);
+                if (session is not null)
+                {
+                    await SetCacheAsync(cacheKey, session, TimeSpan.FromMinutes(30));
+                }
+            }
+
+            return session;
+        }
+
+        public async Task<List<Session>> GetSessionsByUserId(string userId)
+        {
+            var cacheKey = $"Sessions_{userId}";
+            var sessions = await GetFromCacheAsync<List<Session>>(cacheKey);
+
+            if (sessions is null)
+            {
+                sessions = await _decorated.GetSessionsByUserId(userId);
+                if (sessions is not null)
+                {
+                    await SetCacheAsync(cacheKey, sessions, TimeSpan.FromMinutes(30));
+                }
+            }
+
+            return sessions ?? new List<Session>();
+        }
     }
 }

@@ -122,6 +122,7 @@ namespace LexiLearner.Repository
 
         public async Task<LoginStreak> CreateLoginStreak(LoginStreak streak)
         {
+            _context.Attach(streak.User);
             await _context.LoginStreak.AddAsync(streak);
             await _context.SaveChangesAsync();
 
@@ -131,6 +132,31 @@ namespace LexiLearner.Repository
         public async Task<Pupil?> GetPupilByPupilId(Guid pupilId)
         {
             return await _context.Pupil.FirstOrDefaultAsync(p => p.Id == pupilId);
+        }
+
+        public async Task<Session> CreateSession(Session session)
+        {
+            _context.Attach(session.User);
+            await _context.Session.AddAsync(session);
+            await _context.SaveChangesAsync();
+            return session;
+        }
+
+        public async Task<Session?> GetSessionById(Guid sessionId)
+        {
+            return await _context.Session
+                .AsNoTracking()
+                .Include(s => s.User)
+                .FirstOrDefaultAsync(s => s.Id == sessionId);
+        }
+
+        public async Task<List<Session>> GetSessionsByUserId(string userId)
+        {
+            return await _context.Session
+                .AsNoTracking()
+                .Include(s => s.User)
+                .Where(s => s.UserId == userId)
+                .ToListAsync();
         }
     }
 }
