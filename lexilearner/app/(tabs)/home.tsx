@@ -14,13 +14,6 @@ import { CircleUser, Search, Flame } from "lucide-react-native";
 function HomeScreen() {
   const { data: stories, isLoading: isStoriesLoading } = useStories();
 
-  router.push({
-    pathname: "/minigames/play",
-    params: {
-      readingSessionId: "4eccdaae-cbb9-442c-9091-1eb958ce5493",
-    },
-  });
-
   return (
     <ScrollView className="bg-background">
       {/* TODO: MAKE THIS INTO COMPONENT*/}

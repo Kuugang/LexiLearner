@@ -72,6 +72,9 @@ export default function Read() {
     (state) => state.storeTranslation,
   );
 
+  const setCurrentSession = useReadingSessionStore(
+    (state) => state.setCurrentSession,
+  );
   const getPastSession = useReadingSessionStore(
     (state) => state.getPastSession,
   );
@@ -95,13 +98,13 @@ export default function Read() {
     const initSession = async () => {
       let pastSession = getPastSession(selectedContent.id);
 
-      console.log(pastSession);
       if (!pastSession) {
         const newSession = await createReadingSession(selectedContent.id);
         currentSessionRef.current = newSession;
       } else {
         currentSessionRef.current = pastSession;
       }
+      setCurrentSession(currentSessionRef.current);
     };
     initSession();
 
@@ -110,6 +113,7 @@ export default function Read() {
         currentSessionRef.current!!.id,
         scrollPercentageRef.current,
       );
+      setCurrentSession(null);
       return false;
     };
 
@@ -349,9 +353,6 @@ export default function Read() {
 
     router.replace({
       pathname: "/minigames/play",
-      params: {
-        readingMaterialId: currentSessionRef.current.id,
-      },
     });
   };
 

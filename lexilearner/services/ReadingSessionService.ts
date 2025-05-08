@@ -27,11 +27,11 @@ export const useCreateReadingSession = () => {
     mutationFn: (readingMaterialId: string) =>
       createReadingSession(readingMaterialId),
     onSuccess: (data) => {
-      console.log("Raeding session created:", data);
+      console.log("Reading session created:", data);
       addSession(data);
     },
     onError: (error) => {
-      console.error("Error creating session:", error);
+      console.error("Error creating reading session:", error);
     },
   });
 };

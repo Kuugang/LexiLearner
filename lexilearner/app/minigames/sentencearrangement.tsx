@@ -8,67 +8,58 @@ import Animated, {
   FadeIn,
   LinearTransition,
 } from "react-native-reanimated";
-import { useSentenceArrangementMiniGameStore } from "@/stores/miniGameStore";
+import { useSentenceRearrangementMiniGameStore } from "@/stores/miniGameStore";
 import { useMiniGameStore } from "@/stores/miniGameStore";
 import { View, ScrollView, TouchableOpacity } from "react-native";
 import { Text } from "~/components/ui/text";
 import { Heart, Shuffle } from "lucide-react-native";
 import { Minigame } from "@/models/Minigame";
 
-export default function SentenceArrangement(props: Minigame) {
+export default function SentenceArrangement({
+  minigame,
+}: {
+  minigame: Minigame;
+}) {
   const sentenceArrangementData = {
-    correctAnswer: [
-      "The Dodo was",
-      "a flightless",
-      "bird",
-      "native to the island of",
-      "Mauritius",
-      "in the Indian Ocean.",
-    ],
-    parts: [
-      "The Dodo was",
-      "in the Indian Ocean.",
-      "a flightless",
-      "bird",
-      "native to the island of",
-      "Mauritius",
-    ],
+    correctAnswer: JSON.parse(minigame.metaData).correctAnswer,
+    parts: JSON.parse(minigame.metaData).parts,
   };
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
 
-  const lives = useSentenceArrangementMiniGameStore((state) => state.lives);
-  const decrementLives = useSentenceArrangementMiniGameStore(
+  const lives = useSentenceRearrangementMiniGameStore((state) => state.lives);
+  const decrementLives = useSentenceRearrangementMiniGameStore(
     (state) => state.decrementLives,
   );
-  const correctAnswer = useSentenceArrangementMiniGameStore(
+  const correctAnswer = useSentenceRearrangementMiniGameStore(
     (state) => state.correctAnswer,
   );
-  const parts = useSentenceArrangementMiniGameStore((state) => state.parts);
-  const setCorrectAnswer = useSentenceArrangementMiniGameStore(
+  const parts = useSentenceRearrangementMiniGameStore((state) => state.parts);
+  const setCorrectAnswer = useSentenceRearrangementMiniGameStore(
     (state) => state.setCorrectAnswer,
   );
-  const setParts = useSentenceArrangementMiniGameStore(
+  const setParts = useSentenceRearrangementMiniGameStore(
     (state) => state.setParts,
   );
-  const currentAnswer = useSentenceArrangementMiniGameStore(
+  const currentAnswer = useSentenceRearrangementMiniGameStore(
     (state) => state.currentAnswer,
   );
-  const addPartToCurrentAnswer = useSentenceArrangementMiniGameStore(
+  const addPartToCurrentAnswer = useSentenceRearrangementMiniGameStore(
     (state) => state.addPartToCurrentAnswer,
   );
-  const removePartFromCurrentAnswer = useSentenceArrangementMiniGameStore(
+  const removePartFromCurrentAnswer = useSentenceRearrangementMiniGameStore(
     (state) => state.removePartFromCurrentAnswer,
   );
-  const resetCurrentAnswer = useSentenceArrangementMiniGameStore(
+  const resetCurrentAnswer = useSentenceRearrangementMiniGameStore(
     (state) => state.resetCurrentAnswer,
   );
-  const resetGameState = useSentenceArrangementMiniGameStore(
+  const resetGameState = useSentenceRearrangementMiniGameStore(
     (state) => state.resetGameState,
   );
 
   useEffect(() => {
-    //resetGameState();
-    setCorrectAnswer(sentenceArrangementData.correctAnswer.map((text) => text));
+    setCorrectAnswer(
+      sentenceArrangementData.correctAnswer.map((text: string) => text),
+    );
     setParts(sentenceArrangementData.parts);
   }, []);
 
@@ -151,7 +142,9 @@ export default function SentenceArrangement(props: Minigame) {
         <View className="flex gap-36 py-16">
           <View className="flex gap-4">
             <View className="flex flex-row gap-2 justify-center items-center">
-              <Text className="text-3xl font-black">Sentence Arrangement</Text>
+              <Text className="text-3xl font-black text-center">
+                Sentence Arrangement
+              </Text>
             </View>
             <View className="flex flex-row justify-center gap-3">
               {Array.from({ length: lives }).map((_, i) => (

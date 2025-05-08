@@ -33,8 +33,9 @@ export const useUserStore = create<UserStore>()(
             twoFactorEnabled: data.twoFactorEnabled,
             phoneNumber: data.phoneNumber,
             role: data.role,
-            age: data.age,
-            level: data.level ?? 0,
+            //TODO: fix this
+            // age: data.age,
+            // level: data.level ?? 0,
           };
 
           set({ user: updatedUser });
