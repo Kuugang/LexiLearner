@@ -77,12 +77,14 @@ namespace LexiLearner.Data
             modelBuilder.Entity<ClassroomEnrollment>()
                 .HasOne(ce => ce.Pupil)
                 .WithMany()
-                .HasForeignKey(ce => ce.PupilId);
+                .HasForeignKey(ce => ce.PupilId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<ClassroomEnrollment>()
                 .HasOne(ce => ce.Classroom)
-                .WithMany()
-                .HasForeignKey(ce => ce.ClassroomId);
+                .WithMany(c => c.ClassroomEnrollments)
+                .HasForeignKey(ce => ce.ClassroomId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<PupilAchievement>()
                 .HasOne(pa => pa.Pupil)
@@ -111,7 +113,7 @@ namespace LexiLearner.Data
 
             modelBuilder.Entity<ReadingMaterialAssignment>()
                 .HasOne(rma => rma.Classroom)
-                .WithMany()
+                .WithMany(c => c.ReadingMaterialAssignments)
                 .HasForeignKey(rma => rma.ClassroomId);
             
             modelBuilder.Entity<ReadingMaterialAssignment>()

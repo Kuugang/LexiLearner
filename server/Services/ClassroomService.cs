@@ -91,7 +91,8 @@ namespace LexiLearner.Services{
                 TeacherId = teacher.Id,
                 Name = Request.Name,
                 Description = Request.Description,
-                ClassroomEnrollments = new List<ClassroomEnrollment>()
+                ClassroomEnrollments = new List<ClassroomEnrollment>(),
+                ReadingMaterialAssignments = new List<ReadingMaterialAssignment>()
             };
 
             await _classroomRepository.Create(classroom);
@@ -527,7 +528,7 @@ namespace LexiLearner.Services{
                 );
             }
             
-            if (teacher.Id == classroom.TeacherId)
+            if (teacher.Id != classroom.TeacherId)
             {
                 throw new ApplicationExceptionBase(
                     "Teacher is not the teacher of the classroom.",
@@ -557,7 +558,7 @@ namespace LexiLearner.Services{
             }
             
             var random = new Random();
-            var minigame = minigames.OrderBy(m => random.NextDouble()).First();
+            var minigame = minigames.Where(m => m.MinigameType == Request.MinigameType).OrderBy(m => random.NextDouble()).First();
             
             var readingAssignment = new ReadingMaterialAssignment
             {

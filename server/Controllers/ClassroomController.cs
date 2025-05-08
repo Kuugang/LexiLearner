@@ -139,6 +139,10 @@ public class ClassroomController : ControllerBase {
     [Authorize("TeacherPolicy")]
     public async Task<IActionResult> CreateReadingAssignment([FromRoute] Guid ClassroomId, [FromBody] ReadingMaterialAssignmentDTO.Create Request)
     {
+        if (Request == null)
+        {
+            return BadRequest(new ErrorResponseDTO("Invalid request data."));
+        }
         var readingAssignment = await _classroomService.CreateReadingAssignment(ClassroomId, Request, User);
         return StatusCode(StatusCodes.Status201Created,
             new SuccessResponseDTO("Created reading assignment successfully.", readingAssignment)
