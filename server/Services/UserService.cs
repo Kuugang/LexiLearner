@@ -358,7 +358,14 @@ namespace LexiLearner.Services
             else
             {
                 var daysSinceLastLogin = (today - loginStreak.LastLoginDate.Date).Days;
+                
                 if (daysSinceLastLogin == 0)
+                {
+                    // User has already logged in today, no need to update streak
+                    return loginStreak;
+                }
+                
+                if (daysSinceLastLogin == 1)
                 {
                     loginStreak.CurrentStreak++;
 
@@ -383,6 +390,77 @@ namespace LexiLearner.Services
         public async Task<Pupil?> GetPupilByPupilId(Guid pupilId)
         {
             return await _userRepository.GetPupilByPupilId(pupilId);
+        }
+
+        public async Task<SessionDTO> CreateSession(ClaimsPrincipal user)
+        {
+            User? User = await GetUserFromToken(user);
+            if (User == null)
+            {
+                throw new ApplicationExceptionBase("User not found.", "Creating session failed.", StatusCodes.Status404NotFound);
+            }
+            
+            var session = new Session
+            {
+                UserId = User.Id,
+                User = User
+            };
+            
+            session = await _userRepository.CreateSession(session);
+            return new SessionDTO(session);
+        }
+
+        public async Task<SessionDTO> EndSession(Guid sessionId, ClaimsPrincipal user)
+        {
+            User? User = await GetUserFromToken(user);
+            if (User == null)
+            {
+                throw new ApplicationExceptionBase("User not found.", "Ending session failed.", StatusCodes.Status404NotFound);
+            }
+            
+            var session = await _userRepository.GetSessionById(sessionId);
+            if (session == null)
+            {
+                throw new ApplicationExceptionBase("Session not found.", "Ending session failed.", StatusCodes.Status404NotFound);
+            }
+            
+            if (session.UserId != User.Id)
+            {
+                throw new ApplicationExceptionBase("Unauthorized.", "Ending session failed.", StatusCodes.Status403Forbidden);
+            }
+            
+            session.EndAt = DateTime.UtcNow;
+            session.Duration = (int?)(session.EndAt - session.CreatedAt).TotalMinutes;
+            
+            await _userRepository.Update(session);
+            return new SessionDTO(session);
+        }
+
+        public async Task<Session?> GetSessionById(Guid sessionId, ClaimsPrincipal user)
+        {
+            User? User = await GetUserFromToken(user);
+            if (User == null)
+            {
+                throw new ApplicationExceptionBase("User not found.", "Fetching session failed.", StatusCodes.Status404NotFound);
+            }
+            
+            var session = await _userRepository.GetSessionById(sessionId);
+            if (session == null)
+            {
+                throw new ApplicationExceptionBase("Session not found.", "Fetching session failed.", StatusCodes.Status404NotFound);
+            }
+            
+            if (session.UserId != User.Id)
+            {
+                throw new ApplicationExceptionBase("Unauthorized.", "Fetching session failed.", StatusCodes.Status403Forbidden);
+            }
+            
+            return session;
+        }
+
+        public async Task<List<Session>> GetSessionsByUserId(string userId)
+        {
+            return await _userRepository.GetSessionsByUserId(userId);
         }
     }
 
