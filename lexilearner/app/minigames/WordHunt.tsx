@@ -14,6 +14,7 @@ import { Heart } from "lucide-react-native";
 import { useWordHuntGameStore } from "@/stores/miniGameStore";
 import { useMiniGameStore } from "@/stores/miniGameStore";
 import { usePathname } from "expo-router";
+import { Minigame } from "@/models/Minigame";
 
 export function WordHuntBtn({
   word,
@@ -38,7 +39,7 @@ export function WordHuntBtn({
   );
 }
 
-export default function WordHunt() {
+export default function WordHunt({ minigame }: { minigame: Minigame }) {
   const correctAnswers = useWordHuntGameStore((state) => state.correctAnswers);
   const wrongAnswers = useWordHuntGameStore((state) => state.wrongAnswers);
   const allWords = useWordHuntGameStore((state) => state.allWords);
@@ -63,14 +64,11 @@ export default function WordHunt() {
   const resetStreak = useWordHuntGameStore((state) => state.resetStreak);
   const decrementLives = useWordHuntGameStore((state) => state.decrementLives);
 
-  const setGame = useMiniGameStore((state) => state.setGame);
-  const pathname = usePathname(); // This gives you the current path
-
   // TODO morerender syag thrice somewhere diri HSHAHSAH
   useEffect(() => {
-    const correct = ["hood", "weak", "peep", "quietly", "child", "nothing"];
-    const wrong = ["paramore", "laptop", "phone"];
-    const combined = [...correct, ...wrong];
+    const correct = JSON.parse(minigame.metaData).correct;
+    const wrong = JSON.parse(minigame.metaData).wrong;
+    const combined = JSON.parse(minigame.metaData).combined;
 
     setCorrectAnswers(correct);
     setWrongAnswers(wrong);
@@ -79,7 +77,6 @@ export default function WordHunt() {
   }, []);
 
   useEffect(() => {
-    setGame(pathname);
     const backHandler = BackHandler.addEventListener(
       "hardwareBackPress",
       () => {

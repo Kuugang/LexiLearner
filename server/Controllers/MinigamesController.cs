@@ -1,6 +1,7 @@
 ﻿using LexiLearner.Interfaces;
 using LexiLearner.Models;
 using LexiLearner.Models.DTO;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LexiLearner.Controllers
@@ -16,6 +17,7 @@ namespace LexiLearner.Controllers
         }
 
         [HttpPost("wordhunt")]
+        [Authorize("AdminPolicy")]
         public async Task<IActionResult> CreateWordHunt([FromBody] MinigameDTO.WordHuntGame request)
         {
             var minigame = await _minigameService.Create(MinigameType.WordHunt, request);
@@ -24,6 +26,7 @@ namespace LexiLearner.Controllers
         }
 
         [HttpPost("wordsfromletters")]
+        [Authorize("AdminPolicy")]
         public async Task<IActionResult> CreateWordsFromLetters([FromBody] MinigameDTO.WordsFromLettersGame request)
         {
             var minigame = await _minigameService.Create(MinigameType.WordsFromLetters, request);
@@ -32,6 +35,7 @@ namespace LexiLearner.Controllers
         }
 
         [HttpPost("fillintheblanks")]
+        [Authorize("AdminPolicy")]
         public async Task<IActionResult> CreateFillInTheBlanks([FromBody] MinigameDTO.FillInTheBlanksGame request)
         {
             var minigame = await _minigameService.Create(MinigameType.FillInTheBlanks, request);
@@ -40,6 +44,7 @@ namespace LexiLearner.Controllers
         }
 
         [HttpPost("twotruthsonelie")]
+        [Authorize("AdminPolicy")]
         public async Task<IActionResult> CreateTwoTruthsOneLie([FromBody] MinigameDTO.TwoTruthsOneLieGame request)
         {
             var minigame = await _minigameService.Create(MinigameType.TwoTruthsOneLie, request);
@@ -48,6 +53,7 @@ namespace LexiLearner.Controllers
         }
 
         [HttpPost("sentencerearrangement")]
+        [Authorize("AdminPolicy")]
         public async Task<IActionResult> CreateSentenceRearrangement([FromBody] MinigameDTO.SentenceRearrangementGame request)
         {
             var minigame = await _minigameService.Create(MinigameType.SentenceRearrangement, request);
@@ -56,6 +62,7 @@ namespace LexiLearner.Controllers
         }
 
         [HttpGet("{MinigameId}")]
+        [Authorize]
         public async Task<IActionResult> GetMinigame([FromRoute] Guid MinigameId)
         {
             var minigame = await _minigameService.GetMinigameById(MinigameId);
@@ -64,6 +71,7 @@ namespace LexiLearner.Controllers
         }
 
         [HttpGet("")]
+        [Authorize]
         public async Task<IActionResult> GetMinigames()
         {
             var minigames = await _minigameService.GetMinigames();
@@ -73,6 +81,7 @@ namespace LexiLearner.Controllers
         }
 
         [HttpPost("{SessionId}/complete")]
+        [Authorize]
         public async Task<IActionResult> Complete([FromRoute] Guid SessionId)
         {
             await _minigameService.Complete(SessionId);
@@ -82,7 +91,8 @@ namespace LexiLearner.Controllers
         }
 
         [HttpPost("logs/wordhunt")]
-        public async Task<IActionResult> CreateLogWordHunt([FromBody] MinigameLogDTO.WordHuntLog request)
+        [Authorize]
+        public async Task<IActionResult> CreateLogWordHunt([FromBody] MinigameLogDTO request)
         {
             var minigamelog = await _minigameService.Create(MinigameType.WordHunt, request);
             return StatusCode(StatusCodes.Status201Created,
@@ -90,7 +100,8 @@ namespace LexiLearner.Controllers
         }
 
         [HttpPost("logs/wordsfromletters")]
-        public async Task<IActionResult> CreateLogWordsFromLetters([FromBody] MinigameLogDTO.WordsFromLettersLog request)
+        [Authorize]
+        public async Task<IActionResult> CreateLogWordsFromLetters([FromBody] MinigameLogDTO request)
         {
             var minigamelog = await _minigameService.Create(MinigameType.WordsFromLetters, request);
             return StatusCode(StatusCodes.Status201Created,
@@ -98,7 +109,8 @@ namespace LexiLearner.Controllers
         }
 
         [HttpPost("logs/fillintheblanks")]
-        public async Task<IActionResult> CreateLogFillInTheBlanks([FromBody] MinigameLogDTO.FillInTheBlanksLog request)
+        [Authorize]
+        public async Task<IActionResult> CreateLogFillInTheBlanks([FromBody] MinigameLogDTO request)
         {
             var minigamelog = await _minigameService.Create(MinigameType.FillInTheBlanks, request);
             return StatusCode(StatusCodes.Status201Created,
@@ -106,7 +118,8 @@ namespace LexiLearner.Controllers
         }
 
         [HttpPost("logs/twotruthsonelie")]
-        public async Task<IActionResult> CreateLogTwoTruthsOneLie([FromBody] MinigameLogDTO.TwoTruthsOneLieLog request)
+        [Authorize]
+        public async Task<IActionResult> CreateLogTwoTruthsOneLie([FromBody] MinigameLogDTO request)
         {
             var minigamelog = await _minigameService.Create(MinigameType.TwoTruthsOneLie, request);
             return StatusCode(StatusCodes.Status201Created,
@@ -114,7 +127,8 @@ namespace LexiLearner.Controllers
         }
 
         [HttpPost("logs/sentencerearrangement")]
-        public async Task<IActionResult> CreateLogSentenceRearrangement([FromBody] MinigameLogDTO.SentenceRearrangementLog request)
+        [Authorize]
+        public async Task<IActionResult> CreateLogSentenceRearrangement([FromBody] MinigameLogDTO request)
         {
             var minigamelog = await _minigameService.Create(MinigameType.SentenceRearrangement, request);
             return StatusCode(StatusCodes.Status201Created,
@@ -122,6 +136,7 @@ namespace LexiLearner.Controllers
         }
 
         [HttpGet("/logs/{MinigameLogId}")]
+        [Authorize]
         public async Task<IActionResult> GetMinigameLog([FromRoute] Guid MinigameLogId)
         {
             var minigamelog = await _minigameService.GetMinigameLogById(MinigameLogId);
@@ -130,11 +145,31 @@ namespace LexiLearner.Controllers
         }
 
         [HttpGet("logs")]
+        [Authorize]
         public async Task<IActionResult> GetMinigameLogs()
         {
             var minigamelogs = await _minigameService.GetMinigameLogs();
             return StatusCode(StatusCodes.Status200OK,
               new SuccessResponseDTO("Minigames found.", minigamelogs)
+            );
+        }
+
+        [HttpGet("{readingSessionId}/random")]
+        [Authorize]
+        public async Task<IActionResult> GetRandomMinigame([FromRoute] Guid readingSessionId)
+        {
+            var minigames = await _minigameService.GetRandomMinigames(readingSessionId);
+            return StatusCode(StatusCodes.Status200OK,
+                new SuccessResponseDTO("Successfully fetched minigames.", minigames)
+            );
+        }
+
+        [HttpGet("readingmaterials/{readingMaterialId}")]
+        public async Task<IActionResult> GetMinigamesByReadingMaterialId([FromRoute] Guid readingMaterialId)
+        {
+            var minigames = await _minigameService.GetMinigamesByRMId(readingMaterialId);
+            return StatusCode(StatusCodes.Status200OK,
+                new SuccessResponseDTO("Successfully fetched minigames.", minigames)
             );
         }
 

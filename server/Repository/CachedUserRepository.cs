@@ -169,5 +169,82 @@ namespace LexiLearner.Repository
             return deletedUser;
         }
 
+        public async Task<LoginStreak?> GetLoginStreak(string userId)
+        {
+            var cacheKey = $"LoginStreak_{userId}";
+            var streak = await GetFromCacheAsync<LoginStreak>(cacheKey);
+
+            if (streak is null)
+            {
+                streak = await _decorated.GetLoginStreak(userId);
+                if (streak is not null)
+                {
+                    await SetCacheAsync(cacheKey, streak, TimeSpan.FromMinutes(30));
+                }
+            }
+
+            return streak;
+        }
+
+        public async Task<LoginStreak> CreateLoginStreak(LoginStreak streak)
+        {
+            return await _decorated.CreateLoginStreak(streak);
+        }
+        
+        public async Task<Pupil?> GetPupilByPupilId(Guid pupilId)
+        {
+            var cacheKey = $"Pupil_{pupilId}";
+            var pupil = await GetFromCacheAsync<Pupil>(cacheKey);
+
+            if (pupil is null)
+            {
+                pupil = await _decorated.GetPupilByPupilId(pupilId);
+                if (pupil is not null)
+                {
+                    await SetCacheAsync(cacheKey, pupil, TimeSpan.FromMinutes(30));
+                }
+            }
+
+            return pupil;
+        }
+
+        public async Task<Session> CreateSession(Session session)
+        {
+            return await _decorated.CreateSession(session);
+        }
+
+        public async Task<Session?> GetSessionById(Guid sessionId)
+        {
+            var cacheKey = $"Session_{sessionId}";
+            var session = await GetFromCacheAsync<Session>(cacheKey);
+
+            if (session is null)
+            {
+                session = await _decorated.GetSessionById(sessionId);
+                if (session is not null)
+                {
+                    await SetCacheAsync(cacheKey, session, TimeSpan.FromMinutes(30));
+                }
+            }
+
+            return session;
+        }
+
+        public async Task<List<Session>> GetSessionsByUserId(string userId)
+        {
+            var cacheKey = $"Sessions_{userId}";
+            var sessions = await GetFromCacheAsync<List<Session>>(cacheKey);
+
+            if (sessions is null)
+            {
+                sessions = await _decorated.GetSessionsByUserId(userId);
+                if (sessions is not null)
+                {
+                    await SetCacheAsync(cacheKey, sessions, TimeSpan.FromMinutes(30));
+                }
+            }
+
+            return sessions ?? new List<Session>();
+        }
     }
 }

@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useCallback, memo, useMemo } from "react";
-import { usePathname } from "expo-router";
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -13,12 +12,16 @@ import { Text } from "~/components/ui/text";
 import { Heart, Shuffle } from "lucide-react-native";
 import { CorrectSound } from "@/utils/sounds";
 import { Progress } from "@/components/ui/progress";
+import { Minigame, MinigameType } from "@/models/Minigame";
+import { useCreateMinigameLog } from "@/services/minigameService";
 
-export default function WordsFromLetters() {
+export default function WordsFromLetters({ minigame }: { minigame: Minigame }) {
   const wordsFromLetters = {
-    letters: ["A", "E", "T", "C", "R"],
-    words: ["CATER", "CRATE", "REACT", "TRACE", "RECTA", "CARTE"],
+    letters: JSON.parse(minigame.metaData).letters,
+    words: JSON.parse(minigame.metaData).words,
   };
+
+  const { mutate: triggerCreateMinigameLog } = useCreateMinigameLog();
 
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
   const lives = useWordsFromLettersMiniGameStore((state) => state.lives);
@@ -70,11 +73,16 @@ export default function WordsFromLetters() {
     (state) => state.resetStreak,
   );
 
-  const setGame = useMiniGameStore((state) => state.setGame);
-  const pathname = usePathname(); // This gives you the current path
+  const resetGame = useWordsFromLettersMiniGameStore(
+    (state) => state.resetGame,
+  );
+  const gameOver = useMiniGameStore((state) => state.gameOver);
+  const incrementMinigameIndex = useMiniGameStore(
+    (state) => state.incrementMinigamesIndex,
+  );
 
   useEffect(() => {
-    setGame(pathname);
+    //resetGame();
     setLetters(wordsFromLetters.letters);
     const backHandler = BackHandler.addEventListener(
       "hardwareBackPress",
@@ -84,12 +92,6 @@ export default function WordsFromLetters() {
     );
 
     return () => backHandler.remove();
-  }, []);
-
-  const resetGuess = useCallback(() => {
-    setGuess(Array(5).fill(""));
-    resetUsedIndices();
-    setIsCorrect(null);
   }, []);
 
   useEffect(() => {
@@ -114,6 +116,41 @@ export default function WordsFromLetters() {
       }
     }
   }, [guess]);
+
+  useEffect(() => {
+    if (lives <= 0 || correctAnswers.length === wordsFromLetters.words.length) {
+      try {
+        const minigameLog = gameOver({
+          correctAnswers,
+          incorrectAnswers,
+          streak,
+        });
+
+        if (!minigameLog) {
+          throw Error("Minigame Log is null");
+        }
+
+        triggerCreateMinigameLog({
+          minigameLog,
+          type: MinigameType.WordsFromLetters,
+        });
+
+        resetGame();
+        incrementMinigameIndex();
+      } catch (error) {
+        console.error(
+          "Error during Words From Letter game over logic: ",
+          error,
+        );
+      }
+    }
+  }, [lives, correctAnswers]);
+
+  const resetGuess = useCallback(() => {
+    setGuess(Array(5).fill(""));
+    resetUsedIndices();
+    setIsCorrect(null);
+  }, []);
 
   const addLetterToGuess = useCallback(
     (letter: string, index: number) => {
@@ -148,15 +185,15 @@ export default function WordsFromLetters() {
   );
 
   return (
-    <ScrollView className="bg-lightGray">
-      <View className="flex p-8 gap-4">
+    <ScrollView className="bg-lightGray h-full">
+      <View className="flex p-8">
         <Progress
           value={progressValue}
           className="web:w-[60%] bg-background"
           indicatorClassName="bg-[#8383FF]"
         />
 
-        <View className="flex gap-36 py-16">
+        <View className="flex gap-14 py-16">
           <View className="flex gap-4">
             <View className="flex flex-row gap-2 justify-center items-center">
               <Text className="text-3xl font-black">Words From Letters</Text>
@@ -171,31 +208,33 @@ export default function WordsFromLetters() {
             </Text>
           </View>
 
-          <GuessContainer
-            guess={guess}
-            isCorrect={isCorrect}
-            removeLetterFromGuess={removeLetterFromGuess}
-          />
+          <View className="flex flex-col gap-6">
+            <GuessContainer
+              guess={guess}
+              isCorrect={isCorrect}
+              removeLetterFromGuess={removeLetterFromGuess}
+            />
 
-          <View className="flex flex-row gap-4">
-            <View className="flex flex-row gap-6 justify-center">
-              {letters && letters.length > 0 ? (
-                letters.map((letter: string, i: number) => (
-                  <LetterButton
-                    key={`letter-${i}`}
-                    letter={letter}
-                    disabled={usedIndices.includes(i)}
-                    onPress={() => addLetterToGuess(letter, i)}
-                  />
-                ))
-              ) : (
-                <Text>Loading letters...</Text>
-              )}
+            <View className="flex flex-col gap-2 justify-center items-center">
+              <TouchableOpacity onPress={shuffleLetters}>
+                <Shuffle size={30} color="black" />
+              </TouchableOpacity>
+
+              <View className="flex-row flex-wrap justify-center gap-6">
+                {letters && letters.length > 0 ? (
+                  letters.map((letter: string, i: number) => (
+                    <LetterButton
+                      key={`letter-${i}`}
+                      letter={letter}
+                      disabled={usedIndices.includes(i)}
+                      onPress={() => addLetterToGuess(letter, i)}
+                    />
+                  ))
+                ) : (
+                  <Text>Loading letters...</Text>
+                )}
+              </View>
             </View>
-
-            <TouchableOpacity onPress={shuffleLetters}>
-              <Shuffle size={50} color="black" />
-            </TouchableOpacity>
           </View>
         </View>
       </View>
@@ -270,7 +309,7 @@ const GuessSlot = memo(
         className={`border p-4 rounded-md ${borderClass}`}
       >
         <TouchableOpacity onPress={onPress}>
-          <Text className={`text-2xl font-black ${textClass}`}>{letter}</Text>
+          <Text className={`text-4xl font-black ${textClass}`}>{letter}</Text>
         </TouchableOpacity>
       </Animated.View>
     );

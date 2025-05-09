@@ -14,6 +14,7 @@ import {
   useMiniGameStore,
 } from "@/stores/miniGameStore";
 import { usePathname } from "expo-router";
+import { Minigame } from "@/models/Minigame";
 
 export function ChoicesBtn({
   sentence,
@@ -37,12 +38,8 @@ export function ChoicesBtn({
   );
 }
 
-export default function _2Truths1Lie() {
-  const choices = [
-    { choice: "Cats say meow", answer: false },
-    { choice: "The sky is green", answer: true },
-    { choice: "Fish live in water", answer: false },
-  ];
+export default function TwoTruthsOneLie({ minigame }: { minigame: Minigame }) {
+  const choices = JSON.parse(minigame.metaData).choices;
 
   // const choices = use2Truths1LieGameStore((state) => state.choices);
   const score = use2Truths1LieGameStore((state) => state.score);
@@ -51,17 +48,13 @@ export default function _2Truths1Lie() {
   const setScore = use2Truths1LieGameStore((state) => state.setScore);
   const newGame = use2Truths1LieGameStore((state) => state.newGame);
 
-  const setGame = useMiniGameStore((state) => state.setGame);
-  const pathname = usePathname(); // This gives you the current path
-
   useEffect(() => {
     newGame();
-    setGame(pathname);
     const backHandler = BackHandler.addEventListener(
       "hardwareBackPress",
       () => {
         return true;
-      }
+      },
     );
 
     return () => backHandler.remove();

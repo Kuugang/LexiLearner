@@ -1,8 +1,3 @@
-using System.Security.Claims;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
-using System.IdentityModel.Tokens.Jwt;
-using LexiLearner.Models;
 using LexiLearner.Interfaces;
 
 namespace LexiLearner.Middlewares
@@ -30,7 +25,6 @@ namespace LexiLearner.Middlewares
         public async Task InvokeAsync(HttpContext context)
         {
             var token = context.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
-            Console.WriteLine("TOKEN:"+token);
 
             if (!string.IsNullOrEmpty(token))
             {

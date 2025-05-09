@@ -3,9 +3,8 @@ import { create } from "zustand";
 import { useUserStore } from "./userStore";
 import { useGlobalStore } from "./globalStore";
 import { persist } from "zustand/middleware";
-import { User } from "../models/User";
+import { Pupil, User } from "../models/User";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { setAuthToken } from "@/utils/axiosInstance";
 
 import {
   login as apiLogin,
@@ -33,7 +32,7 @@ export const useAuthStore = create<AuthStore>()(
         try {
           let response = await apiLogin(email, password);
 
-          setAuthToken(response.data.token);
+          await AsyncStorage.setItem("bearerToken", response.data.token);
 
           response = await getProfile();
 
@@ -49,8 +48,7 @@ export const useAuthStore = create<AuthStore>()(
               twoFactorEnabled,
               phoneNumber,
               role,
-              age,
-              level,
+              pupil,
             } = userData;
 
             const user: User = {
@@ -62,9 +60,15 @@ export const useAuthStore = create<AuthStore>()(
               twoFactorEnabled: twoFactorEnabled,
               phoneNumber: phoneNumber,
               role: role,
-              age: age,
-              level: level ?? 0,
             };
+
+            if (role === "Pupil") {
+              user.pupil = {
+                id: pupil.id,
+                level: pupil.level,
+                age: pupil.age,
+              };
+            }
 
             setUser(user);
           } else {
@@ -83,7 +87,9 @@ export const useAuthStore = create<AuthStore>()(
       signup: async (registerForm: Record<string, any>) => {
         try {
           let response = await apiSignUp(registerForm);
-          setAuthToken(response.data.token);
+
+          await AsyncStorage.setItem("bearerToken", response.data.token);
+
           response = await getProfile();
 
           const {
@@ -119,9 +125,10 @@ export const useAuthStore = create<AuthStore>()(
           );
         }
       },
-      logout: () => {
+      logout: async () => {
         setUser(null);
-        setAuthToken(null);
+
+        await AsyncStorage.removeItem("bearerToken");
       },
 
       providerAuth: async (provider: number) => {
@@ -152,7 +159,8 @@ export const useAuthStore = create<AuthStore>()(
           }
 
           setIsLoading(true);
-          setAuthToken(response.data.token);
+          await AsyncStorage.setItem("bearerToken", response.data.token);
+
           let userProfileResponse = await getProfile();
 
           const userData = userProfileResponse.data;

@@ -11,7 +11,9 @@ namespace LexiLearner.Models
         public required Guid ClassroomId { get; set; }
         [ForeignKey("ClassroomId")]
         public required Classroom Classroom { get; set; }
-
+        public required Guid ReadingMaterialId { get; set; }
+        [ForeignKey("ReadingMaterialId")]
+        public required ReadingMaterial ReadingMaterial { get; set; }
         public required Guid MinigameId { get; set; }
         [ForeignKey("MinigameId")]
         public required Minigame Minigame { get; set; }

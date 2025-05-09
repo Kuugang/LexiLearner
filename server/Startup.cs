@@ -20,6 +20,7 @@ using LexiLearner.Services;
 using LexiLearner.Repository;
 using LexiLearner.Validators;
 using LexiLearner.Extensions;
+using System.Text.Json.Serialization;
 
 
 namespace LexiLearner
@@ -87,8 +88,14 @@ namespace LexiLearner
                 .AddJsonOptions(options =>
                 {
                     options.JsonSerializerOptions.DefaultIgnoreCondition =
-                        System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull;
+                        JsonIgnoreCondition.WhenWritingNull;
                     options.AllowInputFormatterExceptionMessages = true;
+                });
+                
+            services.AddControllers()
+                .AddJsonOptions(opt =>
+                {
+                    opt.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
                 });
 
             services.ConfigureApplicationCookie(options =>
@@ -123,10 +130,9 @@ namespace LexiLearner
             services.AddScoped<IPupilService, PupilService>();
             services.AddScoped<IMinigameService, MinigameService>();
             services.AddScoped<IClassroomService, ClassroomService>();
-            services.AddScoped<IClassroomEnrollmentService, ClassroomEnrollmentService>();
             services.AddScoped<IReadingSessionService, ReadingSessionService>();
+            services.AddScoped<IAchievementService, AchievementService>();
 
-            services.AddScoped<IClassroomEnrollmentRepository, ClassroomEnrollmentRepository>();
             services.AddScoped<IClassroomRepository, ClassroomRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IGenreRepository, GenreRepository>();
@@ -134,6 +140,7 @@ namespace LexiLearner
             services.AddScoped<IPupilRepository, PupilRepository>();
             services.AddScoped<IMinigameRepository, MinigameRepository>();
             services.AddScoped<IReadingSessionRepository, ReadingSessionRepository>();
+            services.AddScoped<IAchievementRepository, AchievementRepository>();
 
             // Configure Entity Framework with PostgreSQL
             services.AddDbContext<DataContext>(options =>

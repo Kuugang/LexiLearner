@@ -25,5 +25,6 @@ namespace LexiLearner.Models
         public required String MetaData { get; set; }
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public required int MaxScore { get; set; }
     }
 }

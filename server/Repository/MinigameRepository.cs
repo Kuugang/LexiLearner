@@ -68,5 +68,5 @@ namespace LexiLearner.Repository
             _dataContext.Update(Pupil);
             await _dataContext.SaveChangesAsync();
         }
-    }
+	}
 }

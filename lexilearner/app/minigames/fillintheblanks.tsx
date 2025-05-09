@@ -13,13 +13,13 @@ import { useMiniGameStore } from "@/stores/miniGameStore";
 import { View, ScrollView, TouchableOpacity, BackHandler } from "react-native";
 import { Text } from "~/components/ui/text";
 import { Heart, Shuffle } from "lucide-react-native";
+import { Minigame } from "@/models/Minigame";
 
-export default function SentenceArrangement() {
+export default function FillInTheBlank({ minigame }: { minigame: Minigame }) {
   const fillInTheBlankData = {
-    phrases:
-      "The Dodo was a flightless {{blank}} native to the island of Mauritius in the Indian Ocean.",
-    correctAnswer: "Bird",
-    choices: ["Bird", "Dog", "Human"],
+    phrases: JSON.parse(minigame.metaData).question,
+    correctAnswer: JSON.parse(minigame.metaData).correctAnswer,
+    choices: JSON.parse(minigame.metaData).choices,
   };
 
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
@@ -110,7 +110,7 @@ export default function SentenceArrangement() {
   return (
     <ScrollView className="bg-lightGray">
       <View className="flex p-8 gap-4">
-        <View className="flex gap-36 py-16">
+        <View className="flex gap-12 py-16">
           <View className="flex gap-4">
             <View className="flex flex-row gap-2 justify-center items-center">
               <Text className="text-3xl font-black">Fill in the Blank</Text>
@@ -138,7 +138,7 @@ export default function SentenceArrangement() {
                   {answer ||
                     "_".repeat(
                       Math.max(
-                        ...fillInTheBlankData.choices.map((c) => c.length),
+                        ...fillInTheBlankData.choices.map((c: any) => c.length),
                       ),
                     )}
                 </Text>
@@ -147,7 +147,7 @@ export default function SentenceArrangement() {
             </Animated.View>
 
             <View className="flex flex-col gap-4 items-center">
-              {fillInTheBlankData.choices.map((choice, index) => {
+              {fillInTheBlankData.choices.map((choice: any, index: any) => {
                 return (
                   <View
                     key={index}

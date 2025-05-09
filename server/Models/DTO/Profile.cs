@@ -27,18 +27,15 @@ namespace LexiLearner.Models.DTO
         public string? Avatar { get; set; }
         public string Role { get; set; }
 
-        public int? Age { get; set; }
-        public int? GradeLevel { get; set; }
-        public int? Level { get; set; }
+
+        public Pupil Pupil { get; set; }
 
         public ProfileDTO() { }
 
         public ProfileDTO(User user, Pupil pupil, bool Public = false)
         {
             SetupFields(user, Public);
-            Age = pupil.Age;
-            GradeLevel = pupil.GradeLevel;
-            Level = pupil.Level;
+            Pupil = pupil;
             Role = Roles.Pupil.ToString();
         }
 
@@ -61,6 +58,24 @@ namespace LexiLearner.Models.DTO
             Email = user.Email;
             TwoFactorEnabled = user.TwoFactorEnabled;
             PhoneNumber = user.PhoneNumber;
+        }
+    }
+
+    public class LoginStreakDTO
+    {
+        public Guid Id { get; set; }
+        public string UserId { get; set; }
+        public int CurrentStreak { get; set; }
+        public int LongestStreak { get; set; }
+        public DateTime LastLoginDate { get; set; }
+
+        public LoginStreakDTO(LoginStreak streak)
+        {
+            Id = streak.Id;
+            UserId = streak.UserId;
+            CurrentStreak = streak.CurrentStreak;
+            LongestStreak = streak.LongestStreak;
+            LastLoginDate = streak.LastLoginDate;
         }
     }
 }

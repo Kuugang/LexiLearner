@@ -1,4 +1,5 @@
 using System.Text.Json.Serialization;
+using LexiLearner.Data.DTO;
 
 namespace LexiLearner.Models.DTO
 {
@@ -21,9 +22,10 @@ namespace LexiLearner.Models.DTO
       public int? Word_Count { get; set; }
       [JsonPropertyName("passage")]
       public required string Passage { get; set; }
-     [JsonPropertyName("questions")]
-      public required List<object> Questions { get; set; } 
+      [JsonPropertyName("minigames")]
+      public required JsonMinigame Minigames { get; set; } 
     }
+    
     public class Create
     {
       public required Guid Id { get; set; }

@@ -8,17 +8,15 @@ export interface User {
   phoneNumber: string;
   role: string;
 
-  age?: number;
-  level?: number;
+  pupil?: Pupil;
 }
 
 export interface TeacherProfile {
   user: User;
 }
 
-export interface StudentProfile {
-  user: User;
-  readingLevel: number;
-  age: number;
-  gradeLevel: number;
+export interface Pupil {
+  id?: string;
+  age?: number;
+  level?: number;
 }
