@@ -18,7 +18,7 @@ const Index = () => {
     } else {
     }
     // return <Redirect href="/home" />;
-    return <Redirect href="/minigames/fillintheblanks" />;
+    // return <Redirect href="/minigames/WordHunt" />;
   }
 
   return (

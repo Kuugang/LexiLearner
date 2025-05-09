@@ -11,7 +11,7 @@ import BackHeader from "@/components/BackHeader";
 
 function ContentIndex() {
   const selectedContent = useReadingContentStore(
-    (state) => state.selectedContent,
+    (state) => state.selectedContent
   );
 
   if (!selectedContent) {
@@ -45,14 +45,15 @@ function ContentIndex() {
 
         <BackHeader />
 
-        <Image
+        {/* <Image
+          // TODO: MURAG NAA DIRI AKONG PROBLEMA!
           source={{
             uri: selectedContent.cover,
           }}
           className="rounded-lg mr-4"
           style={{ width: 130, height: 185 }}
           alt=""
-        />
+        /> */}
 
         <Text className="text-2xl font-bold">{selectedContent.title}</Text>
         {selectedContent.author && (
