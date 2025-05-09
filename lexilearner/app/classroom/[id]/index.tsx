@@ -9,13 +9,20 @@ import {
 } from "../../../components/Classroom/MainClassroomBtns";
 import { Settings, SettingsIcon, Users, UsersIcon } from "lucide-react-native";
 import ClassroomHeader from "@/components/Classroom/ClassroomHeader";
+import { useClassroomStore } from "@/stores/classroomStore";
 
-export default function ClassroomScreen() {
+export default function CurrentClassroom() {
   const params = useLocalSearchParams<{ id: string }>();
+  // selectedClassroom()
+  const selectedClassroom = useClassroomStore(
+    (state) => state.selectedClassroom
+  );
+  console.log("SELECTED CLASSROOM:", selectedClassroom?.id);
+
   return (
     <ScrollView>
       <View>
-        <ClassroomHeader />
+        <ClassroomHeader name="" joinCode="" />
         <View className="p-8">
           <Text>id:{params.id}</Text>
           <View className="items-center justify-between flex-row w-full">
@@ -26,7 +33,12 @@ export default function ClassroomScreen() {
                 <View className="mx-3">
                   <UsersIcon color="black" />
                 </View>
-                <SettingsIcon color="black" />
+                <SettingsIcon
+                  color="black"
+                  onPress={() => {
+                    router.push(`/classroom/${params.id}/classroomsettings`);
+                  }}
+                />
               </View>
             </View>
 

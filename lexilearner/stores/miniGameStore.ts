@@ -107,8 +107,8 @@ export const useMiniGameStore = create<MiniGameStore>()(
           await AsyncStorage.removeItem(name);
         },
       },
-    },
-  ),
+    }
+  )
 );
 
 interface WordsFromLettersGameState {
@@ -197,8 +197,8 @@ export const use2Truths1LieGameStore = create<_2Truths1LieGameState>()(
           await AsyncStorage.removeItem(name);
         },
       },
-    },
-  ),
+    }
+  )
 );
 
 export const useWordHuntGameStore = create<WordHuntGameState>()(
@@ -228,6 +228,7 @@ export const useWordHuntGameStore = create<WordHuntGameState>()(
 
       setCorrectAnswers: (correctAnswers: string[]) =>
         set((state) => ({ correctAnswers: correctAnswers })),
+
       setWrongAnswers: (wrongAnswers: string[]) =>
         set((state) => ({ wrongAnswers: wrongAnswers })),
       setAllWords: (allWords: string[]) =>
@@ -263,8 +264,8 @@ export const useWordHuntGameStore = create<WordHuntGameState>()(
           await AsyncStorage.removeItem(name);
         },
       },
-    },
-  ),
+    }
+  )
 );
 
 export const useWordsFromLettersMiniGameStore =
@@ -299,7 +300,7 @@ export const useWordsFromLettersMiniGameStore =
             state.usedIndices.forEach((letterIndex, guessIndex) => {
               if (letterIndex !== -1) {
                 const newPosition = shuffled.findIndex(
-                  (item) => item.originalIndex === letterIndex,
+                  (item) => item.originalIndex === letterIndex
                 );
                 if (newPosition !== -1) {
                   newUsedIndices[guessIndex] = newPosition;
@@ -385,8 +386,8 @@ export const useWordsFromLettersMiniGameStore =
             await AsyncStorage.removeItem(name);
           },
         },
-      },
-    ),
+      }
+    )
   );
 
 interface SentenceRearrangementGameState {
@@ -465,8 +466,8 @@ export const useSentenceRearrangementMiniGameStore =
             await AsyncStorage.removeItem(name);
           },
         },
-      },
-    ),
+      }
+    )
   );
 
 interface FillInTheBlankGameState {
@@ -530,6 +531,6 @@ export const useFillInTheBlankMiniGameStore = create<FillInTheBlankGameState>()(
           await AsyncStorage.removeItem(name);
         },
       },
-    },
-  ),
+    }
+  )
 );
