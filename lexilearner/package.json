@@ -83,7 +83,13 @@
     "tailwind-merge": "^3.2.0",
     "tailwindcss": "^3.4.17",
     "tailwindcss-animate": "^1.0.7",
+<<<<<<< Updated upstream
     "zustand": "^5.0.3"
+=======
+    "zustand": "^5.0.3",
+    "@shopify/flash-list": "1.7.3",
+    "expo-dev-client": "~5.0.20"
+>>>>>>> Stashed changes
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",

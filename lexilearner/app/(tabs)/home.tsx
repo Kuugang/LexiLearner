@@ -1,7 +1,8 @@
 import { router } from "expo-router";
 import { useStories } from "@/services/ReadingMaterialService";
-import { memo, useEffect } from "react";
+import { memo, useEffect, useState } from "react";
 import ReadingContent from "@/components/ReadingContent";
+import LoginStreak from "@/components/LoginStreak";
 
 //Components
 import { ScrollView, TouchableOpacity, View } from "react-native";
@@ -13,21 +14,48 @@ import { CircleUser, Search, Flame } from "lucide-react-native";
 
 function HomeScreen() {
   const { data: stories, isLoading: isStoriesLoading } = useStories();
+  const [showStreak, setShowStreakModal] = useState(false);
+
+  // Show streak modal when component mounts
+  useEffect(() => {
+    // Check if it's a new day since last login or first-time user
+    // This is where you would add your logic to determine if the streak should be shown
+    // For demo purposes, we'll just show it after a short delay
+    const timer = setTimeout(() => {
+      setShowStreakModal(true);
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  const streakCount = 3;
+  const activeWeekdays = [true, true, true, false, false, false, false];
 
   return (
     <ScrollView className="bg-background">
       {/* TODO: MAKE THIS INTO COMPONENT*/}
       <View className="flex flex-row gap-2 items-center w-full p-4">
-        <TouchableOpacity onPress={() => router.push("/(tabs)/profile")}>
+        <TouchableOpacity
+          onPress={() => router.push("/(tabs)/achievementslist")}
+        >
           <CircleUser color="#FFD43B" size={30} />
         </TouchableOpacity>
 
-        <View>
-          <Flame color="red" size={30} />
-          <Text className="text-red-500 font-bold absolute -bottom-1 -right-1">
-            3
-          </Text>
-        </View>
+        <LoginStreak
+          isVisible={showStreak}
+          onClose={() => setShowStreakModal(false)}
+          streakCount={streakCount}
+          activeWeekdays={activeWeekdays}
+        />
+
+        <TouchableOpacity onPress={() => setShowStreakModal(true)}>
+          <View style={{ position: "relative" }}>
+            <Flame color="red" size={30} />
+            <Text className="text-red-500 font-bold absolute -bottom-1 -right-1">
+              {streakCount}
+            </Text>
+          </View>
+        </TouchableOpacity>
 
         <View className="relative flex-1">
           <Search

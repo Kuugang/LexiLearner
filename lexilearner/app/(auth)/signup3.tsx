@@ -19,7 +19,7 @@ export default function Step3() {
   const signup = useAuthStore((state) => state.signup);
 
   const { registerForm, providerRegisterForm } =
-    useContext(RegisterFormContext);
+    useContext(RegisterFormContext)!;
   const [isInvalid, setIsInvalid] = useState(false);
   const setIsLoading = useGlobalStore((state) => state.setIsLoading);
 
@@ -48,10 +48,11 @@ export default function Step3() {
         router.push("/home");
       }
     } catch (error: any) {
+      console.log("Form data being submitted:", form);
       Toast.show({
         type: "error",
-        text1: "Registration Failed",
-        text2: error.message,
+        text1: "Registration Failed bbb",
+        text2: error.message || "Unknown error occurred",
       });
     } finally {
       setIsLoading(false);

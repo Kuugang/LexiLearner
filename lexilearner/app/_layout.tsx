@@ -1,3 +1,4 @@
+// app/_layout.tsx (fix)
 import "~/global.css";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { SplashScreen, Stack } from "expo-router";
