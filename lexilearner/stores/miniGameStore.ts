@@ -45,7 +45,10 @@ export const useMiniGameStore = create<MiniGameStore>()(
         let logResult: Record<string, any> = {};
 
         const startTime = get().gameStartTime;
-        if (!startTime) return null;
+        if (!startTime) {
+          console.warn("start time is null");
+          return null;
+        }
         const duration: number = Math.floor(
           (Date.now() - startTime.getTime()) / 1000,
         );
@@ -55,25 +58,40 @@ export const useMiniGameStore = create<MiniGameStore>()(
           case MinigameType.WordsFromLetters:
             logResult["correctAnswers"] = result.correctAnswers;
             logResult["incorrectAnswers"] = result.correctAnswers;
-            logResult["streak"] = result.streak;
             logResult["score"] = logResult["correctAnswers"].length;
+            logResult["streak"] = result.streak;
             break;
           case MinigameType.FillInTheBlanks:
+            logResult["answers"] = result.answers;
+            logResult["score"] = result.score;
+            break;
           case MinigameType.SentenceRearrangement:
+            logResult["answers"] = result.answers;
+            logResult["score"] = result.score;
+            break;
           case MinigameType.WordHunt:
+            logResult["score"] = result.answers;
+            logResult["streak"] = result.streak;
+            logResult["correctAttempts"] = result.correctAttempts;
+            logResult["incorrectAttempts"] = result.incorrectAttempts;
+            break;
           case MinigameType.TwoTruthsOneLie:
+            logResult["score"] = result.score;
+            break;
         }
 
         const currentReadingSession =
           useReadingSessionStore.getState().currentSession;
 
         if (!currentReadingSession) {
+          console.warn("currentReadingSession is null");
           return null;
         }
 
         const user = useUserStore.getState().user;
 
         if (!user?.pupil?.id) {
+          console.warn("pupil is null");
           return null;
         }
 
@@ -82,7 +100,6 @@ export const useMiniGameStore = create<MiniGameStore>()(
           pupilId: user.pupil.id,
           readingSessionId: currentReadingSession.id,
           result: JSON.stringify(logResult),
-          createdAt: new Date().toString(),
         };
         set({ gameStartTime: null });
         return minigameLog;
@@ -111,74 +128,24 @@ export const useMiniGameStore = create<MiniGameStore>()(
   ),
 );
 
-interface WordsFromLettersGameState {
-  letters: string[];
-  guess: string[];
-  usedIndices: number[];
-  correctAnswers: string[];
-  incorrectAnswers: string[];
-  streak: number;
-  lives: number;
-
-  shuffleLetters: () => void;
-
-  setLetters: (letters: string[]) => void;
-  setGuess: (guess: string[]) => void;
-
-  addUsedIndex: (guessIndex: number, letterIndex: number) => void;
-  removeUsedIndex: (index: number) => void;
-  resetUsedIndices: () => void;
-  clearUsedIndices: () => void;
-
-  addCorrectAnswer: (answer: string) => void;
-  addIncorrectAnswer: (answer: string) => void;
-
-  incrementStreak: () => void;
-  resetStreak: () => void;
-  resetGame: () => void;
-
-  decrementLives: () => void;
-}
-
 type Choice = { choice: string; answer: boolean };
-interface _2Truths1LieGameState {
+interface TwoTruthsOneLieGameState {
   choices: Choice[];
   score: number;
 
-  setScore: () => void;
+  setScore: (score: number) => void;
   setChoices: (choices: Choice[]) => void;
   newGame: () => void;
 }
 
-interface WordHuntGameState {
-  correctAnswers: string[];
-  wrongAnswers: string[];
-  allWords: string[];
-  lives: number;
-  streak: number;
-  shuffledWords: string[];
-  answered: string[];
-
-  setShuffled: (allWords: string[]) => void;
-  setAnswered: (answered: string) => void;
-  setCorrectAnswers: (correctAnswers: string[]) => void;
-  setWrongAnswers: (wrongAnswers: string[]) => void;
-  setAllWords: (allWords: string[]) => void;
-
-  incrementStreak: () => void;
-  resetStreak: () => void;
-  newGame: () => void;
-  decrementLives: () => void;
-}
-
-export const use2Truths1LieGameStore = create<_2Truths1LieGameState>()(
+export const useTwoTruthsOneLieGameStore = create<TwoTruthsOneLieGameState>()(
   persist(
     (set) => ({
       choices: [],
       score: 0,
 
-      setScore: () => set((state) => ({ score: state.score + 1 })),
-      setChoices: (choices: Choice[]) => set((state) => ({ choices: choices })),
+      setScore: (score: number) => set({ score: score }),
+      setChoices: (choices: Choice[]) => set({ choices: choices }),
       newGame: () => set(() => ({ score: 0 })),
     }),
     {
@@ -201,6 +168,29 @@ export const use2Truths1LieGameStore = create<_2Truths1LieGameState>()(
   ),
 );
 
+interface WordHuntGameState {
+  correctAnswers: string[];
+  wrongAnswers: string[];
+  allWords: string[];
+  lives: number;
+  streak: number;
+  shuffledWords: string[];
+  correctAttempts: string[];
+  incorrectAttempts: string[];
+
+  setShuffled: (allWords: string[]) => void;
+  addCorrectAttempt: (word: string) => void;
+  addIncorrectAttempt: (word: string) => void;
+  setCorrectAnswers: (correctAnswers: string[]) => void;
+  setWrongAnswers: (wrongAnswers: string[]) => void;
+  setAllWords: (allWords: string[]) => void;
+
+  incrementStreak: () => void;
+  resetStreak: () => void;
+  newGame: () => void;
+  decrementLives: () => void;
+}
+
 export const useWordHuntGameStore = create<WordHuntGameState>()(
   persist(
     (set) => ({
@@ -210,40 +200,45 @@ export const useWordHuntGameStore = create<WordHuntGameState>()(
       lives: 3,
       streak: 0,
       shuffledWords: [],
-      answered: [],
+      correctAttempts: [],
+      incorrectAttempts: [],
 
       setShuffled: (allWords: string[]) => {
         const shuffled = allWords
           .map((value) => ({ value, sort: Math.random() }))
           .sort((a, b) => a.sort - b.sort)
           .map(({ value }) => value);
-
         set({ shuffledWords: shuffled });
       },
 
-      setAnswered: (word: string) =>
+      addCorrectAttempt: (word: string) =>
         set((state) => ({
-          answered: [...state.answered, word],
+          correctAttempts: [...state.correctAttempts, word],
         })),
-
+      addIncorrectAttempt: (word: string) =>
+        set((state) => ({
+          incorrectAttempts: [...state.incorrectAttempts, word],
+        })),
       setCorrectAnswers: (correctAnswers: string[]) =>
-        set((state) => ({ correctAnswers: correctAnswers })),
+        set({ correctAnswers: correctAnswers }),
       setWrongAnswers: (wrongAnswers: string[]) =>
-        set((state) => ({ wrongAnswers: wrongAnswers })),
-      setAllWords: (allWords: string[]) =>
-        set((state) => ({ allWords: allWords })),
+        set({ wrongAnswers: wrongAnswers }),
+      setAllWords: (allWords: string[]) => set({ allWords: allWords }),
 
       decrementLives: () =>
         set((state) => ({
           lives: state.lives - 1,
         })),
 
-      resetStreak: () => set((state) => ({ streak: 0 })),
+      resetStreak: () => set({ streak: 0 }),
       newGame: () =>
         set(() => ({
           lives: 3,
           streak: 0,
-          answered: [],
+          correctAttempts: [],
+          incorrectAttempts: [],
+          allWords: [],
+          wrongAnswers: [],
         })),
       incrementStreak: () => set((state) => ({ streak: state.streak + 1 })),
     }),
@@ -267,11 +262,43 @@ export const useWordHuntGameStore = create<WordHuntGameState>()(
   ),
 );
 
+interface WordsFromLettersGameState {
+  letters: string[];
+  words: string[];
+  guess: string[];
+  usedIndices: number[];
+  correctAnswers: string[];
+  incorrectAnswers: string[];
+  streak: number;
+  lives: number;
+
+  shuffleLetters: () => void;
+
+  setLetters: (letters: string[]) => void;
+  setWords: (words: string[]) => void;
+  setGuess: (guess: string[]) => void;
+
+  addUsedIndex: (guessIndex: number, letterIndex: number) => void;
+  removeUsedIndex: (index: number) => void;
+  resetUsedIndices: () => void;
+  clearUsedIndices: () => void;
+
+  addCorrectAnswer: (answer: string) => void;
+  addIncorrectAnswer: (answer: string) => void;
+
+  incrementStreak: () => void;
+  resetStreak: () => void;
+  resetGame: () => void;
+
+  decrementLives: () => void;
+}
+
 export const useWordsFromLettersMiniGameStore =
   create<WordsFromLettersGameState>()(
     persist(
       (set, get) => ({
         letters: Array(5).fill(""),
+        words: [],
         guess: Array(5).fill(""),
         usedIndices: Array(5).fill(-1),
         correctAnswers: [],
@@ -314,6 +341,7 @@ export const useWordsFromLettersMiniGameStore =
           }),
 
         setLetters: (letters: string[]) => set({ letters }),
+        setWords: (words: string[]) => set({ words }),
         setGuess: (guess: string[]) => set({ guess }),
 
         addUsedIndex: (guessIndex: number, letterIndex: number) =>
@@ -359,6 +387,7 @@ export const useWordsFromLettersMiniGameStore =
           set(() => {
             return {
               letters: Array(5).fill(""),
+              words: [],
               guess: Array(5).fill(""),
               usedIndices: Array(5).fill(-1),
               correctAnswers: [],
@@ -470,7 +499,7 @@ export const useSentenceRearrangementMiniGameStore =
   );
 
 interface FillInTheBlankGameState {
-  phrases: string | null;
+  phrases: string;
   correctAnswer: string | null;
   choices: string[];
   answers: string[];
@@ -488,7 +517,7 @@ interface FillInTheBlankGameState {
 export const useFillInTheBlankMiniGameStore = create<FillInTheBlankGameState>()(
   persist(
     (set) => ({
-      phrases: null,
+      phrases: "",
       correctAnswer: null,
       choices: [],
       answers: [],

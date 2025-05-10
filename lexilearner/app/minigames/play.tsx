@@ -3,20 +3,26 @@ import {
   useRandomMinigames,
 } from "@/services/minigameService";
 import { useMiniGameStore } from "@/stores/miniGameStore";
-import { useLocalSearchParams } from "expo-router";
 import { memo, useEffect } from "react";
 import WordsFromLetters from "./wordsfromletters";
 import FillInTheBlank from "./fillintheblanks";
 import SentenceArrangement from "./sentencearrangement";
 import { Minigame, MinigameType } from "@/models/Minigame";
 import WordHunt from "./WordHunt";
-import TwoTruthsOneLie from "./2Truths1Lie";
+import TwoTruthsOneLie from "./twoTruthsOneLie";
 import { View, Text } from "react-native";
 import { useReadingSessionStore } from "@/stores/readingSessionStore";
 
-function Play() {
-  const params = useLocalSearchParams();
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withTiming,
+} from "react-native-reanimated";
+import { Dimensions } from "react-native";
 
+const { width } = Dimensions.get("window");
+
+function Play() {
   const currentReadingSession = useReadingSessionStore(
     (state) => state.currentSession,
   );
@@ -56,26 +62,35 @@ function Play() {
     if (isLoading) return;
     if (!randomMinigames) return;
 
-    if (!minigame1 || !minigame2 || !minigame3 || !minigame4 || !minigame5)
-      return;
-    const games: Minigame[] = [
-      minigame1,
-      minigame2,
-      minigame3,
-      minigame4,
-      minigame5,
-    ];
+    // if (!minigame1 || !minigame2 || !minigame3 || !minigame4 || !minigame5)
+    //   return;
+    // const games: Minigame[] = [
+    //   minigame1,
+    //   minigame2,
+    //   minigame3,
+    //   minigame4,
+    //   minigame5,
+    // ];
 
-    setMinigames(games);
-    setCurrentMinigame(games[minigamesIndex]);
-    //setMinigames(randomMinigames);
-    //setCurrentMinigame(randomMinigames[minigamesIndex]);
+    // setMinigames(games);
+    // setCurrentMinigame(games[minigamesIndex]);
+    setMinigames(randomMinigames);
+    setCurrentMinigame(randomMinigames[minigamesIndex]);
   }, [isLoading]);
 
+  const translateX = useSharedValue(0);
   useEffect(() => {
-    console.log(minigamesIndex);
     setCurrentMinigame(minigames[minigamesIndex]);
+    const timeout = setTimeout(() => {
+      translateX.value = withTiming(-width * minigamesIndex, { duration: 300 });
+    }, 200);
+
+    return () => clearTimeout(timeout);
   }, [minigamesIndex]);
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [{ translateX: translateX.value }],
+  }));
 
   const getMinigameComponent = (minigame: Minigame) => {
     switch (minigame.minigameType) {
@@ -93,8 +108,28 @@ function Play() {
         return <Text>Unknown minigame type</Text>;
     }
   };
+
   if (!currentMinigame) return <Text>Loading...</Text>;
-  return <View>{getMinigameComponent(currentMinigame)}</View>;
+
+  return (
+    <View style={{ flex: 1, overflow: "hidden" }}>
+      <Animated.View
+        style={[
+          {
+            flexDirection: "row",
+            width: width * minigames.length,
+          },
+          animatedStyle,
+        ]}
+      >
+        {minigames.map((minigame, i) => (
+          <View key={i} style={{ width }}>
+            {getMinigameComponent(minigame)}
+          </View>
+        ))}
+      </Animated.View>
+    </View>
+  );
 }
 
 export default memo(Play);

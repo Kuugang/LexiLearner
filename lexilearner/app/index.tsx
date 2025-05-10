@@ -1,5 +1,5 @@
-import React, { useEffect } from "react";
-import { Redirect, RelativePathString, router } from "expo-router"; // Or useNavigation if using React Navigation
+import React from "react";
+import { Redirect, router } from "expo-router"; // Or useNavigation if using React Navigation
 import { useUserStore } from "@/stores/userStore";
 import { useMiniGameStore } from "@/stores/miniGameStore";
 
@@ -9,16 +9,16 @@ import { Button } from "~/components/ui/button";
 import { Text } from "~/components/ui/text";
 
 const Index = () => {
-  // const user = useUserStore((state) => state.user);
-  // const currentMinigame = useMiniGameStore((state) => state.currentMinigame);
+  const user = useUserStore((state) => state.user);
+  const currentMinigame = useMiniGameStore((state) => state.currentMinigame);
 
-  // if (user) {
-  //   if (currentMinigame) {
-  //     return <Redirect href="/minigames/play" />;
-  //   } else {
-  //   }
-  //   return <Redirect href="/home" />;
-  // }
+  if (user) {
+    if (currentMinigame) {
+      return <Redirect href="/minigames/play" />;
+    } else {
+    }
+    return <Redirect href="/home" />;
+  }
 
   return (
     <ScrollView

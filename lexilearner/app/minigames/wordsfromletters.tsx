@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback, memo, useMemo } from "react";
+import React, { useEffect, useState, useCallback, memo } from "react";
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -16,11 +16,6 @@ import { Minigame, MinigameType } from "@/models/Minigame";
 import { useCreateMinigameLog } from "@/services/minigameService";
 
 export default function WordsFromLetters({ minigame }: { minigame: Minigame }) {
-  const wordsFromLetters = {
-    letters: JSON.parse(minigame.metaData).letters,
-    words: JSON.parse(minigame.metaData).words,
-  };
-
   const { mutate: triggerCreateMinigameLog } = useCreateMinigameLog();
 
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
@@ -32,6 +27,8 @@ export default function WordsFromLetters({ minigame }: { minigame: Minigame }) {
   const setLetters = useWordsFromLettersMiniGameStore(
     (state) => state.setLetters,
   );
+  const words = useWordsFromLettersMiniGameStore((state) => state.words);
+  const setWords = useWordsFromLettersMiniGameStore((state) => state.setWords);
   const guess = useWordsFromLettersMiniGameStore((state) => state.guess);
   const setGuess = useWordsFromLettersMiniGameStore((state) => state.setGuess);
   const storeShuffleLetters = useWordsFromLettersMiniGameStore(
@@ -83,7 +80,9 @@ export default function WordsFromLetters({ minigame }: { minigame: Minigame }) {
 
   useEffect(() => {
     //resetGame();
-    setLetters(wordsFromLetters.letters);
+
+    setLetters(JSON.parse(minigame.metaData).letters);
+    setWords(JSON.parse(minigame.metaData).words);
     const backHandler = BackHandler.addEventListener(
       "hardwareBackPress",
       () => {
@@ -97,7 +96,7 @@ export default function WordsFromLetters({ minigame }: { minigame: Minigame }) {
   useEffect(() => {
     if (!guess.includes("")) {
       const word = guess.join("");
-      if (wordsFromLetters.words.includes(word)) {
+      if (words.includes(word)) {
         incrementStreak();
         setIsCorrect(true);
         CorrectSound.play();
@@ -118,7 +117,8 @@ export default function WordsFromLetters({ minigame }: { minigame: Minigame }) {
   }, [guess]);
 
   useEffect(() => {
-    if (lives <= 0 || correctAnswers.length === wordsFromLetters.words.length) {
+    if (words.length === 0) return;
+    if (lives <= 0 || correctAnswers.length === words.length) {
       try {
         const minigameLog = gameOver({
           correctAnswers,
@@ -178,17 +178,15 @@ export default function WordsFromLetters({ minigame }: { minigame: Minigame }) {
     [guess, setGuess, removeUsedIndex],
   );
 
-  const progressValue = useMemo(
-    () =>
-      Math.floor((correctAnswers.length / wordsFromLetters.words.length) * 100),
-    [correctAnswers.length, wordsFromLetters.words.length],
-  );
-
   return (
     <ScrollView className="bg-lightGray h-full">
       <View className="flex p-8">
         <Progress
-          value={progressValue}
+          value={
+            words.length === 0
+              ? 0
+              : Math.floor((correctAnswers.length / words.length) * 100)
+          }
           className="web:w-[60%] bg-background"
           indicatorClassName="bg-[#8383FF]"
         />

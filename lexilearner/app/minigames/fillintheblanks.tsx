@@ -1,30 +1,29 @@
 import React, { useEffect, useState, useCallback } from "react";
-import { usePathname } from "expo-router";
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
   withSequence,
   withTiming,
-  FadeIn,
-  LinearTransition,
 } from "react-native-reanimated";
 import { useFillInTheBlankMiniGameStore } from "@/stores/miniGameStore";
 import { useMiniGameStore } from "@/stores/miniGameStore";
 import { View, ScrollView, TouchableOpacity, BackHandler } from "react-native";
 import { Text } from "~/components/ui/text";
-import { Heart, Shuffle } from "lucide-react-native";
-import { Minigame } from "@/models/Minigame";
+import { Heart } from "lucide-react-native";
+import { Minigame, MinigameType } from "@/models/Minigame";
+import { useCreateMinigameLog } from "@/services/minigameService";
 
 export default function FillInTheBlank({ minigame }: { minigame: Minigame }) {
-  const fillInTheBlankData = {
-    phrases: JSON.parse(minigame.metaData).question,
-    correctAnswer: JSON.parse(minigame.metaData).correctAnswer,
-    choices: JSON.parse(minigame.metaData).choices,
-  };
+  const { mutate: triggerCreateMinigameLog } = useCreateMinigameLog();
 
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
   const [answer, setAnswer] = useState<string | null>(null);
 
+  const choices = useFillInTheBlankMiniGameStore((state) => state.choices);
+  const phrases = useFillInTheBlankMiniGameStore((state) => state.phrases);
+  const correctAnswer = useFillInTheBlankMiniGameStore(
+    (state) => state.correctAnswer,
+  );
   const lives = useFillInTheBlankMiniGameStore((state) => state.lives);
   const decrementLives = useFillInTheBlankMiniGameStore(
     (state) => state.decrementLives,
@@ -38,18 +37,30 @@ export default function FillInTheBlank({ minigame }: { minigame: Minigame }) {
   const setChoices = useFillInTheBlankMiniGameStore(
     (state) => state.setChoices,
   );
+  const answers = useFillInTheBlankMiniGameStore((state) => state.answers);
   const addAnswer = useFillInTheBlankMiniGameStore((state) => state.addAnswer);
   const resetGameState = useFillInTheBlankMiniGameStore(
     (state) => state.resetGameState,
+  );
+  const gameOver = useMiniGameStore((state) => state.gameOver);
+  const incrementMinigamesIndex = useMiniGameStore(
+    (state) => state.incrementMinigamesIndex,
   );
 
   const shake = useSharedValue(0);
 
   useEffect(() => {
-    //resetGameState();
-    setPhrases(fillInTheBlankData.phrases);
-    setCorrectAnswer(fillInTheBlankData.correctAnswer);
-    setChoices(fillInTheBlankData.choices);
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      () => {
+        return true;
+      },
+    );
+    resetGameState();
+    setPhrases(JSON.parse(minigame.metaData).question);
+    setCorrectAnswer(JSON.parse(minigame.metaData).correctAnswer);
+    setChoices(JSON.parse(minigame.metaData).choices);
+    return () => backHandler.remove();
   }, []);
 
   useEffect(() => {
@@ -63,31 +74,55 @@ export default function FillInTheBlank({ minigame }: { minigame: Minigame }) {
     }
   }, [isCorrect]);
 
-  const handleAnswer = useCallback(
-    async (index: number) => {
-      setAnswer(fillInTheBlankData.choices[index]);
-      addAnswer(fillInTheBlankData.choices[index]);
+  useEffect(() => {
+    console.log(choices);
+  }, [choices]);
 
-      console.log(
-        fillInTheBlankData.choices[index],
-        fillInTheBlankData.correctAnswer,
-      );
+  useEffect(() => {
+    if (!answer) return;
+    if (lives <= 0 || answer === correctAnswer) {
+      try {
+        let score = answer === correctAnswer ? 1 : 0;
+        const minigameLog = gameOver({
+          answers,
+          score,
+        });
 
-      if (
-        fillInTheBlankData.choices[index] === fillInTheBlankData.correctAnswer
-      ) {
-        setIsCorrect(true);
-        await new Promise((res) => setTimeout(res, 500));
-      } else {
-        setIsCorrect(false);
-        await new Promise((res) => setTimeout(res, 500));
-        setIsCorrect(null);
-        setAnswer(null);
-        decrementLives();
+        if (!minigameLog) {
+          throw Error("Minigame Log is null");
+        }
+
+        triggerCreateMinigameLog({
+          minigameLog,
+          type: MinigameType.FillInTheBlanks,
+        });
+
+        resetGameState();
+        incrementMinigamesIndex();
+      } catch (error) {
+        console.error(
+          "Error during Fill in the blank game over logic: ",
+          error,
+        );
       }
-    },
-    [answer],
-  );
+    }
+  }, [answer]);
+
+  const handleAnswer = async (index: number) => {
+    setAnswer(choices[index]);
+    addAnswer(choices[index]);
+
+    if (choices[index] === correctAnswer) {
+      setIsCorrect(true);
+      await new Promise((res) => setTimeout(res, 500));
+    } else {
+      setIsCorrect(false);
+      await new Promise((res) => setTimeout(res, 500));
+      setIsCorrect(null);
+      setAnswer(null);
+      decrementLives();
+    }
+  };
 
   const shakeAnimationStyle = useAnimatedStyle(() => ({
     transform: [{ translateX: shake.value }],
@@ -131,23 +166,23 @@ export default function FillInTheBlank({ minigame }: { minigame: Minigame }) {
               className={borderClass}
             >
               <Text className="text-2xl font-semibold flex flex-row flex-wrap">
-                {fillInTheBlankData.phrases.split("{{blank}}")[0]}
+                {phrases.split("{{blank}}")[0]}
                 <Text
                   className={`text-2xl font-semibold flex flex-row flex-wrap underline ${textClass} text-blue-500`}
                 >
                   {answer ||
                     "_".repeat(
-                      Math.max(
-                        ...fillInTheBlankData.choices.map((c: any) => c.length),
-                      ),
+                      choices.length > 0
+                        ? Math.max(...choices.map((c: any) => c.length))
+                        : 5,
                     )}
                 </Text>
-                {fillInTheBlankData.phrases.split("{{blank}}")[1]}
+                {phrases.split("{{blank}}")[1]}
               </Text>
             </Animated.View>
 
             <View className="flex flex-col gap-4 items-center">
-              {fillInTheBlankData.choices.map((choice: any, index: any) => {
+              {choices.map((choice: any, index: any) => {
                 return (
                   <View
                     key={index}

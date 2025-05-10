@@ -1,55 +1,77 @@
 import {
   BackHandler,
-  ColorValue,
   Pressable,
   ScrollView,
   StyleSheet,
   Text,
   View,
 } from "react-native";
-import React, { memo, useCallback, useEffect, useState } from "react";
-import BackHeader from "@/components/BackHeader";
+import React, { useCallback, useEffect } from "react";
 import { Progress } from "@/components/ui/progress";
 import { Heart } from "lucide-react-native";
 import { useWordHuntGameStore } from "@/stores/miniGameStore";
 import { useMiniGameStore } from "@/stores/miniGameStore";
-import { usePathname } from "expo-router";
-import { Minigame } from "@/models/Minigame";
+import { Minigame, MinigameType } from "@/models/Minigame";
+import { useCreateMinigameLog } from "@/services/minigameService";
 
 export function WordHuntBtn({
   word,
   onPress,
   disabled,
+  isCorrect,
+  isIncorrect,
 }: {
   word: string;
   onPress: () => void;
   disabled: boolean;
+  isCorrect: boolean;
+  isIncorrect: boolean;
 }) {
   return (
     <Pressable
       onPress={onPress}
       disabled={disabled}
       className={`items-center justify-center rounded-xl p-3 shadow-main ${
-        disabled ? "bg-gray-300" : "bg-white"
+        isCorrect ? "bg-green-300" : isIncorrect ? "bg-red-300" : "bg-white"
       }`}
       style={{ width: "30%", height: "30%", aspectRatio: 1 }}
     >
-      <Text className="font-bold">{word}</Text>
+      <Text
+        numberOfLines={1}
+        adjustsFontSizeToFit
+        style={{
+          fontWeight: "bold",
+        }}
+        className="font-bold"
+      >
+        {word}
+      </Text>
     </Pressable>
   );
 }
 
 export default function WordHunt({ minigame }: { minigame: Minigame }) {
+  const { mutate: triggerCreateMinigameLog } = useCreateMinigameLog();
+
   const correctAnswers = useWordHuntGameStore((state) => state.correctAnswers);
-  const wrongAnswers = useWordHuntGameStore((state) => state.wrongAnswers);
   const allWords = useWordHuntGameStore((state) => state.allWords);
   const lives = useWordHuntGameStore((state) => state.lives);
   const streak = useWordHuntGameStore((state) => state.streak);
   const shuffledWords = useWordHuntGameStore((state) => state.shuffledWords);
-  const answered = useWordHuntGameStore((state) => state.answered);
 
+  const correctAttempts = useWordHuntGameStore(
+    (state) => state.correctAttempts,
+  );
+  const incorrectAttempts = useWordHuntGameStore(
+    (state) => state.incorrectAttempts,
+  );
   const setShuffled = useWordHuntGameStore((state) => state.setShuffled);
-  const setAnswered = useWordHuntGameStore((state) => state.setAnswered);
+  const addCorrectAttempt = useWordHuntGameStore(
+    (state) => state.addCorrectAttempt,
+  );
+  const addIncorrectAttempt = useWordHuntGameStore(
+    (state) => state.addIncorrectAttempt,
+  );
   const setCorrectAnswers = useWordHuntGameStore(
     (state) => state.setCorrectAnswers,
   );
@@ -64,17 +86,10 @@ export default function WordHunt({ minigame }: { minigame: Minigame }) {
   const resetStreak = useWordHuntGameStore((state) => state.resetStreak);
   const decrementLives = useWordHuntGameStore((state) => state.decrementLives);
 
-  // TODO morerender syag thrice somewhere diri HSHAHSAH
-  useEffect(() => {
-    const correct = JSON.parse(minigame.metaData).correct;
-    const wrong = JSON.parse(minigame.metaData).wrong;
-    const combined = JSON.parse(minigame.metaData).combined;
-
-    setCorrectAnswers(correct);
-    setWrongAnswers(wrong);
-    setAllWords(combined);
-    newGame();
-  }, []);
+  const gameOver = useMiniGameStore((state) => state.gameOver);
+  const incrementMinigamesIndex = useMiniGameStore(
+    (state) => state.incrementMinigamesIndex,
+  );
 
   useEffect(() => {
     const backHandler = BackHandler.addEventListener(
@@ -84,6 +99,14 @@ export default function WordHunt({ minigame }: { minigame: Minigame }) {
       },
     );
 
+    const correct = JSON.parse(minigame.metaData).correct;
+    const wrong = JSON.parse(minigame.metaData).wrong;
+    const combined = JSON.parse(minigame.metaData).combined;
+
+    newGame();
+    setCorrectAnswers(correct);
+    setWrongAnswers(wrong);
+    setAllWords(combined);
     return () => backHandler.remove();
   }, []);
 
@@ -93,61 +116,96 @@ export default function WordHunt({ minigame }: { minigame: Minigame }) {
 
   const onPress = useCallback(
     (word: string) => {
-      console.log("TEST: ", correctAnswers.includes(word));
       if (correctAnswers.includes(word) && lives > 0) {
         incrementStreak();
-        setAnswered(word);
+        addCorrectAttempt(word);
       } else {
+        addIncorrectAttempt(word);
         decrementLives();
         resetStreak();
       }
     },
-    [lives, streak, answered],
+    [lives, streak, correctAttempts, incorrectAttempts],
   );
 
-  console.log(correctAnswers, lives, streak);
-  console.log("ANSWERED: ", answered);
+  useEffect(() => {
+    if (correctAnswers.length === 0) return;
+    if (
+      lives <= 0 ||
+      correctAnswers.every((item) => correctAttempts.includes(item))
+    ) {
+      try {
+        let score = correctAttempts.length;
+
+        const minigameLog = gameOver({
+          score,
+          correctAttempts,
+          incorrectAttempts,
+          streak,
+        });
+
+        if (!minigameLog) {
+          throw Error("Minigame Log is null");
+        }
+
+        triggerCreateMinigameLog({
+          minigameLog,
+          type: MinigameType.WordHunt,
+        });
+
+        newGame();
+        incrementMinigamesIndex();
+      } catch (error) {
+        console.error("Error during Word Hunt game over logic: ", error);
+      }
+    }
+  }, [lives, correctAttempts]);
 
   return (
     <ScrollView className="bg-lightGray">
-      <View>
-        <BackHeader />
-
+      <View className="p-8 gap-4">
         <Progress
-          value={(streak / correctAnswers.length) * 100}
+          value={
+            correctAnswers.length === 0
+              ? 0
+              : (correctAttempts.length / correctAnswers.length) * 100
+          }
           className="web:w-[60%] bg-background"
           indicatorClassName="bg-[#8383FF]"
         />
 
-        <View className="p-8">
-          <View className="items-center">
-            <View className="flex flex-row justify-center gap-3">
-              {Array.from({ length: lives }).map((_, i) => (
-                <Heart key={i} fill="#8383FF" />
-              ))}
-            </View>
-            <View className="flex flex-row gap-2 justify-center items-center">
-              <Text className="text-3xl font-black">Word Hunt</Text>
-            </View>
-            <Text className="text-center font-medium p-3">
-              Find words that have appeared in the book!
-            </Text>
+        <View className="items-center flex gap-2">
+          <View className="flex flex-row gap-2 justify-center items-center">
+            <Text className="text-3xl font-black">Word Hunt</Text>
           </View>
 
-          <View className="flex-row flex-wrap gap-3 justify-center mt-6">
-            {shuffledWords.map((word, i) => (
-              <WordHuntBtn
-                key={i}
-                word={word}
-                onPress={() => onPress(word)}
-                disabled={
-                  answered.includes(word) ||
-                  lives === 0 ||
-                  answered.length == correctAnswers.length
-                }
-              />
+          <View className="flex flex-row justify-center gap-3">
+            {Array.from({ length: lives }).map((_, i) => (
+              <Heart key={i} fill="#8383FF" />
             ))}
           </View>
+
+          <Text className="text-center font-medium p-3">
+            Find words that have appeared in the book!
+          </Text>
+        </View>
+
+        <View className="flex-row flex-wrap gap-3 justify-center mt-6">
+          {shuffledWords.map((word, i) => (
+            <WordHuntBtn
+              key={i}
+              word={word}
+              onPress={() => onPress(word)}
+              disabled={
+                correctAttempts.includes(word) ||
+                incorrectAttempts.includes(word) ||
+                lives === 0 ||
+                correctAttempts.length == correctAnswers.length
+              }
+              isCorrect={correctAttempts.includes(word)}
+              isIncorrect={incorrectAttempts.includes(word)}
+            />
+          ))}
         </View>
       </View>
     </ScrollView>
