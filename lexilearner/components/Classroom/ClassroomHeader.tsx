@@ -1,8 +1,15 @@
 import React from "react";
 import { View, Text, Image } from "react-native";
 import BackHeader from "../BackHeader";
+interface ClassroomDetailsProp {
+  name: string;
+  joinCode: string;
+}
 
-export default function ClassroomHeader() {
+export default function ClassroomHeader({
+  name,
+  joinCode,
+}: ClassroomDetailsProp) {
   return (
     <View
       style={{
@@ -15,10 +22,8 @@ export default function ClassroomHeader() {
       <View className="flex flex-row justify-between items-center px-4 h-full">
         <BackHeader />
         <View>
-          <Text className="text-[22px] font-bold leading-tight">
-            Grade 6 - F2
-          </Text>
-          <Text>x5AHSydA</Text>
+          <Text className="text-[22px] font-bold leading-tight">{name}</Text>
+          <Text>{joinCode}</Text>
         </View>
         <Image
           source={require("@/assets/images/Juicy/Office-desk.png")}
