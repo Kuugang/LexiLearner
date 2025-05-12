@@ -97,7 +97,6 @@ export default function SentenceArrangement({
           type: MinigameType.SentenceRearrangement,
         });
 
-        resetGameState();
         incrementMinigamesIndex();
       } catch (error) {
         console.error(

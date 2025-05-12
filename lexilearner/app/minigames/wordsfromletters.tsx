@@ -70,8 +70,8 @@ export default function WordsFromLetters({ minigame }: { minigame: Minigame }) {
     (state) => state.resetStreak,
   );
 
-  const resetGame = useWordsFromLettersMiniGameStore(
-    (state) => state.resetGame,
+  const resetGameState = useWordsFromLettersMiniGameStore(
+    (state) => state.resetGameState,
   );
   const gameOver = useMiniGameStore((state) => state.gameOver);
   const incrementMinigameIndex = useMiniGameStore(
@@ -79,7 +79,7 @@ export default function WordsFromLetters({ minigame }: { minigame: Minigame }) {
   );
 
   useEffect(() => {
-    //resetGame();
+    //resetGameState();
 
     setLetters(JSON.parse(minigame.metaData).letters);
     setWords(JSON.parse(minigame.metaData).words);
@@ -135,7 +135,6 @@ export default function WordsFromLetters({ minigame }: { minigame: Minigame }) {
           type: MinigameType.WordsFromLetters,
         });
 
-        resetGame();
         incrementMinigameIndex();
       } catch (error) {
         console.error(

@@ -82,7 +82,7 @@ export default function WordHunt({ minigame }: { minigame: Minigame }) {
   const incrementStreak = useWordHuntGameStore(
     (state) => state.incrementStreak,
   );
-  const newGame = useWordHuntGameStore((state) => state.newGame);
+  const resetGameState = useWordHuntGameStore((state) => state.resetGameState);
   const resetStreak = useWordHuntGameStore((state) => state.resetStreak);
   const decrementLives = useWordHuntGameStore((state) => state.decrementLives);
 
@@ -103,7 +103,7 @@ export default function WordHunt({ minigame }: { minigame: Minigame }) {
     const wrong = JSON.parse(minigame.metaData).wrong;
     const combined = JSON.parse(minigame.metaData).combined;
 
-    newGame();
+    //resetGameState();
     setCorrectAnswers(correct);
     setWrongAnswers(wrong);
     setAllWords(combined);
@@ -153,7 +153,6 @@ export default function WordHunt({ minigame }: { minigame: Minigame }) {
           type: MinigameType.WordHunt,
         });
 
-        newGame();
         incrementMinigamesIndex();
       } catch (error) {
         console.error("Error during Word Hunt game over logic: ", error);

@@ -97,7 +97,6 @@ export default function FillInTheBlank({ minigame }: { minigame: Minigame }) {
           type: MinigameType.FillInTheBlanks,
         });
 
-        resetGameState();
         incrementMinigamesIndex();
       } catch (error) {
         console.error(
