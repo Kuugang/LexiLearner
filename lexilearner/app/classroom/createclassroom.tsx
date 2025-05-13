@@ -5,20 +5,30 @@ import { TextArea } from "@/components/ui/textarea";
 import { router } from "expo-router";
 import { View, Image, TouchableOpacity, Text, ScrollView } from "react-native";
 import { Input } from "~/components/ui/input";
-import { ClassroomFormContext } from "./_layout";
 import { Description } from "@rn-primitives/dialog";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { createClassroom } from "@/services/ClassroomService";
 import { useClassroomStore } from "@/stores/classroomStore";
 
+// TODO: setselectedclassroom
 export default function CreateClassroom() {
-  const { createClassroomForm, setCreateClassroomForm } =
-    useContext(ClassroomFormContext);
-  const createClassroom = useClassroomStore((state) => state.createClassroom);
+  console.log("hmmmmm?");
+  const setSelectedClassroom = useClassroomStore(
+    (state) => state.setSelectedClassroom
+  );
 
-  //TODO: NGANONG RED MAN KA murag naa pani better way gangshyts
-  const handleCreateClassroom = async () => {
-    let response = await createClassroom(createClassroomForm);
-    router.push(`/classroom/${response.data.id}`);
-  };
+  const queryClient = useQueryClient();
+  const [classroomForm, setClassroomForm] = useState({
+    name: "",
+    description: "",
+  });
+
+  const { mutateAsync: createClassroomMutation } = useMutation({
+    mutationFn: createClassroom,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["classroomsData"] });
+    },
+  });
 
   return (
     <View className="flex-1">
@@ -30,20 +40,18 @@ export default function CreateClassroom() {
             <Input
               placeholder="Classroom Name..."
               className="my-3"
-              value={createClassroomForm.Name}
-              onChangeText={(value: string) =>
-                setCreateClassroomForm({ ...createClassroomForm, Name: value })
-              }
+              value={classroomForm.name}
+              onChangeText={(name: string) => {
+                setClassroomForm({ ...classroomForm, name: name });
+              }}
             ></Input>
             <TextArea
               placeholder="Classroom Description..."
-              value={createClassroomForm.Description}
-              onChangeText={(value: string) =>
-                setCreateClassroomForm({
-                  ...createClassroomForm,
-                  Description: value,
-                })
-              }
+              className="my-3"
+              value={classroomForm.description}
+              onChangeText={(desc: string) => {
+                setClassroomForm({ ...classroomForm, description: desc });
+              }}
             ></TextArea>
           </View>
         </View>
@@ -52,7 +60,17 @@ export default function CreateClassroom() {
       <View className="p-5">
         <Button
           className="bg-yellowOrange m-5 mb-24 shadow-main"
-          onPress={handleCreateClassroom}
+          onPress={async () => {
+            try {
+              const response = await createClassroomMutation(classroomForm);
+              const classroom = response.data;
+
+              setSelectedClassroom(classroom);
+              router.replace(`/classroom/${classroom.id}`);
+            } catch (error) {
+              console.error("Error creating classroom:", error);
+            }
+          }}
         >
           <Text>Finish</Text>
         </Button>

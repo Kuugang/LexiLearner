@@ -2,26 +2,43 @@ import {
   useGetMinigameById,
   useRandomMinigames,
 } from "@/services/minigameService";
-import { useMiniGameStore } from "@/stores/miniGameStore";
-import { useLocalSearchParams } from "expo-router";
-import { memo, useEffect } from "react";
+import {
+  useFillInTheBlankMiniGameStore,
+  useMiniGameStore,
+  useSentenceRearrangementMiniGameStore,
+  useTwoTruthsOneLieGameStore,
+  useWordsFromLettersMiniGameStore,
+} from "@/stores/miniGameStore";
+import { memo, useEffect, useRef } from "react";
 import WordsFromLetters from "./wordsfromletters";
 import FillInTheBlank from "./fillintheblanks";
 import SentenceArrangement from "./sentencearrangement";
 import { Minigame, MinigameType } from "@/models/Minigame";
 import WordHunt from "./WordHunt";
-import TwoTruthsOneLie from "./2Truths1Lie";
+import TwoTruthsOneLie from "./twoTruthsOneLie";
 import { View, Text } from "react-native";
 import { useReadingSessionStore } from "@/stores/readingSessionStore";
 
-function Play() {
-  const params = useLocalSearchParams();
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withTiming,
+} from "react-native-reanimated";
+import { Dimensions } from "react-native";
+import { router } from "expo-router";
 
+const { width } = Dimensions.get("window");
+
+function Play() {
   const currentReadingSession = useReadingSessionStore(
     (state) => state.currentSession,
   );
 
   const minigamesIndex = useMiniGameStore((state) => state.minigamesIndex);
+  const prevMinigamesIndex = useRef(minigamesIndex);
+  const setMinigamesIndex = useMiniGameStore(
+    (state) => state.setMinigamesIndex,
+  );
   const currentMinigame = useMiniGameStore((state) => state.currentMinigame);
 
   const setCurrentMinigame = useMiniGameStore(
@@ -66,16 +83,52 @@ function Play() {
       minigame5,
     ];
 
-    setMinigames(games);
-    setCurrentMinigame(games[minigamesIndex]);
-    //setMinigames(randomMinigames);
-    //setCurrentMinigame(randomMinigames[minigamesIndex]);
+    // setMinigames(games);
+    // setCurrentMinigame(games[minigamesIndex]);
+    setMinigames(randomMinigames);
+    setCurrentMinigame(randomMinigames[minigamesIndex]);
   }, [isLoading]);
 
+  const translateX = useSharedValue(0);
   useEffect(() => {
-    console.log(minigamesIndex);
+    if (minigamesIndex > 2) {
+      setCurrentMinigame(null);
+      setMinigames([]);
+      setMinigamesIndex(0);
+      router.replace("/home");
+    }
+    if (prevMinigamesIndex.current === minigamesIndex) return;
+    let pastMinigame = currentMinigame;
     setCurrentMinigame(minigames[minigamesIndex]);
+    const timeout = setTimeout(() => {
+      translateX.value = withTiming(-width * minigamesIndex, { duration: 300 });
+    }, 400);
+
+    switch (pastMinigame?.minigameType) {
+      case MinigameType.WordsFromLetters:
+        useWordsFromLettersMiniGameStore.getState().resetGameState();
+        break;
+      case MinigameType.FillInTheBlanks:
+        useFillInTheBlankMiniGameStore.getState().resetGameState();
+        break;
+      case MinigameType.SentenceRearrangement:
+        useSentenceRearrangementMiniGameStore.getState().resetGameState();
+        break;
+      case MinigameType.WordHunt:
+        useWordsFromLettersMiniGameStore.getState().resetGameState();
+        break;
+      case MinigameType.TwoTruthsOneLie:
+        useTwoTruthsOneLieGameStore.getState().resetGameState();
+        break;
+    }
+    prevMinigamesIndex.current = minigamesIndex;
+
+    return () => clearTimeout(timeout);
   }, [minigamesIndex]);
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [{ translateX: translateX.value }],
+  }));
 
   const getMinigameComponent = (minigame: Minigame) => {
     switch (minigame.minigameType) {
@@ -93,8 +146,28 @@ function Play() {
         return <Text>Unknown minigame type</Text>;
     }
   };
+
   if (!currentMinigame) return <Text>Loading...</Text>;
-  return <View>{getMinigameComponent(currentMinigame)}</View>;
+
+  return (
+    <View style={{ flex: 1, overflow: "hidden" }}>
+      <Animated.View
+        style={[
+          {
+            flexDirection: "row",
+            width: width * minigames.length,
+          },
+          animatedStyle,
+        ]}
+      >
+        {minigames.map((minigame, i) => (
+          <View key={i} style={{ width }}>
+            {getMinigameComponent(minigame)}
+          </View>
+        ))}
+      </Animated.View>
+    </View>
+  );
 }
 
 export default memo(Play);

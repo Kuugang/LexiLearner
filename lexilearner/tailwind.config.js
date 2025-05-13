@@ -11,6 +11,7 @@ module.exports = {
         black: "rgb(47,30,56)",
         white: "rgb(254,253,248)",
         gray: "rgb(69,55,81)",
+        appBlue: "#6798C0",
         lightGray: "rgb(221,230,234)",
 
         orange: "rgb(255, 102, 62)",

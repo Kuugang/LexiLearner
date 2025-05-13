@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useCallback } from "react";
-import { usePathname } from "expo-router";
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -10,10 +9,11 @@ import Animated, {
 } from "react-native-reanimated";
 import { useSentenceRearrangementMiniGameStore } from "@/stores/miniGameStore";
 import { useMiniGameStore } from "@/stores/miniGameStore";
-import { View, ScrollView, TouchableOpacity } from "react-native";
+import { View, ScrollView, TouchableOpacity, BackHandler } from "react-native";
 import { Text } from "~/components/ui/text";
-import { Heart, Shuffle } from "lucide-react-native";
-import { Minigame } from "@/models/Minigame";
+import { Heart } from "lucide-react-native";
+import { Minigame, MinigameType } from "@/models/Minigame";
+import { useCreateMinigameLog } from "@/services/minigameService";
 
 export default function SentenceArrangement({
   minigame,
@@ -24,6 +24,7 @@ export default function SentenceArrangement({
     correctAnswer: JSON.parse(minigame.metaData).correctAnswer,
     parts: JSON.parse(minigame.metaData).parts,
   };
+  const { mutate: triggerCreateMinigameLog } = useCreateMinigameLog();
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
 
   const lives = useSentenceRearrangementMiniGameStore((state) => state.lives);
@@ -55,13 +56,56 @@ export default function SentenceArrangement({
   const resetGameState = useSentenceRearrangementMiniGameStore(
     (state) => state.resetGameState,
   );
+  const answers = useSentenceRearrangementMiniGameStore(
+    (state) => state.answers,
+  );
+  const addAnswer = useSentenceRearrangementMiniGameStore(
+    (state) => state.addAnswer,
+  );
+  const gameOver = useMiniGameStore((state) => state.gameOver);
+  const incrementMinigamesIndex = useMiniGameStore(
+    (state) => state.incrementMinigamesIndex,
+  );
 
   useEffect(() => {
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      () => {
+        return true;
+      },
+    );
+
     setCorrectAnswer(
       sentenceArrangementData.correctAnswer.map((text: string) => text),
     );
     setParts(sentenceArrangementData.parts);
+    return () => backHandler.remove();
   }, []);
+
+  useEffect(() => {
+    if (lives <= 0 || isCorrect) {
+      try {
+        let score = isCorrect ? 1 : 0;
+        let minigameLog = gameOver({ answers, score });
+
+        if (!minigameLog) {
+          throw Error("Minigame Log is null");
+        }
+
+        triggerCreateMinigameLog({
+          minigameLog,
+          type: MinigameType.SentenceRearrangement,
+        });
+
+        incrementMinigamesIndex();
+      } catch (error) {
+        console.error(
+          "Error during Fill in the blank game over logic: ",
+          error,
+        );
+      }
+    }
+  }, [isCorrect]);
 
   const addPart = useCallback(
     async (index: number) => {
@@ -75,6 +119,7 @@ export default function SentenceArrangement({
       setParts(update);
 
       if (update.length === 0) {
+        addAnswer(newAnswer);
         if (JSON.stringify(newAnswer) === JSON.stringify(correctAnswer)) {
           setIsCorrect(true);
           await new Promise((res) => setTimeout(res, 500));
