@@ -4,7 +4,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ReadingContentType } from "@/models/ReadingContent";
 
 interface ReadingContentStore {
-  contents: ReadingContentType[] | null;
+  contents: ReadingContentType[];
   selectedContent: ReadingContentType | null;
 
   setContents: (contents: ReadingContentType[]) => void;
@@ -14,7 +14,7 @@ interface ReadingContentStore {
 export const useReadingContentStore = create<ReadingContentStore>()(
   persist(
     (set) => ({
-      contents: null,
+      contents: [],
       selectedContent: null,
       setContents: (contents: ReadingContentType[]) =>
         set({ contents: contents }),
@@ -35,6 +35,6 @@ export const useReadingContentStore = create<ReadingContentStore>()(
           await AsyncStorage.removeItem(name);
         },
       },
-    },
-  ),
+    }
+  )
 );
