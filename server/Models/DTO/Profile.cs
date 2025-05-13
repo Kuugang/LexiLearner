@@ -64,7 +64,7 @@ namespace LexiLearner.Models.DTO
     public class LoginStreakDTO
     {
         public Guid Id { get; set; }
-        public string UserId { get; set; }
+        public Guid UserId { get; set; }
         public int CurrentStreak { get; set; }
         public int LongestStreak { get; set; }
         public DateTime LastLoginDate { get; set; }
@@ -72,7 +72,7 @@ namespace LexiLearner.Models.DTO
         public LoginStreakDTO(LoginStreak streak)
         {
             Id = streak.Id;
-            UserId = streak.UserId;
+            UserId = streak.PupilId;
             CurrentStreak = streak.CurrentStreak;
             LongestStreak = streak.LongestStreak;
             LastLoginDate = streak.LastLoginDate;
