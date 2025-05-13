@@ -147,13 +147,12 @@ namespace LexiLearner.Migrations
                     b.Property<int>("LongestStreak")
                         .HasColumnType("integer");
 
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<Guid>("PupilId")
+                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("PupilId");
 
                     b.ToTable("LoginStreak");
                 });
@@ -232,7 +231,7 @@ namespace LexiLearner.Migrations
                     b.Property<int?>("GradeLevel")
                         .HasColumnType("integer");
 
-                    b.Property<int?>("Level")
+                    b.Property<int>("Level")
                         .HasColumnType("integer");
 
                     b.Property<string>("UserId")
@@ -701,13 +700,13 @@ namespace LexiLearner.Migrations
 
             modelBuilder.Entity("LexiLearner.Models.LoginStreak", b =>
                 {
-                    b.HasOne("LexiLearner.Models.User", "User")
+                    b.HasOne("LexiLearner.Models.Pupil", "Pupil")
                         .WithMany()
-                        .HasForeignKey("UserId")
+                        .HasForeignKey("PupilId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("User");
+                    b.Navigation("Pupil");
                 });
 
             modelBuilder.Entity("LexiLearner.Models.Minigame", b =>

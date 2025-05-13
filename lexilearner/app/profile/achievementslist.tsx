@@ -9,14 +9,7 @@ import { StyleSheet, ScrollView, View, Image } from "react-native";
 export default function achievementslist() {
   return (
     <ScrollView className="bg-white">
-      <View
-        style={{
-          height: 150,
-          width: "100%",
-          borderBottomLeftRadius: 40,
-        }}
-        className="bg-yellowOrange p-5 shadow-lg w-full"
-      >
+      <View className="h-[150px] w-full rounded-bl-[40px] bg-yellowOrange p-4">
         <View className="flex flex-row justify-between">
           <BackHeader />
         </View>

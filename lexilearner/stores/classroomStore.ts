@@ -10,12 +10,9 @@ import { persist } from "zustand/middleware";
 
 interface ClassroomStore {
   selectedClassroom: Classroom | null;
-  setSelectedClassroom: (classroom: Classroom) => void;
+  setSelectedClassroom: (classroom: Classroom | null) => void;
   classrooms: Classroom[];
   setClassrooms: (classrooms: Classroom[]) => void;
-  createClassroom: (createClassroomForm: Record<string, any>) => void;
-  getByTeacherId: () => void;
-  updateClassroom: (editClassroomForm: Record<string, any>) => Promise<void>;
 }
 
 export const useClassroomStore = create<ClassroomStore>()(
@@ -25,45 +22,8 @@ export const useClassroomStore = create<ClassroomStore>()(
       selectedClassroom: null,
       setClassrooms: (classrooms: Classroom[]) =>
         set((state) => ({ ...state, classrooms: classrooms })),
-      createClassroom: async (createClassroomForm: Record<string, any>) => {
-        try {
-          let response = await apiCreateClassroom(createClassroomForm);
-
-          const { id, teacher, joinCode, name, description } = response.data;
-
-          const classroom: Classroom = {
-            id: id,
-            teacher: teacher,
-            joinCode: joinCode,
-            name: name,
-            description: description,
-          };
-
-          return response;
-        } catch (err: any) {
-          throw Error(
-            err instanceof Error ? err.message : "Failed to create classroom."
-          );
-        }
-      },
-      getByTeacherId: async () => {
-        try {
-          let response = await apiGetByTeacherIdClassroom();
-        } catch (err: any) {
-          throw Error(
-            err instanceof Error
-              ? err.message
-              : "Failed to retrieve teacher's classrooms."
-          );
-        }
-      },
-      setSelectedClassroom: (selectedClassroom: Classroom) =>
+      setSelectedClassroom: (selectedClassroom: Classroom | null) =>
         set((state) => ({ selectedClassroom: selectedClassroom })),
-      updateClassroom: async (editClassroomForm: Record<string, any>) => {
-        // try {
-        //   const response = await apiEditClassroom()
-        // }
-      },
     }),
     {
       name: "classroom-store",
@@ -82,6 +42,3 @@ export const useClassroomStore = create<ClassroomStore>()(
     }
   )
 );
-
-export const createClassroom = () =>
-  useClassroomStore((state) => state.createClassroom);

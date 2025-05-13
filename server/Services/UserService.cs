@@ -324,30 +324,42 @@ namespace LexiLearner.Services
 
             if (User == null)
             {
-                throw new ApplicationExceptionBase("User not found.", "Fetching user streak failed.");
+                throw new ApplicationExceptionBase("User not found.", "Fetching login streak failed.", StatusCodes.Status404NotFound);
+            }
+            
+            Pupil? pupil = await GetPupilByUserId(User.Id);
+            if (pupil == null)
+            {
+                throw new ApplicationExceptionBase("Pupil not found.", "Fetching login streak failed.", StatusCodes.Status404NotFound);
             }
 
-            return await _userRepository.GetLoginStreak(User.Id);
+            return await _userRepository.GetLoginStreak(pupil.Id);
         }
 
         public async Task<LoginStreak> RecordLoginAsync(string userId)
         {
-            var loginStreak = await _userRepository.GetLoginStreak(userId);
+            var user = await _userRepository.GetUserByIdAsync(userId);
+
+            if (user == null)
+            {
+                throw new ApplicationExceptionBase("User not found.", "Recording login failed.", StatusCodes.Status404NotFound);
+            }
+            
+            Pupil? pupil = await _userRepository.GetPupilByUserId(userId);
+            if (pupil == null)
+            {
+                throw new ApplicationExceptionBase("Pupil not found.", "Recording login failed.", StatusCodes.Status404NotFound);
+            }
+
+            var loginStreak = await _userRepository.GetLoginStreak(pupil.Id);
             var today = DateTime.UtcNow.Date;
 
             if (loginStreak == null)
             {
-                var user = await _userRepository.GetUserByIdAsync(userId);
-
-                if (user == null)
-                {
-                    throw new ApplicationExceptionBase("User not found.", "Recording login failed.");
-                }
-
                 loginStreak = new LoginStreak
                 {
-                    UserId = userId,
-                    User = user,
+                    PupilId = pupil.Id,
+                    Pupil = pupil,
                     CurrentStreak = 1,
                     LastLoginDate = today,
                     LongestStreak = 1

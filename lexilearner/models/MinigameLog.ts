@@ -4,11 +4,11 @@ export interface MinigameLog {
   pupilId: string;
   readingSessionId: string;
   result: string;
-  createdAt: string;
+  createdAt?: string;
 }
 
 // result: JSON for MinigameLog
-// // wordsFromLetters
+// wordsFromLetters
 // {
 //   "duration": "int (seconds)",
 //   "correctAnswers": ["ans1", "ans2", "ans3"],
@@ -42,16 +42,14 @@ export interface MinigameLog {
 // // wordHunt
 // {
 //   "duration": "int(seconds),
-//   "wordsFound": ["lamp", "sand", "word"],
-//   "incorrectAttempts": ["sard", "pam"], // up to 3
-//   "score": "int",
+//   "correctAttemps": ["lamp", "sand", "word"],
+//   "incorrectAttempts": ["sard", "pam"],
+//   "score": "int"
 //   "streak", "int",
 // }
 //
-// // 2Truths1Lie - if ur answer is incorrect, proceed to next round
+// 2Truths1Lie
 // {
 //   "duration": "int (seconds),
-//   "roundResults": [ "ansStmt1", "ansStmt2", "ansStmt2" ],
 //   "score": "int",
-//   "streak": "int"
 // }

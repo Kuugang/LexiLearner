@@ -1,9 +1,9 @@
 export enum MinigameType {
-  WordsFromLetters,
-  FillInTheBlanks,
-  SentenceRearrangement,
-  WordHunt,
-  TwoTruthsOneLie,
+  WordsFromLetters = "WordsFromLetters",
+  FillInTheBlanks = "FillInTheBlanks",
+  SentenceRearrangement = "SentenceRearrangement",
+  WordHunt = "WordHunt",
+  TwoTruthsOneLie = "TwoTruthsOneLie",
 }
 
 export interface Minigame {

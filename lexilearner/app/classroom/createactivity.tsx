@@ -1,4 +1,5 @@
 import BackHeader from "@/components/BackHeader";
+import { AddReadingAssignment } from "@/components/Classroom/MainClassroomBtns";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { TextArea } from "@/components/ui/textarea";
@@ -13,11 +14,11 @@ export default function createactivity() {
           <BackHeader />
           <View className="py-8">
             <Text className="text-[22px] font-bold">Create Activity</Text>
+            <View className="py-4">
+              <AddReadingAssignment />
+            </View>
             <Input placeholder="Title..." className="my-3"></Input>
             <TextArea placeholder="Description..."></TextArea>
-            <View className="py-4">
-              <Text className="font-bold">Set minigame?</Text>
-            </View>
           </View>
         </View>
       </ScrollView>

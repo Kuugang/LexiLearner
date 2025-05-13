@@ -1,31 +1,30 @@
 import { Text } from "@/components/ui/text";
 import { StyleSheet, ScrollView, View, Image } from "react-native";
-import { NewClassroomBtn } from "../../components/Classroom/MainClassroomBtns";
+import {
+  JoinClassroomBtn,
+  NewClassroomBtn,
+} from "../../components/Classroom/MainClassroomBtns";
 import ClassroomCard from "../../components/Classroom/ClassroomCard";
-import { getByTeacherId as apiGetByTeacherId } from "@/services/ClassroomService";
+import { getByRoleId as apiGetRoleById } from "@/services/ClassroomService";
 import { useEffect, useState } from "react";
 import { useClassroomStore } from "@/stores/classroomStore";
 import { useMutation, useQuery } from "@tanstack/react-query";
+import { useUserStore } from "@/stores/userStore";
 
 export default function ClassroomScreen() {
   console.log("RERENDER TEST HAHAHA");
   const classroom = useClassroomStore((state) => state.classrooms);
   const setClassroom = useClassroomStore((state) => state.setClassrooms);
-
-  // useEffect(() => {
-  //   const fetchClassrooms = async () => {
-  //     const response = await apiGetByTeacherId();
-  //     setClassroom(response.data);
-  //   };
-
-  //   fetchClassrooms();
-  // }, [classroom, setClassroom]);
+  const user = useUserStore((state) => state.user);
 
   const {
     data: classrooms,
     isLoading,
     isError,
-  } = useQuery({ queryKey: ["classroomsData"], queryFn: apiGetByTeacherId });
+  } = useQuery({
+    queryFn: () => apiGetRoleById(user?.role || ""),
+    queryKey: ["classroomsData", user?.role],
+  });
 
   if (isLoading) {
     return (
@@ -45,26 +44,10 @@ export default function ClassroomScreen() {
 
   setClassroom(classrooms?.data);
 
-  // TODO: updateclassroom shit asjdhkj taga add mo add sa list React-Query
-
-  // const mutation = useMutation({
-  //   mutationFn: apiGetByTeacherId,
-  //   onSuccess: (data) => {
-  //     setClassroom(data.data);
-  //   },
-  // });
-
   return (
     <ScrollView className="bg-white">
       <View>
-        <View
-          style={{
-            height: 150,
-            width: "100%",
-            borderBottomLeftRadius: 40,
-          }}
-          className="bg-yellowOrange p-4"
-        >
+        <View className="h-[150px] w-full rounded-bl-[40px] bg-yellowOrange p-4">
           <View className="flex-row items-center justify-between px-4 h-full">
             <Text className="text-[22px] font-bold leading-tight">
               Your{"\n"}Classrooms
@@ -79,14 +62,12 @@ export default function ClassroomScreen() {
         </View>
 
         <View className="p-8">
-          <NewClassroomBtn />
+          {user?.role === "Teacher" ? (
+            <NewClassroomBtn />
+          ) : (
+            <JoinClassroomBtn />
+          )}
           {classroom.map((classroom) => (
-            // <ClassroomCard
-            //   id={classroom.id}
-            //   key={classroom.id}
-            //   sectionName={classroom.name}
-            //   studentCount={29}
-            // />
             <ClassroomCard key={classroom.id} classroom={classroom} />
           ))}
         </View>
