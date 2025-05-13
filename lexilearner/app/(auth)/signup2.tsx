@@ -1,14 +1,14 @@
 import React, { useContext, useState } from "react";
 import { router, useLocalSearchParams } from "expo-router";
 import { RegisterFormContext } from "./_layout";
-
+import { View, Text } from "react-native";
 import { checkUserExist } from "@/services/UserService";
 import { validateField } from "@/utils/utils";
 import SignUp2 from "@/components/Auth/SignUp2";
 
 export default function Step2() {
-  const { registerForm, providerRegisterForm } =
-    useContext(RegisterFormContext);
+  // Get the context without destructuring
+  const context = useContext(RegisterFormContext);
   const { fromProviderAuth } = useLocalSearchParams();
 
   const [formErrors, setFormErrors] = useState({
@@ -18,6 +18,18 @@ export default function Step2() {
     confirmPassword: "",
   });
 
+  // If context is null, show a loading state
+  if (!context) {
+    return (
+      <View>
+        <Text>Loading registration form...</Text>
+      </View>
+    );
+  }
+
+  // After checking, it's safe to destructure
+  const { registerForm, providerRegisterForm } = context;
+
   const handleStep = async () => {
     let form = fromProviderAuth ? providerRegisterForm : registerForm;
 
@@ -26,7 +38,7 @@ export default function Step2() {
       const error = validateField(
         field,
         form[field as keyof typeof form],
-        form,
+        form
       );
       if (error == "") return;
       newErrors[field] = error;

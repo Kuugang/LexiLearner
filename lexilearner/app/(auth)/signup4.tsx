@@ -30,7 +30,7 @@ export default function Step4() {
     } catch (error: any) {
       Toast.show({
         type: "error",
-        text1: "Registration Failed",
+        text1: "Registration Failed aaa",
         text2: error.message,
       });
     } finally {

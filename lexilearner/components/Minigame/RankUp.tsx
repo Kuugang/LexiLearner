@@ -2,6 +2,7 @@ import React from "react";
 import { View, ScrollView, Text, Image } from "react-native";
 import { Button } from "~/components/ui/button";
 import { MoveRight } from "lucide-react-native";
+import { router } from "expo-router";
 
 export default function RankUp() {
   return (
@@ -30,11 +31,11 @@ export default function RankUp() {
           <Text className="text-center font-bold text-4xl">299</Text>
           <MoveRight color="#000000" size={30} />
           <Text className="text-center font-bold text-4xl text-appBlue">
-            321
+            3222
           </Text>
         </View>
         <Text className="text-center font-bold text-2xl">
-          You've Ranked Up!
+          You've Ranked Up!!!!
         </Text>
         <Text className="text-center text-sm">
           TIP: Keep reading to climb further up the ranks!
@@ -42,8 +43,11 @@ export default function RankUp() {
       </View>
 
       <Button
-        className="w-2/3 bg-background border-appBlue border-b-4"
-        onPress={() => {}}
+        className="bg-white m-5 mb-24 shadow-main"
+        onPress={() => {
+          console.log("Button pressed");
+          router.push("/minigames/results/recommendation");
+        }}
       >
         <Text className="font-semibold">NEXT</Text>
       </Button>

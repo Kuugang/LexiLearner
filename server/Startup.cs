@@ -144,8 +144,7 @@ namespace LexiLearner
 
             // Configure Entity Framework with PostgreSQL
             services.AddDbContext<DataContext>(options =>
-                options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection"))
-            );
+            options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
 
             // Configure Identity
             services.AddIdentity<User, IdentityRole>(options =>

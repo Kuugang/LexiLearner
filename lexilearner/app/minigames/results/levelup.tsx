@@ -19,20 +19,23 @@ export default function levelup() {
             />
           </View>
 
-          <Text className="text-[35px] font-bold m-5">
-            299 <ArrowRightIcon color="black" /> 321
+          <Text className="text-[35px] font-bold m-4">
+            299 <ArrowRightIcon color="black" /> 300
           </Text>
           <Text className="poppins text-[30px] font-bold">
             You've Ranked Up!
           </Text>
-          <Text>TIP: Keep reading to climb further up the ranks!</Text>
+          <Text>TIP: Keep reading to climb further up the ranks!!!</Text>
         </View>
       </ScrollView>
 
       <View className="p-5">
         <Button
           className="bg-white m-5 mb-24 shadow-main"
-          onPress={() => router.push("/minigames/results/recommendation")}
+          onPress={() => {
+            console.log("Button pressed");
+            router.push("/minigames/results/recommendation");
+          }}
         >
           <Text>Next</Text>
         </Button>
