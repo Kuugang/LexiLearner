@@ -5,7 +5,7 @@ import {
   BackHandler,
   TouchableOpacity,
 } from "react-native";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   useTwoTruthsOneLieGameStore,
   useMiniGameStore,
@@ -15,10 +15,13 @@ import { useCreateMinigameLog } from "@/services/minigameService";
 
 export default function TwoTruthsOneLie({ minigame }: { minigame: Minigame }) {
   const { mutate: triggerCreateMinigameLog } = useCreateMinigameLog();
+  const [answered, setAnswered] = useState(false);
   const choices = useTwoTruthsOneLieGameStore((state) => state.choices);
   const setChoices = useTwoTruthsOneLieGameStore((state) => state.setChoices);
   const setScore = useTwoTruthsOneLieGameStore((state) => state.setScore);
-  const newGame = useTwoTruthsOneLieGameStore((state) => state.newGame);
+  const resetGameState = useTwoTruthsOneLieGameStore(
+    (state) => state.resetGameState,
+  );
 
   const gameOver = useMiniGameStore((state) => state.gameOver);
   const incrementMinigameIndex = useMiniGameStore(
@@ -26,7 +29,7 @@ export default function TwoTruthsOneLie({ minigame }: { minigame: Minigame }) {
   );
 
   useEffect(() => {
-    newGame();
+    //resetGameState();
     setChoices(JSON.parse(minigame.metaData).choices);
 
     const backHandler = BackHandler.addEventListener(
@@ -41,6 +44,7 @@ export default function TwoTruthsOneLie({ minigame }: { minigame: Minigame }) {
 
   const handleAnswer = (answer: boolean) => {
     setScore(answer === true ? 1 : 0);
+    setAnswered(true);
 
     try {
       let score = answer === true ? 1 : 0;
@@ -57,7 +61,6 @@ export default function TwoTruthsOneLie({ minigame }: { minigame: Minigame }) {
         type: MinigameType.TwoTruthsOneLie,
       });
 
-      newGame();
       incrementMinigameIndex();
     } catch (error) {
       console.error("Error during Two Truths One Lie game over logic: ", error);
@@ -80,10 +83,12 @@ export default function TwoTruthsOneLie({ minigame }: { minigame: Minigame }) {
           {choices.map((choice: any, index: number) => (
             <TouchableOpacity
               key={index}
+              disabled={answered}
               onPress={() => handleAnswer(choice.answer)}
             >
               <View
-                className={`items-center justify-center rounded-xl p-3 shadow-main my-1 bg-[#d1d5db]`}
+                className={`items-center justify-center rounded-xl p-3 shadow-main my-1 
+                ${answered ? (choice.answer === true ? "bg-green-400" : "bg-red-400") : "bg-[#d1d5db] "}`}
               >
                 <Text className="font-semibold text-center">
                   {choice.choice}

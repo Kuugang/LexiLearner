@@ -2,8 +2,14 @@ import {
   useGetMinigameById,
   useRandomMinigames,
 } from "@/services/minigameService";
-import { useMiniGameStore } from "@/stores/miniGameStore";
-import { memo, useEffect } from "react";
+import {
+  useFillInTheBlankMiniGameStore,
+  useMiniGameStore,
+  useSentenceRearrangementMiniGameStore,
+  useTwoTruthsOneLieGameStore,
+  useWordsFromLettersMiniGameStore,
+} from "@/stores/miniGameStore";
+import { memo, useEffect, useRef } from "react";
 import WordsFromLetters from "./wordsfromletters";
 import FillInTheBlank from "./fillintheblanks";
 import SentenceArrangement from "./sentencearrangement";
@@ -19,6 +25,7 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 import { Dimensions } from "react-native";
+import { router } from "expo-router";
 
 const { width } = Dimensions.get("window");
 
@@ -28,6 +35,10 @@ function Play() {
   );
 
   const minigamesIndex = useMiniGameStore((state) => state.minigamesIndex);
+  const prevMinigamesIndex = useRef(minigamesIndex);
+  const setMinigamesIndex = useMiniGameStore(
+    (state) => state.setMinigamesIndex,
+  );
   const currentMinigame = useMiniGameStore((state) => state.currentMinigame);
 
   const setCurrentMinigame = useMiniGameStore(
@@ -62,15 +73,15 @@ function Play() {
     if (isLoading) return;
     if (!randomMinigames) return;
 
-    // if (!minigame1 || !minigame2 || !minigame3 || !minigame4 || !minigame5)
-    //   return;
-    // const games: Minigame[] = [
-    //   minigame1,
-    //   minigame2,
-    //   minigame3,
-    //   minigame4,
-    //   minigame5,
-    // ];
+    if (!minigame1 || !minigame2 || !minigame3 || !minigame4 || !minigame5)
+      return;
+    const games: Minigame[] = [
+      minigame1,
+      minigame2,
+      minigame3,
+      minigame4,
+      minigame5,
+    ];
 
     // setMinigames(games);
     // setCurrentMinigame(games[minigamesIndex]);
@@ -80,10 +91,37 @@ function Play() {
 
   const translateX = useSharedValue(0);
   useEffect(() => {
+    if (minigamesIndex > 2) {
+      setCurrentMinigame(null);
+      setMinigames([]);
+      setMinigamesIndex(0);
+      router.replace("/home");
+    }
+    if (prevMinigamesIndex.current === minigamesIndex) return;
+    let pastMinigame = currentMinigame;
     setCurrentMinigame(minigames[minigamesIndex]);
     const timeout = setTimeout(() => {
       translateX.value = withTiming(-width * minigamesIndex, { duration: 300 });
-    }, 200);
+    }, 400);
+
+    switch (pastMinigame?.minigameType) {
+      case MinigameType.WordsFromLetters:
+        useWordsFromLettersMiniGameStore.getState().resetGameState();
+        break;
+      case MinigameType.FillInTheBlanks:
+        useFillInTheBlankMiniGameStore.getState().resetGameState();
+        break;
+      case MinigameType.SentenceRearrangement:
+        useSentenceRearrangementMiniGameStore.getState().resetGameState();
+        break;
+      case MinigameType.WordHunt:
+        useWordsFromLettersMiniGameStore.getState().resetGameState();
+        break;
+      case MinigameType.TwoTruthsOneLie:
+        useTwoTruthsOneLieGameStore.getState().resetGameState();
+        break;
+    }
+    prevMinigamesIndex.current = minigamesIndex;
 
     return () => clearTimeout(timeout);
   }, [minigamesIndex]);

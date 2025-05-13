@@ -1,19 +1,40 @@
 import { router } from "expo-router";
 import { useStories } from "@/services/ReadingMaterialService";
-import { memo, useEffect } from "react";
+import { memo, useEffect, useState } from "react";
 import ReadingContent from "@/components/ReadingContent";
 
 //Components
-import { ScrollView, TouchableOpacity, View } from "react-native";
+import { Dimensions, ScrollView, TouchableOpacity, View } from "react-native";
 import { Image } from "react-native";
 import { Text } from "~/components/ui/text";
 import { Input } from "~/components/ui/input";
 
 import { CircleUser, Search, Flame } from "lucide-react-native";
+import RankUp from "~/components/Minigame/RankUp";
 
 function HomeScreen() {
   const { data: stories, isLoading: isStoriesLoading } = useStories();
 
+  const [screenWidth, setScreenWidth] = useState(
+    Dimensions.get("window").width,
+  );
+
+  useEffect(() => {
+    const dimensionHandler = Dimensions.addEventListener(
+      "change",
+      ({ window }) => {
+        setScreenWidth(window.width);
+      },
+    );
+
+    return () => {
+      dimensionHandler.remove();
+    };
+  }, []);
+
+  const imageWidth = Math.min(200, screenWidth * 0.4);
+  const imageHeight = imageWidth;
+  return <RankUp />;
   return (
     <ScrollView className="bg-background">
       {/* TODO: MAKE THIS INTO COMPONENT*/}
@@ -52,21 +73,30 @@ function HomeScreen() {
 
       <View
         className="flex flex-row items-center px-4 py-4 bg-yellowOrange"
-        style={{
-          borderBottomLeftRadius: 40,
-        }}
+        style={{ borderBottomLeftRadius: 40 }}
       >
-        <View className="flex-1 pr-2">
-          <Text className="p-3 text-orange text-3xl font-bold text-wrap">
+        <View style={{ flex: 1, paddingRight: 8 }}>
+          <Text
+            numberOfLines={2}
+            adjustsFontSizeToFit
+            style={{
+              padding: 12,
+              fontSize: screenWidth < 400 ? 24 : 30,
+              fontWeight: "bold",
+              flexWrap: "wrap",
+            }}
+            className="text-orange"
+          >
             Ready for a Journey?
           </Text>
         </View>
-
         <Image
           source={require("@/assets/images/woman-reading-2.png")}
-          style={{ width: 200, height: 200 }}
+          style={{
+            width: imageWidth,
+            height: imageHeight,
+          }}
           resizeMode="contain"
-          alt="Woman reading"
         />
       </View>
 

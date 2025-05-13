@@ -8,9 +8,9 @@ import { useUserStore } from "./userStore";
 
 interface MiniGameStore {
   currentMinigame: Minigame | null;
-  setCurrentMinigame: (minigame: Minigame) => void;
+  setCurrentMinigame: (minigame: Minigame | null) => void;
 
-  minigames: Minigame[] | [];
+  minigames: Minigame[];
   gameStartTime: Date | null;
 
   setMinigames: (minigames: Minigame[]) => void;
@@ -30,7 +30,7 @@ export const useMiniGameStore = create<MiniGameStore>()(
       minigamesIndex: 0,
       gameStartTime: null,
 
-      setCurrentMinigame: (minigame: Minigame) => {
+      setCurrentMinigame: (minigame: Minigame | null) => {
         set({ currentMinigame: minigame });
         set({ gameStartTime: new Date() });
       },
@@ -135,7 +135,7 @@ interface TwoTruthsOneLieGameState {
 
   setScore: (score: number) => void;
   setChoices: (choices: Choice[]) => void;
-  newGame: () => void;
+  resetGameState: () => void;
 }
 
 export const useTwoTruthsOneLieGameStore = create<TwoTruthsOneLieGameState>()(
@@ -146,7 +146,7 @@ export const useTwoTruthsOneLieGameStore = create<TwoTruthsOneLieGameState>()(
 
       setScore: (score: number) => set({ score: score }),
       setChoices: (choices: Choice[]) => set({ choices: choices }),
-      newGame: () => set(() => ({ score: 0 })),
+      resetGameState: () => set(() => ({ score: 0 })),
     }),
     {
       name: "2-truths-1-lie-store",
@@ -187,7 +187,7 @@ interface WordHuntGameState {
 
   incrementStreak: () => void;
   resetStreak: () => void;
-  newGame: () => void;
+  resetGameState: () => void;
   decrementLives: () => void;
 }
 
@@ -231,7 +231,7 @@ export const useWordHuntGameStore = create<WordHuntGameState>()(
         })),
 
       resetStreak: () => set({ streak: 0 }),
-      newGame: () =>
+      resetGameState: () =>
         set(() => ({
           lives: 3,
           streak: 0,
@@ -288,7 +288,7 @@ interface WordsFromLettersGameState {
 
   incrementStreak: () => void;
   resetStreak: () => void;
-  resetGame: () => void;
+  resetGameState: () => void;
 
   decrementLives: () => void;
 }
@@ -383,13 +383,10 @@ export const useWordsFromLettersMiniGameStore =
 
         resetStreak: () => set({ streak: 0 }),
 
-        resetGame: () =>
+        resetGameState: () =>
           set(() => {
             return {
-              letters: Array(5).fill(""),
               words: [],
-              guess: Array(5).fill(""),
-              usedIndices: Array(5).fill(-1),
               correctAnswers: [],
               incorrectAnswers: [],
               streak: 0,
@@ -470,10 +467,9 @@ export const useSentenceRearrangementMiniGameStore =
         decrementLives: () => set((state) => ({ lives: state.lives - 1 })),
 
         resetGameState: () =>
-          set((state) => {
+          set(() => {
             return {
               correctAnswer: [],
-              parts: [],
               answers: [],
               currentAnswer: [],
               lives: 3,
@@ -536,10 +532,9 @@ export const useFillInTheBlankMiniGameStore = create<FillInTheBlankGameState>()(
       decrementLives: () => set((state) => ({ lives: state.lives - 1 })),
 
       resetGameState: () =>
-        set((state) => {
+        set(() => {
           return {
             correctAnswer: null,
-            choices: [],
             answers: [],
             lives: 3,
           };
