@@ -11,6 +11,21 @@ import { useClassroomStore } from "@/stores/classroomStore";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useUserStore } from "@/stores/userStore";
 
+const extractArrayFromResponse = (data: any): any[] => {
+  if (!data) return [];
+
+  if (data.data && data.data.$values) return data.data.$values;
+
+  if (data.$values) return data.$values;
+
+  if (Array.isArray(data)) return data;
+
+  if (data.data && Array.isArray(data.data)) return data.data;
+
+  console.warn("Could not extract array from response:", data);
+  return [];
+};
+
 export default function ClassroomScreen() {
   console.log("RERENDER TEST HAHAHA");
   const classroom = useClassroomStore((state) => state.classrooms);
@@ -24,7 +39,16 @@ export default function ClassroomScreen() {
   } = useQuery({
     queryFn: () => apiGetRoleById(user?.role || ""),
     queryKey: ["classroomsData", user?.role],
+    enabled: !!user?.role,
   });
+
+  useEffect(() => {
+    if (classrooms) {
+      const classroomArray = extractArrayFromResponse(classrooms);
+      console.log("Extracted classrooms:", classroomArray.length);
+      setClassroom(classroomArray);
+    }
+  }, [classrooms, setClassroom]);
 
   if (isLoading) {
     return (
@@ -42,7 +66,11 @@ export default function ClassroomScreen() {
     );
   }
 
-  setClassroom(classrooms?.data);
+  const classroomArray = Array.isArray(classroom)
+    ? classroom
+    : classroom && typeof classroom === "object" && "$values" in classroom
+    ? (classroom as any).$values
+    : [];
 
   return (
     <ScrollView className="bg-white">
@@ -50,7 +78,7 @@ export default function ClassroomScreen() {
         <View className="h-[150px] w-full rounded-bl-[40px] bg-yellowOrange p-4">
           <View className="flex-row items-center justify-between px-4 h-full">
             <Text className="text-[22px] font-bold leading-tight">
-              Your{"\n"}Classrooms
+              You{"\n"}Classrooms
             </Text>
 
             <Image
@@ -67,9 +95,14 @@ export default function ClassroomScreen() {
           ) : (
             <JoinClassroomBtn />
           )}
-          {classroom.map((classroom) => (
-            <ClassroomCard key={classroom.id} classroom={classroom} />
-          ))}
+
+          {Array.isArray(classroomArray) && classroomArray.length > 0 ? (
+            classroomArray.map((item) => (
+              <ClassroomCard key={item.id} classroom={item} />
+            ))
+          ) : (
+            <Text className="text-center mt-4">No classrooms found</Text>
+          )}
         </View>
       </View>
     </ScrollView>
