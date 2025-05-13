@@ -6,6 +6,7 @@ namespace LexiLearner.Interfaces
 {
     public interface IUserService
     {
+        Task<IEnumerable<User>> SearchUsersByRoleAsync(string role, string searchTerm);
         Task<string> GetRole(User User);
         Task<User?> GetUserByIdAsync(string UserId);
         Task<Pupil?> GetPupilByUserId(string UserId);

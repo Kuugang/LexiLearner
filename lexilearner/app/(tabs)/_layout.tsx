@@ -96,8 +96,8 @@ export default function TabLayout() {
           tabBarIcon: ({ color, focused }) => (
             <User color={focused ? "#f97316" : "#9ca3af"} />
           ),
-          // Fix for href type error - use a different approach
-          href: "../profile",
+          // Fix the href to match your actual route structure
+          href: "/profile/settings",
         }}
       />
       <Tabs.Screen

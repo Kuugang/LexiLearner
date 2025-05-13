@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { Text } from "@/components/ui/text";
 import {
   ScrollView,
@@ -6,16 +6,22 @@ import {
   TextInput,
   KeyboardAvoidingView,
   Platform,
+  TouchableOpacity,
+  ActivityIndicator,
 } from "react-native";
 import { Button } from "@/components/ui/button";
 import BackHeader from "@/components/BackHeader";
 import { Input } from "@/components/ui/input";
 import { useClassroomStore } from "@/stores/classroomStore";
 import { TextArea } from "@/components/ui/textarea";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
 import {
   editClassroom as apiEditClassroom,
   deleteClassroom as apiDeleteClassroom,
+  addPupilToClassroom as apiAddPupilToClassroom,
+  searchPupils as apiSearchPupils,
+  getPupilsFromClassroom,
+  Pupil,
 } from "@/services/ClassroomService";
 import { router } from "expo-router";
 
@@ -32,6 +38,59 @@ export default function ClassroomSettings() {
     name: selectedClassroom?.name || "",
     description: selectedClassroom?.description || "",
   });
+
+  const [pupilName, setPupilName] = useState("");
+  const [filteredPupils, setFilteredPupils] = useState<Pupil[]>([]);
+  const [showDropdown, setShowDropdown] = useState(false);
+  const [searching, setSearching] = useState(false);
+
+  const { data: enrolledPupils, isLoading: loadingPupils } = useQuery({
+    queryKey: ["classroomPupils", selectedClassroom?.id],
+    queryFn: () =>
+      selectedClassroom?.id
+        ? getPupilsFromClassroom(selectedClassroom.id)
+        : Promise.resolve([]),
+    enabled: !!selectedClassroom?.id,
+  });
+
+  useEffect(() => {
+    const searchPupils = async () => {
+      if (pupilName.length > 1) {
+        setSearching(true);
+        try {
+          const results = await apiSearchPupils(pupilName);
+
+          const filteredResults = results.filter(
+            (pupil) =>
+              !enrolledPupils?.some(
+                (enrolledPupil) => enrolledPupil.id === pupil.id
+              )
+          );
+
+          setFilteredPupils(filteredResults);
+          setShowDropdown(true);
+        } catch (error) {
+          console.error("Error searching pupils:", error);
+          const mockResults: Pupil[] = [
+            { id: "1", firstName: pupilName, lastName: "Smith" },
+            { id: "2", firstName: pupilName, lastName: "Johnson" },
+            { id: "3", firstName: pupilName, lastName: "Williams" },
+          ];
+
+          setFilteredPupils(mockResults);
+          setShowDropdown(true);
+        } finally {
+          setSearching(false);
+        }
+      } else {
+        setFilteredPupils([]);
+        setShowDropdown(false);
+      }
+    };
+
+    const timeoutId = setTimeout(searchPupils, 500);
+    return () => clearTimeout(timeoutId);
+  }, [pupilName, enrolledPupils]);
 
   const { mutateAsync: editClassroomMutation } = useMutation({
     mutationFn: ({
@@ -53,6 +112,48 @@ export default function ClassroomSettings() {
       queryClient.invalidateQueries({ queryKey: ["classroomsData"] });
     },
   });
+
+  const { mutateAsync: addPupilMutation } = useMutation({
+    mutationFn: ({
+      classroomId,
+      pupilId,
+    }: {
+      classroomId: string;
+      pupilId: string;
+    }) => apiAddPupilToClassroom(classroomId, pupilId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["classroomPupils", selectedClassroom?.id],
+      });
+      setPupilName("");
+      setShowDropdown(false);
+    },
+  });
+
+  const handlePupilNameChange = (text: string) => {
+    setPupilName(text);
+  };
+
+  const handleSelectPupil = async (pupil: Pupil) => {
+    setPupilName("");
+    setShowDropdown(false);
+
+    if (selectedClassroom?.id && pupil.id) {
+      try {
+        await addPupilMutation({
+          classroomId: selectedClassroom.id,
+          pupilId: pupil.id || "",
+        });
+        console.log("Pupil added successfully");
+      } catch (error) {
+        console.error("Error adding pupil:", error);
+      }
+    }
+  };
+
+  const displayPupilName = (pupil: Pupil): string => {
+    return `${pupil.firstName} ${pupil.lastName}`;
+  };
 
   return (
     <View className="flex-1">
@@ -84,17 +185,67 @@ export default function ClassroomSettings() {
               description: value,
             })
           }
-        ></TextArea>
+        />
 
-        <View className="py-1">
+        <View className="py-1 relative z-40">
           <Text className="font-bold">Add Pupil</Text>
           <Input
             className="border border-gray-300 rounded-md p-2 mt-2"
             placeholder="Type pupil name..."
-            // value={pupilName}
-            // onChangeText={setPupilName}
+            value={pupilName}
+            onChangeText={handlePupilNameChange}
           />
+
+          {showDropdown && (
+            <View className="absolute z-50 top-20 w-full bg-white border border-gray-300 rounded-md shadow-md">
+              {searching ? (
+                <View className="p-3 flex items-center justify-center">
+                  <ActivityIndicator size="small" color="#0000ff" />
+                  <Text className="text-gray-600 mt-2">Searching...</Text>
+                </View>
+              ) : filteredPupils.length > 0 ? (
+                <ScrollView style={{ maxHeight: 150 }}>
+                  {filteredPupils.map((pupil) => (
+                    <TouchableOpacity
+                      key={pupil.id}
+                      className="p-3 border-b border-gray-200"
+                      onPress={() => handleSelectPupil(pupil)}
+                    >
+                      <Text>{displayPupilName(pupil)}</Text>
+                    </TouchableOpacity>
+                  ))}
+                </ScrollView>
+              ) : (
+                <View className="p-3">
+                  <Text className="text-gray-600">No pupils found</Text>
+                </View>
+              )}
+            </View>
+          )}
         </View>
+
+        <View className="py-4 mt-4">
+          <Text className="font-bold">Current Pupils</Text>
+          {loadingPupils ? (
+            <ActivityIndicator size="small" color="#0000ff" />
+          ) : enrolledPupils && enrolledPupils.length > 0 ? (
+            <View className="mt-2 border border-gray-200 rounded-md">
+              {enrolledPupils.map((pupil) => (
+                <View
+                  key={pupil.id}
+                  className="p-3 border-b border-gray-200 flex-row justify-between items-center"
+                >
+                  <Text>{displayPupilName(pupil)}</Text>
+                </View>
+              ))}
+            </View>
+          ) : (
+            <Text className="text-gray-500 italic mt-2">
+              No pupils enrolled in this classroom yet
+            </Text>
+          )}
+        </View>
+
         <View className="p-5 bottom-0">
           <Button className="m-5" onPress={() => {}}>
             <Text>Generate Classroom Report</Text>

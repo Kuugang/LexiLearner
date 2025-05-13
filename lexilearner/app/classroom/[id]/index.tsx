@@ -34,7 +34,7 @@ export default function CurrentClassroom() {
   return (
     <ScrollView>
       <View>
-        <ClassroomHeader name="" joinCode="" />
+        <ClassroomHeader name="Grade 6" joinCode="Hardcoded" />
         <View className="p-8">
           <Text>id:{params.id}</Text>
           <View className="items-center justify-between flex-row w-full">

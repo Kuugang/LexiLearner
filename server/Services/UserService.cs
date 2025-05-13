@@ -20,6 +20,38 @@ namespace LexiLearner.Services
         private readonly IJWTService _jwtService;
         private readonly IFileUploadService _fileUploadService;
 
+        public async Task<IEnumerable<User>> SearchUsersByRoleAsync(string role, string searchTerm)
+        {
+            var usersInRole = await _userManager.GetUsersInRoleAsync(role);
+            
+            if (string.IsNullOrWhiteSpace(searchTerm))
+            {
+                return usersInRole;
+            }
+            
+            searchTerm = searchTerm.ToLower();
+            var filteredUsers = usersInRole.Where(u => 
+                (u.UserName != null && u.UserName.ToLower().Contains(searchTerm)) || 
+                (u.Email != null && u.Email.ToLower().Contains(searchTerm)) || 
+                u.FirstName.ToLower().Contains(searchTerm) || 
+                u.LastName.ToLower().Contains(searchTerm)
+            ).ToList();
+
+            if (role == "Pupil")
+            {
+                foreach (var user in filteredUsers)
+                {
+                    if (user.Pupil == null)
+                    {
+                        user.Pupil = await _userRepository.GetPupilByUserId(user.Id);
+                    }
+                }
+            }
+            
+            return filteredUsers;
+        }
+
+
         public UserService(UserManager<User> userManager, IUserRepository userRepository, ITwoFactorAuthService twoFactorAuthService, IJWTService jwtService, IFileUploadService fileUploadService)
         {
             _userManager = userManager;
@@ -401,6 +433,7 @@ namespace LexiLearner.Services
 
         public async Task<Pupil?> GetPupilByPupilId(Guid pupilId)
         {
+            Console.WriteLine($"oten PupilId: {pupilId}");
             return await _userRepository.GetPupilByPupilId(pupilId);
         }
 

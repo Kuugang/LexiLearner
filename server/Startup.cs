@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.FileProviders;
-
+using System.Text.Json.Serialization;
 using DotNetEnv;
 
 using Microsoft.AspNetCore.Mvc;
@@ -85,18 +85,13 @@ namespace LexiLearner
             services.Configure<JwtOptions>(Configuration.GetSection("JWT"));
 
             services.AddControllers()
-                .AddJsonOptions(options =>
-                {
-                    options.JsonSerializerOptions.DefaultIgnoreCondition =
-                        JsonIgnoreCondition.WhenWritingNull;
-                    options.AllowInputFormatterExceptionMessages = true;
-                });
-                
-            services.AddControllers()
-                .AddJsonOptions(opt =>
-                {
-                    opt.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-                });
+            .AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
+                options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+                options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+                options.AllowInputFormatterExceptionMessages = true;
+            });
 
             services.ConfigureApplicationCookie(options =>
             {

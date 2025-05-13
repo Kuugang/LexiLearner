@@ -13,7 +13,7 @@ export default function createactivity() {
         <View className="p-8">
           <BackHeader />
           <View className="py-8">
-            <Text className="text-[22px] font-bold">Create Activity</Text>
+            <Text className="text-[22px] font-bold">Create Activity 2</Text>
             <View className="py-4">
               <AddReadingAssignment />
             </View>

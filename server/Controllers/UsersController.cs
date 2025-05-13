@@ -145,5 +145,27 @@ public class UsersController : ControllerBase
         return session != null
             ? StatusCode(StatusCodes.Status200OK, new SuccessResponseDTO("Session ended successfully.", session))
             : StatusCode(StatusCodes.Status404NotFound, new ErrorResponseDTO("Session not found.", StatusCodes.Status404NotFound));
-    }    
+    }  
+    
+    [HttpGet("search")]
+    [Authorize] 
+    public async Task<IActionResult> SearchUsers([FromQuery] string query, [FromQuery] string role)
+    {
+        if (string.IsNullOrEmpty(query))
+        {
+            return BadRequest(new ResponseDTO("Search query cannot be empty.", null, "Bad Request", 400));
+        }
+
+        // Fix parameter order here - role comes first in the interface
+        var users = await _userService.SearchUsersByRoleAsync(role, query);
+        
+        if (users == null || !users.Any())
+        {
+            // Return an empty array directly (not wrapped in another object)
+            return Ok(new SuccessResponseDTO("No users found.", new List<User>()));
+        }
+
+        // Return users directly without extra nesting
+        return Ok(new SuccessResponseDTO("Users found.", users));
+    }
 }
