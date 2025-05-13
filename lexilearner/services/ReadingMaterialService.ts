@@ -23,13 +23,13 @@ export const getStories = async (): Promise<ReadingContentType[]> => {
   } catch (error: any) {
     console.error("Error fetching stories:", error);
     throw new Error(
-      error?.response?.data?.message || "Failed to fetch stories.",
+      error?.response?.data?.message || "Failed to fetch stories."
     );
   }
 };
 
 export const getFilteredStories = async (
-  filters?: ReadingMaterialFilters,
+  filters?: ReadingMaterialFilters
 ): Promise<ReadingContentType[]> => {
   try {
     const response = await axiosInstance.get(`${API_URL}/readingMaterials`, {
@@ -41,7 +41,7 @@ export const getFilteredStories = async (
   } catch (error: any) {
     console.error("Error fetching stories:", error);
     throw new Error(
-      error?.response?.data?.message || "Failed to fetch stories.",
+      error?.response?.data?.message || "Failed to fetch stories."
     );
   }
 };
@@ -51,3 +51,17 @@ export interface ReadingMaterialFilters {
   Genre: string[];
   Title: string;
 }
+
+export const getReadingMaterialById = async (readingMaterialId: string) => {
+  const response = await axiosInstance.get(
+    `/readingMaterials/${readingMaterialId}`,
+    {
+      validateStatus: () => true,
+    }
+  );
+
+  if (response.status !== 200 && response.status !== 201) {
+    throw new Error(response.data.message);
+  }
+  return response.data.data;
+};

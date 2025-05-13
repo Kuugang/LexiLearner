@@ -40,11 +40,12 @@ import {
 } from "@/services/ReadingSessionService";
 import { ReadingSession } from "@/models/ReadingSession";
 import { router } from "expo-router";
+import BackHeader from "@/components/BackHeader";
 
 export default function Read() {
   const { width } = useWindowDimensions();
   const selectedContent = useReadingContentStore(
-    (state) => state.selectedContent,
+    (state) => state.selectedContent
   );
 
   const scrollPercentageRef = useRef(0);
@@ -69,17 +70,17 @@ export default function Read() {
 
   const getTranslation = useTranslationStore((state) => state.getTranslation);
   const storeTranslation = useTranslationStore(
-    (state) => state.storeTranslation,
+    (state) => state.storeTranslation
   );
 
   const setCurrentSession = useReadingSessionStore(
-    (state) => state.setCurrentSession,
+    (state) => state.setCurrentSession
   );
   const getPastSession = useReadingSessionStore(
-    (state) => state.getPastSession,
+    (state) => state.getPastSession
   );
   const updateReadingSessionProgress = useReadingSessionStore(
-    (state) => state.updateReadingSessionProgress,
+    (state) => state.updateReadingSessionProgress
   );
 
   const { mutateAsync: createReadingSession } = useCreateReadingSession();
@@ -111,7 +112,7 @@ export default function Read() {
     const backAction = () => {
       updateReadingSessionProgress(
         currentSessionRef.current!!.id,
-        scrollPercentageRef.current,
+        scrollPercentageRef.current
       );
       setCurrentSession(null);
       return false;
@@ -119,7 +120,7 @@ export default function Read() {
 
     const backHandler = BackHandler.addEventListener(
       "hardwareBackPress",
-      backAction,
+      backAction
     );
 
     return () => {
@@ -148,7 +149,7 @@ export default function Read() {
           headers: {
             "Content-Type": "application/x-www-form-urlencoded",
           },
-        },
+        }
       );
       storeTranslation(word, data.result);
       setTranslation(data.result);
@@ -161,7 +162,7 @@ export default function Read() {
   const fetchDefinition = useCallback(async (word: string) => {
     try {
       const { data } = await axios.get(
-        `https://corsproxy.io/?url=https://googledictionary.freecollocation.com/meaning?word=${word}`,
+        `https://corsproxy.io/?url=https://googledictionary.freecollocation.com/meaning?word=${word}`
       );
       return data;
     } catch (error) {
@@ -231,7 +232,7 @@ export default function Read() {
         setIsDefinitionLoading(false);
       }
     },
-    [fetchDefinition, getDefinition, storeDefinition],
+    [fetchDefinition, getDefinition, storeDefinition]
   );
 
   const handleWordPress = useCallback(
@@ -241,7 +242,7 @@ export default function Read() {
       setDefinitionVisible(true);
       handleDisplayDefinition(cleanedWord);
     },
-    [handleDisplayDefinition],
+    [handleDisplayDefinition]
   );
 
   const handlePronounce = useCallback(() => {
@@ -282,7 +283,7 @@ export default function Read() {
 
   const renderParagraph = useCallback(
     ({ item }: { item: any }) => <ParagraphItem words={item.words} />,
-    [],
+    []
   );
 
   const estimatedItemSize = useMemo(() => {
@@ -359,6 +360,7 @@ export default function Read() {
   return (
     <>
       <View style={{ flex: 1 }} className="bg-background">
+        <BackHeader />
         {!isContentReady && (
           <View className="flex-1 justify-center items-center absolute inset-0 z-50">
             <ActivityIndicator size="large" color="#0000ff" />
