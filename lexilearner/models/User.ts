@@ -16,6 +16,8 @@ export interface TeacherProfile {
 }
 
 export interface Pupil {
+  firstName: string;
+  lastName: string;
   id?: string;
   age?: number;
   level?: number;

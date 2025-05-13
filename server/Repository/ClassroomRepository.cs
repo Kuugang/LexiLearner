@@ -68,6 +68,7 @@ namespace LexiLearner.Repository{
             var classroom = await _context.Classroom
                 .Include(c => c.ClassroomEnrollments)
                 .ThenInclude(ce => ce.Pupil)
+                .ThenInclude(p => p.User)
                 .FirstOrDefaultAsync(c => c.Id == ClassroomId);
 
             return classroom?.ClassroomEnrollments.Select(ce => ce.Pupil).ToList() ?? [];
