@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { router } from "expo-router";
 
-// tanginang copy paste css yan
+// TODO: iusa nlng ni nga btn oy dzuh tanginang copy paste css yan
 export function NewClassroomBtn() {
   return (
     <TouchableOpacity
@@ -48,7 +48,7 @@ export function AddActivity() {
   return (
     <TouchableOpacity
       onPress={() => {
-        router.push("/classroom/createactivity");
+        router.replace("/classroom/createactivity");
       }}
     >
       <View className="border-2 rounded-xl border-lightGray my-4 border-b-4">
@@ -56,6 +56,25 @@ export function AddActivity() {
           <View className="items-center">
             <FontAwesomeIcon size={25} icon={faPlus} />
             <Text className="my-2">Add New Activity</Text>
+          </View>
+        </View>
+      </View>
+    </TouchableOpacity>
+  );
+}
+
+export function AddReadingAssignment() {
+  return (
+    <TouchableOpacity
+      onPress={() => {
+        // router.push("/classroom/createactivity");
+      }}
+    >
+      <View className="border-2 rounded-xl border-lightGray my-4 border-b-4">
+        <View className="p-6">
+          <View className="items-center">
+            <FontAwesomeIcon size={25} icon={faPlus} />
+            <Text className="my-2">Choose Book</Text>
           </View>
         </View>
       </View>

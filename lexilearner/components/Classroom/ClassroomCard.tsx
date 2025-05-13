@@ -26,7 +26,7 @@ export default function ClassroomCard({ classroom }: ClassroomCardProps) {
     console.log("CURRENT CLASSROOM CARD TING FROM SETSELECTED:", classroom.id);
     console.log(
       "CURRENT CLASSROOM CARD TING FROM SELECTED:",
-      selectedClassroom.name
+      selectedClassroom?.name
     );
     router.push(`/classroom/${classroom.id}`);
   };
