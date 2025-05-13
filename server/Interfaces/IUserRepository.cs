@@ -14,7 +14,7 @@ namespace LexiLearner.Interfaces
         Task<Teacher?> GetTeacherByUserId(string UserId);
 
         Task Update<T>(T entity) where T : class;
-        Task<LoginStreak?> GetLoginStreak(string userId);
+        Task<LoginStreak?> GetLoginStreak(Guid pupilId);
         Task<LoginStreak> CreateLoginStreak(LoginStreak streak);
         Task<Pupil?> GetPupilByPupilId(Guid pupilId);
         Task<Session> CreateSession(Session session);
