@@ -30,5 +30,9 @@ namespace LexiLearner.Interfaces
         Task<SessionDTO> EndSession(Guid sessionId, ClaimsPrincipal user);
         Task<Session?> GetSessionById(Guid sessionId, ClaimsPrincipal user);
         Task<List<Session>> GetSessionsByUserId(string userId);
+        Task<List<PupilLeaderboard>> GetPupilLeaderboard(ClaimsPrincipal user);
+        Task<List<PupilLeaderboard>> GetPupilLeaderboardByPupilId(Guid pupilId);
+        Task<List<PupilLeaderboard>> GetGlobal10Leaderboard();
+        Task<PupilLeaderboard> CreatePupilLeaderboardEntry(PupilLeaderboardDTO.Create request);
     }
 }

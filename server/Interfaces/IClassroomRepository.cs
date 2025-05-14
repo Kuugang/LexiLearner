@@ -21,5 +21,6 @@ namespace LexiLearner.Interfaces{
 		Task<List<ReadingMaterialAssignment>> GetActiveReadingAssignmentsByClassroomId(Guid ClassroomId);
 		Task<ReadingMaterialAssignment> UpdateReadingAssignment(ReadingMaterialAssignment ReadingMaterialAssignment);
 		Task DeleteReadingAssignment(ReadingMaterialAssignment ReadingMaterialAssignment);
+		Task<List<ClassroomEnrollment>> GetLeaderboard(Guid ClassroomId);
 	}
 }

@@ -246,5 +246,42 @@ namespace LexiLearner.Repository
 
             return sessions ?? new List<Session>();
         }
+
+        public async Task<List<PupilLeaderboard>> GetPupilLeaderboardByPupilId(Guid pupilId)
+        {
+            var cacheKey = $"PupilLeaderboard_{pupilId}";
+            var pupilLeaderboard = await GetFromCacheAsync<List<PupilLeaderboard>>(cacheKey);
+            if (pupilLeaderboard is null)
+            {
+                pupilLeaderboard = await _decorated.GetPupilLeaderboardByPupilId(pupilId);
+                if (pupilLeaderboard is not null)
+                {
+                    await SetCacheAsync(cacheKey, pupilLeaderboard, TimeSpan.FromMinutes(30));
+                }
+            }
+            
+            return pupilLeaderboard ?? new List<PupilLeaderboard>();
+        }
+
+        public async Task<List<PupilLeaderboard>> GetGlobal10Leaderboard()
+        {
+            var cacheKey = $"Global10Leaderboard";
+            var global10Leaderboard = await GetFromCacheAsync<List<PupilLeaderboard>>(cacheKey);
+            if (global10Leaderboard is null)
+            {
+                global10Leaderboard = await _decorated.GetGlobal10Leaderboard();
+                if (global10Leaderboard is not null)
+                {
+                    await SetCacheAsync(cacheKey, global10Leaderboard, TimeSpan.FromMinutes(30));
+                }
+            }
+
+            return global10Leaderboard ?? new List<PupilLeaderboard>();
+        }
+
+        public Task<PupilLeaderboard> CreatePupilLeaderboardEntry(PupilLeaderboard pupilLeaderboard)
+        {
+            return _decorated.CreatePupilLeaderboardEntry(pupilLeaderboard);
+        }
     }
 }

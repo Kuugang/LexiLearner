@@ -15,6 +15,7 @@ namespace LexiLearner.Services
 
         private readonly UserManager<User> _userManager;
         private readonly IUserRepository _userRepository;
+        private readonly IPupilService _pupilService;
         // private readonly CachedUserRepository _userRepository;
         private readonly ITwoFactorAuthService _twoFactorAuthService;
         private readonly IJWTService _jwtService;
@@ -52,13 +53,14 @@ namespace LexiLearner.Services
         }
 
 
-        public UserService(UserManager<User> userManager, IUserRepository userRepository, ITwoFactorAuthService twoFactorAuthService, IJWTService jwtService, IFileUploadService fileUploadService)
+        public UserService(UserManager<User> userManager, IUserRepository userRepository, ITwoFactorAuthService twoFactorAuthService, IJWTService jwtService, IFileUploadService fileUploadService, IPupilService pupilService)
         {
             _userManager = userManager;
             _userRepository = userRepository;
             _twoFactorAuthService = twoFactorAuthService;
             _jwtService = jwtService;
             _fileUploadService = fileUploadService;
+            _pupilService = pupilService;
         }
 
         public async Task<string> GetRole(User user)
@@ -118,6 +120,23 @@ namespace LexiLearner.Services
             };
             user = await _userRepository.Create(user, RegisterRequest.Password);
             await _userRepository.CreateProfile(user, RegisterRequest.Role);
+            
+            // If the user is a pupil, create a leaderboard entry
+            if (RegisterRequest.Role == "Pupil")
+            {
+                var pupil = await _userRepository.GetPupilByUserId(user.Id);
+                if (pupil != null)
+                {
+                    var leaderboardEntry = new PupilLeaderboard
+                    {
+                        PupilId = pupil.Id,
+                        Pupil = pupil,
+                        Level = pupil.Level // Default level (e.g., 0)
+                    };
+
+                    await _userRepository.CreatePupilLeaderboardEntry(leaderboardEntry);
+                }
+            }
 
             var token = _jwtService.GenerateJWTToken(user.Id, user.UserName!, RegisterRequest.Role);
 
@@ -506,6 +525,53 @@ namespace LexiLearner.Services
         public async Task<List<Session>> GetSessionsByUserId(string userId)
         {
             return await _userRepository.GetSessionsByUserId(userId);
+        }
+        
+        public async Task<List<PupilLeaderboard>> GetPupilLeaderboardByPupilId(Guid pupilId)
+        {
+            return await _userRepository.GetPupilLeaderboardByPupilId(pupilId);
+        }
+        
+        public async Task<PupilLeaderboard> CreatePupilLeaderboardEntry(PupilLeaderboardDTO.Create request)
+        {
+            Pupil? pupil = await _pupilService.GetPupilById(request.PupilId);
+            if (pupil == null)
+            {
+                throw new ApplicationExceptionBase("Pupil not found", "Failed to create leaderboard entry", StatusCodes.Status404NotFound);
+            }
+            
+            PupilLeaderboard pupilLeaderboard = new PupilLeaderboard
+            {
+                PupilId = request.PupilId,
+                Pupil = pupil,
+                Level = request.Level
+            };
+            
+            pupilLeaderboard = await _userRepository.CreatePupilLeaderboardEntry(pupilLeaderboard);
+            return pupilLeaderboard;
+        }
+
+        public Task<List<PupilLeaderboard>> GetGlobal10Leaderboard()
+        {
+            return _userRepository.GetGlobal10Leaderboard();
+        }
+        
+        public async Task<List<PupilLeaderboard>> GetPupilLeaderboard(ClaimsPrincipal user)
+        {
+            User? User = GetUserFromToken(user).Result;
+            if (User == null)
+            {
+                throw new ApplicationExceptionBase("User not found.", "Fetching leaderboard failed.", StatusCodes.Status404NotFound);
+            }
+            
+            Pupil? pupil = GetPupilByUserId(User.Id).Result;
+            if (pupil == null)
+            {
+                throw new ApplicationExceptionBase("Pupil not found.", "Fetching leaderboard failed.", StatusCodes.Status404NotFound);
+            }
+            
+            var leaderboardHist = await _userRepository.GetPupilLeaderboardByPupilId(pupil.Id);
+            return leaderboardHist;
         }
     }
 

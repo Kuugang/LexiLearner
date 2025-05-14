@@ -78,4 +78,26 @@ namespace LexiLearner.Models.DTO
             LastLoginDate = streak.LastLoginDate;
         }
     }
+    
+    public class PupilLeaderboardDTO
+    {
+        public Guid Id { get; set; }
+        public Guid PupilId { get; set; }
+        public int Level { get; set; }
+        public DateTime RecordedAt { get; set; } 
+
+        public PupilLeaderboardDTO(PupilLeaderboard pupilLeaderboard)
+        {
+            Id = pupilLeaderboard.Id;
+            PupilId = pupilLeaderboard.PupilId;
+            Level = pupilLeaderboard.Level;
+            RecordedAt = pupilLeaderboard.RecordedAt;
+        }
+        
+        public class Create
+        {
+            public required Guid PupilId { get; set; }
+            public required int Level { get; set; }
+        }
+    }
 }

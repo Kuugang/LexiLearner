@@ -20,5 +20,8 @@ namespace LexiLearner.Interfaces
         Task<Session> CreateSession(Session session);
         Task<Session?> GetSessionById(Guid sessionId);
         Task<List<Session>> GetSessionsByUserId(string userId);
+        Task<List<PupilLeaderboard>> GetPupilLeaderboardByPupilId(Guid pupilId);
+        Task<List<PupilLeaderboard>> GetGlobal10Leaderboard();
+        Task<PupilLeaderboard> CreatePupilLeaderboardEntry(PupilLeaderboard pupilLeaderboard);
 	}
 }

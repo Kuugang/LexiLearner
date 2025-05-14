@@ -190,4 +190,14 @@ public class ClassroomController : ControllerBase {
             new SuccessResponseDTO("Deleted reading assignment successfully.")
         );
     }
+    
+    [HttpGet("{ClassroomId}/leaderboard")]
+    [Authorize]
+    public async Task<IActionResult> GetClassroomLeaderboard([FromRoute] Guid ClassroomId)
+    {
+        var classroomLeaderboard = await _classroomService.GetLeaderboard(ClassroomId, User);
+        return StatusCode(StatusCodes.Status200OK,
+            new SuccessResponseDTO("Fetched classroom leaderboard successfully.", classroomLeaderboard)
+        );
+    }
 }

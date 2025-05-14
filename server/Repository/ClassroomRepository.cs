@@ -125,5 +125,15 @@ namespace LexiLearner.Repository{
             _context.ReadingMaterialAssignment.Remove(ReadingMaterialAssignment);
             return _context.SaveChangesAsync();
         }
+
+        public async Task<List<ClassroomEnrollment>> GetLeaderboard(Guid ClassroomId)
+        {
+            return await _context.ClassroomEnrollment
+                .Include(ce => ce.Pupil)
+                .ThenInclude(p => p.User)
+                .Where(ce => ce.ClassroomId == ClassroomId)
+                .OrderByDescending(ce => ce.Pupil.Level)
+                .ToListAsync();
+        }
     }
 }
