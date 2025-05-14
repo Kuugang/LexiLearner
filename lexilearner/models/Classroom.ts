@@ -1,4 +1,4 @@
-import { StudentProfile, TeacherProfile, User } from "./User";
+import { Pupil, TeacherProfile, User } from "./User";
 
 export interface Classroom {
   id: string;
@@ -10,5 +10,5 @@ export interface Classroom {
 
 export interface ClassroomEnrollment {
   classroom: Classroom;
-  pupil: StudentProfile;
+  pupil: Pupil;
 }

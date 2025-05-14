@@ -5,18 +5,17 @@ import { ReadingSession } from "@/models/ReadingSession";
 import { useReadingSessionStore } from "@/stores/readingSessionStore";
 
 const createReadingSession = async (
-  ReadingMaterialId: string,
+  ReadingMaterialId: string
 ): Promise<ReadingSession> => {
   try {
     const response = await axiosInstance.post(
-      `${API_URL}/readingsessions/${ReadingMaterialId}`,
+      `${API_URL}/readingsessions/${ReadingMaterialId}`
     );
-
     return response.data.data;
   } catch (error: any) {
     console.error("Failed to create reading session.", error);
     throw new Error(
-      error?.response?.data?.message || "Failed to create reading session.",
+      error?.response?.data?.message || "Failed to create reading session."
     );
   }
 };
@@ -37,26 +36,26 @@ export const useCreateReadingSession = () => {
 };
 
 const updateReadingSession = async (
-  ReadingSession: ReadingSession,
+  ReadingSession: ReadingSession
 ): Promise<ReadingSession> => {
   try {
     const response = await axiosInstance.put(
       `${API_URL}/readingsessions/${ReadingSession.id}`,
-      ReadingSession,
+      ReadingSession
     );
 
     return response.data.data;
   } catch (error: any) {
     console.error("Failed to update reading session.", error);
     throw new Error(
-      error?.response?.data?.message || "Failed to update reading session.",
+      error?.response?.data?.message || "Failed to update reading session."
     );
   }
 };
 
 export const useUpdateReadingSession = () => {
   const updateReadingSessionProgress = useReadingSessionStore(
-    (state) => state.updateReadingSessionProgress,
+    (state) => state.updateReadingSessionProgress
   );
 
   return useMutation({
