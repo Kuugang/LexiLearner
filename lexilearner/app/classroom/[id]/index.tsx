@@ -22,13 +22,14 @@ import {
 } from "lucide-react-native";
 import ClassroomHeader from "@/components/Classroom/ClassroomHeader";
 import { useClassroomStore } from "@/stores/classroomStore";
+import { useUserStore } from "@/stores/userStore";
 
 export default function CurrentClassroom() {
   const params = useLocalSearchParams<{ id: string }>();
-  // selectedClassroom()
   const selectedClassroom = useClassroomStore(
     (state) => state.selectedClassroom
   );
+  const user = useUserStore((state) => state.user);
   console.log("SELECTED CLASSROOM:", selectedClassroom?.id);
 
   return (
@@ -59,11 +60,9 @@ export default function CurrentClassroom() {
               </View>
             </View>
           </View>
-          <AddActivity />
+          {user?.role === "Teacher" ? <AddActivity /> : null}
           <Activity />
           <Activity />
-          {/* <StudentDisplay />
-            <StudentLeaderboardDisplay /> */}
         </View>
       </View>
     </ScrollView>
