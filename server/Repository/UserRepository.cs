@@ -169,19 +169,21 @@ namespace LexiLearner.Repository
         
         public async Task<PupilLeaderboard> CreatePupilLeaderboardEntry(PupilLeaderboard pupilLeaderboard)
         {
+            _context.Attach(pupilLeaderboard.Pupil);
             await _context.PupilLeaderboard.AddAsync(pupilLeaderboard);
             await _context.SaveChangesAsync();
             return pupilLeaderboard;
         }
 
-        public Task<List<PupilLeaderboard>> GetGlobal10Leaderboard()
+        public async Task<List<PupilLeaderboard>> GetGlobal10Leaderboard()
         {
-            return _context.PupilLeaderboard
+            var allLeaderboards = await _context.PupilLeaderboard.AsNoTracking().ToListAsync();
+            return allLeaderboards
                 .GroupBy(pl => pl.PupilId)
                 .Select(g => g.OrderByDescending(pl => pl.Level).First())
                 .OrderByDescending(pl => pl.Level)
                 .Take(10)
-                .ToListAsync();
+                .ToList();
         }
     }
 }

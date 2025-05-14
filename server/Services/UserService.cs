@@ -120,6 +120,23 @@ namespace LexiLearner.Services
             };
             user = await _userRepository.Create(user, RegisterRequest.Password);
             await _userRepository.CreateProfile(user, RegisterRequest.Role);
+            
+            // If the user is a pupil, create a leaderboard entry
+            if (RegisterRequest.Role == "Pupil")
+            {
+                var pupil = await _userRepository.GetPupilByUserId(user.Id);
+                if (pupil != null)
+                {
+                    var leaderboardEntry = new PupilLeaderboard
+                    {
+                        PupilId = pupil.Id,
+                        Pupil = pupil,
+                        Level = pupil.Level // Default level (e.g., 0)
+                    };
+
+                    await _userRepository.CreatePupilLeaderboardEntry(leaderboardEntry);
+                }
+            }
 
             var token = _jwtService.GenerateJWTToken(user.Id, user.UserName!, RegisterRequest.Role);
 
@@ -539,7 +556,7 @@ namespace LexiLearner.Services
             return _userRepository.GetGlobal10Leaderboard();
         }
         
-        public Task<List<PupilLeaderboard>> GetPupilLeaderboard(ClaimsPrincipal user)
+        public async Task<List<PupilLeaderboard>> GetPupilLeaderboard(ClaimsPrincipal user)
         {
             User? User = GetUserFromToken(user).Result;
             if (User == null)
@@ -553,7 +570,8 @@ namespace LexiLearner.Services
                 throw new ApplicationExceptionBase("Pupil not found.", "Fetching leaderboard failed.", StatusCodes.Status404NotFound);
             }
             
-            return _userRepository.GetPupilLeaderboardByPupilId(pupil.Id);
+            var leaderboardHist = await _userRepository.GetPupilLeaderboardByPupilId(pupil.Id);
+            return leaderboardHist;
         }
     }
 
