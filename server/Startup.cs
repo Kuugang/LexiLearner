@@ -84,10 +84,11 @@ namespace LexiLearner
 
             services.Configure<JwtOptions>(Configuration.GetSection("JWT"));
 
+            // bago giadd ni deo idk
             services.AddControllers()
             .AddJsonOptions(options =>
             {
-                options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
+                options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
                 options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
                 options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
                 options.AllowInputFormatterExceptionMessages = true;

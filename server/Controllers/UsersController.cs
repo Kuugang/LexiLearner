@@ -146,6 +146,26 @@ public class UsersController : ControllerBase
             ? StatusCode(StatusCodes.Status200OK, new SuccessResponseDTO("Session ended successfully.", session))
             : StatusCode(StatusCodes.Status404NotFound, new ErrorResponseDTO("Session not found.", StatusCodes.Status404NotFound));
     }  
+
+    [HttpGet("me/sessions")]
+    [Authorize]
+    public async Task<IActionResult> GetTotalSession() {
+        var user = await _userService.GetUserFromToken(User);
+        if(user == null) {
+            return StatusCode(StatusCodes.Status404NotFound, new ErrorResponseDTO("User not found.", StatusCodes.Status404NotFound));
+        }
+
+        var userId = user.Id.ToString();
+        var sessions = await _userService.GetSessionsByUserId(userId);
+
+        if(sessions == null) {
+            return StatusCode(StatusCodes.Status404NotFound, new ErrorResponseDTO("No sessions found.", StatusCodes.Status404NotFound));
+        }
+
+        Console.WriteLine($"Sessions: {sessions.Count}");
+        var totalDuration = sessions.Sum(s => s.Duration ?? 0);
+        return StatusCode(StatusCodes.Status200OK, new SuccessResponseDTO("Total session duration fetched successfully.", totalDuration));
+    }
     
     [HttpGet("search")]
     [Authorize] 

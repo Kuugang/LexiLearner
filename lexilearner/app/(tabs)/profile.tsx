@@ -19,9 +19,24 @@ import {
 
 import ProfileStat from "@/components/ProfileStat";
 import BackHeader from "@/components/BackHeader";
+import { getTotalSession } from "@/services/UserService";
+import { useQuery } from "@tanstack/react-query";
 
 export default function Profile() {
   const user = useUserStore((state) => state.user);
+
+  const { data: screenTime, isLoading } = useQuery({
+    queryKey: ["totalSession"],
+    queryFn: getTotalSession,
+  });
+
+  const formatScreenTime = (minutes: number) => {
+    const hours = Math.floor(minutes / 60);
+    const remainingMinutes = minutes % 60;
+    return `${hours}h ${remainingMinutes}m`;
+  };
+
+  console.log("TOTAL SCNERESNT:", screenTime);
 
   return (
     <ScrollView className="bg-background">
@@ -103,8 +118,8 @@ export default function Profile() {
                   icon={<Book color="blue" />}
                 />
                 <ProfileStat
-                  level={"4.5 Hours"}
-                  description="Avg. Screentime"
+                  level={formatScreenTime(screenTime)}
+                  description="Total Screentime"
                   icon={<Smartphone color="black" />}
                 />
                 <ProfileStat

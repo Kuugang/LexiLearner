@@ -17,7 +17,7 @@ export const useStories = () => {
 export const getStories = async (): Promise<ReadingContentType[]> => {
   try {
     const response = await axiosInstance.get(`${API_URL}/readingMaterials`);
-    console.log("stories fetched from api:", response.data.data);
+    // console.log("stories fetched from api:", response.data.data);
 
     return response.data.data;
   } catch (error: any) {
@@ -35,7 +35,7 @@ export const getFilteredStories = async (
     const response = await axiosInstance.get(`${API_URL}/readingMaterials`, {
       params: filters,
     });
-    console.log("stories fetched from api:", response);
+    // console.log("stories fetched from api:", response);
 
     return response.data.data;
   } catch (error: any) {
