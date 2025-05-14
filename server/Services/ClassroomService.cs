@@ -366,24 +366,59 @@ namespace LexiLearner.Services{
                 );
             }
             
-            var teacher = await _userService.GetTeacherByUserId(user.Id);
-            if (teacher == null)
+            var classroom = await GetByClassroomId(ClassroomId);
+            if (classroom == null)
             {
                 throw new ApplicationExceptionBase(
-                    "Teacher is not found.",
+                    "Classroom not found.",
                     "Failed getting pupils from classroom.",
                     StatusCodes.Status404NotFound
                 );
             }
             
-            var classroom = await GetByClassroomId(ClassroomId);
-            if (teacher.Id != classroom.TeacherId)
+            var userRole = await _userService.GetRole(user);
+            if ( userRole == "Teacher")
             {
-                throw new ApplicationExceptionBase(
-                    "Teacher is not the teacher of the classroom.",
-                    "Failed getting pupils from classroom.",
-                    StatusCodes.Status404NotFound
-                );
+                var teacher = await _userService.GetTeacherByUserId(user.Id);
+                if (teacher == null)
+                {
+                    throw new ApplicationExceptionBase(
+                        "Teacher not found.",
+                        "Failed getting pupils from classroom.",
+                        StatusCodes.Status404NotFound
+                    );
+                }
+                
+                if (teacher.Id != classroom.TeacherId)
+                {
+                    throw new ApplicationExceptionBase(
+                        "Teacher is not the teacher of the classroom.",
+                        "Failed getting pupils from classroom.",
+                        StatusCodes.Status401Unauthorized
+                    );
+                }
+            }
+            else if (userRole == "Pupil")
+            {
+                var pupil = await _userService.GetPupilByUserId(user.Id);
+                if (pupil == null)
+                {
+                    throw new ApplicationExceptionBase(
+                        "Pupil not found.",
+                        "Failed getting pupils from classroom.",
+                        StatusCodes.Status404NotFound
+                    );
+                }
+                
+                var classroomEnrollment = await _classroomRepository.GetClassroomEnrollmentByPupilandClassId(pupil.Id, ClassroomId);
+                if (classroomEnrollment == null)
+                {
+                    throw new ApplicationExceptionBase(
+                        "Pupil is not enrolled in the classroom.",
+                        "Failed getting pupils from classroom.",
+                        StatusCodes.Status401Unauthorized
+                    );
+                }
             }
             
 			return await _classroomRepository.GetPupilsByClassroomId(ClassroomId);
