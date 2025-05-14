@@ -49,4 +49,18 @@ public class ReadingMaterialsController : ControllerBase
             )
           );
     }
+
+    [HttpGet("{readingMaterialId}")]
+    public async Task<IActionResult> GetReadingMaterialById([FromRoute] Guid readingMaterialId) {
+        var readingMaterial = await _readingMaterialService.GetById(readingMaterialId);
+
+        if (readingMaterial == null)
+        {
+            return StatusCode(StatusCodes.Status404NotFound,
+              new ErrorResponseDTO("Reading Material not found."));
+        }
+
+        return StatusCode(StatusCodes.Status200OK,
+          new SuccessResponseDTO("Reading Material fetched.", new ReadingMaterialResponseDTO(readingMaterial)));
+    }
 }

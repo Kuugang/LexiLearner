@@ -11,14 +11,16 @@ namespace LexiLearner.Services
         private readonly IMinigameRepository _minigameRepository;
         private readonly IReadingMaterialService _readingMaterialService;
         private readonly IPupilService _pupilService;
+        private readonly IUserService _userService;
         private readonly IReadingSessionService _readingSessionService;
         private readonly Random _random;
-        public MinigameService(IMinigameRepository minigameRepository, IReadingMaterialService readingMaterialService, IPupilService pupilService, IReadingSessionService readingSessionService)
+        public MinigameService(IMinigameRepository minigameRepository, IReadingMaterialService readingMaterialService, IPupilService pupilService, IReadingSessionService readingSessionService, IUserService userService)
         {
             _minigameRepository = minigameRepository;
             _readingMaterialService = readingMaterialService;
             _pupilService = pupilService;
             _readingSessionService = readingSessionService;
+            _userService = userService;
             _random = new Random();
         }
         public async Task<MinigameDTO> Create(MinigameType minigameType, MinigameDTO.Create request)
@@ -243,6 +245,12 @@ namespace LexiLearner.Services
             Pupil Pupil = ReadingSession.Pupil;
             Pupil.Level += FinalScore;
             await _minigameRepository.Complete(Pupil);
+            
+            await _userService.CreatePupilLeaderboardEntry(new PupilLeaderboardDTO.Create
+            {
+                PupilId = Pupil.Id,
+                Level = Pupil.Level
+            });
         }
 
         public async Task<List<MinigameDTO>> GetRandomMinigames(Guid readingSessionId)

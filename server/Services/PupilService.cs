@@ -1,5 +1,8 @@
-﻿using LexiLearner.Interfaces;
+﻿using System.Security.Claims;
+using LexiLearner.Exceptions;
+using LexiLearner.Interfaces;
 using LexiLearner.Models;
+using LexiLearner.Models.DTO;
 
 namespace LexiLearner.Services
 {

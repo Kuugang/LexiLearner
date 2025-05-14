@@ -8,16 +8,8 @@ import { useColorScheme } from "@/hooks/useColorScheme";
 
 import CompassAnimation from "~/assets/animations/Animation - 1744671952675.json";
 
-// Fix type errors for the CompassIcon props
-const CompassIcon = ({
-  compassFocused,
-  setCompassFocused,
-}: {
-  compassFocused: boolean;
-  setCompassFocused: React.Dispatch<React.SetStateAction<boolean>>;
-}) => {
-  // Fix the ref type to properly access LottieView methods
-  const animationRef = useRef<LottieView | null>(null);
+const CompassIcon = ({ compassFocused, setCompassFocused }) => {
+  const animationRef = useRef(null);
 
   useEffect(() => {
     if (compassFocused) {
@@ -42,7 +34,7 @@ const CompassIcon = ({
 };
 
 export default function TabLayout() {
-  const animationRef = useRef<LottieView | null>(null);
+  const animationRef = useRef<LottieView>(null);
   const colorScheme = useColorScheme();
   const [compassFocused, setCompassFocused] = useState<boolean>(false);
 
@@ -52,12 +44,13 @@ export default function TabLayout() {
         headerShown: false,
         tabBarStyle: Platform.select({
           ios: {
-            backgroundColor: "rgba(0, 0, 0, 0.5)",
+            // Transparent background for iOS with a blur effect
+            backgroundColor: "rgba(0, 0, 0, 0.5)", // Set the background color here
             position: "absolute",
-            bottom: 0,
+            bottom: 0, // Optionally adjust the position
           },
           default: {
-            backgroundColor: "white",
+            backgroundColor: "white", // Set background color for Android or other platforms
           },
         }),
       }}
@@ -67,10 +60,33 @@ export default function TabLayout() {
         options={{
           tabBarLabel: () => null,
           tabBarIcon: ({ color, focused }) => (
-            <House color={focused ? "#f97316" : "#9ca3af"} />
+            <House color={focused ? "#f97316" : "#9ca3af"} /> // Orange if active, Gray if not
           ),
         }}
       />
+
+      {/* <Tabs.Screen */}
+      {/*   name="explore" */}
+      {/*   options={{ */}
+      {/*     tabBarLabel: () => null, */}
+      {/*     tabBarIcon: ({ focused }) => ( */}
+      {/*       <CompassIcon */}
+      {/*         compassFocused={compassFocused} */}
+      {/*         setCompassFocused={setCompassFocused} */}
+      {/*       /> */}
+      {/*     ), */}
+      {/*     tabBarButton: (props) => ( */}
+      {/*       <TouchableOpacity */}
+      {/*         {...props} */}
+      {/*         onPress={() => { */}
+      {/*           props.onPress(); // don't forget this to navigate! */}
+      {/*           setCompassFocused(true); */}
+      {/*         }} */}
+      {/*       /> */}
+      {/*     ), */}
+      {/*   }} */}
+      {/* /> */}
+
       <Tabs.Screen
         name="explore"
         options={{
@@ -80,6 +96,7 @@ export default function TabLayout() {
           ),
         }}
       />
+
       <Tabs.Screen
         name="library"
         options={{
@@ -89,17 +106,14 @@ export default function TabLayout() {
           ),
         }}
       />
+
       <Tabs.Screen
         name="profile"
         options={{
-          tabBarLabel: () => null,
-          tabBarIcon: ({ color, focused }) => (
-            <User color={focused ? "#f97316" : "#9ca3af"} />
-          ),
-          // Fix the href to match your actual route structure
-          href: "/profile/settings",
+          href: null,
         }}
       />
+
       <Tabs.Screen
         name="classroom"
         options={{
