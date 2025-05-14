@@ -84,8 +84,7 @@ namespace LexiLearner
 
             services.Configure<JwtOptions>(Configuration.GetSection("JWT"));
 
-            // bago giadd ni deo idk
-            services.AddControllers()
+           services.AddControllers()
             .AddJsonOptions(options =>
             {
                 options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
@@ -93,6 +92,8 @@ namespace LexiLearner
                 options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
                 options.AllowInputFormatterExceptionMessages = true;
             });
+
+            
 
             services.ConfigureApplicationCookie(options =>
             {
