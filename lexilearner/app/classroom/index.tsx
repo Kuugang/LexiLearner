@@ -78,7 +78,7 @@ export default function ClassroomScreen() {
         <View className="h-[150px] w-full rounded-bl-[40px] bg-yellowOrange p-4">
           <View className="flex-row items-center justify-between px-4 h-full">
             <Text className="text-[22px] font-bold leading-tight">
-              You{"\n"}Classrooms
+              Your{"\n"}Classrooms
             </Text>
 
             <Image

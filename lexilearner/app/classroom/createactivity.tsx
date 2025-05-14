@@ -3,6 +3,7 @@ import { AddReadingAssignment } from "@/components/Classroom/MainClassroomBtns";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { TextArea } from "@/components/ui/textarea";
+import { router } from "expo-router";
 import React from "react";
 import { View, Image, TouchableOpacity, Text, ScrollView } from "react-native";
 
@@ -26,6 +27,9 @@ export default function createactivity() {
         <Button
           className="bg-yellowOrange m-5 mb-24 shadow-main"
           //   onPress={() => router.push("/minigames/results/recommendation")}
+          onPress={() => {
+            router.back(); // or aron secure router.push(`/classroom/${classroomId}`);
+          }}
         >
           <Text>Finish</Text>
         </Button>
