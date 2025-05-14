@@ -158,5 +158,30 @@ namespace LexiLearner.Repository
                 .Where(s => s.UserId == userId)
                 .ToListAsync();
         }
+        
+        public async Task<List<PupilLeaderboard>> GetPupilLeaderboardByPupilId(Guid pupilId)
+        {
+            return await _context.PupilLeaderboard
+                .Where(pl => pl.PupilId == pupilId)
+                .OrderByDescending(pl => pl.Level)
+                .ToListAsync();
+        }
+        
+        public async Task<PupilLeaderboard> CreatePupilLeaderboardEntry(PupilLeaderboard pupilLeaderboard)
+        {
+            await _context.PupilLeaderboard.AddAsync(pupilLeaderboard);
+            await _context.SaveChangesAsync();
+            return pupilLeaderboard;
+        }
+
+        public Task<List<PupilLeaderboard>> GetGlobal10Leaderboard()
+        {
+            return _context.PupilLeaderboard
+                .GroupBy(pl => pl.PupilId)
+                .Select(g => g.OrderByDescending(pl => pl.Level).First())
+                .OrderByDescending(pl => pl.Level)
+                .Take(10)
+                .ToListAsync();
+        }
     }
 }
