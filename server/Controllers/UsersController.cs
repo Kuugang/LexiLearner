@@ -77,7 +77,7 @@ public class UsersController : ControllerBase
 
         return Ok(new SuccessResponseDTO("User exists."));
     }
-    
+
     [HttpPut("me/streak")]
     [Authorize]
     public async Task<IActionResult> RecordLoginStreak()

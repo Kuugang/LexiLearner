@@ -2,69 +2,65 @@ import app from "@/app";
 import { createSession, endSession } from "@/services/UserService";
 import { useUserStore } from "@/stores/userStore";
 import React, { useEffect, useRef, useState } from "react";
-import { AppState } from "react-native";
+import { AppState, AppStateStatus } from "react-native";
 
 //TODO: mo create sesh dayun sya and naay edge case pretty sure nga lahi nga userid iya icredit rn tangina
 export default function useScreenTime() {
   const appState = useRef(AppState.currentState);
-  const [isInitialState, setIsInitialState] = useState(true);
-  const [sessionId, setSessionId] = useState<string | null>(null);
+  const sessionId = useRef<string | null>(null);
 
   useEffect(() => {
-    const initializeSession = async () => {
-      if (appState.current === "active" && isInitialState) {
+    const handleSessionStart = async () => {
+      if (!sessionId.current) {
         try {
-          const response = await createSession();
-          console.log("Session created on app open:", response);
-          setSessionId(response.id);
-          setIsInitialState(false);
+          await createSession().then((response) => {
+            sessionId.current = response.id;
+            console.log("Session created:", sessionId.current);
+          });
         } catch (error) {
-          console.error("Error creating session on app open:", error);
+          console.error("Error creating session:", error);
         }
       }
     };
 
-    initializeSession();
+    const handleSessionEnd = async () => {
+      if (sessionId.current) {
+        try {
+          await endSession(sessionId.current).then((response) => {
+            console.log("Session ended:", response.endAt);
+            sessionId.current = null;
+          });
+        } catch (error) {
+          console.error("Error ending session:", error);
+        }
+      }
+    };
+
+    const handleAppStateChange = async (nextAppState: AppStateStatus) => {
+      if (nextAppState === "active") {
+        await handleSessionStart();
+        console.log("App is active");
+      } else if (nextAppState === "background" || nextAppState === "inactive") {
+        await handleSessionEnd();
+        console.log("App is inactive or in background");
+      }
+      appState.current = nextAppState;
+    };
+
+    if (appState.current === "active") {
+      handleSessionStart();
+    }
 
     const subscription = AppState.addEventListener(
       "change",
-      async (nextAppState) => {
-        if (nextAppState === "active" || isInitialState) {
-          try {
-            const response = await createSession();
-            console.log("Session created:", response);
-            setSessionId(response.id);
-          } catch (error) {
-            console.error("Error creating session:", error);
-          }
-
-          setIsInitialState(false);
-        } else if (
-          nextAppState === "background" ||
-          nextAppState === "inactive"
-        ) {
-          console.log("app background inactive shiesh");
-          console.log(sessionId);
-
-          if (sessionId) {
-            try {
-              const response = await endSession(sessionId);
-              console.log("Session ended:", response.endAt);
-              setSessionId(null);
-            } catch (error) {
-              console.error("Error ending session:", error);
-            }
-          }
-        }
-
-        appState.current = nextAppState;
-      }
+      handleAppStateChange
     );
 
     return () => {
       subscription.remove();
+      handleSessionEnd();
     };
-  }, [sessionId]);
+  }, []);
 
   return null;
 }

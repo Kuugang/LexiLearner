@@ -88,8 +88,32 @@ export const getTotalSession = async () => {
   if (response.status !== 200 && response.status !== 201) {
     throw new Error(response.data.message);
   }
-  console.log(response.data.data);
+
   return response.data.data;
 };
 
 export const getSessionById = async () => {};
+
+export const recordLoginStreak = async () => {
+  const response = await axiosInstance.put("/users/me/streak", {
+    validateStatus: () => true,
+  });
+
+  if (response.status !== 200 && response.status !== 201) {
+    throw new Error(response.data.message);
+  }
+
+  return response.data.data;
+};
+
+export const getLoginStreak = async () => {
+  const response = await axiosInstance.get("/users/me/streak", {
+    validateStatus: () => true,
+  });
+
+  if (response.status !== 200 && response.status !== 201) {
+    throw new Error(response.data.message);
+  }
+
+  return response.data.data;
+};
