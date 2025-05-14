@@ -10,7 +10,6 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createClassroom } from "@/services/ClassroomService";
 import { useClassroomStore } from "@/stores/classroomStore";
 
-// TODO: setselectedclassroom
 export default function CreateClassroom() {
   console.log("hmmmmm?");
   const setSelectedClassroom = useClassroomStore(

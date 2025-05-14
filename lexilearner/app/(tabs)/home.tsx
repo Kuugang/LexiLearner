@@ -56,9 +56,7 @@ function HomeScreen() {
     <ScrollView className="bg-background">
       {/* TODO: MAKE THIS INTO COMPONENT*/}
       <View className="flex flex-row gap-2 items-center w-full p-4">
-        <TouchableOpacity
-          onPress={() => router.push("/(tabs)/achievementslist")}
-        >
+        <TouchableOpacity onPress={() => router.push("/(tabs)/profile")}>
           <CircleUser color="#FFD43B" size={30} />
         </TouchableOpacity>
 
@@ -163,17 +161,13 @@ Originally created by Dr. Seuss himself, Beginner Books are fun, funny, and easy
         />
       </View>
 
-      <View className="flex-1 gap-4 w-full p-4">
+      <View className="flex-1 gap-4 w-full p-8">
         <Text className="text-2xl font-bold">Explore</Text>
-        <ScrollView
-          horizontal={true}
-          showsHorizontalScrollIndicator={false}
-          className="p-2"
-        >
-          {isStoriesLoading && <Text>Loading stories...</Text>}
+        {isStoriesLoading && <Text>Loading stories...</Text>}
+        <View className="flex flex-row gap-3 flex-wrap">
           {!isStoriesLoading && Array.isArray(stories) && stories?.length > 0
             ? stories?.map((item) => (
-                <View key={item.id} className="mr-4">
+                <View key={item.id}>
                   <ReadingContent
                     type="ScrollView"
                     id={item.id}
@@ -190,7 +184,7 @@ Originally created by Dr. Seuss himself, Beginner Books are fun, funny, and easy
             : !isStoriesLoading && (
                 <Text className="text-gray-500">No stories available.</Text>
               )}
-        </ScrollView>
+        </View>
       </View>
     </ScrollView>
   );
