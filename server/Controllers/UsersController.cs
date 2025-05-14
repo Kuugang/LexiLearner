@@ -104,14 +104,24 @@ public class UsersController : ControllerBase
           new SuccessResponseDTO("Login streak fetched successfully.", new LoginStreakDTO(loginStreak)));
     }
 
-    [HttpGet("leaderboard")]
+    [HttpGet("me/leaderboard")]
     [Authorize]
     public async Task<IActionResult> GetLeaderBoard()
     {
-        var loginStreak = await _userService.GetLoginStreak(User);
+        var pupilLeaderboards = await _userService.GetPupilLeaderboard(User);
 
         return StatusCode(StatusCodes.Status200OK,
-          new SuccessResponseDTO("Login streak fetched successfully.", new LoginStreakDTO(loginStreak)));
+          new SuccessResponseDTO("Leaderboard fetched successfully.", new PupilLeaderboardDTO(pupilLeaderboards.First())));
+    }
+    
+    [HttpGet("me/leaderboard/history")]
+    [Authorize]
+    public async Task<IActionResult> GetLeaderBoardHistory()
+    {
+        var pupilLeaderboards = await _userService.GetPupilLeaderboard(User);
+
+        return StatusCode(StatusCodes.Status200OK,
+          new SuccessResponseDTO("Leaderboard history fetched successfully.", pupilLeaderboards.Select(l => new PupilLeaderboardDTO(l)).ToList()));
     }
     
     [HttpPost("me/sessions")]
@@ -187,5 +197,37 @@ public class UsersController : ControllerBase
 
         // Return users directly without extra nesting
         return Ok(new SuccessResponseDTO("Users found.", users));
+    }
+    
+    [HttpGet("leaderboard")]
+    [Authorize]
+    public async Task<IActionResult> GetGlobal10Leaderboard()
+    {
+        var leaderboards = await _userService.GetGlobal10Leaderboard();
+
+        return StatusCode(StatusCodes.Status200OK,
+          new SuccessResponseDTO("Top 10 Leaderboard fetched successfully.",
+            leaderboards.Select(l => new PupilLeaderboardDTO(l)).ToList())
+        );
+    }
+    
+    [HttpGet("leaderboard/{pupilId}")]
+    [Authorize]
+    public async Task<IActionResult> GetPupilLeaderboardByPupilId(Guid pupilId)
+    {
+        var pupilLeaderboards = await _userService.GetPupilLeaderboardByPupilId(pupilId);
+
+        return StatusCode(StatusCodes.Status200OK,
+          new SuccessResponseDTO("Leaderboard fetched successfully.", new PupilLeaderboardDTO(pupilLeaderboards.First())));
+    }
+    
+    [HttpGet("leaderboard/{pupilId}/history")]
+    [Authorize]
+    public async Task<IActionResult> GetPupilLeaderboardHistoryByPupilId(Guid pupilId)
+    {
+        var pupilLeaderboards = await _userService.GetPupilLeaderboardByPupilId(pupilId);
+
+        return StatusCode(StatusCodes.Status200OK,
+          new SuccessResponseDTO("Leaderboard history fetched successfully.", pupilLeaderboards.Select(l => new PupilLeaderboardDTO(l)).ToList()));
     }
 }

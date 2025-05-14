@@ -22,5 +22,6 @@ namespace LexiLearner.Interfaces{
 		Task<List<ReadingMaterialAssignment>> GetActiveReadingAssignmentsByClassroomId(Guid ClassroomId, ClaimsPrincipal User);
 		Task<ReadingMaterialAssignment> UpdateReadingAssignment(Guid ReadingAssignmentId, ReadingMaterialAssignmentDTO.Update Request, ClaimsPrincipal User);
 		Task DeleteReadingAssignment(Guid ReadingAssignmentId, ClaimsPrincipal User);
+		Task<List<ClassroomEnrollmentDTO.Leaderboard>> GetLeaderboard(Guid ClassroomId, ClaimsPrincipal User);
 	}
 }
