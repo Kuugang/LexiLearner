@@ -38,6 +38,7 @@ export default function useScreenTime() {
     };
 
     const handleAppStateChange = async (nextAppState: AppStateStatus) => {
+      console.log(user?.role);
       if (nextAppState === "active") {
         await handleSessionStart();
         console.log("App is active");

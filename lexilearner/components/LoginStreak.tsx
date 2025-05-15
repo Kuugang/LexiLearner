@@ -1,4 +1,5 @@
 import { getLoginStreak, recordLoginStreak } from "@/services/UserService";
+import { useUserStore } from "@/stores/userStore";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import React, { useEffect, useState } from "react";
 import { View, Text, TouchableOpacity, Modal, Dimensions } from "react-native";
@@ -18,6 +19,7 @@ const WEEKDAYS = ["M", "T", "W", "T", "F", "S", "S"];
 const { width, height } = Dimensions.get("window");
 
 const LoginStreak: React.FC<LoginStreakProps> = ({ isVisible, onClose }) => {
+  const user = useUserStore((state) => state.user);
   const scale = useSharedValue(0.8);
   const opacity = useSharedValue(0);
   const [streak, setStreak] = useState(1);

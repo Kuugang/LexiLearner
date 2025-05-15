@@ -26,7 +26,6 @@ import {
 } from "@/services/ClassroomService";
 import { router } from "expo-router";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
-import { P } from "@/components/ui/typography";
 import PupilSettings from "@/components/PupilSettings";
 import { useUserStore } from "@/stores/userStore";
 
