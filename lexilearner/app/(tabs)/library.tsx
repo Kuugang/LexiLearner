@@ -1,4 +1,3 @@
-import BackHeader from "@/components/BackHeader";
 import ReadingContent from "@/components/ReadingContent";
 import { getReadingMaterialById as apiGetReadingMaterialById } from "@/services/ReadingMaterialService";
 import { useReadingSessionStore } from "@/stores/readingSessionStore";
@@ -9,7 +8,7 @@ import { ScrollView, Text, View } from "react-native";
 function library() {
   const sessions = useReadingSessionStore((state) => state.sessions);
   const filteredSessions = sessions?.filter(
-    (session) => session.completionPercentage < 100
+    (session) => session.completionPercentage < 100,
   );
 
   const { data: readingMaterials, isLoading } = useQuery({
@@ -20,8 +19,8 @@ function library() {
     queryFn: async () => {
       const materials = await Promise.all(
         (filteredSessions || []).map((session) =>
-          apiGetReadingMaterialById(session.readingMaterialId)
-        )
+          apiGetReadingMaterialById(session.readingMaterialId),
+        ),
       );
       return materials;
     },

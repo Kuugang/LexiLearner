@@ -46,7 +46,7 @@ export const getMinigameById = async (
     const response = await axiosInstance.get(
       `${API_URL}/minigames/${minigameId}`,
     );
-    console.log("Minigame fetched from api:", response.data.data);
+    //console.log("Minigame fetched from api:", response.data.data);
 
     return response.data.data;
   } catch (error: any) {
@@ -63,14 +63,6 @@ const createMinigameLog = async (
 ): Promise<MinigameLog> => {
   try {
     let url = `${API_URL}/minigames/logs/`;
-
-    console.log(minigameLog);
-    // public Guid Id { get; set; }
-    // public Guid MinigameId { get; set; }
-    // public Guid PupilId { get; set; }
-    // public string Result { get; set; }
-    // public DateTime CreatedAt { get; set; }
-    // public Guid ReadingSessionId { get; set; }
 
     switch (type) {
       case MinigameType.WordsFromLetters:
@@ -92,7 +84,6 @@ const createMinigameLog = async (
         url += "twotruthsonelie";
         break;
     }
-    console.log(url);
 
     const response = await axiosInstance.post(url, minigameLog);
 
@@ -115,10 +106,39 @@ export const useCreateMinigameLog = () => {
       type: MinigameType;
     }) => createMinigameLog(minigameLog, type),
     onSuccess: (data) => {
-      console.log("Minigame log created", data);
+      //console.log("Minigame log created", data);
     },
     onError: (error) => {
       console.error("Error creating minigame log:", error);
+    },
+  });
+};
+
+const completeMinigameSession = async (
+  readingSessionId: string,
+): Promise<Record<string, any>> => {
+  try {
+    const url = `${API_URL}/minigames/${readingSessionId}/complete`;
+    const response = await axiosInstance.post(url);
+
+    return response.data.data;
+  } catch (error: any) {
+    console.error("Failed to complete minigame session.", error);
+    throw new Error(
+      error?.response?.data?.message || "Failed to complete minigame session.",
+    );
+  }
+};
+
+export const useCompleteMinigameSession = () => {
+  return useMutation({
+    mutationFn: (readingSessionId: string) =>
+      completeMinigameSession(readingSessionId),
+    onSuccess: (data) => {
+      console.log("Minigames session completed", data);
+    },
+    onError: (error) => {
+      console.error("Failed to complete minigame session.", error);
     },
   });
 };

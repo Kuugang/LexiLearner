@@ -8,5 +8,6 @@ namespace LexiLearner.Interfaces
         Task<List<ReadingSession>> GetReadingSessionByReadingMaterialId(Guid ReadingMaterialId);
         Task<ReadingSession> Create(ReadingSession ReadingSession);
         Task Update(ReadingSession ReadingSession);
+        Task<List<ReadingMaterial>> GetReadingMaterialsRead(Guid PupilId);
     }
 }

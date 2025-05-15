@@ -70,7 +70,7 @@ export const useMiniGameStore = create<MiniGameStore>()(
             logResult["score"] = result.score;
             break;
           case MinigameType.WordHunt:
-            logResult["score"] = result.answers;
+            logResult["score"] = result.score;
             logResult["streak"] = result.streak;
             logResult["correctAttempts"] = result.correctAttempts;
             logResult["incorrectAttempts"] = result.incorrectAttempts;
@@ -89,7 +89,6 @@ export const useMiniGameStore = create<MiniGameStore>()(
         }
 
         const user = useUserStore.getState().user;
-
         if (!user?.pupil?.id) {
           console.warn("pupil is null");
           return null;
@@ -191,7 +190,7 @@ interface WordHuntGameState {
   decrementLives: () => void;
 }
 
-export const useWordHuntGameStore = create<WordHuntGameState>()(
+export const useWordHuntMinigameStore = create<WordHuntGameState>()(
   persist(
     (set) => ({
       correctAnswers: [],

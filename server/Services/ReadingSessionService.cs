@@ -8,100 +8,110 @@ using LexiLearner.Models.DTO;
 
 namespace LexiLearner.Services
 {
-	public class ReadingSessionService : IReadingSessionService
-	{
-		private readonly IReadingSessionRepository _readingSessionRepository;
-		private readonly IReadingMaterialService _readingMaterialService;
-		private readonly IUserService _userService;
-		public ReadingSessionService(IReadingSessionRepository readingSessionRepository, IUserService userService, IReadingMaterialService readingMaterialService)
-		{
-			_readingSessionRepository = readingSessionRepository;
-			_userService = userService;
-			_readingMaterialService = readingMaterialService;
-		}
+    public class ReadingSessionService : IReadingSessionService
+    {
+        private readonly IReadingSessionRepository _readingSessionRepository;
+        private readonly IReadingMaterialService _readingMaterialService;
+        private readonly IUserService _userService;
+        public ReadingSessionService(IReadingSessionRepository readingSessionRepository, IUserService userService, IReadingMaterialService readingMaterialService)
+        {
+            _readingSessionRepository = readingSessionRepository;
+            _userService = userService;
+            _readingMaterialService = readingMaterialService;
+        }
 
-		public async Task<ReadingSessionDTO> Create(Guid ReadingMaterialId, ClaimsPrincipal User)
-		{
-			User? user = await _userService.GetUserFromToken(User);
+        public async Task<ReadingSessionDTO> Create(Guid ReadingMaterialId, ClaimsPrincipal User)
+        {
+            User? user = await _userService.GetUserFromToken(User);
 
-			if (user == null)
-			{
-				throw new ApplicationExceptionBase(
-					$"User does not exist",
-					"Reading session creation failed.",
-					StatusCodes.Status404NotFound
-				);
-			}
+            if (user == null)
+            {
+                throw new ApplicationExceptionBase(
+                    $"User does not exist",
+                    "Reading session creation failed.",
+                    StatusCodes.Status404NotFound
+                );
+            }
 
-			var pupil = await _userService.GetPupilByUserId(user.Id);
-			if (pupil == null)
-			{
-				throw new ApplicationExceptionBase(
-					$"Pupil does not exist.",
-					"Reading session creation failed.",
-					StatusCodes.Status404NotFound
-				);
-			}
-						
-			var readingMat = await _readingMaterialService.GetById( ReadingMaterialId );
-			if (readingMat == null) {
-				throw new ApplicationExceptionBase(
-					$"Reading material with id {ReadingMaterialId} not found",
-					"Reading session creation failed.",
-					StatusCodes.Status404NotFound
-				);
-			}
+            var pupil = await _userService.GetPupilByUserId(user.Id);
+            if (pupil == null)
+            {
+                throw new ApplicationExceptionBase(
+                    $"Pupil does not exist.",
+                    "Reading session creation failed.",
+                    StatusCodes.Status404NotFound
+                );
+            }
 
-			var readingSession = new ReadingSession
-			{
-				Pupil = pupil,
-				PupilId = pupil.Id,
-				ReadingMaterialId = readingMat.Id,
-				ReadingMaterial = readingMat,
-				CompletionPercentage = 0
-			};
+            var readingMat = await _readingMaterialService.GetById(ReadingMaterialId);
+            if (readingMat == null)
+            {
+                throw new ApplicationExceptionBase(
+                    $"Reading material with id {ReadingMaterialId} not found",
+                    "Reading session creation failed.",
+                    StatusCodes.Status404NotFound
+                );
+            }
 
-			readingSession = await _readingSessionRepository.Create(readingSession);
+            var readingSession = new ReadingSession
+            {
+                Pupil = pupil,
+                PupilId = pupil.Id,
+                ReadingMaterialId = readingMat.Id,
+                ReadingMaterial = readingMat,
+                CompletionPercentage = 0
+            };
 
-			return new ReadingSessionDTO(readingSession);
-		}
+            readingSession = await _readingSessionRepository.Create(readingSession);
 
-		public async Task<ReadingSessionDTO> Update(Guid readingSessionId, ReadingSessionDTO.Update request)
-		{
-			var readingSession = await _readingSessionRepository.GetReadingSessionById(readingSessionId);
-			if (readingSession == null)
-			{
-				throw new ApplicationExceptionBase(
-					"Reading session does not exist",
-					"Updating reading session failed.",
-					StatusCodes.Status404NotFound
-				);
-			}
+            return new ReadingSessionDTO(readingSession);
+        }
 
-			if (request.CompletionPercentage != null)
-			{
-				readingSession.CompletionPercentage = (float)request.CompletionPercentage;
-			}
+        public async Task<ReadingSessionDTO> Update(Guid readingSessionId, ReadingSessionDTO.Update request)
+        {
+            var readingSession = await _readingSessionRepository.GetReadingSessionById(readingSessionId);
+            if (readingSession == null)
+            {
+                throw new ApplicationExceptionBase(
+                    "Reading session does not exist",
+                    "Updating reading session failed.",
+                    StatusCodes.Status404NotFound
+                );
+            }
 
-			if (request.CompletedAt != null)
-			{
-				readingSession.CompletedAt = (DateTime)request.CompletedAt;
-			}
+            if (request.CompletionPercentage != null)
+            {
+                readingSession.CompletionPercentage = (float)request.CompletionPercentage;
+                if (readingSession.CompletionPercentage == 100)
+                {
+                    readingSession.CompletedAt = DateTime.UtcNow;
+                }
+            }
 
-			await _readingSessionRepository.Update(readingSession);
-			return new ReadingSessionDTO(readingSession);
-		}
+            if (request.CompletedAt != null)
+            {
+                readingSession.CompletedAt = (DateTime)request.CompletedAt;
+            }
 
-		public async Task<ReadingSession?> GetReadingSessionById(Guid ReadingSessionId)
-		{
-			return await _readingSessionRepository.GetReadingSessionById(ReadingSessionId);
-		}
+            await _readingSessionRepository.Update(readingSession);
+            return new ReadingSessionDTO(readingSession);
+        }
+
+        public async Task<ReadingSession?> GetReadingSessionById(Guid ReadingSessionId)
+        {
+            return await _readingSessionRepository.GetReadingSessionById(ReadingSessionId);
+        }
 
 
-		public async Task<List<ReadingSession>> GetReadingSessionByReadingMaterialId(Guid ReadingMaterialId)
-		{
-			return await _readingSessionRepository.GetReadingSessionByReadingMaterialId(ReadingMaterialId);
-		}
-	}
+        public async Task<List<ReadingSession>> GetReadingSessionByReadingMaterialId(Guid ReadingMaterialId)
+        {
+            return await _readingSessionRepository.GetReadingSessionByReadingMaterialId(ReadingMaterialId);
+        }
+
+        public async Task<List<ReadingMaterial>> GetReadingMaterialsRead(Guid PupilId)
+        {
+            return await _readingSessionRepository.GetReadingMaterialsRead(PupilId);
+        }
+    }
 }
 
