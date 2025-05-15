@@ -19,5 +19,6 @@ namespace LexiLearner.Interfaces
         Task<List<MinigameLog>> GetMinigameLogByReadingSessionId(Guid SessionId);
 
         Task<CompleteReadingSessionDTO> Complete(Guid SessionId);
+        Task<List<MinigameDTO>> GetMinigamesByRMIdAndType(Guid readingMaterialId, MinigameType minigameType);
     }
 }
