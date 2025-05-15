@@ -7,7 +7,7 @@ import { useQuery } from "@tanstack/react-query";
 import React from "react";
 import { ScrollView, Text, View } from "react-native";
 
-//TODO: tarungon
+//TODO: persist to storage why the heck is it sigeg refetching that is so sad
 function library() {
   const { data: readingMaterials, isLoading } = useQuery({
     queryKey: ["readingSessions"],

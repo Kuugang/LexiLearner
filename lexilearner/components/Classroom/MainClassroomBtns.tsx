@@ -5,7 +5,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { router } from "expo-router";
 
-// TODO: iusa nlng ni nga btn oy dzuh tanginang copy paste css yan
 export function NewClassroomBtn() {
   return (
     <TouchableOpacity

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Text } from "@/components/ui/text";
 import { ScrollView, View, Image } from "react-native";
-import Achievement from "@/components/Achievement";
+import Achievement from "@/components/AchievementDisplay";
 import { Button } from "@/components/ui/button";
 import { router, useLocalSearchParams } from "expo-router";
 import { Achievement as AchievementType } from "@/models/Achievement";
@@ -16,7 +16,7 @@ export default function achievements() {
 
     if (parsed) {
       const achievementsList = parsed.achievements.map(
-        (item: any) => item.achievement,
+        (item: any) => item.achievement
       );
       setAchievements(achievementsList);
     }

@@ -49,7 +49,6 @@ public class ClassroomController : ControllerBase {
 		);
     }
 
-    // TODO: feel nako better ni isame route with sa getbypupilID but kani lng sa for now DD:
     [HttpGet("teacher/me")]
     [Authorize("TeacherPolicy")]
     public async Task<IActionResult> GetByTeacherId() {

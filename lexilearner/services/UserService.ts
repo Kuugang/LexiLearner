@@ -118,3 +118,15 @@ export const getLoginStreak = async () => {
 
   return response.data.data;
 };
+
+export const getPupilAchievements = async () => {
+  const response = await axiosInstance.get(`/achievements`, {
+    validateStatus: () => true,
+  });
+
+  if (response.status !== 200 && response.status !== 201) {
+    throw new Error(response.data.message);
+  }
+
+  return response.data.data;
+};
