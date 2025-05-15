@@ -1,5 +1,5 @@
-import { getLoginStreak } from "@/services/UserService";
-import { useMutation } from "@tanstack/react-query";
+import { getLoginStreak, recordLoginStreak } from "@/services/UserService";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import React, { useEffect, useState } from "react";
 import { View, Text, TouchableOpacity, Modal, Dimensions } from "react-native";
 import Animated, {
@@ -24,19 +24,23 @@ const LoginStreak: React.FC<LoginStreakProps> = ({ isVisible, onClose }) => {
   const [activeWeekdays, setActiveWeekdays] = useState<boolean[]>(
     Array(7).fill(false)
   );
+  const queryClient = useQueryClient();
 
   // Get current day of week (0 = Sunday, 1 = Monday, etc.)
   // Convert to our format (0 = Monday, 6 = Sunday)
   const today = new Date().getDay();
   const currentDayIndex = today === 0 ? 6 : today - 1;
 
-  const { mutateAsync: getLoginStreakMutation } = useMutation({
-    mutationFn: getLoginStreak,
+  const { mutateAsync: recordLoginStreakMutation } = useMutation({
+    mutationFn: recordLoginStreak,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["loginStreak"] });
+    },
   });
 
   const loginStreakCount = async () => {
     try {
-      return await getLoginStreakMutation().then((response) => {
+      return await recordLoginStreakMutation().then((response) => {
         console.log("Login streak count: ", response);
         setStreak(response.currentStreak);
       });

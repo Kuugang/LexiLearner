@@ -21,19 +21,20 @@ import ProfileStat from "@/components/ProfileStat";
 import BackHeader from "@/components/BackHeader";
 import { getLoginStreak, getTotalSession } from "@/services/UserService";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useCallback } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 export default function Profile() {
   const user = useUserStore((state) => state.user);
+  const [longestStreak, setLongestStreak] = useState(0);
 
   // Opening back to profile page will force refetch total screentime
-  const { data: screenTime, isLoading } = useQuery({
+  const { data: screenTime } = useQuery({
     queryKey: ["totalSession"],
     queryFn: getTotalSession,
     refetchOnWindowFocus: true,
   });
 
-  const { data: loginStreak } = useQuery({
+  const { data: loginStreak, isLoading } = useQuery({
     queryKey: ["loginStreak"],
     queryFn: getLoginStreak,
   });
@@ -114,7 +115,7 @@ export default function Profile() {
 
               <View className="grid grid-cols-2 gap-2">
                 <ProfileStat
-                  level={`${loginStreak.longestStreak}`}
+                  level={isLoading ? "1" : `${loginStreak.longestStreak}`}
                   description="Longest Streak"
                   icon={<Flame color="red" />}
                 />
