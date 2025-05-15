@@ -31,7 +31,7 @@ function HomeScreen() {
     return () => clearTimeout(timer);
   }, []);
 
-  const streakCount = 3;
+  const streak = useUserStore((state) => state.streak);
   const activeWeekdays = [true, true, true, false, false, false, false];
 
   const [screenWidth, setScreenWidth] = useState(
@@ -67,7 +67,7 @@ function HomeScreen() {
             <LoginStreak
               isVisible={showStreak}
               onClose={() => setShowStreakModal(false)}
-              streakCount={streakCount}
+              // streakCount={streakCount}
               activeWeekdays={activeWeekdays}
             />
 
@@ -75,7 +75,7 @@ function HomeScreen() {
               <View style={{ position: "relative" }}>
                 <Flame color="red" size={30} />
                 <Text className="text-red-500 font-bold absolute -bottom-1 -right-1">
-                  {streakCount}
+                  {streak}
                 </Text>
               </View>
             </TouchableOpacity>

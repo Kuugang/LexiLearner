@@ -22,10 +22,10 @@ import BackHeader from "@/components/BackHeader";
 import { getLoginStreak, getTotalSession } from "@/services/UserService";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useCallback, useEffect, useState } from "react";
+import AwardIcon from "@/components/AwardIcon";
 
 export default function Profile() {
   const user = useUserStore((state) => state.user);
-  const [longestStreak, setLongestStreak] = useState(0);
 
   // Opening back to profile page will force refetch total screentime
   const { data: screenTime } = useQuery({
@@ -47,14 +47,7 @@ export default function Profile() {
 
   return (
     <ScrollView className="bg-background">
-      <View
-        style={{
-          height: 150,
-          width: "100%",
-          borderBottomLeftRadius: 40,
-        }}
-        className="bg-yellowOrange p-4 shadow-lg w-full"
-      >
+      <View className="h-[150px] w-full rounded-bl-[40px] bg-yellowOrange p-4 rounded-xl border-lightGray border-b-4">
         <View className="flex flex-row justify-between">
           <BackHeader />
 
@@ -73,7 +66,7 @@ export default function Profile() {
         className="flex p-8 gap-4"
         style={{ position: "relative", bottom: 90 }}
       >
-        <View className="h-32 w-32">
+        <View className="h-32 w-32 rounded-full border-[5px] border-white">
           <Image
             source={require("@/assets/images/leeseopp.png")}
             className="rounded-full shadow-lg w-full h-full"
@@ -96,7 +89,9 @@ export default function Profile() {
                 <>
                   <View className="flex flex-row gap-2 items-center">
                     <Zap color="#FFD43B" />
-                    <Text className="text-lg font-bold">{user?.level}</Text>
+                    <Text className="text-lg font-bold">
+                      {user?.pupil?.level}
+                    </Text>
                   </View>
                   <Text className="text-sm text-gray-800">
                     Reading Compr. Level
@@ -140,28 +135,23 @@ export default function Profile() {
                 />
               </View>
 
-              <View className="flex-row justify-between">
-                <Text className="text-xl font-bold">Achievements</Text>
-                <Text
-                  className="underline"
-                  onPress={async () => {
-                    router.push("/profile/achievementslist");
-                  }}
-                >
-                  View All
-                </Text>
-              </View>
-
-              <View className="flex-row flex gap-4">
-                <View className="p-4 rounded-md bg-yellow-500 shadow-md">
-                  <Award color="black" style={{ width: 30, height: 30 }} />
+              <View className="my-4">
+                <View className="flex-row justify-between">
+                  <Text className="text-xl font-bold my-2">Achievements</Text>
+                  <Text
+                    className="underline"
+                    onPress={async () => {
+                      router.push("/profile/achievementslist");
+                    }}
+                  >
+                    View All
+                  </Text>
                 </View>
 
-                <View className="p-4 rounded-md bg-yellow-500 shadow-md">
-                  <Medal color="black" style={{ width: 30, height: 30 }} />
-                </View>
-                <View className="p-4 rounded-md bg-yellow-500 shadow-md">
-                  <Trophy color="black" style={{ width: 30, height: 30 }} />
+                <View className="flex-row flex gap-4">
+                  <AwardIcon />
+                  <AwardIcon />
+                  <AwardIcon />
                 </View>
               </View>
             </>
