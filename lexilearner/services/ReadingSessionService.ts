@@ -1,5 +1,5 @@
 import { API_URL } from "../utils/constants";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { axiosInstance } from "@/utils/axiosInstance";
 import { ReadingSession } from "@/models/ReadingSession";
 import { useReadingSessionStore } from "@/stores/readingSessionStore";
@@ -21,6 +21,7 @@ const createReadingSession = async (
 };
 
 export const useCreateReadingSession = () => {
+  const queryClient = useQueryClient();
   const addSession = useReadingSessionStore((state) => state.addSession);
   return useMutation({
     mutationFn: (readingMaterialId: string) =>
@@ -28,6 +29,7 @@ export const useCreateReadingSession = () => {
     onSuccess: (data) => {
       console.log("Reading session created:", data);
       addSession(data);
+      queryClient.invalidateQueries({ queryKey: ["readingSessions"] });
     },
     onError: (error) => {
       console.error("Error creating reading session:", error);
@@ -69,4 +71,17 @@ export const useUpdateReadingSession = () => {
       console.error("Error updating session:", error);
     },
   });
+};
+
+export const getIncompleteReadingSessions = async () => {
+  const response = await axiosInstance.get("/incomplete/readingmaterials", {
+    validateStatus: () => true,
+  });
+
+  if (response.status !== 200 && response.status !== 201) {
+    throw new Error(response.data.message);
+  }
+
+  console.log("Incomplete Reading Sessions:", response.data.data);
+  return response.data.data;
 };

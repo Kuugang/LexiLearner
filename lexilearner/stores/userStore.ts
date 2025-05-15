@@ -6,6 +6,7 @@ import {
   updateProfile as apiUpdateProfile,
   deleteAccount as apiDeleteAccount,
 } from "~/services/UserService";
+import { Session } from "@/models/Session";
 
 type UserStore = {
   user: User | null;
@@ -47,7 +48,7 @@ export const useUserStore = create<UserStore>()(
           });
         } catch (error: any) {
           throw new Error(
-            error instanceof Error ? error.message : "Unknown error occurred",
+            error instanceof Error ? error.message : "Unknown error occurred"
           );
         }
       },
@@ -70,6 +71,6 @@ export const useUserStore = create<UserStore>()(
           await AsyncStorage.removeItem(name);
         },
       },
-    },
-  ),
+    }
+  )
 );

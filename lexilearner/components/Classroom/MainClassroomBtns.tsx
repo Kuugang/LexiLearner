@@ -48,7 +48,7 @@ export function AddActivity() {
   return (
     <TouchableOpacity
       onPress={() => {
-        router.replace("/classroom/createactivity");
+        router.push("/classroom/createactivity");
       }}
     >
       <View className="border-2 rounded-xl border-lightGray my-4 border-b-4">

@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using LexiLearner.Models;
 
 namespace LexiLearner.Interfaces
@@ -9,5 +10,7 @@ namespace LexiLearner.Interfaces
         Task<ReadingSession> Create(ReadingSession ReadingSession);
         Task Update(ReadingSession ReadingSession);
         Task<List<ReadingMaterial>> GetReadingMaterialsRead(Guid PupilId);
+        Task<List<ReadingSession>> GetIncompleteReadingSessionsByPupilId(Guid PupilId);
+        Task<List<ReadingMaterial>> GetIncompleteReadingMaterialsByPupilId(Guid PupilId);
     }
 }

@@ -25,6 +25,24 @@ namespace LexiLearner.Repository
 
             return ReadingSession;
         }
+        public Task<List<ReadingSession>> GetIncompleteReadingSessionsByPupilId(Guid pupilId)
+        {
+            return _context.ReadingSession
+                .Where(rs => rs.PupilId == pupilId && rs.CompletionPercentage < 100)
+                .ToListAsync();
+        }
+
+        public Task<List<ReadingMaterial>> GetIncompleteReadingMaterialsByPupilId(Guid pupilId)
+        {
+            return _context.ReadingSession
+                .Where(rs => rs.PupilId == pupilId && rs.CompletionPercentage < 100)
+                .Include(rs => rs.ReadingMaterial)
+                    .ThenInclude(rm => rm.ReadingMaterialGenres)
+                    .ThenInclude(rmg => rmg.Genre)
+                .Select(rs => rs.ReadingMaterial)
+                .Distinct()
+                .ToListAsync();
+        }
 
         public async Task<ReadingSession?> GetReadingSessionById(Guid ReadingSessionId)
         {

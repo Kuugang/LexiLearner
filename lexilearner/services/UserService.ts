@@ -10,7 +10,7 @@ export const getProfile = async () => {
   } catch (error: any) {
     console.error("Error fetching profile:", error);
     throw new Error(
-      error?.response?.data?.message || "Failed to fetch profile",
+      error?.response?.data?.message || "Failed to fetch profile"
     );
   }
 };
@@ -46,7 +46,7 @@ export const checkUserExist = async (fieldType: string, fieldValue: string) => {
     `/users/check-user?fieldType=${fieldType}&fieldValue=${fieldValue}`,
     {
       validateStatus: () => true,
-    },
+    }
   );
   return response.data;
 };
@@ -54,4 +54,67 @@ export const checkUserExist = async (fieldType: string, fieldValue: string) => {
 export const deleteAccount = async () => {
   const response = await axiosInstance.delete(`/users/me`);
   return response.data;
+};
+
+export const createSession = async () => {
+  const response = await axiosInstance.post("/users/me/sessions", {
+    validateStatus: () => true,
+  });
+
+  if (response.status !== 200 && response.status !== 201) {
+    throw new Error(response.data.message);
+  }
+
+  return response.data.data;
+}; // 1 session 1 new row
+
+export const endSession = async (sessionId: string) => {
+  const response = await axiosInstance.put(`/users/me/sessions/${sessionId}`, {
+    validateStatus: () => true,
+  });
+
+  if (response.status !== 200 && response.status !== 201) {
+    throw new Error(response.data.message);
+  }
+
+  return response.data.data;
+};
+
+export const getTotalSession = async () => {
+  const response = await axiosInstance.get("/users/me/sessions", {
+    validateStatus: () => true,
+  });
+
+  if (response.status !== 200 && response.status !== 201) {
+    throw new Error(response.data.message);
+  }
+
+  return response.data.data;
+};
+
+export const getSessionById = async () => {};
+
+export const recordLoginStreak = async () => {
+  const response = await axiosInstance.put("/users/me/streak", {
+    validateStatus: () => true,
+  });
+
+  if (response.status !== 200 && response.status !== 201) {
+    throw new Error(response.data.message);
+  }
+
+  return response.data.data;
+};
+
+export const getLoginStreak = async () => {
+  const response = await axiosInstance.get("/users/me/streak", {
+    validateStatus: () => true,
+  });
+  console.log("Get login streak response: ", response.data.data);
+
+  if (response.status !== 200 && response.status !== 201) {
+    throw new Error(response.data.message);
+  }
+
+  return response.data.data;
 };

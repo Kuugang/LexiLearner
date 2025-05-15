@@ -1,4 +1,7 @@
-import React, { useEffect } from "react";
+import { getLoginStreak, recordLoginStreak } from "@/services/UserService";
+import { useUserStore } from "@/stores/userStore";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import React, { useEffect, useState } from "react";
 import { View, Text, TouchableOpacity, Modal, Dimensions } from "react-native";
 import Animated, {
   useSharedValue,
@@ -9,26 +12,61 @@ import Animated, {
 interface LoginStreakProps {
   isVisible: boolean;
   onClose: () => void;
-  streakCount: number;
   activeWeekdays: boolean[];
 }
 
 const WEEKDAYS = ["M", "T", "W", "T", "F", "S", "S"];
 const { width, height } = Dimensions.get("window");
 
-const LoginStreak: React.FC<LoginStreakProps> = ({
-  isVisible,
-  onClose,
-  streakCount = 3,
-  activeWeekdays = [true, true, true, false, false, false, false],
-}) => {
+const LoginStreak: React.FC<LoginStreakProps> = ({ isVisible, onClose }) => {
+  const user = useUserStore((state) => state.user);
   const scale = useSharedValue(0.8);
   const opacity = useSharedValue(0);
+  const [streak, setStreak] = useState(1);
+  const [activeWeekdays, setActiveWeekdays] = useState<boolean[]>(
+    Array(7).fill(false)
+  );
+  const queryClient = useQueryClient();
 
   // Get current day of week (0 = Sunday, 1 = Monday, etc.)
   // Convert to our format (0 = Monday, 6 = Sunday)
   const today = new Date().getDay();
   const currentDayIndex = today === 0 ? 6 : today - 1;
+
+  const { mutateAsync: recordLoginStreakMutation } = useMutation({
+    mutationFn: recordLoginStreak,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["loginStreak"] });
+    },
+  });
+
+  const loginStreakCount = async () => {
+    try {
+      return await recordLoginStreakMutation().then((response) => {
+        console.log("Login streak count: ", response);
+        setStreak(response.currentStreak);
+      });
+    } catch (error) {
+      console.error("Error fetching login streak: ", error);
+    }
+  };
+
+  const activeWeekdaysDisplay = () => {
+    const updatedActiveWeekdays = Array(7).fill(false);
+    for (let i = currentDayIndex; i > currentDayIndex - streak && i >= 0; i--) {
+      updatedActiveWeekdays[i] = true;
+      // console.log(updatedActiveWeekdays);
+    }
+    setActiveWeekdays(updatedActiveWeekdays);
+  };
+
+  useEffect(() => {
+    loginStreakCount();
+  }, []);
+
+  useEffect(() => {
+    activeWeekdaysDisplay();
+  }, [streak, currentDayIndex]);
 
   useEffect(() => {
     if (isVisible) {
@@ -89,7 +127,7 @@ const LoginStreak: React.FC<LoginStreakProps> = ({
               color: "#2D1832", // Dark purple color
             }}
           >
-            {streakCount}
+            {streak}
           </Text>
 
           {/* Day streak text */}

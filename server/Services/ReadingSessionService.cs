@@ -112,6 +112,61 @@ namespace LexiLearner.Services
         {
             return await _readingSessionRepository.GetReadingMaterialsRead(PupilId);
         }
+
+        public async Task<List<ReadingSession>> GetIncompleteReadingSessionsByPupil(ClaimsPrincipal User)
+        {
+            User? user = await _userService.GetUserFromToken(User);
+            if (user == null)
+            {
+                throw new ApplicationExceptionBase(
+                    $"User does not exist",
+                    "Fetching incomplete reading sessions failed.",
+                    StatusCodes.Status404NotFound
+                );
+            }
+
+            Pupil? pupil = await _userService.GetPupilByUserId(user.Id);
+            if (pupil == null)
+            {
+                throw new ApplicationExceptionBase(
+                    $"Pupil does not exist.",
+                    "Fetching incomplete reading sessions failed.",
+                    StatusCodes.Status404NotFound
+                );
+            }
+
+            return await _readingSessionRepository.GetIncompleteReadingSessionsByPupilId(pupil.Id);
+        }
+
+        public async Task<List<ReadingSession>> GetIncompleteReadingSessionsByPupilId(Guid pupilId)
+        {
+            return await _readingSessionRepository.GetIncompleteReadingSessionsByPupilId(pupilId);
+        }
+
+        public async Task<List<ReadingMaterial>> GetIncompleteReadingMaterialsByPupil(ClaimsPrincipal User)
+        {
+            User? user = await _userService.GetUserFromToken(User);
+            if (user == null)
+            {
+                throw new ApplicationExceptionBase(
+                    $"User does not exist",
+                    "Fetching incomplete reading sessions failed.",
+                    StatusCodes.Status404NotFound
+                );
+            }
+
+            Pupil? pupil = await _userService.GetPupilByUserId(user.Id);
+            if (pupil == null)
+            {
+                throw new ApplicationExceptionBase(
+                    $"Pupil does not exist.",
+                    "Fetching incomplete reading sessions failed.",
+                    StatusCodes.Status404NotFound
+                );
+            }
+
+            return await _readingSessionRepository.GetIncompleteReadingMaterialsByPupilId(pupil.Id);
+        }
     }
 }
 

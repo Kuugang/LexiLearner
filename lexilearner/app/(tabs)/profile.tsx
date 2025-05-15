@@ -1,4 +1,4 @@
-import { router } from "expo-router";
+import { router, useFocusEffect } from "expo-router";
 import { useUserStore } from "@/stores/userStore";
 
 import { ScrollView, View, Image } from "react-native";
@@ -19,9 +19,31 @@ import {
 
 import ProfileStat from "@/components/ProfileStat";
 import BackHeader from "@/components/BackHeader";
+import { getLoginStreak, getTotalSession } from "@/services/UserService";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useCallback, useEffect, useState } from "react";
 
 export default function Profile() {
   const user = useUserStore((state) => state.user);
+  const [longestStreak, setLongestStreak] = useState(0);
+
+  // Opening back to profile page will force refetch total screentime
+  const { data: screenTime } = useQuery({
+    queryKey: ["totalSession"],
+    queryFn: getTotalSession,
+    refetchOnWindowFocus: true,
+  });
+
+  const { data: loginStreak, isLoading } = useQuery({
+    queryKey: ["loginStreak"],
+    queryFn: getLoginStreak,
+  });
+
+  const formatScreenTime = (minutes: number) => {
+    const hours = Math.floor(minutes / 60);
+    const remainingMinutes = minutes % 60;
+    return `${hours}h ${remainingMinutes}m`;
+  };
 
   return (
     <ScrollView className="bg-background">
@@ -93,7 +115,7 @@ export default function Profile() {
 
               <View className="grid grid-cols-2 gap-2">
                 <ProfileStat
-                  level={"3"}
+                  level={isLoading ? "1" : `${loginStreak.longestStreak}`}
                   description="Longest Streak"
                   icon={<Flame color="red" />}
                 />
@@ -103,8 +125,12 @@ export default function Profile() {
                   icon={<Book color="blue" />}
                 />
                 <ProfileStat
-                  level={"4.5 Hours"}
-                  description="Avg. Screentime"
+                  level={
+                    screenTime !== undefined
+                      ? formatScreenTime(screenTime)
+                      : "0"
+                  }
+                  description="Total Screentime"
                   icon={<Smartphone color="black" />}
                 />
                 <ProfileStat

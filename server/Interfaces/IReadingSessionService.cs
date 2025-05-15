@@ -11,5 +11,8 @@ namespace LexiLearner.Interfaces
         Task<ReadingSessionDTO> Create(Guid ReadingMaterialId, ClaimsPrincipal User);
         Task<ReadingSessionDTO> Update(Guid readingSessionId, ReadingSessionDTO.Update request);
         Task<List<ReadingMaterial>> GetReadingMaterialsRead(Guid PupilId);
+        Task<List<ReadingSession>> GetIncompleteReadingSessionsByPupilId(Guid PupilId);
+        Task<List<ReadingSession>> GetIncompleteReadingSessionsByPupil(ClaimsPrincipal User);
+        Task<List<ReadingMaterial>> GetIncompleteReadingMaterialsByPupil(ClaimsPrincipal User);
     }
 }
