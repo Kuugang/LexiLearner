@@ -3,6 +3,8 @@ import { axiosInstance } from "@/utils/axiosInstance";
 
 import { User, Pupil } from "@/models/User";
 import { Classroom } from "@/models/Classroom";
+import { ReadingAssignment } from "@/models/ReadingMaterialAssignment";
+import { useQuery } from "@tanstack/react-query";
 
 export const createClassroom = async (classroomForm: Record<string, any>) => {
   const response = await axiosInstance.post(
@@ -251,8 +253,49 @@ export const getPupilsFromClassroom = async (
   }
 };
 
-export const createReadingAssignment = async () => {};
-export const getReadingAssignments = async () => {}; // use get ACTIVE assignments endpoint
+export const createReadingAssignment = async (variables: {
+  classroomId: string;
+  readingAssignmentForm: Record<string, any>;
+}) => {
+  const { classroomId, readingAssignmentForm } = variables;
+
+  const response = await axiosInstance.post(
+    `/classroom/${classroomId}/readingassignments`,
+    readingAssignmentForm,
+    { validateStatus: () => true }
+  );
+
+  if (response.status !== 200 && response.status !== 201) {
+    throw new Error(response.data.message);
+  }
+
+  return response.data;
+};
+
+export const useActiveReadingAssignments = (classroomId: string) => {
+  return useQuery<ReadingAssignment[], Error>({
+    queryKey: ["activeReadingAssignments"],
+    queryFn: () => getReadingAssignments(classroomId),
+    staleTime: 1000 * 60 * 60, // 1 hour
+  });
+};
+
+const getReadingAssignments = async (
+  classroomId: string
+): Promise<ReadingAssignment[]> => {
+  console.log("Fetching active reading assignments for classroom:", classroomId);
+  const response = await axiosInstance.get(
+    `/classroom/${classroomId}/readingassignments/active`,
+    { validateStatus: () => true }
+  );
+
+  if (response.status !== 200 && response.status !== 201) {
+    throw new Error(response.data.message);
+  }
+
+  return response.data.data;
+}; // use get ACTIVE assignments endpoint
+
 export const updateReadingAssignment = async () => {};
 export const deleteReadingAssignment = async () => {};
 export { Pupil };
