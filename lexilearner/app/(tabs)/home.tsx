@@ -12,10 +12,12 @@ import { Input } from "~/components/ui/input";
 
 import { CircleUser, Search, Flame } from "lucide-react-native";
 import RankUp from "~/components/Minigame/RankUp";
+import { useUserStore } from "@/stores/userStore";
 
 function HomeScreen() {
   const { data: stories, isLoading: isStoriesLoading } = useStories();
   const [showStreak, setShowStreakModal] = useState(false);
+  const user = useUserStore((state) => state.user);
 
   // Show streak modal when component mounts
   useEffect(() => {
@@ -60,21 +62,25 @@ function HomeScreen() {
           <CircleUser color="#FFD43B" size={30} />
         </TouchableOpacity>
 
-        <LoginStreak
-          isVisible={showStreak}
-          onClose={() => setShowStreakModal(false)}
-          streakCount={streakCount}
-          activeWeekdays={activeWeekdays}
-        />
+        {user?.role === "Teacher" ? null : (
+          <View>
+            <LoginStreak
+              isVisible={showStreak}
+              onClose={() => setShowStreakModal(false)}
+              streakCount={streakCount}
+              activeWeekdays={activeWeekdays}
+            />
 
-        <TouchableOpacity onPress={() => setShowStreakModal(true)}>
-          <View style={{ position: "relative" }}>
-            <Flame color="red" size={30} />
-            <Text className="text-red-500 font-bold absolute -bottom-1 -right-1">
-              {streakCount}
-            </Text>
+            <TouchableOpacity onPress={() => setShowStreakModal(true)}>
+              <View style={{ position: "relative" }}>
+                <Flame color="red" size={30} />
+                <Text className="text-red-500 font-bold absolute -bottom-1 -right-1">
+                  {streakCount}
+                </Text>
+              </View>
+            </TouchableOpacity>
           </View>
-        </TouchableOpacity>
+        )}
 
         <View className="relative flex-1">
           <Search

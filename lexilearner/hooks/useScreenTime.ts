@@ -8,10 +8,11 @@ import { AppState, AppStateStatus } from "react-native";
 export default function useScreenTime() {
   const appState = useRef(AppState.currentState);
   const sessionId = useRef<string | null>(null);
+  const user = useUserStore((state) => state.user);
 
   useEffect(() => {
     const handleSessionStart = async () => {
-      if (!sessionId.current) {
+      if (user?.role === "Pupil" && !sessionId.current) {
         try {
           await createSession().then((response) => {
             sessionId.current = response.id;
@@ -24,7 +25,7 @@ export default function useScreenTime() {
     };
 
     const handleSessionEnd = async () => {
-      if (sessionId.current) {
+      if (user?.role === "Pupil" && sessionId.current) {
         try {
           await endSession(sessionId.current).then((response) => {
             console.log("Session ended:", response.endAt);
@@ -37,6 +38,7 @@ export default function useScreenTime() {
     };
 
     const handleAppStateChange = async (nextAppState: AppStateStatus) => {
+      console.log(user?.role);
       if (nextAppState === "active") {
         await handleSessionStart();
         console.log("App is active");

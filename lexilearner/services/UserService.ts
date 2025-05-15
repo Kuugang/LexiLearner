@@ -110,6 +110,7 @@ export const getLoginStreak = async () => {
   const response = await axiosInstance.get("/users/me/streak", {
     validateStatus: () => true,
   });
+  console.log("Get login streak response: ", response.data.data);
 
   if (response.status !== 200 && response.status !== 201) {
     throw new Error(response.data.message);
