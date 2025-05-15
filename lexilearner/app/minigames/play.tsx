@@ -1,13 +1,15 @@
 import {
   useGetMinigameById,
   useRandomMinigames,
+  useCompleteMinigameSession,
 } from "@/services/minigameService";
 import {
-  useFillInTheBlankMiniGameStore,
   useMiniGameStore,
+  useFillInTheBlankMiniGameStore,
   useSentenceRearrangementMiniGameStore,
   useTwoTruthsOneLieGameStore,
   useWordsFromLettersMiniGameStore,
+  useWordHuntMinigameStore,
 } from "@/stores/miniGameStore";
 import { memo, useEffect, useRef } from "react";
 import WordsFromLetters from "./wordsfromletters";
@@ -26,10 +28,12 @@ import Animated, {
 } from "react-native-reanimated";
 import { Dimensions } from "react-native";
 import { router } from "expo-router";
+import { useUserStore } from "@/stores/userStore";
 
 const { width } = Dimensions.get("window");
 
 function Play() {
+  const translateX = useSharedValue(0);
   const currentReadingSession = useReadingSessionStore(
     (state) => state.currentSession,
   );
@@ -49,78 +53,68 @@ function Play() {
 
   if (!currentReadingSession) return null;
 
-  const { data: randomMinigames, isLoading } = useRandomMinigames(
-    currentReadingSession.id,
-  );
+  const { data: randomMinigames, isLoading: minigamesLoading } =
+    useRandomMinigames(currentReadingSession.id);
 
-  const { data: minigame1 } = useGetMinigameById(
-    "0e496c1e-fa16-4381-ac0a-b90be4329d37",
-  );
-  const { data: minigame2 } = useGetMinigameById(
-    "02337be2-936a-43f5-bf44-4f5fde410b51",
-  );
-  const { data: minigame3 } = useGetMinigameById(
-    "0212c829-28ce-4932-b8ab-e483ad25bf29",
-  );
-  const { data: minigame4 } = useGetMinigameById(
-    "02b2ad3b-259a-42d0-b6bb-a241f78e78a5",
-  );
-  const { data: minigame5 } = useGetMinigameById(
-    "09afe046-8d63-4ff6-a991-39edecb39be7",
-  );
+  const { mutateAsync: completeMinigamesSession } =
+    useCompleteMinigameSession();
 
   useEffect(() => {
-    if (isLoading) return;
+    if (minigamesLoading) return;
     if (!randomMinigames) return;
 
-    if (!minigame1 || !minigame2 || !minigame3 || !minigame4 || !minigame5)
-      return;
-    const games: Minigame[] = [
-      minigame1,
-      minigame2,
-      minigame3,
-      minigame4,
-      minigame5,
-    ];
-
-    // setMinigames(games);
-    // setCurrentMinigame(games[minigamesIndex]);
     setMinigames(randomMinigames);
     setCurrentMinigame(randomMinigames[minigamesIndex]);
-  }, [isLoading]);
+  }, [minigamesLoading]);
 
-  const translateX = useSharedValue(0);
   useEffect(() => {
+    const handleComplete = async () => {
+      try {
+        return await completeMinigamesSession(currentReadingSession.id);
+      } catch (error) {
+        console.error("Failed to complete minigame session:", error);
+      }
+    };
+
     if (minigamesIndex > 2) {
-      setCurrentMinigame(null);
-      setMinigames([]);
-      setMinigamesIndex(0);
-      router.replace("/home");
+      handleComplete().then((data) => {
+        setCurrentMinigame(null);
+        setMinigames([]);
+        setMinigamesIndex(0);
+        useWordsFromLettersMiniGameStore.getState().resetGameState();
+        useFillInTheBlankMiniGameStore.getState().resetGameState();
+        useSentenceRearrangementMiniGameStore.getState().resetGameState();
+        useWordHuntMinigameStore.getState().resetGameState();
+        useTwoTruthsOneLieGameStore.getState().resetGameState();
+
+        if (data?.achievements.length > 0) {
+          router.replace({
+            pathname: "/minigames/results/achievements",
+            params: {
+              data: JSON.stringify(data),
+            },
+          });
+          return;
+        }
+
+        router.replace({
+          pathname: "/minigames/results/levelup",
+          params: {
+            data: JSON.stringify(data),
+          },
+        });
+      });
+      return;
     }
+
     if (prevMinigamesIndex.current === minigamesIndex) return;
-    let pastMinigame = currentMinigame;
+
     setCurrentMinigame(minigames[minigamesIndex]);
+
     const timeout = setTimeout(() => {
       translateX.value = withTiming(-width * minigamesIndex, { duration: 300 });
     }, 400);
 
-    switch (pastMinigame?.minigameType) {
-      case MinigameType.WordsFromLetters:
-        useWordsFromLettersMiniGameStore.getState().resetGameState();
-        break;
-      case MinigameType.FillInTheBlanks:
-        useFillInTheBlankMiniGameStore.getState().resetGameState();
-        break;
-      case MinigameType.SentenceRearrangement:
-        useSentenceRearrangementMiniGameStore.getState().resetGameState();
-        break;
-      case MinigameType.WordHunt:
-        useWordsFromLettersMiniGameStore.getState().resetGameState();
-        break;
-      case MinigameType.TwoTruthsOneLie:
-        useTwoTruthsOneLieGameStore.getState().resetGameState();
-        break;
-    }
     prevMinigamesIndex.current = minigamesIndex;
 
     return () => clearTimeout(timeout);

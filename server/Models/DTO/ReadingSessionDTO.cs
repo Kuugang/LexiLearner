@@ -7,7 +7,7 @@ namespace LexiLearner.Models.DTO
         public Guid ReadingMaterialId { get; set; }
         public float CompletionPercentage { get; set; }
         public DateTime StartedAt { get; set; }
-        public DateTime CompletedAt { get; set; }
+        public DateTime? CompletedAt { get; set; }
 
         public ReadingSessionDTO(ReadingSession readingSession)
         {
@@ -21,7 +21,7 @@ namespace LexiLearner.Models.DTO
 
         public class Update
         {
-            public float? CompletionPercentage {  get; set; }
+            public float? CompletionPercentage { get; set; }
             public DateTime? CompletedAt { get; set; }
 
         }

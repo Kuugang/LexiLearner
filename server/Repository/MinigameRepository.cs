@@ -2,9 +2,6 @@
 using LexiLearner.Interfaces;
 using LexiLearner.Models;
 using Microsoft.EntityFrameworkCore;
-
-using System.Text.Json;
-
 namespace LexiLearner.Repository
 {
     public class MinigameRepository(DataContext dataContext) : IMinigameRepository
@@ -58,7 +55,10 @@ namespace LexiLearner.Repository
 
         public async Task<List<MinigameLog>> GetMinigameLogByReadingSessionId(Guid ReadingSessionId)
         {
-            return await _dataContext.MinigameLog.Where(mgl => mgl.ReadingSessionId == ReadingSessionId).ToListAsync();
+            return await _dataContext.MinigameLog
+                .Include(mgl => mgl.Minigame)
+                .Where(mgl => mgl.ReadingSessionId == ReadingSessionId)
+                .ToListAsync();
         }
 
 
@@ -68,5 +68,5 @@ namespace LexiLearner.Repository
             _dataContext.Update(Pupil);
             await _dataContext.SaveChangesAsync();
         }
-	}
+    }
 }

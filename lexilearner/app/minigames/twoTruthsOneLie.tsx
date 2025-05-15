@@ -43,11 +43,10 @@ export default function TwoTruthsOneLie({ minigame }: { minigame: Minigame }) {
   }, []);
 
   const handleAnswer = (answer: boolean) => {
-    setScore(answer === true ? 1 : 0);
     setAnswered(true);
 
     try {
-      let score = answer === true ? 1 : 0;
+      let score = answer === true ? 0 : 1;
       const minigameLog = gameOver({
         score,
       });

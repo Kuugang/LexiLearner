@@ -19,6 +19,6 @@ namespace LexiLearner.Models
 
         //To get the duration CompletedAt - StartedAt
         public DateTime StartedAt { get; set; } = DateTime.UtcNow;
-        public DateTime CompletedAt { get; set; }
+        public DateTime? CompletedAt { get; set; }
     }
 }

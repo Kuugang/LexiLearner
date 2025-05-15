@@ -1,4 +1,3 @@
-import BackHeader from "@/components/BackHeader";
 import ReadingContent from "@/components/ReadingContent";
 import { ReadingContentType } from "@/models/ReadingContent";
 import { getReadingMaterialById as apiGetReadingMaterialById } from "@/services/ReadingMaterialService";

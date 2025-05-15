@@ -84,9 +84,9 @@ namespace LexiLearner.Controllers
         [Authorize]
         public async Task<IActionResult> Complete([FromRoute] Guid SessionId)
         {
-            await _minigameService.Complete(SessionId);
+            var data = await _minigameService.Complete(SessionId);
             return StatusCode(StatusCodes.Status200OK,
-              new SuccessResponseDTO("Session score recorded successfully.")
+              new SuccessResponseDTO("Session score recorded successfully.", data)
             );
         }
 

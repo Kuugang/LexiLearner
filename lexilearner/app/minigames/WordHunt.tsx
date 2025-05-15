@@ -9,7 +9,7 @@ import {
 import React, { useCallback, useEffect } from "react";
 import { Progress } from "@/components/ui/progress";
 import { Heart } from "lucide-react-native";
-import { useWordHuntGameStore } from "@/stores/miniGameStore";
+import { useWordHuntMinigameStore } from "@/stores/miniGameStore";
 import { useMiniGameStore } from "@/stores/miniGameStore";
 import { Minigame, MinigameType } from "@/models/Minigame";
 import { useCreateMinigameLog } from "@/services/minigameService";
@@ -53,38 +53,46 @@ export function WordHuntBtn({
 export default function WordHunt({ minigame }: { minigame: Minigame }) {
   const { mutate: triggerCreateMinigameLog } = useCreateMinigameLog();
 
-  const correctAnswers = useWordHuntGameStore((state) => state.correctAnswers);
-  const allWords = useWordHuntGameStore((state) => state.allWords);
-  const lives = useWordHuntGameStore((state) => state.lives);
-  const streak = useWordHuntGameStore((state) => state.streak);
-  const shuffledWords = useWordHuntGameStore((state) => state.shuffledWords);
+  const correctAnswers = useWordHuntMinigameStore(
+    (state) => state.correctAnswers,
+  );
+  const allWords = useWordHuntMinigameStore((state) => state.allWords);
+  const lives = useWordHuntMinigameStore((state) => state.lives);
+  const streak = useWordHuntMinigameStore((state) => state.streak);
+  const shuffledWords = useWordHuntMinigameStore(
+    (state) => state.shuffledWords,
+  );
 
-  const correctAttempts = useWordHuntGameStore(
+  const correctAttempts = useWordHuntMinigameStore(
     (state) => state.correctAttempts,
   );
-  const incorrectAttempts = useWordHuntGameStore(
+  const incorrectAttempts = useWordHuntMinigameStore(
     (state) => state.incorrectAttempts,
   );
-  const setShuffled = useWordHuntGameStore((state) => state.setShuffled);
-  const addCorrectAttempt = useWordHuntGameStore(
+  const setShuffled = useWordHuntMinigameStore((state) => state.setShuffled);
+  const addCorrectAttempt = useWordHuntMinigameStore(
     (state) => state.addCorrectAttempt,
   );
-  const addIncorrectAttempt = useWordHuntGameStore(
+  const addIncorrectAttempt = useWordHuntMinigameStore(
     (state) => state.addIncorrectAttempt,
   );
-  const setCorrectAnswers = useWordHuntGameStore(
+  const setCorrectAnswers = useWordHuntMinigameStore(
     (state) => state.setCorrectAnswers,
   );
-  const setWrongAnswers = useWordHuntGameStore(
+  const setWrongAnswers = useWordHuntMinigameStore(
     (state) => state.setWrongAnswers,
   );
-  const setAllWords = useWordHuntGameStore((state) => state.setAllWords);
-  const incrementStreak = useWordHuntGameStore(
+  const setAllWords = useWordHuntMinigameStore((state) => state.setAllWords);
+  const incrementStreak = useWordHuntMinigameStore(
     (state) => state.incrementStreak,
   );
-  const resetGameState = useWordHuntGameStore((state) => state.resetGameState);
-  const resetStreak = useWordHuntGameStore((state) => state.resetStreak);
-  const decrementLives = useWordHuntGameStore((state) => state.decrementLives);
+  const resetGameState = useWordHuntMinigameStore(
+    (state) => state.resetGameState,
+  );
+  const resetStreak = useWordHuntMinigameStore((state) => state.resetStreak);
+  const decrementLives = useWordHuntMinigameStore(
+    (state) => state.decrementLives,
+  );
 
   const gameOver = useMiniGameStore((state) => state.gameOver);
   const incrementMinigamesIndex = useMiniGameStore(
@@ -185,7 +193,7 @@ export default function WordHunt({ minigame }: { minigame: Minigame }) {
           </View>
 
           <Text className="text-center font-medium p-3">
-            Find words that have appeared in the book!
+            Find words that have appeared in the reading material!
           </Text>
         </View>
 

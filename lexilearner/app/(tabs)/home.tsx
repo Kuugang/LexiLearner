@@ -11,7 +11,6 @@ import { Text } from "~/components/ui/text";
 import { Input } from "~/components/ui/input";
 
 import { CircleUser, Search, Flame } from "lucide-react-native";
-import RankUp from "~/components/Minigame/RankUp";
 import { useUserStore } from "@/stores/userStore";
 
 function HomeScreen() {
@@ -35,7 +34,7 @@ function HomeScreen() {
   const activeWeekdays = [true, true, true, false, false, false, false];
 
   const [screenWidth, setScreenWidth] = useState(
-    Dimensions.get("window").width
+    Dimensions.get("window").width,
   );
 
   useEffect(() => {
@@ -43,7 +42,7 @@ function HomeScreen() {
       "change",
       ({ window }) => {
         setScreenWidth(window.width);
-      }
+      },
     );
 
     return () => {
@@ -81,6 +80,15 @@ function HomeScreen() {
             </TouchableOpacity>
           </View>
         )}
+
+        <TouchableOpacity onPress={() => setShowStreakModal(true)}>
+          <View style={{ position: "relative" }}>
+            <Flame color="red" size={30} />
+            <Text className="text-red-500 font-bold absolute -bottom-1 -right-1">
+              {streakCount}
+            </Text>
+          </View>
+        </TouchableOpacity>
 
         <View className="relative flex-1">
           <Search

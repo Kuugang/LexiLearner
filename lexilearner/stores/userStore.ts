@@ -28,21 +28,27 @@ export const useUserStore = create<UserStore>()(
           const response = await apiUpdateProfile(form);
           const data = response.data;
 
-          const updatedUser: User = {
-            id: data.id,
-            email: data.email,
-            firstName: data.firstName,
-            lastName: data.lastName,
-            userName: data.userName,
-            twoFactorEnabled: data.twoFactorEnabled,
-            phoneNumber: data.phoneNumber,
-            role: data.role,
-            //TODO: fix this
-            // age: data.age,
-            // level: data.level ?? 0,
-          };
+          set((state) => {
+            if (!state.user) return {};
 
-          set({ user: updatedUser });
+            return {
+              user: {
+                ...state.user,
+                pupil: {
+                  ...state.user.pupil,
+                  ...(data.age !== undefined && { age: data.age }),
+                },
+                id: state.user.id,
+                email: data.email,
+                firstName: data.firstName,
+                lastName: data.lastName,
+                userName: data.userName,
+                twoFactorEnabled: data.twoFactorEnabled,
+                phoneNumber: data.phoneNumber,
+                role: data.role,
+              },
+            };
+          });
         } catch (error: any) {
           throw new Error(
             error instanceof Error ? error.message : "Unknown error occurred"
