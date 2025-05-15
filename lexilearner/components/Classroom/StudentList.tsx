@@ -4,6 +4,12 @@ import { Text } from "@/components/ui/text";
 import { MaterialIcons, FontAwesome } from "@expo/vector-icons";
 import ClassroomHeader from "./ClassroomHeader";
 import { FontAwesome5 } from "@expo/vector-icons";
+import { useQuery } from "@tanstack/react-query";
+import {
+  getLeaderboardByClassroomId as apiGetLeaderboardByClassroomId,
+  Pupil,
+} from "@/services/ClassroomService";
+import { useClassroomStore } from "@/stores/classroomStore";
 
 // Default Avatar component using initials
 const DefaultAvatar = ({
@@ -60,14 +66,26 @@ const RankBadge = ({ rank }: { rank: number }) => {
 };
 
 export default function StudentsList() {
+  const selectedClassroom = useClassroomStore(
+    (state) => state.selectedClassroom
+  );
+
+  const { data: students } = useQuery({
+    queryFn: () => apiGetLeaderboardByClassroomId(selectedClassroom!.id),
+    queryKey: ["leaderboard", selectedClassroom!.id],
+    enabled: !!selectedClassroom,
+  });
+
+  console.log("leaderboard ni studentlist:", students);
+
   // Hardcoded data - replace with API data later server server
-  const students = [
-    { id: 1, name: "chriskrt", level: 1200, avatar: null },
-    { id: 2, name: "Jakeee", level: 890, avatar: null },
-    { id: 3, name: "DIOOOOOOOO", level: 634, avatar: null },
-    { id: 4, name: "Leeseo", level: 321, avatar: null },
-    { id: 5, name: "User", level: 211, avatar: null },
-  ];
+  // const students = [
+  //   { id: 1, name: "chriskrt", level: 1200, avatar: null },
+  //   { id: 2, name: "Jakeee", level: 890, avatar: null },
+  //   { id: 3, name: "DIOOOOOOOO", level: 634, avatar: null },
+  //   { id: 4, name: "Leeseo", level: 321, avatar: null },
+  //   { id: 5, name: "User", level: 211, avatar: null },
+  // ];
 
   const [activeTab, setActiveTab] = useState("pupils");
 
@@ -112,19 +130,19 @@ export default function StudentsList() {
       <View className="p-4">
         {activeTab === "pupils"
           ? // Pupils tab content
-            students.map((student) => (
+            students.map((student: Pupil) => (
               <TouchableOpacity
                 key={student.id}
                 className="flex-row items-center bg-white rounded-lg p-4 mb-3 shadow-sm"
               >
                 {/* Use DefaultAvatar for all students */}
                 <View className="mr-4">
-                  <DefaultAvatar name={student.name} size={12} />
+                  <DefaultAvatar name={`${student.firstName}`} size={12} />
                 </View>
 
                 <View className="flex-1">
                   <Text className="font-semibold text-base">
-                    {student.name}
+                    {`${student.firstName} ${student.lastName}`}
                   </Text>
                 </View>
 
@@ -140,7 +158,7 @@ export default function StudentsList() {
               </TouchableOpacity>
             ))
           : // Leaderboard tab content - hardcoded without navigation
-            students.map((student, index) => (
+            students.map((student: Pupil, index: number) => (
               <View
                 key={student.id}
                 className="flex-row items-center bg-white rounded-lg p-4 mb-3 shadow-sm"
@@ -157,13 +175,13 @@ export default function StudentsList() {
 
                 {/* Avatar */}
                 <View className="mr-3">
-                  <DefaultAvatar name={student.name} size={12} />
+                  <DefaultAvatar name={`${student.firstName}`} size={12} />
                 </View>
 
                 {/* Name */}
                 <View className="flex-1">
                   <Text className="font-semibold text-base">
-                    {student.name}
+                    {`${student.firstName} ${student.lastName}`}
                   </Text>
                 </View>
 

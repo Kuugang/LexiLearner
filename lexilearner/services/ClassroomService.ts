@@ -256,3 +256,18 @@ export const getReadingAssignments = async () => {}; // use get ACTIVE assignmen
 export const updateReadingAssignment = async () => {};
 export const deleteReadingAssignment = async () => {};
 export { Pupil };
+
+export const getLeaderboardByClassroomId = async (classroomId: string) => {
+  const response = await axiosInstance.get(
+    `/classroom/${classroomId}/leaderboard`,
+    {
+      validateStatus: () => true,
+    }
+  );
+
+  if (response.status !== 200 && response.status !== 201) {
+    throw new Error(response.data.message);
+  }
+
+  return response.data.data;
+};

@@ -35,9 +35,12 @@ export default function CurrentClassroom() {
   return (
     <ScrollView>
       <View>
-        <ClassroomHeader name="Grade 6" joinCode="Hardcoded" />
+        <ClassroomHeader
+          name={`${selectedClassroom?.name}`}
+          joinCode={`${selectedClassroom?.joinCode}`}
+        />
         <View className="p-8">
-          <Text>id:{params.id}</Text>
+          {/* <Text>id:{params.id}</Text> */}
           <View className="items-center justify-between flex-row w-full">
             <View className="flex flex-row justify-between items-center w-full">
               <Text className="font-bold text-[22px]">Activities</Text>

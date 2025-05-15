@@ -15,6 +15,8 @@ function library() {
     queryFn: getIncompleteReadingSessions,
   });
 
+  console.log("READINGSJ MATERIASL NI MOURNS THE WICKED:", readingMaterials);
+
   if (isLoading) {
     return (
       <View className="flex-1 justify-center items-center">
