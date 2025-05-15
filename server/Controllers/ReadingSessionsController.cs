@@ -52,4 +52,26 @@ public class ReadingSessionsController : ControllerBase
 			new SuccessResponseDTO("Reading session fetched.", new ReadingSessionDTO(readingSession))
 		);
 	}
+	
+	[HttpGet("incomplete/readingmaterials")]
+	[Authorize("PupilPolicy")]
+	public async Task<IActionResult> GetIncompleteReadingSessionsByPupilId()
+	{
+		var readingMaterials = await _sessionService.GetIncompleteReadingMaterialsByPupil(User);
+
+		return StatusCode(StatusCodes.Status200OK,
+			new SuccessResponseDTO("Currently reading materials fetched.", readingMaterials.Select(rm => new ReadingMaterialResponseDTO(rm)))
+		);
+	}
+	
+	[HttpGet("incomplete")]
+	[Authorize]
+	public async Task<IActionResult> GetIncompleteReadingSessions()
+	{
+		var readingSessions = await _sessionService.GetIncompleteReadingSessionsByPupil(User);
+
+		return StatusCode(StatusCodes.Status200OK,
+			new SuccessResponseDTO("Currently reading sessions fetched.", readingSessions.Select(rs => new ReadingSessionDTO(rs)))
+		);
+	}
 }
