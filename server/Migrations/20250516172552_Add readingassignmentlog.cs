@@ -15,15 +15,14 @@ namespace LexiLearner.Migrations
                 name: "ReadingAssignmentLog",
                 columns: table => new
                 {
-                    ReadingAssignmentId = table.Column<Guid>(type: "uuid", nullable: false),
-                    MinigameLogId = table.Column<Guid>(type: "uuid", nullable: false),
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    CompletedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    ReadingMaterialAssignmentId = table.Column<Guid>(type: "uuid", nullable: true)
+                    ReadingMaterialAssignmentId = table.Column<Guid>(type: "uuid", nullable: false),
+                    MinigameLogId = table.Column<Guid>(type: "uuid", nullable: false),
+                    CompletedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ReadingAssignmentLog", x => new { x.ReadingAssignmentId, x.MinigameLogId });
+                    table.PrimaryKey("PK_ReadingAssignmentLog", x => x.Id);
                     table.ForeignKey(
                         name: "FK_ReadingAssignmentLog_MinigameLog_MinigameLogId",
                         column: x => x.MinigameLogId,
@@ -31,16 +30,11 @@ namespace LexiLearner.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_ReadingAssignmentLog_ReadingMaterialAssignment_ReadingAssig~",
-                        column: x => x.ReadingAssignmentId,
-                        principalTable: "ReadingMaterialAssignment",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
                         name: "FK_ReadingAssignmentLog_ReadingMaterialAssignment_ReadingMater~",
                         column: x => x.ReadingMaterialAssignmentId,
                         principalTable: "ReadingMaterialAssignment",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(

@@ -8,6 +8,7 @@ using LexiLearner.Models.DTO;
 using LexiLearner.Repository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
+using Org.BouncyCastle.Asn1;
 
 namespace LexiLearner.Services{
     public class ClassroomService : IClassroomService
@@ -1028,8 +1029,8 @@ namespace LexiLearner.Services{
             
             var assignmentLog = new ReadingAssignmentLog
             {
-                ReadingAssignment = readingAssignment,
-                ReadingAssignmentId = ReadingAssignmentId,
+                ReadingMaterialAssignment = readingAssignment,
+                ReadingMaterialAssignmentId = ReadingAssignmentId,
                 MinigameLogId = MinigameLogId,
                 MinigameLog = minigameLog
             };
@@ -1173,32 +1174,36 @@ namespace LexiLearner.Services{
         
         public async Task<ReadingMaterialAssignmentDTO.Overview> GetReadingAssignmentStatByAssignment(ReadingMaterialAssignment ReadingAssignment)
         {
-            var assignmentLogs = await GetAssignmentLogsByReadingAssignmentId(ReadingAssignment.Id);
+            var assignmentLogs = await _classroomRepository.GetAssignmentLogsByReadingAssignmentId(ReadingAssignment.Id);
             int totalLogs = assignmentLogs.Count;
             int totalScore = 0;
             int totalDuration = 0;
+
             if (totalLogs > 0)
             {
-                foreach (var assignmentLog in assignmentLogs)
+                foreach (ReadingAssignmentLog assignmentLog in assignmentLogs)
                 {
-                    var log = assignmentLog.MinigameLog;
+                    MinigameLog log = assignmentLog.MinigameLog;
                     
                     if (!string.IsNullOrEmpty(log.Result))
                     {
-                        var outerJsonElement = JsonSerializer.Deserialize<JsonElement>(log.Result);
-
-                        if (outerJsonElement.ValueKind == JsonValueKind.String)
+                        var result = JsonSerializer.Deserialize<JsonElement>(log.Result);
+                        
+                        if (result.ValueKind == JsonValueKind.String)
                         {
-                            var innerJson = outerJsonElement.GetString();
-                            var resultJson = JsonSerializer.Deserialize<JsonElement>(innerJson);
+                            var resultString = result.GetString();
+                            result = JsonSerializer.Deserialize<JsonElement>(resultString);
+                        }
 
-                            if (resultJson.TryGetProperty("score", out var scoreElement) &&
+                        if (result.ValueKind == JsonValueKind.Object)
+                        {
+                            if (result.TryGetProperty("score", out var scoreElement) &&
                                 scoreElement.TryGetInt32(out var parsedScore))
                             {
                                 totalScore += parsedScore;
                             }
                             
-                            if (resultJson.TryGetProperty("duration", out var durationElement) &&
+                            if (result.TryGetProperty("duration", out var durationElement) &&
                                 durationElement.TryGetInt32(out var parsedDuration))
                             {
                                 totalDuration += parsedDuration;
