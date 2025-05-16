@@ -169,6 +169,17 @@ public class ClassroomController : ControllerBase {
             readingAssignments.Select(ra => new ReadingMaterialAssignmentDTO(ra)).ToList())
         );
     }
+
+    [HttpGet("readingAssignments/{ReadingAssignmentId}")]
+    [Authorize]
+    public async Task<IActionResult> GetReadingAssignmentById([FromRoute] Guid ReadingAssignmentId)
+    {
+        var readingAssignment = await _classroomService.GetReadingAssignmentById(ReadingAssignmentId);
+
+        return StatusCode(StatusCodes.Status200OK,
+            new SuccessResponseDTO("Reading Assignment fetched successfully.",
+            new ReadingMaterialAssignmentDTO(readingAssignment)));
+    }
     
     [HttpPut("readingAssignments/{ReadingAssignmentId}")]
     [Authorize("TeacherPolicy")]

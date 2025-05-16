@@ -9,10 +9,7 @@ import {
 import React, { useCallback, useEffect } from "react";
 import { router, useFocusEffect, useLocalSearchParams } from "expo-router";
 import BackHeader from "@/components/BackHeader";
-import {
-  Activity,
-  AddActivity,
-} from "../../../components/Classroom/MainClassroomBtns";
+import { AddActivity } from "../../../components/Classroom/MainClassroomBtns";
 import {
   BookOpenIcon,
   Settings,
@@ -38,8 +35,11 @@ export default function CurrentClassroom() {
   const setReadingAssignments = useReadingAssignmentStore(
     (state) => state.setReadingAssignments
   );
-  const { data: readingAssignments, isLoading: isReadingAssignmentsLoading, refetch: refetchAssignments } =
-    useActiveReadingAssignments(selectedClassroom?.id || "");
+  const {
+    data: readingAssignments,
+    isLoading: isReadingAssignmentsLoading,
+    refetch: refetchAssignments,
+  } = useActiveReadingAssignments(selectedClassroom?.id || "");
 
   useFocusEffect(
     useCallback(() => {

@@ -33,21 +33,25 @@ import { Achievement } from "@/models/Achievement";
 export default function Profile() {
   const user = useUserStore((state) => state.user);
   const setAchievements = useMiniGameStore((state) => state.setAchievements);
+  const isPupil = user?.role === "Pupil";
 
   const [achievementsQuery, screenTimeQuery, loginStreakQuery] = useQueries({
     queries: [
       {
         queryKey: ["achievements"],
         queryFn: getPupilAchievements,
+        enabled: isPupil,
       },
       {
         queryKey: ["totalSession"],
         queryFn: getTotalSession,
         refetchOnWindowFocus: true,
+        enabled: isPupil,
       },
       {
         queryKey: ["loginStreak"],
         queryFn: getLoginStreak,
+        enabled: isPupil,
       },
     ],
   });
