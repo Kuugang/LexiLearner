@@ -6,8 +6,8 @@ import {
   Image,
   TouchableOpacity,
 } from "react-native";
-import React from "react";
-import { router, useLocalSearchParams } from "expo-router";
+import React, { useCallback, useEffect } from "react";
+import { router, useFocusEffect, useLocalSearchParams } from "expo-router";
 import BackHeader from "@/components/BackHeader";
 import {
   Activity,
@@ -23,6 +23,9 @@ import {
 import ClassroomHeader from "@/components/Classroom/ClassroomHeader";
 import { useClassroomStore } from "@/stores/classroomStore";
 import { useUserStore } from "@/stores/userStore";
+import { useReadingAssignmentStore } from "@/stores/readingAssignmentStore";
+import { useActiveReadingAssignments } from "@/services/ClassroomService";
+import AssignmentCard from "@/components/Classroom/AssignmentCard";
 
 export default function CurrentClassroom() {
   const params = useLocalSearchParams<{ id: string }>();
@@ -31,6 +34,25 @@ export default function CurrentClassroom() {
   );
   const user = useUserStore((state) => state.user);
   console.log("SELECTED CLASSROOM:", selectedClassroom?.id);
+
+  const setReadingAssignments = useReadingAssignmentStore(
+    (state) => state.setReadingAssignments
+  );
+  const { data: readingAssignments, isLoading: isReadingAssignmentsLoading, refetch: refetchAssignments } =
+    useActiveReadingAssignments(selectedClassroom?.id || "");
+
+  useFocusEffect(
+    useCallback(() => {
+      refetchAssignments();
+    }, [selectedClassroom?.id])
+  );
+
+  useEffect(() => {
+    if (readingAssignments) {
+      setReadingAssignments(readingAssignments);
+      console.log("READING ASSIGNMENTS:", readingAssignments);
+    }
+  }, [readingAssignments, setReadingAssignments]);
 
   return (
     <ScrollView>
@@ -64,8 +86,26 @@ export default function CurrentClassroom() {
             </View>
           </View>
           {user?.role === "Teacher" ? <AddActivity /> : null}
-          <Activity />
-          <Activity />
+          {isReadingAssignmentsLoading && (
+            <View className="flex-1 justify-center items-center">
+              <Text>Loading activities...</Text>
+            </View>
+          )}
+          {!isReadingAssignmentsLoading &&
+          readingAssignments &&
+          readingAssignments!.length > 0 ? (
+            <View className="flex flex-col gap-4">
+              {readingAssignments!.map((item) => (
+                <AssignmentCard key={item.id} assignment={item} />
+              ))}
+            </View>
+          ) : (
+            !isReadingAssignmentsLoading && (
+              <View className="flex-1 justify-center items-center">
+                <Text className="text-gray-500">No activities available.</Text>
+              </View>
+            )
+          )}
         </View>
       </View>
     </ScrollView>

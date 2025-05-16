@@ -1,9 +1,13 @@
 import { View, Image, Button, TouchableOpacity } from "react-native";
 import { Text } from "@/components/ui/text";
-import React from "react";
+import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { router } from "expo-router";
+import { MinigameType } from "@/models/Minigame";
+import { Ionicons } from "@expo/vector-icons";
+import RNPickerSelect from "react-native-picker-select";
+import { ReadingAssignment } from "@/models/ReadingMaterialAssignment";
 
 export function NewClassroomBtn() {
   return (
@@ -66,7 +70,7 @@ export function AddReadingAssignment() {
   return (
     <TouchableOpacity
       onPress={() => {
-        // router.push("/classroom/createactivity");
+        router.push("/classroom/createactivity-choosebook");
       }}
     >
       <View className="border-2 rounded-xl border-lightGray my-4 border-b-4">
@@ -81,24 +85,30 @@ export function AddReadingAssignment() {
   );
 }
 
-export function Activity() {
+const minigameOptions = [
+  { label: "2 Truths 1 Lie", value: MinigameType.TwoTruthsOneLie },
+  { label: "Fill in the Blanks", value: MinigameType.FillInTheBlanks },
+  { label: "Word Hunt", value: MinigameType.WordHunt },
+  {
+    label: "Sentence Rearrangement",
+    value: MinigameType.SentenceRearrangement,
+  },
+  { label: "Words From Letters", value: MinigameType.WordsFromLetters },
+];
+
+export default function SetMinigameDropdown({ selected, setSelected }) {
   return (
-    <View className="border-2 rounded-xl border-lightGray border-b-4 my-1 p-4">
-      <View className="items-center flex-row">
-        <Image
-          source={require("@/assets/images/cat-in-the-hat.png")}
-          resizeMode="contain"
-          className="rounded-xl"
-          alt="book for activity"
-          style={{ width: 125, height: 125 }}
+    <View className="flex flex-row items-center">
+      <Text className="font-bold mr-2">Set Minigame?</Text>
+      <View className="flex flex-1 bg-white rounded-lg border-2 border-lightGray p-2">
+        <RNPickerSelect
+          placeholder={{}}
+          value={selected}
+          onValueChange={setSelected}
+          items={minigameOptions}
+          Icon={() => <Ionicons name="caret-down" size={24} color="black" />}
+          useNativeAndroidPickerStyle={false}
         />
-        <View className="flex-1">
-          <Text className="font-bold">Cat in the Hat</Text>
-          <Text>Learn what the cat has done for the day.</Text>
-          <TouchableOpacity className="w-[75%] bg-yellowOrange rounded-lg py-2 items-center mt-2 drop-shadow-custom">
-            <Text className="font-semibold">Progress</Text>
-          </TouchableOpacity>
-        </View>
       </View>
     </View>
   );

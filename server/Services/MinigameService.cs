@@ -306,5 +306,20 @@ namespace LexiLearner.Services
 
             return 0;
         }
+        
+        
+        public async Task<List<MinigameDTO>> GetMinigamesByRMIdAndType(Guid readingMaterialId, MinigameType minigameType)
+        {
+            var minigames = await _minigameRepository.GetMinigamesByRMIdAndType(readingMaterialId, minigameType);
+            if (minigames == null)
+            {
+                throw new ApplicationExceptionBase(
+                  "Minigames not found.",
+                  $"Minigames with id {readingMaterialId} is not found.",
+                  StatusCodes.Status404NotFound);
+            }
+
+            return minigames.Select(mg => new MinigameDTO(mg)).ToList();
+        }
     }
 }
