@@ -615,9 +615,18 @@ namespace LexiLearner.Services{
             return new ReadingMaterialAssignmentDTO(readingAssignment);
         }
 
-        public async Task<ReadingMaterialAssignment?> GetReadingAssignmentById(Guid Id)
+        public async Task<ReadingMaterialAssignment> GetReadingAssignmentById(Guid Id)
         {
-            return await _classroomRepository.GetReadingAssignmentById(Id);
+            var readingAssignment = await _classroomRepository.GetReadingAssignmentById(Id);
+            if (readingAssignment == null)
+            {
+                throw new ApplicationExceptionBase(
+                "Reading Assignment not found",
+                "Failed getting reading assignment from Id",
+                StatusCodes.Status404NotFound
+                );
+            }
+            return readingAssignment;
         }
 
         public async Task<List<ReadingMaterialAssignment>> GetAllReadingAssignmentsByClassroomId(Guid ClassroomId, ClaimsPrincipal User)

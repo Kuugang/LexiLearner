@@ -9,10 +9,7 @@ import {
 import React, { useCallback, useEffect } from "react";
 import { router, useFocusEffect, useLocalSearchParams } from "expo-router";
 import BackHeader from "@/components/BackHeader";
-import {
-  Activity,
-  AddActivity,
-} from "../../../components/Classroom/MainClassroomBtns";
+import { AddActivity } from "../../../components/Classroom/MainClassroomBtns";
 import {
   BookOpenIcon,
   Settings,
@@ -38,8 +35,11 @@ export default function CurrentClassroom() {
   const setReadingAssignments = useReadingAssignmentStore(
     (state) => state.setReadingAssignments
   );
-  const { data: readingAssignments, isLoading: isReadingAssignmentsLoading, refetch: refetchAssignments } =
-    useActiveReadingAssignments(selectedClassroom?.id || "");
+  const {
+    data: readingAssignments,
+    isLoading: isReadingAssignmentsLoading,
+    refetch: refetchAssignments,
+  } = useActiveReadingAssignments(selectedClassroom?.id || "");
 
   useFocusEffect(
     useCallback(() => {
@@ -57,9 +57,12 @@ export default function CurrentClassroom() {
   return (
     <ScrollView>
       <View>
-        <ClassroomHeader name="Grade 6" joinCode="Hardcoded" />
+        <ClassroomHeader
+          name={`${selectedClassroom?.name}`}
+          joinCode={`${selectedClassroom?.joinCode}`}
+        />
         <View className="p-8">
-          <Text>id:{params.id}</Text>
+          {/* <Text>id:{params.id}</Text> */}
           <View className="items-center justify-between flex-row w-full">
             <View className="flex flex-row justify-between items-center w-full">
               <Text className="font-bold text-[22px]">Activities</Text>

@@ -3,6 +3,7 @@ import { View, Text, Image, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { ReadingAssignment } from "@/models/ReadingMaterialAssignment";
 import { useReadingAssignmentStore } from "@/stores/readingAssignmentStore";
+import { router } from "expo-router";
 
 interface AssignmentCardProps {
   assignment: ReadingAssignment;
@@ -30,7 +31,12 @@ function AssignmentCard({ assignment }: AssignmentCardProps) {
       <View className="flex-1">
         <Text className="font-bold">{assignment.title}</Text>
         <Text>{assignment.description}</Text>
-        <TouchableOpacity className="w-[75%] bg-yellowOrange rounded-lg py-2 items-center mt-2 drop-shadow-custom">
+        <TouchableOpacity
+          className="w-[75%] bg-yellowOrange rounded-lg py-2 items-center mt-2 drop-shadow-custom"
+          onPress={() => {
+            router.push(`/classroom/activity/${assignment.id}`);
+          }}
+        >
           <Text className="font-semibold">Progress</Text>
         </TouchableOpacity>
       </View>

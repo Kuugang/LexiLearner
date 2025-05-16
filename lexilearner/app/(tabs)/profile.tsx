@@ -19,25 +19,57 @@ import {
 
 import ProfileStat from "@/components/ProfileStat";
 import BackHeader from "@/components/BackHeader";
-import { getLoginStreak, getTotalSession } from "@/services/UserService";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  getLoginStreak,
+  getPupilAchievements,
+  getTotalSession,
+} from "@/services/UserService";
+import { useQueries, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useCallback, useEffect, useState } from "react";
+import { useMiniGameStore } from "@/stores/miniGameStore";
+import { AwardIcon } from "@/components/AchievementDisplay";
+import { Achievement } from "@/models/Achievement";
 
 export default function Profile() {
   const user = useUserStore((state) => state.user);
-  const [longestStreak, setLongestStreak] = useState(0);
+  const setAchievements = useMiniGameStore((state) => state.setAchievements);
+  const isPupil = user?.role === "Pupil";
 
-  // Opening back to profile page will force refetch total screentime
-  const { data: screenTime } = useQuery({
-    queryKey: ["totalSession"],
-    queryFn: getTotalSession,
-    refetchOnWindowFocus: true,
+  const [achievementsQuery, screenTimeQuery, loginStreakQuery] = useQueries({
+    queries: [
+      {
+        queryKey: ["achievements"],
+        queryFn: getPupilAchievements,
+        enabled: isPupil,
+      },
+      {
+        queryKey: ["totalSession"],
+        queryFn: getTotalSession,
+        refetchOnWindowFocus: true,
+        enabled: isPupil,
+      },
+      {
+        queryKey: ["loginStreak"],
+        queryFn: getLoginStreak,
+        enabled: isPupil,
+      },
+    ],
   });
 
-  const { data: loginStreak, isLoading } = useQuery({
-    queryKey: ["loginStreak"],
-    queryFn: getLoginStreak,
-  });
+  if (
+    achievementsQuery.isLoading ||
+    screenTimeQuery.isLoading ||
+    loginStreakQuery.isLoading
+  ) {
+    return (
+      <View>
+        <Text>Loading...</Text>
+      </View>
+    );
+  }
+
+  setAchievements(achievementsQuery.data);
+  console.log("acsuehmet:", achievementsQuery.data);
 
   const formatScreenTime = (minutes: number) => {
     const hours = Math.floor(minutes / 60);
@@ -47,14 +79,7 @@ export default function Profile() {
 
   return (
     <ScrollView className="bg-background">
-      <View
-        style={{
-          height: 150,
-          width: "100%",
-          borderBottomLeftRadius: 40,
-        }}
-        className="bg-yellowOrange p-4 shadow-lg w-full"
-      >
+      <View className="h-[150px] w-full rounded-bl-[40px] bg-yellowOrange p-4 rounded-xl border-lightGray border-b-4">
         <View className="flex flex-row justify-between">
           <BackHeader />
 
@@ -73,7 +98,7 @@ export default function Profile() {
         className="flex p-8 gap-4"
         style={{ position: "relative", bottom: 90 }}
       >
-        <View className="h-32 w-32">
+        <View className="h-32 w-32 rounded-full border-[5px] border-white">
           <Image
             source={require("@/assets/images/leeseopp.png")}
             className="rounded-full shadow-lg w-full h-full"
@@ -96,7 +121,9 @@ export default function Profile() {
                 <>
                   <View className="flex flex-row gap-2 items-center">
                     <Zap color="#FFD43B" />
-                    <Text className="text-lg font-bold">{user?.level}</Text>
+                    <Text className="text-lg font-bold">
+                      {user?.pupil?.level}
+                    </Text>
                   </View>
                   <Text className="text-sm text-gray-800">
                     Reading Compr. Level
@@ -115,7 +142,7 @@ export default function Profile() {
 
               <View className="grid grid-cols-2 gap-2">
                 <ProfileStat
-                  level={isLoading ? "1" : `${loginStreak.longestStreak}`}
+                  level={`${loginStreakQuery.data.longestStreak}`}
                   description="Longest Streak"
                   icon={<Flame color="red" />}
                 />
@@ -126,42 +153,39 @@ export default function Profile() {
                 />
                 <ProfileStat
                   level={
-                    screenTime !== undefined
-                      ? formatScreenTime(screenTime)
+                    screenTimeQuery !== undefined
+                      ? formatScreenTime(screenTimeQuery.data)
                       : "0"
                   }
                   description="Total Screentime"
                   icon={<Smartphone color="black" />}
                 />
                 <ProfileStat
-                  level={"2"}
+                  level={`${achievementsQuery.data.length}`}
                   description="Achievements"
                   icon={<Star color="#FFD43B" />}
                 />
               </View>
 
-              <View className="flex-row justify-between">
-                <Text className="text-xl font-bold">Achievements</Text>
-                <Text
-                  className="underline"
-                  onPress={async () => {
-                    router.push("/profile/achievementslist");
-                  }}
-                >
-                  View All
-                </Text>
-              </View>
-
-              <View className="flex-row flex gap-4">
-                <View className="p-4 rounded-md bg-yellow-500 shadow-md">
-                  <Award color="black" style={{ width: 30, height: 30 }} />
+              <View className="my-4">
+                <View className="flex-row justify-between">
+                  <Text className="text-xl font-bold my-2">Achievements</Text>
+                  <Text
+                    className="underline"
+                    onPress={async () => {
+                      router.push("/profile/achievementslist");
+                    }}
+                  >
+                    View All
+                  </Text>
                 </View>
 
-                <View className="p-4 rounded-md bg-yellow-500 shadow-md">
-                  <Medal color="black" style={{ width: 30, height: 30 }} />
-                </View>
-                <View className="p-4 rounded-md bg-yellow-500 shadow-md">
-                  <Trophy color="black" style={{ width: 30, height: 30 }} />
+                <View className="flex-row flex gap-4">
+                  {achievementsQuery.data.map(
+                    (a: Achievement, index: number) => (
+                      <AwardIcon badge={`${a.badge}`} key={index} />
+                    )
+                  )}
                 </View>
               </View>
             </>

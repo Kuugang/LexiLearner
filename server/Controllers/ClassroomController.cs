@@ -49,7 +49,6 @@ public class ClassroomController : ControllerBase {
 		);
     }
 
-    // TODO: feel nako better ni isame route with sa getbypupilID but kani lng sa for now DD:
     [HttpGet("teacher/me")]
     [Authorize("TeacherPolicy")]
     public async Task<IActionResult> GetByTeacherId() {
@@ -169,6 +168,17 @@ public class ClassroomController : ControllerBase {
             new SuccessResponseDTO("Fetched active reading assignments successfully.", 
             readingAssignments.Select(ra => new ReadingMaterialAssignmentDTO(ra)).ToList())
         );
+    }
+
+    [HttpGet("readingAssignments/{ReadingAssignmentId}")]
+    [Authorize]
+    public async Task<IActionResult> GetReadingAssignmentById([FromRoute] Guid ReadingAssignmentId)
+    {
+        var readingAssignment = await _classroomService.GetReadingAssignmentById(ReadingAssignmentId);
+
+        return StatusCode(StatusCodes.Status200OK,
+            new SuccessResponseDTO("Reading Assignment fetched successfully.",
+            new ReadingMaterialAssignmentDTO(readingAssignment)));
     }
     
     [HttpPut("readingAssignments/{ReadingAssignmentId}")]

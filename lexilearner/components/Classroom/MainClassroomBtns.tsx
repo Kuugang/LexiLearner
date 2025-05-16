@@ -8,7 +8,6 @@ import { MinigameType } from "@/models/Minigame";
 import { Ionicons } from "@expo/vector-icons";
 import { Menu, Button } from "react-native-paper";
 
-// TODO: iusa nlng ni nga btn oy dzuh tanginang copy paste css yan
 export function NewClassroomBtn() {
   return (
     <TouchableOpacity

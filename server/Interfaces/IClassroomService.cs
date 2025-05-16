@@ -17,7 +17,7 @@ namespace LexiLearner.Interfaces{
         Task RemovePupil(Guid PupilId, Guid ClassroomId, ClaimsPrincipal User);
         Task<ClassroomEnrollment> GetClassroomEnrollmentByPupilAndClassId(Guid PupilId, Guid ClassroomId);
         Task<ReadingMaterialAssignmentDTO> CreateReadingAssignment(Guid ClassroomId, ReadingMaterialAssignmentDTO.Create Request, ClaimsPrincipal User);
-        Task<ReadingMaterialAssignment?> GetReadingAssignmentById(Guid Id);
+        Task<ReadingMaterialAssignment> GetReadingAssignmentById(Guid Id);
 		Task<List<ReadingMaterialAssignment>> GetAllReadingAssignmentsByClassroomId(Guid ClassroomId, ClaimsPrincipal User);
 		Task<List<ReadingMaterialAssignment>> GetActiveReadingAssignmentsByClassroomId(Guid ClassroomId, ClaimsPrincipal User);
 		Task<ReadingMaterialAssignment> UpdateReadingAssignment(Guid ReadingAssignmentId, ReadingMaterialAssignmentDTO.Update Request, ClaimsPrincipal User);
