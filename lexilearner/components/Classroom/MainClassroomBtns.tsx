@@ -1,4 +1,4 @@
-import { View, Image, Button, TouchableOpacity } from "react-native";
+import { View, TouchableOpacity } from "react-native";
 import { Text } from "@/components/ui/text";
 import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
@@ -6,8 +6,7 @@ import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { router } from "expo-router";
 import { MinigameType } from "@/models/Minigame";
 import { Ionicons } from "@expo/vector-icons";
-import RNPickerSelect from "react-native-picker-select";
-import { ReadingAssignment } from "@/models/ReadingMaterialAssignment";
+import { Menu, Button } from "react-native-paper";
 
 export function NewClassroomBtn() {
   return (
@@ -85,30 +84,58 @@ export function AddReadingAssignment() {
   );
 }
 
-const minigameOptions = [
-  { label: "2 Truths 1 Lie", value: MinigameType.TwoTruthsOneLie },
-  { label: "Fill in the Blanks", value: MinigameType.FillInTheBlanks },
-  { label: "Word Hunt", value: MinigameType.WordHunt },
-  {
-    label: "Sentence Rearrangement",
-    value: MinigameType.SentenceRearrangement,
-  },
-  { label: "Words From Letters", value: MinigameType.WordsFromLetters },
-];
+export default function SetMinigameDropdown({
+  selected,
+  setSelected,
+}: {
+  selected: MinigameType;
+  setSelected: (val: MinigameType) => void;
+}) {
+  const [visible, setVisible] = useState(false);
 
-export default function SetMinigameDropdown({ selected, setSelected }) {
+  const minigameOptions = [
+    { label: "2 Truths 1 Lie", value: MinigameType.TwoTruthsOneLie },
+    { label: "Fill in the Blanks", value: MinigameType.FillInTheBlanks },
+    { label: "Word Hunt", value: MinigameType.WordHunt },
+    {
+      label: "Sentence Rearrangement",
+      value: MinigameType.SentenceRearrangement,
+    },
+    { label: "Words From Letters", value: MinigameType.WordsFromLetters },
+  ];
+
+  const selectedLabel =
+    minigameOptions.find((option) => option.value === selected)?.label ??
+    "Select Minigame";
+
   return (
     <View className="flex flex-row items-center">
       <Text className="font-bold mr-2">Set Minigame?</Text>
-      <View className="flex flex-1 bg-white rounded-lg border-2 border-lightGray p-2">
-        <RNPickerSelect
-          placeholder={{}}
-          value={selected}
-          onValueChange={setSelected}
-          items={minigameOptions}
-          Icon={() => <Ionicons name="caret-down" size={24} color="black" />}
-          useNativeAndroidPickerStyle={false}
-        />
+      <View className="flex flex-1">
+        <Menu
+          visible={visible}
+          onDismiss={() => setVisible(false)}
+          anchor={
+            <Button
+              mode="outlined"
+              onPress={() => setVisible(true)}
+              contentStyle={{ justifyContent: "flex-start" }}
+            >
+              {selectedLabel}
+            </Button>
+          }
+        >
+          {Object.entries(minigameOptions).map(([key, option]) => (
+            <Menu.Item
+              key={option.value}
+              onPress={() => {
+                setSelected(option.value);
+                setVisible(false);
+              }}
+              title={option.label}
+            />
+          ))}
+        </Menu>
       </View>
     </View>
   );
