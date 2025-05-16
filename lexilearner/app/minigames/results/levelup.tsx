@@ -92,7 +92,9 @@ export default function levelup() {
           <Text className="poppins text-[30px] font-bold">
             You've Ranked Up!
           </Text>
-          <Text>TIP: Keep reading to climb further up the ranks!!!</Text>
+          <Text className="text-center">
+            TIP: Keep reading to climb further up the ranks!
+          </Text>
         </View>
       </ScrollView>
       <View className="p-5">
