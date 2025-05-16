@@ -49,7 +49,7 @@ export const useMiniGameStore = create<MiniGameStore>()(
 
         let logResult: Record<string, any> = {};
 
-        const startTime = get().gameStartTime;
+        const startTime = new Date(get().gameStartTime);
         if (!startTime) {
           console.warn("start time is null");
           return null;
@@ -480,6 +480,7 @@ export const useSentenceRearrangementMiniGameStore =
               answers: [],
               currentAnswer: [],
               lives: 3,
+              parts: [],
             };
           }),
       }),

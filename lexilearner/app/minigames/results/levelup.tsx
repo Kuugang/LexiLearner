@@ -92,14 +92,21 @@ export default function levelup() {
           <Text className="poppins text-[30px] font-bold">
             You've Ranked Up!
           </Text>
-          <Text>TIP: Keep reading to climb further up the ranks!!!</Text>
+          <Text className="text-center">
+            TIP: Keep reading to climb further up the ranks!
+          </Text>
         </View>
       </ScrollView>
       <View className="p-5">
         <Button
           className="w-full bg-background border-appBlue border-b-4 rounded-xl"
           onPress={() => {
-            router.push("/minigames/results/recommendation");
+            router.push({
+              pathname: "/minigames/results/recommendation",
+              params: {
+                data: data,
+              },
+            });
           }}
         >
           <Text>Next</Text>

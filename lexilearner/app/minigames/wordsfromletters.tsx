@@ -15,68 +15,46 @@ import { Progress } from "@/components/ui/progress";
 import { Minigame, MinigameType } from "@/models/Minigame";
 import { useCreateMinigameLog } from "@/services/minigameService";
 
-export default function WordsFromLetters({ minigame }: { minigame: Minigame }) {
+export default function WordsFromLetters({
+  minigame,
+  nextGame,
+}: {
+  minigame: Minigame;
+  nextGame: () => void;
+}) {
   const { mutate: triggerCreateMinigameLog } = useCreateMinigameLog();
 
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
-  const lives = useWordsFromLettersMiniGameStore((state) => state.lives);
-  const decrementLives = useWordsFromLettersMiniGameStore(
-    (state) => state.decrementLives,
-  );
-  const letters = useWordsFromLettersMiniGameStore((state) => state.letters);
-  const setLetters = useWordsFromLettersMiniGameStore(
-    (state) => state.setLetters,
-  );
-  const words = useWordsFromLettersMiniGameStore((state) => state.words);
-  const setWords = useWordsFromLettersMiniGameStore((state) => state.setWords);
-  const guess = useWordsFromLettersMiniGameStore((state) => state.guess);
-  const setGuess = useWordsFromLettersMiniGameStore((state) => state.setGuess);
-  const storeShuffleLetters = useWordsFromLettersMiniGameStore(
-    (state) => state.shuffleLetters,
-  );
-  const usedIndices = useWordsFromLettersMiniGameStore(
-    (state) => state.usedIndices,
-  );
-  const addUsedIndex = useWordsFromLettersMiniGameStore(
-    (state) => state.addUsedIndex,
-  );
-  const removeUsedIndex = useWordsFromLettersMiniGameStore(
-    (state) => state.removeUsedIndex,
-  );
-  const resetUsedIndices = useWordsFromLettersMiniGameStore(
-    (state) => state.resetUsedIndices,
-  );
+  const {
+    lives,
+    decrementLives,
+    letters,
+    setLetters,
+    words,
+    setWords,
+    guess,
+    setGuess,
+    storeShuffleLetters,
+    usedIndices,
+    addUsedIndex,
+    removeUsedIndex,
+    resetUsedIndices,
+    correctAnswers,
+    addCorrectAnswer,
+    incorrectAnswers,
+    addIncorrectAnswer,
+    streak,
+    incrementStreak,
+    resetStreak,
+    resetGameState,
+  } = useWordsFromLettersMiniGameStore();
+
   const shuffleLetters = useCallback(storeShuffleLetters, [
     letters,
     usedIndices,
   ]);
-  const correctAnswers = useWordsFromLettersMiniGameStore(
-    (state) => state.correctAnswers,
-  );
-  const addCorrectAnswer = useWordsFromLettersMiniGameStore(
-    (state) => state.addCorrectAnswer,
-  );
-  const incorrectAnswers = useWordsFromLettersMiniGameStore(
-    (state) => state.incorrectAnswers,
-  );
-  const addIncorrectAnswer = useWordsFromLettersMiniGameStore(
-    (state) => state.addIncorrectAnswer,
-  );
-  const streak = useWordsFromLettersMiniGameStore((state) => state.streak);
-  const incrementStreak = useWordsFromLettersMiniGameStore(
-    (state) => state.incrementStreak,
-  );
-  const resetStreak = useWordsFromLettersMiniGameStore(
-    (state) => state.resetStreak,
-  );
 
-  const resetGameState = useWordsFromLettersMiniGameStore(
-    (state) => state.resetGameState,
-  );
-  const gameOver = useMiniGameStore((state) => state.gameOver);
-  const incrementMinigameIndex = useMiniGameStore(
-    (state) => state.incrementMinigamesIndex,
-  );
+  const { gameOver, incrementMinigamesIndex } = useMiniGameStore();
 
   useEffect(() => {
     //resetGameState();
@@ -120,6 +98,7 @@ export default function WordsFromLetters({ minigame }: { minigame: Minigame }) {
     if (words.length === 0) return;
     if (lives <= 0 || correctAnswers.length === words.length) {
       try {
+        console.log("Words from letters Game Over");
         const minigameLog = gameOver({
           correctAnswers,
           incorrectAnswers,
@@ -135,7 +114,10 @@ export default function WordsFromLetters({ minigame }: { minigame: Minigame }) {
           type: MinigameType.WordsFromLetters,
         });
 
-        incrementMinigameIndex();
+        setTimeout(() => {
+          nextGame();
+          resetGameState();
+        }, 500);
       } catch (error) {
         console.error(
           "Error during Words From Letter game over logic: ",
@@ -153,6 +135,7 @@ export default function WordsFromLetters({ minigame }: { minigame: Minigame }) {
 
   const addLetterToGuess = useCallback(
     (letter: string, index: number) => {
+      if (lives <= 0) return;
       const updated = [...guess];
       const emptyIndex = updated.indexOf("");
       if (emptyIndex !== -1) {
@@ -193,7 +176,9 @@ export default function WordsFromLetters({ minigame }: { minigame: Minigame }) {
         <View className="flex gap-14 py-16">
           <View className="flex gap-4">
             <View className="flex flex-row gap-2 justify-center items-center">
-              <Text className="text-3xl font-black">Words From Letters</Text>
+              <Text className="text-3xl font-black text-indigo-600">
+                Words From Letters
+              </Text>
             </View>
             <View className="flex flex-row justify-center gap-3">
               {Array.from({ length: lives }).map((_, i) => (

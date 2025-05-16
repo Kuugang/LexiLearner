@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, memo } from "react";
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -15,78 +15,170 @@ import { Heart } from "lucide-react-native";
 import { Minigame, MinigameType } from "@/models/Minigame";
 import { useCreateMinigameLog } from "@/services/minigameService";
 
+// Consistent colors for parts - alternate between these two
+const PART_COLORS = ["#FFFFFF", "#7dd3fc"];
+
+// Memoized Part component to prevent unnecessary re-renders
+const Part = memo(
+  ({
+    part,
+    index,
+    onPress,
+    colorIndex,
+  }: {
+    part: string;
+    index: number;
+    onPress: (index: number, colorIndex: number) => void;
+    colorIndex: number;
+  }) => {
+    const partStyle = {
+      backgroundColor: PART_COLORS[colorIndex % 2],
+      padding: 12,
+      borderRadius: 16,
+      shadowColor: "#000",
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.25,
+      shadowRadius: 3,
+      elevation: 3,
+      margin: 4,
+    };
+
+    const isLeft = index % 2 === 0;
+
+    return (
+      <Animated.View layout={LinearTransition.duration(300)} style={partStyle}>
+        <TouchableOpacity onPress={() => onPress(index, colorIndex)}>
+          <Text style={{ fontSize: 16, fontWeight: "600" }}>{part}</Text>
+        </TouchableOpacity>
+      </Animated.View>
+    );
+  },
+);
+
+// Memoized Answer Part component
+const AnswerPart = memo(
+  ({
+    part,
+    index,
+    onPress,
+    textClass,
+    colorIndex,
+  }: {
+    part: string;
+    index: number;
+    onPress: (index: number) => void;
+    textClass: string;
+    colorIndex: number;
+  }) => {
+    const partStyle = {
+      backgroundColor: PART_COLORS[colorIndex % 2],
+      padding: 12,
+      borderRadius: 16,
+      shadowColor: "#000",
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.25,
+      shadowRadius: 3,
+      elevation: 3,
+      margin: 4,
+    };
+
+    return (
+      <Animated.View
+        key={`answer-${index}`}
+        entering={FadeIn.duration(300)}
+        style={partStyle}
+      >
+        <TouchableOpacity onPress={() => onPress(index)}>
+          <Text
+            style={{ fontSize: 16, fontWeight: "600" }}
+            className={textClass}
+          >
+            {part}
+          </Text>
+        </TouchableOpacity>
+      </Animated.View>
+    );
+  },
+);
+
 export default function SentenceArrangement({
   minigame,
+  nextGame,
 }: {
   minigame: Minigame;
+  nextGame: () => void;
 }) {
-  const sentenceArrangementData = {
-    correctAnswer: JSON.parse(minigame.metaData).correctAnswer,
-    parts: JSON.parse(minigame.metaData).parts,
-  };
+  const sentenceArrangementData = React.useMemo(
+    () => ({
+      correctAnswer: JSON.parse(minigame.metaData).correctAnswer,
+      parts: JSON.parse(minigame.metaData).parts,
+    }),
+    [minigame.metaData],
+  );
+
   const { mutate: triggerCreateMinigameLog } = useCreateMinigameLog();
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
+  const [feedback, setFeedback] = useState("");
+  // Track color indices for each part
+  const [colorIndices, setColorIndices] = useState<number[]>([]);
+  // Track color indices for answer parts
+  const [answerColorIndices, setAnswerColorIndices] = useState<number[]>([]);
 
-  const lives = useSentenceRearrangementMiniGameStore((state) => state.lives);
-  const decrementLives = useSentenceRearrangementMiniGameStore(
-    (state) => state.decrementLives,
-  );
-  const correctAnswer = useSentenceRearrangementMiniGameStore(
-    (state) => state.correctAnswer,
-  );
-  const parts = useSentenceRearrangementMiniGameStore((state) => state.parts);
-  const setCorrectAnswer = useSentenceRearrangementMiniGameStore(
-    (state) => state.setCorrectAnswer,
-  );
-  const setParts = useSentenceRearrangementMiniGameStore(
-    (state) => state.setParts,
-  );
-  const currentAnswer = useSentenceRearrangementMiniGameStore(
-    (state) => state.currentAnswer,
-  );
-  const addPartToCurrentAnswer = useSentenceRearrangementMiniGameStore(
-    (state) => state.addPartToCurrentAnswer,
-  );
-  const removePartFromCurrentAnswer = useSentenceRearrangementMiniGameStore(
-    (state) => state.removePartFromCurrentAnswer,
-  );
-  const resetCurrentAnswer = useSentenceRearrangementMiniGameStore(
-    (state) => state.resetCurrentAnswer,
-  );
-  const resetGameState = useSentenceRearrangementMiniGameStore(
-    (state) => state.resetGameState,
-  );
-  const answers = useSentenceRearrangementMiniGameStore(
-    (state) => state.answers,
-  );
-  const addAnswer = useSentenceRearrangementMiniGameStore(
-    (state) => state.addAnswer,
-  );
-  const gameOver = useMiniGameStore((state) => state.gameOver);
-  const incrementMinigamesIndex = useMiniGameStore(
-    (state) => state.incrementMinigamesIndex,
-  );
+  // Use selectors to minimize re-renders
+  const {
+    lives,
+    decrementLives,
+    correctAnswer,
+    parts,
+    setCorrectAnswer,
+    setParts,
+    currentAnswer,
+    addPartToCurrentAnswer,
+    removePartFromCurrentAnswer,
+    resetCurrentAnswer,
+    answers,
+    addAnswer,
+    resetGameState,
+  } = useSentenceRearrangementMiniGameStore();
 
+  const { gameOver, incrementMinigamesIndex } = useMiniGameStore();
+
+  // Initialize game state
   useEffect(() => {
     const backHandler = BackHandler.addEventListener(
       "hardwareBackPress",
-      () => {
-        return true;
-      },
+      () => true,
     );
 
-    setCorrectAnswer(
-      sentenceArrangementData.correctAnswer.map((text: string) => text),
+    if (parts.length === 0) {
+      setCorrectAnswer(
+        sentenceArrangementData.correctAnswer.map(
+          (text: string): string => text,
+        ),
+      );
+      setParts(sentenceArrangementData.parts);
+    }
+
+    setColorIndices(
+      sentenceArrangementData.parts.map(
+        (_: any, idx: number): number => idx % 2,
+      ),
     );
-    setParts(sentenceArrangementData.parts);
-    return () => backHandler.remove();
+
+    setAnswerColorIndices([]);
+
+    return () => {
+      backHandler.remove();
+    };
   }, []);
 
   useEffect(() => {
     if (lives <= 0 || isCorrect) {
       try {
-        let score = isCorrect ? 1 : 0;
-        let minigameLog = gameOver({ answers, score });
+        const score = isCorrect ? 1 : 0;
+
+        console.log("Sentence Rearrangement Game Over");
+        const minigameLog = gameOver({ answers, score });
 
         if (!minigameLog) {
           throw Error("Minigame Log is null");
@@ -97,53 +189,90 @@ export default function SentenceArrangement({
           type: MinigameType.SentenceRearrangement,
         });
 
-        incrementMinigamesIndex();
+        setTimeout(() => {
+          nextGame();
+          resetGameState();
+        }, 500);
       } catch (error) {
         console.error(
-          "Error during Fill in the blank game over logic: ",
+          "Error during sentence arrangement game over logic: ",
           error,
         );
       }
     }
-  }, [isCorrect]);
+  }, [isCorrect, lives]);
 
+  // Add part to answer - memoized to avoid recreating on every render
   const addPart = useCallback(
-    async (index: number) => {
+    async (index: number, colorIndex: number) => {
+      // Update parts
       const update = [...parts];
       const selectedPart = update[index];
 
+      // Update current answer
       const newAnswer = [...currentAnswer, selectedPart];
       addPartToCurrentAnswer(selectedPart);
 
+      // Update color indices for answers
+      const newAnswerColorIndices = [...answerColorIndices, colorIndex];
+      setAnswerColorIndices(newAnswerColorIndices);
+
+      // Remove the part from available parts
       update.splice(index, 1);
       setParts(update);
 
+      // Also remove the color index
+      const newColorIndices = [...colorIndices];
+      newColorIndices.splice(index, 1);
+      setColorIndices(newColorIndices);
+
       if (update.length === 0) {
         addAnswer(newAnswer);
+
         if (JSON.stringify(newAnswer) === JSON.stringify(correctAnswer)) {
+          setFeedback("Correct! Great job!");
           setIsCorrect(true);
           await new Promise((res) => setTimeout(res, 500));
         } else {
+          setFeedback("Try again!");
           setIsCorrect(false);
           await new Promise((res) => setTimeout(res, 500));
-          setTimeout(() => null, 500);
           decrementLives();
           resetCurrentAnswer();
           setParts(sentenceArrangementData.parts);
+          // Reset color indices
+          setColorIndices(
+            sentenceArrangementData.parts.map((_: any, idx: number) => idx % 2),
+          );
+          setAnswerColorIndices([]);
           setIsCorrect(null);
+          setTimeout(() => setFeedback(""), 1500);
         }
       }
     },
-    [parts, currentAnswer],
+    [parts, currentAnswer, correctAnswer, colorIndices, answerColorIndices],
   );
 
+  // Remove part from answer - memoized
   const removePart = useCallback(
     (index: number) => {
+      const colorIndex = answerColorIndices[index];
+
+      // Add the color index back to the parts array
+      setColorIndices([...colorIndices, colorIndex]);
+
+      // Remove the color index from the answer
+      const newAnswerColorIndices = [...answerColorIndices];
+      newAnswerColorIndices.splice(index, 1);
+      setAnswerColorIndices(newAnswerColorIndices);
+
+      // Remove the part from the answer
       removePartFromCurrentAnswer(index);
     },
-    [parts, currentAnswer],
+    [answerColorIndices, colorIndices],
   );
 
+  // Animation for incorrect answers
   const shake = useSharedValue(0);
 
   useEffect(() => {
@@ -161,12 +290,13 @@ export default function SentenceArrangement({
     transform: [{ translateX: shake.value }],
   }));
 
+  // Style classes based on correctness
   const borderClass =
     isCorrect === true
       ? "border-green-500"
       : isCorrect === false
         ? "border-red-500"
-        : "";
+        : "border-gray-300";
 
   const textClass =
     isCorrect === true
@@ -175,87 +305,83 @@ export default function SentenceArrangement({
         ? "text-red-500"
         : "";
 
+  // Memoize the parts list to prevent unnecessary re-renders
+  const partsList = React.useMemo(() => {
+    return parts.map((part, index) => (
+      <Part
+        key={`part-${part}-${index}`}
+        part={part}
+        index={index}
+        onPress={addPart}
+        colorIndex={colorIndices[index]}
+      />
+    ));
+  }, [parts, colorIndices, addPart]);
+
+  // Answer container styles
+  const answerContainerStyle = {
+    minHeight: 100,
+    padding: 16,
+    borderWidth: 2,
+    borderColor:
+      isCorrect === null ? "#e0e0e0" : isCorrect ? "#22c55e" : "#ef4444",
+    borderRadius: 16,
+    backgroundColor: "#f9f9f9",
+    marginVertical: 16,
+  };
+
   return (
     <ScrollView className="bg-lightGray">
-      <View className="flex p-8 gap-4">
-        {/* <Progress */}
-        {/*   value={80} */}
-        {/*   className="web:w-[60%] bg-background" */}
-        {/*   indicatorClassName="bg-[#8383FF]" */}
-        {/* /> */}
-
-        <View className="flex gap-36 py-16">
-          <View className="flex gap-4">
+      <View className="flex p-8 gap-6">
+        <View className="flex py-12">
+          <View className="flex gap-6">
             <View className="flex flex-row gap-2 justify-center items-center">
-              <Text className="text-3xl font-black text-center">
+              <Text className="text-3xl font-black text-center text-indigo-600">
                 Sentence Arrangement
               </Text>
             </View>
+
             <View className="flex flex-row justify-center gap-3">
               {Array.from({ length: lives }).map((_, i) => (
-                <Heart key={i} fill="#8383FF" />
+                <Heart key={i} fill="#8383FF" size={24} />
               ))}
             </View>
-            <Text className="text-center font-medium">
+
+            <Text className="text-center font-medium text-gray-700 text-lg">
               Arrange the word blocks to make the sentence!
             </Text>
+
+            {feedback ? (
+              <Animated.Text
+                entering={FadeIn.duration(300)}
+                className={`text-center font-bold text-lg ${isCorrect ? "text-green-500" : "text-red-500"}`}
+              >
+                {feedback}
+              </Animated.Text>
+            ) : null}
           </View>
 
-          <View className="flex gap-4">
+          <View className="flex gap-6">
             <Animated.View
               style={[answerContainerStyle, shakeAnimationStyle]}
-              className={`border p-4 rounded-md ${borderClass}`}
+              className={`border-2 rounded-lg ${borderClass}`}
             >
-              <View className="flex flex-row gap-2 flex-wrap">
-                {currentAnswer.map((part, index) => {
-                  const partStyle = getPartStyle(
-                    index % 2 === 0 ? "white" : "#7dd3fc",
-                  );
-
-                  return (
-                    <Animated.View
-                      key={index}
-                      entering={FadeIn.duration(300)}
-                      style={partStyle}
-                    >
-                      <TouchableOpacity onPress={() => removePart(index)}>
-                        <Text
-                          style={{ fontSize: 16, fontWeight: "500" }}
-                          className={textClass}
-                        >
-                          {part}
-                        </Text>
-                      </TouchableOpacity>
-                    </Animated.View>
-                  );
-                })}
+              <View className="flex flex-row gap-2 flex-wrap justify-center">
+                {currentAnswer.map((part, index) => (
+                  <AnswerPart
+                    key={`answer-part-${index}`}
+                    part={part}
+                    index={index}
+                    onPress={removePart}
+                    textClass={textClass}
+                    colorIndex={answerColorIndices[index]}
+                  />
+                ))}
               </View>
             </Animated.View>
 
-            <View className="flex flex-col gap-4 items-center">
-              {parts && parts.length > 0 ? (
-                parts.map((part, index) => {
-                  const isLeft = index % 2 === 0 ? true : false;
-                  return (
-                    <Animated.View key={index} layout={LinearTransition}>
-                      <View
-                        style={getPartStyle(
-                          index % 2 === 0 ? "white" : "#7dd3fc",
-                        )}
-                        className={isLeft ? "left-10" : "right-10"}
-                      >
-                        <TouchableOpacity onPress={() => addPart(index)}>
-                          <Text style={{ fontSize: 16, fontWeight: "500" }}>
-                            {part}
-                          </Text>
-                        </TouchableOpacity>
-                      </View>
-                    </Animated.View>
-                  );
-                })
-              ) : (
-                <></>
-              )}
+            <View className="flex flex-row flex-wrap gap-3 justify-center items-center">
+              {partsList}
             </View>
           </View>
         </View>
@@ -263,22 +389,3 @@ export default function SentenceArrangement({
     </ScrollView>
   );
 }
-const answerContainerStyle = {
-  minHeight: 80,
-  padding: 10,
-  borderWidth: 1,
-  borderColor: "#e0e0e0",
-  borderRadius: 12,
-  backgroundColor: "#f9f9f9",
-};
-
-const getPartStyle = (color: string) => ({
-  backgroundColor: color,
-  padding: 12,
-  borderRadius: 16,
-  shadowColor: "#000",
-  shadowOffset: { width: 0, height: 1 },
-  shadowOpacity: 0.2,
-  shadowRadius: 1.5,
-  elevation: 2,
-});

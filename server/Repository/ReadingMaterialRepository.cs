@@ -52,7 +52,7 @@ namespace LexiLearner.Repository
             return await query.ToListAsync();
         }
 
-        public async Task<List<ReadingMaterial>> GetRecommendations(Guid PupilId)
+        public async Task<List<ReadingMaterial>> GetRecommendations(Guid PupilId, int Quantity = 10)
         {
             // Step 1: Get completed sessions and include ReadingMaterial + genres
             var completedSessions = await _dataContext.ReadingSession
@@ -65,7 +65,7 @@ namespace LexiLearner.Repository
             {
                 return await _dataContext.ReadingMaterial
                     .OrderByDescending(m => m.CreatedAt)
-                    .Take(10)
+                    .Take(Quantity)
                     .Include(m => m.ReadingMaterialGenres)
                         .ThenInclude(rmg => rmg.Genre)
                     .ToListAsync();
@@ -96,7 +96,7 @@ namespace LexiLearner.Repository
                 .Where(m => m.Grade_Level == gradeLevel)
                 .Where(m => Math.Abs(m.Difficulty - avgDifficulty) <= 10)
                 //.Where(m => m.ReadingMaterialGenres.Any(g => favoriteGenreIds.Contains(g.GenreId)))
-                .Take(10)
+                .Take(Quantity)
                 .ToListAsync();
 
             return recommended;
