@@ -117,13 +117,17 @@ export default function SetMinigameDropdown({
           visible={visible}
           onDismiss={() => setVisible(false)}
           anchor={
-            <Button
-              mode="outlined"
+            <TouchableOpacity
+              className="flex flex-row items-center space-between border-2 rounded-md border-lightGray p-2"
               onPress={() => setVisible(true)}
-              contentStyle={{ justifyContent: "flex-start" }}
             >
-              {selectedLabel}
-            </Button>
+              <Text className="text-sm text-gray-500">{selectedLabel}</Text>
+              <Ionicons
+                name="chevron-down"
+                size={24}
+                style={{ marginLeft: "auto" }}
+              />
+            </TouchableOpacity>
           }
         >
           {Object.entries(minigameOptions).map(([key, option]) => (
@@ -134,6 +138,8 @@ export default function SetMinigameDropdown({
                 setVisible(false);
               }}
               title={option.label}
+              titleStyle={{ fontSize: 15, padding: 2 }}
+              style={{ backgroundColor: (selected === option.value ? '' : "white") }}
             />
           ))}
         </Menu>

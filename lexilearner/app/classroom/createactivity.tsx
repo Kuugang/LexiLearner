@@ -126,8 +126,8 @@ export default function createactivity() {
                     // router.replace(
                     //   `/classroom/${readingAssignment.classroomId}/activity/${readingAssignment.id}`
                     // );
-                    router.dismiss();
                     router.replace(`/classroom/${selectedClassroom!.id}`);
+                    router.dismiss();
 
                     setSelectedContent(null);
                   } catch (error) {
