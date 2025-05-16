@@ -6,11 +6,13 @@ namespace LexiLearner.Models.DTO
         public Guid ClassroomId { get; set; }
         public Guid ReadingMaterialId { get; set; }
         public Guid MinigameId { get; set; }
+        public MinigameType MinigameType { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
         public bool IsActive { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
+        public string Cover { get; set; }
         
         public ReadingMaterialAssignmentDTO(ReadingMaterialAssignment ReadingMaterialAssignment)
         {
@@ -23,6 +25,8 @@ namespace LexiLearner.Models.DTO
             IsActive = ReadingMaterialAssignment.IsActive;
             CreatedAt = ReadingMaterialAssignment.CreatedAt;
             UpdatedAt = ReadingMaterialAssignment.UpdatedAt;
+            Cover = ReadingMaterialAssignment.ReadingMaterial.Cover;
+            MinigameType = ReadingMaterialAssignment.Minigame.MinigameType;
         }
         
         public class Create

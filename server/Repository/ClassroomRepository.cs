@@ -101,17 +101,17 @@ namespace LexiLearner.Repository{
 
         public Task<ReadingMaterialAssignment?> GetReadingAssignmentById(Guid Id)
         {
-            return _context.ReadingMaterialAssignment.FirstOrDefaultAsync(r => r.Id == Id);
+            return _context.ReadingMaterialAssignment.Include(rma => rma.ReadingMaterial).Include(rma => rma.Minigame).FirstOrDefaultAsync(r => r.Id == Id);
         }
 
         public Task<List<ReadingMaterialAssignment>> GetAllReadingAssignmentsByClassroomId(Guid ClassroomId)
         {
-            return _context.ReadingMaterialAssignment.Where(r => r.ClassroomId == ClassroomId).ToListAsync();
+            return _context.ReadingMaterialAssignment.Include(rma => rma.ReadingMaterial).Include(rma => rma.Minigame).Where(r => r.ClassroomId == ClassroomId).ToListAsync();
         }
 
         public Task<List<ReadingMaterialAssignment>> GetActiveReadingAssignmentsByClassroomId(Guid ClassroomId)
         {
-            return _context.ReadingMaterialAssignment.Where(r => r.ClassroomId == ClassroomId && r.IsActive).ToListAsync();
+            return _context.ReadingMaterialAssignment.Include(rma => rma.ReadingMaterial).Include(rma => rma.Minigame).Where(r => r.ClassroomId == ClassroomId && r.IsActive).ToListAsync();
         }
 
         public Task<ReadingMaterialAssignment> UpdateReadingAssignment(ReadingMaterialAssignment ReadingMaterialAssignment)

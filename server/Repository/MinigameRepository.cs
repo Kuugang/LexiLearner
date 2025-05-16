@@ -68,5 +68,12 @@ namespace LexiLearner.Repository
             _dataContext.Update(Pupil);
             await _dataContext.SaveChangesAsync();
         }
+        
+        public async Task<List<Minigame>> GetMinigamesByRMIdAndType(Guid readingMaterialId, MinigameType minigameType)
+        {
+            return await _dataContext.Minigame
+                .Where(mg => mg.ReadingMaterialId == readingMaterialId && mg.MinigameType == minigameType)
+                .ToListAsync();
+        }
     }
 }
