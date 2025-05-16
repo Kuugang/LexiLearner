@@ -4,7 +4,7 @@ using LexiLearner.Models.DTO;
 
 namespace LexiLearner.Interfaces{
     public interface IClassroomService{
-        Task<ClassroomDTO> GetByClassroomId(Guid ClassroomId);
+        Task<Classroom> GetByClassroomId(Guid ClassroomId);
         Task<List<ClassroomDTO>> GetClassroomsByTeacherId(ClaimsPrincipal User);
 		Task<List<ClassroomDTO>> GetClassroomsByPupilId(ClaimsPrincipal User);
         Task<List<Pupil>> GetPupilsByClassroomId(Guid ClassroomId, ClaimsPrincipal User);
@@ -23,5 +23,15 @@ namespace LexiLearner.Interfaces{
 		Task<ReadingMaterialAssignment> UpdateReadingAssignment(Guid ReadingAssignmentId, ReadingMaterialAssignmentDTO.Update Request, ClaimsPrincipal User);
 		Task DeleteReadingAssignment(Guid ReadingAssignmentId, ClaimsPrincipal User);
 		Task<List<ClassroomEnrollmentDTO.Leaderboard>> GetLeaderboard(Guid ClassroomId, ClaimsPrincipal User);
+		Task<ReadingAssignmentLogDTO> CreateAssignmentLog(Guid ReadingAssignmentId, Guid MinigameLogId);
+		Task<ReadingAssignmentLog> GetAssignmentLogById(Guid ReadingAssignmentLogId);
+        Task<ReadingAssignmentLog> GetAssignmentLogByReadingAssignmentIdAndPupilId(Guid ReadingAssignmentId, Guid PupilId);
+		Task<List<ReadingAssignmentLog>> GetAssignmentLogsByReadingAssignmentId(Guid ReadingAssignmentId);
+		Task<List<ReadingAssignmentLog>> GetAssignmentLogsByPupilId(Guid PupilId);
+        Task<List<ReadingAssignmentLog>> GetAssignmentLogsByClassroomId(Guid ClassroomId);
+        Task<List<ReadingAssignmentLog>> GetAssignmentLogsByClassroomIdAndPupilId(Guid ClassroomId, Guid PupilId);
+        Task<ReadingMaterialAssignmentDTO.Overview> GetReadingAssignmentStatByAssignmentId(Guid ReadingAssignmentId, ClaimsPrincipal User);
+        Task<ReadingMaterialAssignmentDTO.Overview> GetReadingAssignmentStatByAssignment(ReadingMaterialAssignment ReadingAssignment);
+        Task<List<ReadingMaterialAssignmentDTO.Overview>> GetReadingAssignmentStatByClassroomId(Guid ClassroomId, ClaimsPrincipal User);
 	}
 }
