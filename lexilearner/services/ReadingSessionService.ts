@@ -85,6 +85,5 @@ export const getIncompleteReadingSessions = async () => {
     throw new Error(response.data.message);
   }
 
-  console.log("Incomplete Reading Sessions:", response.data.data);
   return response.data.data;
 };

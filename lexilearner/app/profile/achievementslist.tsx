@@ -1,9 +1,10 @@
-import AchievementDisplay from "@/components/AchievementDisplay";
+import { AchievementDisplay } from "@/components/AchievementDisplay";
 import BackHeader from "@/components/BackHeader";
 import { Button } from "@/components/ui/button";
 import { Text } from "@/components/ui/text";
 import { Achievement } from "@/models/Achievement";
 import { getPupilAchievements } from "@/services/UserService";
+import { useMiniGameStore } from "@/stores/miniGameStore";
 import { useQuery } from "@tanstack/react-query";
 import { router } from "expo-router";
 import { Settings } from "lucide-react-native";
@@ -11,15 +12,7 @@ import { StyleSheet, ScrollView, View, Image } from "react-native";
 
 // sakto ba diri nga folder? HUHUHUHUUH
 export default function achievementslist() {
-  const { data: achievements, isLoading } = useQuery({
-    queryKey: ["achievements"],
-    queryFn: getPupilAchievements,
-    enabled: true,
-  });
-
-  if (isLoading) {
-    return <Text>Loading...</Text>;
-  }
+  const achievements = useMiniGameStore((state) => state.achievements);
 
   return (
     <ScrollView className="bg-white">

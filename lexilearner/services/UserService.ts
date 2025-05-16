@@ -1,6 +1,7 @@
 import { axiosInstance } from "@/utils/axiosInstance";
 
 import { API_URL } from "../utils/constants";
+import { useQuery } from "@tanstack/react-query";
 
 export const getProfile = async () => {
   try {

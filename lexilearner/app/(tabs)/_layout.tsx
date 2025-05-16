@@ -7,6 +7,7 @@ import { Compass, House, Library, School, User } from "lucide-react-native";
 import { useColorScheme } from "@/hooks/useColorScheme";
 
 import CompassAnimation from "~/assets/animations/Animation - 1744671952675.json";
+import { useUserStore } from "@/stores/userStore";
 
 const CompassIcon = ({ compassFocused, setCompassFocused }) => {
   const animationRef = useRef(null);
@@ -37,6 +38,7 @@ export default function TabLayout() {
   const animationRef = useRef<LottieView>(null);
   const colorScheme = useColorScheme();
   const [compassFocused, setCompassFocused] = useState<boolean>(false);
+  const user = useUserStore((state) => state.user);
 
   return (
     <Tabs
@@ -99,12 +101,16 @@ export default function TabLayout() {
 
       <Tabs.Screen
         name="library"
-        options={{
-          tabBarLabel: () => null,
-          tabBarIcon: ({ color, focused }) => (
-            <Library color={focused ? "#f97316" : "#9ca3af"} />
-          ),
-        }}
+        options={
+          user?.role === "Teacher"
+            ? { href: null }
+            : {
+                tabBarLabel: () => null,
+                tabBarIcon: ({ color, focused }) => (
+                  <Library color={focused ? "#f97316" : "#9ca3af"} />
+                ),
+              }
+        }
       />
 
       <Tabs.Screen

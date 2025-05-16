@@ -10,6 +10,7 @@ import {
   Pupil,
 } from "@/services/ClassroomService";
 import { useClassroomStore } from "@/stores/classroomStore";
+import { User } from "@/models/User";
 
 // Default Avatar component using initials
 const DefaultAvatar = ({
@@ -130,35 +131,39 @@ export default function StudentsList() {
       <View className="p-4">
         {activeTab === "pupils"
           ? // Pupils tab content
-            students.map((student: Pupil) => (
-              <TouchableOpacity
-                key={student.id}
-                className="flex-row items-center bg-white rounded-lg p-4 mb-3 shadow-sm"
-              >
-                {/* Use DefaultAvatar for all students */}
-                <View className="mr-4">
-                  <DefaultAvatar name={`${student.firstName}`} size={12} />
-                </View>
+            students.map(
+              (
+                student: User // changed Pupil to User type
+              ) => (
+                <TouchableOpacity
+                  key={student.id}
+                  className="flex-row items-center bg-white rounded-lg p-4 mb-3 shadow-sm"
+                >
+                  {/* Use DefaultAvatar for all students */}
+                  <View className="mr-4">
+                    <DefaultAvatar name={`${student.firstName}`} size={12} />
+                  </View>
 
-                <View className="flex-1">
-                  <Text className="font-semibold text-base">
-                    {`${student.firstName} ${student.lastName}`}
-                  </Text>
-                </View>
+                  <View className="flex-1">
+                    <Text className="font-semibold text-base">
+                      {`${student.firstName} ${student.lastName}`}
+                    </Text>
+                  </View>
 
-                <View className="flex-row items-center">
-                  <MaterialIcons
-                    name="bar-chart"
-                    size={22}
-                    color="#666"
-                    style={{ marginRight: 16 }}
-                  />
-                  <FontAwesome name="trash-o" size={20} color="#FF6B6B" />
-                </View>
-              </TouchableOpacity>
-            ))
+                  <View className="flex-row items-center">
+                    <MaterialIcons
+                      name="bar-chart"
+                      size={22}
+                      color="#666"
+                      style={{ marginRight: 16 }}
+                    />
+                    <FontAwesome name="trash-o" size={20} color="#FF6B6B" />
+                  </View>
+                </TouchableOpacity>
+              )
+            )
           : // Leaderboard tab content - hardcoded without navigation
-            students.map((student: Pupil, index: number) => (
+            students.map((student: User, index: number) => (
               <View
                 key={student.id}
                 className="flex-row items-center bg-white rounded-lg p-4 mb-3 shadow-sm"
@@ -186,7 +191,9 @@ export default function StudentsList() {
                 </View>
 
                 {/* Level */}
-                <Text className="font-bold text-lg">{student.level} Lvl</Text>
+                <Text className="font-bold text-lg">
+                  {student.pupil?.level} Lvl
+                </Text>
               </View>
             ))}
       </View>

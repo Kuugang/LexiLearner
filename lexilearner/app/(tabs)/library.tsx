@@ -9,12 +9,20 @@ import { ScrollView, Text, View } from "react-native";
 
 //TODO: persist to storage why the heck is it sigeg refetching that is so sad
 function library() {
+  const currentlyReading = useReadingSessionStore(
+    (state) => state.currentlyReading
+  );
+  const setCurrentlyReading = useReadingSessionStore(
+    (state) => state.setCurrentlyReading
+  );
+
   const { data: readingMaterials, isLoading } = useQuery({
     queryKey: ["readingSessions"],
     queryFn: getIncompleteReadingSessions,
+    enabled: !!currentlyReading,
   });
 
-  console.log("READINGSJ MATERIASL NI MOURNS THE WICKED:", readingMaterials);
+  setCurrentlyReading(readingMaterials);
 
   if (isLoading) {
     return (

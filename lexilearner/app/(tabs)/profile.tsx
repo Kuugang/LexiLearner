@@ -19,25 +19,53 @@ import {
 
 import ProfileStat from "@/components/ProfileStat";
 import BackHeader from "@/components/BackHeader";
-import { getLoginStreak, getTotalSession } from "@/services/UserService";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  getLoginStreak,
+  getPupilAchievements,
+  getTotalSession,
+} from "@/services/UserService";
+import { useQueries, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useCallback, useEffect, useState } from "react";
-import AwardIcon from "@/components/AwardIcon";
+import { useMiniGameStore } from "@/stores/miniGameStore";
+import { AwardIcon } from "@/components/AchievementDisplay";
+import { Achievement } from "@/models/Achievement";
 
 export default function Profile() {
   const user = useUserStore((state) => state.user);
+  const setAchievements = useMiniGameStore((state) => state.setAchievements);
 
-  // Opening back to profile page will force refetch total screentime
-  const { data: screenTime } = useQuery({
-    queryKey: ["totalSession"],
-    queryFn: getTotalSession,
-    refetchOnWindowFocus: true,
+  const [achievementsQuery, screenTimeQuery, loginStreakQuery] = useQueries({
+    queries: [
+      {
+        queryKey: ["achievements"],
+        queryFn: getPupilAchievements,
+      },
+      {
+        queryKey: ["totalSession"],
+        queryFn: getTotalSession,
+        refetchOnWindowFocus: true,
+      },
+      {
+        queryKey: ["loginStreak"],
+        queryFn: getLoginStreak,
+      },
+    ],
   });
 
-  const { data: loginStreak, isLoading } = useQuery({
-    queryKey: ["loginStreak"],
-    queryFn: getLoginStreak,
-  });
+  if (
+    achievementsQuery.isLoading ||
+    screenTimeQuery.isLoading ||
+    loginStreakQuery.isLoading
+  ) {
+    return (
+      <View>
+        <Text>Loading...</Text>
+      </View>
+    );
+  }
+
+  setAchievements(achievementsQuery.data);
+  console.log("acsuehmet:", achievementsQuery.data);
 
   const formatScreenTime = (minutes: number) => {
     const hours = Math.floor(minutes / 60);
@@ -110,7 +138,7 @@ export default function Profile() {
 
               <View className="grid grid-cols-2 gap-2">
                 <ProfileStat
-                  level={isLoading ? "1" : `${loginStreak.longestStreak}`}
+                  level={`${loginStreakQuery.data.longestStreak}`}
                   description="Longest Streak"
                   icon={<Flame color="red" />}
                 />
@@ -121,15 +149,15 @@ export default function Profile() {
                 />
                 <ProfileStat
                   level={
-                    screenTime !== undefined
-                      ? formatScreenTime(screenTime)
+                    screenTimeQuery !== undefined
+                      ? formatScreenTime(screenTimeQuery.data)
                       : "0"
                   }
                   description="Total Screentime"
                   icon={<Smartphone color="black" />}
                 />
                 <ProfileStat
-                  level={"2"}
+                  level={`${achievementsQuery.data.length}`}
                   description="Achievements"
                   icon={<Star color="#FFD43B" />}
                 />
@@ -149,9 +177,11 @@ export default function Profile() {
                 </View>
 
                 <View className="flex-row flex gap-4">
-                  <AwardIcon />
-                  <AwardIcon />
-                  <AwardIcon />
+                  {achievementsQuery.data.map(
+                    (a: Achievement, index: number) => (
+                      <AwardIcon badge={`${a.badge}`} key={index} />
+                    )
+                  )}
                 </View>
               </View>
             </>
