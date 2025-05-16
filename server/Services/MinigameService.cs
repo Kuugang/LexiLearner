@@ -10,15 +10,17 @@ namespace LexiLearner.Services
     {
         private readonly IMinigameRepository _minigameRepository;
         private readonly IReadingMaterialService _readingMaterialService;
+        private readonly IReadingMaterialRepository _readingMaterialRepository;
         private readonly IPupilService _pupilService;
         private readonly IReadingSessionService _readingSessionService;
         private readonly IUserService _userService;
         private readonly IAchievementService _achievementService;
         private readonly Random _random;
-        public MinigameService(IMinigameRepository minigameRepository, IReadingMaterialService readingMaterialService, IPupilService pupilService, IReadingSessionService readingSessionService, IUserService userService, IAchievementService achievementService)
+        public MinigameService(IMinigameRepository minigameRepository, IReadingMaterialService readingMaterialService, IReadingMaterialRepository readingMaterialRepository, IPupilService pupilService, IReadingSessionService readingSessionService, IUserService userService, IAchievementService achievementService)
         {
             _minigameRepository = minigameRepository;
             _readingMaterialService = readingMaterialService;
+            _readingMaterialRepository = readingMaterialRepository;
             _pupilService = pupilService;
             _readingSessionService = readingSessionService;
             _userService = userService;
@@ -186,19 +188,19 @@ namespace LexiLearner.Services
                 TotalMaxScore += log.Minigame.MaxScore;
                 if (!string.IsNullOrEmpty(log.Result))
                 {
-                var outerJsonElement = JsonSerializer.Deserialize<JsonElement>(log.Result);
-                
-                if (outerJsonElement.ValueKind == JsonValueKind.String)
-                {
-                    var innerJson = outerJsonElement.GetString();
-                    var resultJson = JsonSerializer.Deserialize<JsonElement>(innerJson);
-                
-                    if (resultJson.TryGetProperty("score", out var scoreElement) &&
-                        scoreElement.TryGetInt32(out var parsedScore))
+                    var outerJsonElement = JsonSerializer.Deserialize<JsonElement>(log.Result);
+
+                    if (outerJsonElement.ValueKind == JsonValueKind.String)
                     {
-                        TotalScore += parsedScore;
+                        var innerJson = outerJsonElement.GetString();
+                        var resultJson = JsonSerializer.Deserialize<JsonElement>(innerJson);
+
+                        if (resultJson.TryGetProperty("score", out var scoreElement) &&
+                            scoreElement.TryGetInt32(out var parsedScore))
+                        {
+                            TotalScore += parsedScore;
+                        }
                     }
-                }
                 }
             }
 
@@ -242,10 +244,13 @@ namespace LexiLearner.Services
             Pupil Pupil = ReadingSession.Pupil;
             Pupil.Level += FinalScore;
             await _minigameRepository.Complete(Pupil);
-            
-            var newAchievements = await _achievementService.AddBooksReadAchievement(Pupil);
 
-            return new CompleteReadingSessionDTO{
+            var newAchievements = await _achievementService.AddBooksReadAchievement(Pupil);
+            var recommendations = await _readingMaterialRepository.GetRecommendations(Pupil.Id, 1);
+
+            return new CompleteReadingSessionDTO
+            {
+                Recommendations = recommendations,
                 Achievements = newAchievements,
                 Level = Pupil.Level,
             };
