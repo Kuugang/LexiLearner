@@ -135,5 +135,50 @@ namespace LexiLearner.Repository{
                 .OrderByDescending(ce => ce.Pupil.Level)
                 .ToListAsync();
         }
+
+        public async Task<ReadingAssignmentLog> CreateAssignmentLog(ReadingAssignmentLog AssignmentLog)
+        {
+            await _context.ReadingAssignmentLog.AddAsync(AssignmentLog);
+            await _context.SaveChangesAsync();
+            return AssignmentLog;
+        }
+
+        public async Task<ReadingAssignmentLog?> GetAssignmentLogById(Guid ReadingAssignmentLogId)
+        {
+            return await _context.ReadingAssignmentLog.Include(ra => ra.MinigameLog).FirstOrDefaultAsync(ra => ra.Id == ReadingAssignmentLogId);
+        }
+
+        public async Task<List<ReadingAssignmentLog>> GetAssignmentLogsByReadingAssignmentId(Guid ReadingAssignmentId)
+        {
+            return await _context.ReadingAssignmentLog.Include(ra => ra.MinigameLog).Where(ra => ra.ReadingAssignmentId == ReadingAssignmentId).ToListAsync();
+        }
+
+        public async Task<List<ReadingAssignmentLog>> GetAssignmentLogsByPupilId(Guid PupilId)
+        {
+            return await _context.ReadingAssignmentLog.Include(ra => ra.MinigameLog).Where(ra => ra.MinigameLog.PupilId == PupilId).ToListAsync();
+        }
+
+        public async Task<List<ReadingAssignmentLog>> GetAssignmentLogsByClassroomId(Guid ClassroomId)
+        {
+            return await _context.ReadingAssignmentLog
+                .Include(ra => ra.MinigameLog)
+                .Include(ra => ra.ReadingAssignment)
+                .Where(ra => ra.ReadingAssignment.ClassroomId == ClassroomId)
+                .ToListAsync();
+        }
+
+        public async Task<List<ReadingAssignmentLog>> GetAssignmentLogsByClassroomIdAndPupilId(Guid ClassroomId, Guid PupilId)
+        {
+            return await _context.ReadingAssignmentLog
+                .Include(ra => ra.MinigameLog)
+                .Include(ra => ra.ReadingAssignment)
+                .Where(ra => ra.ReadingAssignment.ClassroomId == ClassroomId && ra.MinigameLog.PupilId == PupilId)
+                .ToListAsync();
+        }
+
+        public async Task<ReadingAssignmentLog?> GetAssignmentLogByReadingAssignmentIdAndPupilId(Guid ReadingAssignmentId, Guid PupilId)
+        {
+            return await _context.ReadingAssignmentLog.Include(ra => ra.MinigameLog).FirstOrDefaultAsync(ra => ra.ReadingAssignmentId == ReadingAssignmentId && ra.MinigameLog.PupilId == PupilId);
+        }
     }
 }

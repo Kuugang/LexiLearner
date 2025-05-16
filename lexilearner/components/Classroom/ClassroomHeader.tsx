@@ -11,14 +11,7 @@ export default function ClassroomHeader({
   joinCode,
 }: ClassroomDetailsProp) {
   return (
-    <View
-      style={{
-        height: 150,
-        width: "100%",
-        borderBottomLeftRadius: 40,
-      }}
-      className="bg-yellowOrange p-4"
-    >
+    <View className="h-[150px] w-full rounded-bl-[40px] bg-yellowOrange p-4">
       <View className="flex flex-row justify-between items-center px-4 h-full">
         <BackHeader />
         <View>

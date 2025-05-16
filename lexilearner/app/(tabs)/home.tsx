@@ -30,11 +30,11 @@ function HomeScreen() {
     return () => clearTimeout(timer);
   }, []);
 
-  const streakCount = 3;
+  const streak = useUserStore((state) => state.streak);
   const activeWeekdays = [true, true, true, false, false, false, false];
 
   const [screenWidth, setScreenWidth] = useState(
-    Dimensions.get("window").width,
+    Dimensions.get("window").width
   );
 
   useEffect(() => {
@@ -42,7 +42,7 @@ function HomeScreen() {
       "change",
       ({ window }) => {
         setScreenWidth(window.width);
-      },
+      }
     );
 
     return () => {
@@ -66,7 +66,7 @@ function HomeScreen() {
             <LoginStreak
               isVisible={showStreak}
               onClose={() => setShowStreakModal(false)}
-              streakCount={streakCount}
+              // streakCount={streakCount}
               activeWeekdays={activeWeekdays}
             />
 
@@ -74,21 +74,12 @@ function HomeScreen() {
               <View style={{ position: "relative" }}>
                 <Flame color="red" size={30} />
                 <Text className="text-red-500 font-bold absolute -bottom-1 -right-1">
-                  {streakCount}
+                  {streak}
                 </Text>
               </View>
             </TouchableOpacity>
           </View>
         )}
-
-        <TouchableOpacity onPress={() => setShowStreakModal(true)}>
-          <View style={{ position: "relative" }}>
-            <Flame color="red" size={30} />
-            <Text className="text-red-500 font-bold absolute -bottom-1 -right-1">
-              {streakCount}
-            </Text>
-          </View>
-        </TouchableOpacity>
 
         <View className="relative flex-1">
           <Search

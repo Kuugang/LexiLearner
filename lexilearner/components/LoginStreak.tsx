@@ -19,10 +19,11 @@ const WEEKDAYS = ["M", "T", "W", "T", "F", "S", "S"];
 const { width, height } = Dimensions.get("window");
 
 const LoginStreak: React.FC<LoginStreakProps> = ({ isVisible, onClose }) => {
-  const user = useUserStore((state) => state.user);
   const scale = useSharedValue(0.8);
   const opacity = useSharedValue(0);
-  const [streak, setStreak] = useState(1);
+  const streak = useUserStore((state) => state.streak);
+  const setStreak = useUserStore((state) => state.setStreak);
+
   const [activeWeekdays, setActiveWeekdays] = useState<boolean[]>(
     Array(7).fill(false)
   );

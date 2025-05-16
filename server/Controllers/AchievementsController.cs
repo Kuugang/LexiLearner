@@ -20,7 +20,7 @@ public class AchievementsController : ControllerBase
 
     [HttpGet("")]
     [Authorize("PupilPolicy")]
-    public async Task<IActionResult> GetPupilAchievements(string AchievementName)
+    public async Task<IActionResult> GetPupilAchievements()
     {
         var Achievements = await _achievementService.GetByPupilId(User);
 

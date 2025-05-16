@@ -5,6 +5,7 @@ import { User, Pupil } from "@/models/User";
 import { Classroom } from "@/models/Classroom";
 import { ReadingAssignment } from "@/models/ReadingMaterialAssignment";
 import { useQuery } from "@tanstack/react-query";
+export { Pupil };
 
 export const createClassroom = async (classroomForm: Record<string, any>) => {
   const response = await axiosInstance.post(
@@ -283,7 +284,10 @@ export const useActiveReadingAssignments = (classroomId: string) => {
 const getReadingAssignments = async (
   classroomId: string
 ): Promise<ReadingAssignment[]> => {
-  console.log("Fetching active reading assignments for classroom:", classroomId);
+  console.log(
+    "Fetching active reading assignments for classroom:",
+    classroomId
+  );
   const response = await axiosInstance.get(
     `/classroom/${classroomId}/readingassignments/active`,
     { validateStatus: () => true }
@@ -294,8 +298,45 @@ const getReadingAssignments = async (
   }
 
   return response.data.data;
-}; // use get ACTIVE assignments endpoint
+};
+
+const getReadingAssignmentById = async (readingAssignmentId: string) => {
+  const response = await axiosInstance.get(
+    `/classroom/readingAssignments/${readingAssignmentId}`,
+    {
+      validateStatus: () => true,
+    }
+  );
+
+  if (response.status !== 200 && response.status !== 201) {
+    throw new Error(response.data.message);
+  }
+
+  console.log("ACTIVTIY SERVICES:", response.data.data);
+  return response.data.data;
+};
+
+export const useGetReadingAssignmentById = (readingAssignmentId: string) => {
+  return useQuery({
+    queryKey: ["readingAssignment"],
+    queryFn: () => getReadingAssignmentById(readingAssignmentId),
+  });
+};
 
 export const updateReadingAssignment = async () => {};
 export const deleteReadingAssignment = async () => {};
-export { Pupil };
+
+export const getLeaderboardByClassroomId = async (classroomId: string) => {
+  const response = await axiosInstance.get(
+    `/classroom/${classroomId}/leaderboard`,
+    {
+      validateStatus: () => true,
+    }
+  );
+
+  if (response.status !== 200 && response.status !== 201) {
+    throw new Error(response.data.message);
+  }
+
+  return response.data.data;
+};

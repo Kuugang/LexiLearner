@@ -1,5 +1,4 @@
 using LexiLearner.Models;
-using LexiLearner.Models.DTO;
 namespace LexiLearner.Interfaces{
     public interface IClassroomRepository{
         Task<Classroom?> GetById(Guid Id);
@@ -22,5 +21,12 @@ namespace LexiLearner.Interfaces{
 		Task<ReadingMaterialAssignment> UpdateReadingAssignment(ReadingMaterialAssignment ReadingMaterialAssignment);
 		Task DeleteReadingAssignment(ReadingMaterialAssignment ReadingMaterialAssignment);
 		Task<List<ClassroomEnrollment>> GetLeaderboard(Guid ClassroomId);
+		Task<ReadingAssignmentLog> CreateAssignmentLog(ReadingAssignmentLog AssignmentLog);
+		Task<ReadingAssignmentLog?> GetAssignmentLogById(Guid ReadingAssignmentLogId);
+		Task<List<ReadingAssignmentLog>> GetAssignmentLogsByReadingAssignmentId(Guid ReadingAssignmentId);
+		Task<List<ReadingAssignmentLog>> GetAssignmentLogsByPupilId(Guid PupilId);
+        Task<List<ReadingAssignmentLog>> GetAssignmentLogsByClassroomId(Guid ClassroomId);
+        Task<List<ReadingAssignmentLog>> GetAssignmentLogsByClassroomIdAndPupilId(Guid ClassroomId, Guid PupilId);
+        Task<ReadingAssignmentLog?> GetAssignmentLogByReadingAssignmentIdAndPupilId(Guid ReadingAssignmentId, Guid PupilId);
 	}
 }

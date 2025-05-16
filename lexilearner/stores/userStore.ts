@@ -13,6 +13,9 @@ type UserStore = {
   setUser: (user: User | null) => void;
   updateProfile: (form: Record<string, any>) => Promise<void>;
   deleteAccount: () => Promise<void>;
+
+  streak: number;
+  setStreak: (streak: number) => void;
 };
 
 export const useUserStore = create<UserStore>()(
@@ -56,6 +59,8 @@ export const useUserStore = create<UserStore>()(
         await apiDeleteAccount();
         set({ user: null });
       },
+      streak: 1,
+      setStreak: (streak: number) => set((state) => ({ streak: streak })),
     }),
     {
       name: "user-store",

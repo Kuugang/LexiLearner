@@ -1,6 +1,7 @@
 import { axiosInstance } from "@/utils/axiosInstance";
 
 import { API_URL } from "../utils/constants";
+import { useQuery } from "@tanstack/react-query";
 
 export const getProfile = async () => {
   try {
@@ -111,6 +112,18 @@ export const getLoginStreak = async () => {
     validateStatus: () => true,
   });
   console.log("Get login streak response: ", response.data.data);
+
+  if (response.status !== 200 && response.status !== 201) {
+    throw new Error(response.data.message);
+  }
+
+  return response.data.data;
+};
+
+export const getPupilAchievements = async () => {
+  const response = await axiosInstance.get(`/achievements`, {
+    validateStatus: () => true,
+  });
 
   if (response.status !== 200 && response.status !== 201) {
     throw new Error(response.data.message);

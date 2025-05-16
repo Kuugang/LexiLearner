@@ -74,14 +74,16 @@ export const useUpdateReadingSession = () => {
 };
 
 export const getIncompleteReadingSessions = async () => {
-  const response = await axiosInstance.get("/incomplete/readingmaterials", {
-    validateStatus: () => true,
-  });
+  const response = await axiosInstance.get(
+    `/readingsessions/incomplete/readingmaterials`,
+    {
+      validateStatus: () => true,
+    }
+  );
 
   if (response.status !== 200 && response.status !== 201) {
     throw new Error(response.data.message);
   }
 
-  console.log("Incomplete Reading Sessions:", response.data.data);
   return response.data.data;
 };
