@@ -101,7 +101,12 @@ export default function levelup() {
         <Button
           className="w-full bg-background border-appBlue border-b-4 rounded-xl"
           onPress={() => {
-            router.push("/minigames/results/recommendation");
+            router.push({
+              pathname: "/minigames/results/recommendation",
+              params: {
+                data: data,
+              },
+            });
           }}
         >
           <Text>Next</Text>

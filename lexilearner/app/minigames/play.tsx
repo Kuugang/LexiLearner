@@ -3,15 +3,8 @@ import {
   useRandomMinigames,
   useCompleteMinigameSession,
 } from "@/services/minigameService";
-import {
-  useMiniGameStore,
-  useFillInTheBlankMiniGameStore,
-  useSentenceRearrangementMiniGameStore,
-  useTwoTruthsOneLieGameStore,
-  useWordsFromLettersMiniGameStore,
-  useWordHuntMinigameStore,
-} from "@/stores/miniGameStore";
-import { memo, useEffect, useRef } from "react";
+import { useMiniGameStore } from "@/stores/miniGameStore";
+import { memo, useEffect } from "react";
 import WordsFromLetters from "./wordsfromletters";
 import FillInTheBlank from "./fillintheblanks";
 import SentenceArrangement from "./sentencearrangement";
@@ -33,7 +26,6 @@ const { width } = Dimensions.get("window");
 
 function Play() {
   const translateX = useSharedValue(0);
-  const prevMinigamesIndex = useRef(minigamesIndex);
 
   const currentReadingSession = useReadingSessionStore(
     (state) => state.currentSession,
@@ -58,9 +50,7 @@ function Play() {
     data: randomMinigames,
     isLoading: minigamesLoading,
     refetch: fetchRandomMinigames,
-  } = useRandomMinigames(currentReadingSession.id, {
-    enabled: false,
-  });
+  } = useRandomMinigames(currentReadingSession.id);
 
   useEffect(() => {
     console.log("Onload " + minigamesIndex);
@@ -85,12 +75,10 @@ function Play() {
     try {
       const data = await completeMinigamesSession(currentReadingSession.id);
 
-      // Reset global state
       setCurrentMinigame(null);
       setMinigames([]);
       setMinigamesIndex(0);
 
-      // Route to correct screen
       const routePath =
         data?.achievements?.length > 0
           ? "/minigames/results/achievements"
