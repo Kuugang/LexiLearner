@@ -291,22 +291,20 @@ namespace LexiLearner.Migrations
 
             modelBuilder.Entity("LexiLearner.Models.ReadingAssignmentLog", b =>
                 {
-                    b.Property<Guid>("ReadingAssignmentId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("MinigameLogId")
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("CompletedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<Guid>("Id")
+                    b.Property<Guid>("MinigameLogId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid?>("ReadingMaterialAssignmentId")
+                    b.Property<Guid>("ReadingMaterialAssignmentId")
                         .HasColumnType("uuid");
 
-                    b.HasKey("ReadingAssignmentId", "MinigameLogId");
+                    b.HasKey("Id");
 
                     b.HasIndex("MinigameLogId")
                         .IsUnique();
@@ -842,19 +840,15 @@ namespace LexiLearner.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("LexiLearner.Models.ReadingMaterialAssignment", "ReadingAssignment")
-                        .WithMany()
-                        .HasForeignKey("ReadingAssignmentId")
+                    b.HasOne("LexiLearner.Models.ReadingMaterialAssignment", "ReadingMaterialAssignment")
+                        .WithMany("ReadingAssignmentLogs")
+                        .HasForeignKey("ReadingMaterialAssignmentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("LexiLearner.Models.ReadingMaterialAssignment", null)
-                        .WithMany("ReadingAssignmentLogs")
-                        .HasForeignKey("ReadingMaterialAssignmentId");
-
                     b.Navigation("MinigameLog");
 
-                    b.Navigation("ReadingAssignment");
+                    b.Navigation("ReadingMaterialAssignment");
                 });
 
             modelBuilder.Entity("LexiLearner.Models.ReadingMaterialAssignment", b =>

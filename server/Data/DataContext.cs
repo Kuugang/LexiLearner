@@ -127,18 +127,16 @@ namespace LexiLearner.Data
                 .HasOne(rma => rma.ReadingMaterial)
                 .WithMany()
                 .HasForeignKey(rma => rma.ReadingMaterialId);
-                
-            modelBuilder.Entity<ReadingAssignmentLog>()
-                .HasKey(ral => new { ral.ReadingAssignmentId, ral.MinigameLogId });
             
             modelBuilder.Entity<ReadingAssignmentLog>()
-                .HasOne(ral => ral.ReadingAssignment)
-                .WithMany()
-                .HasForeignKey(ral => ral.ReadingAssignmentId);
+                .HasOne(ral => ral.ReadingMaterialAssignment)
+                .WithMany(ra => ra.ReadingAssignmentLogs)
+                .HasForeignKey(ral => ral.ReadingMaterialAssignmentId);
 
             modelBuilder.Entity<ReadingAssignmentLog>()
                 .HasOne(ral => ral.MinigameLog)
-                .WithOne();
+                .WithOne()
+                .HasForeignKey<ReadingAssignmentLog>(ral => ral.MinigameLogId);
                
             modelBuilder.Entity<PupilLeaderboard>()
                 .HasKey(pl => new { pl.PupilId, pl.Level });
