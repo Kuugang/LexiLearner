@@ -8,8 +8,7 @@ import BookCard from "@/components/Classroom/BookCard";
 import { useReadingContentStore } from "@/stores/readingContentStore";
 
 export default function choosebook() {
-
-  const { data: stories, isLoading: isStoriesLoading } = useStories();
+  const { data: stories, isLoading: isStoriesLoading } = useStories(); // REFETCHES. preferably cached store shit lang ttot or idk
   const { selectedContent } = useReadingContentStore();
 
   return (
@@ -24,7 +23,9 @@ export default function choosebook() {
                   <BookCard
                     key={item.id}
                     book={item}
-                    selected={ selectedContent != null && selectedContent.id === item.id}
+                    selected={
+                      selectedContent != null && selectedContent.id === item.id
+                    }
                   />
                 ))
               : !isStoriesLoading && (

@@ -1,5 +1,6 @@
 import BackHeader from "@/components/BackHeader";
-import SetMinigameDropdown, {
+import {
+  SetMinigameDropdown,
   AddReadingAssignment,
 } from "@/components/Classroom/MainClassroomBtns";
 import { Button } from "@/components/ui/button";

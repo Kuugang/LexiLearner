@@ -31,14 +31,8 @@ import { useUserStore } from "@/stores/userStore";
 
 export default function ClassroomSettings() {
   const queryClient = useQueryClient();
-  const user = useUserStore((state) => state.user);
-
-  const selectedClassroom = useClassroomStore(
-    (state) => state.selectedClassroom
-  );
-  const setSelectedClassroom = useClassroomStore(
-    (state) => state.setSelectedClassroom
-  );
+  const { user } = useUserStore();
+  const { selectedClassroom, setSelectedClassroom } = useClassroomStore();
 
   const [editClassroomForm, setEditClassroomForm] = useState({
     name: selectedClassroom?.name || "",

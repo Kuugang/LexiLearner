@@ -4,12 +4,16 @@ import { Ionicons } from "@expo/vector-icons";
 import { ReadingAssignment } from "@/models/ReadingMaterialAssignment";
 import { useReadingAssignmentStore } from "@/stores/readingAssignmentStore";
 import { router } from "expo-router";
+import { useClassroomStore } from "@/stores/classroomStore";
 
 interface AssignmentCardProps {
   assignment: ReadingAssignment;
 }
 
 function AssignmentCard({ assignment }: AssignmentCardProps) {
+  const setSelectedReadingAssignment = useReadingAssignmentStore(
+    (state) => state.setSelectedReadingAssignment
+  );
   return (
     <View
       className="border-2 rounded-xl border-lightGray border-b-4 p-4 items-center flex-row"
@@ -34,7 +38,8 @@ function AssignmentCard({ assignment }: AssignmentCardProps) {
         <TouchableOpacity
           className="w-[75%] bg-yellowOrange rounded-lg py-2 items-center mt-2 drop-shadow-custom"
           onPress={() => {
-            router.push(`/classroom/activity/${assignment.id}`);
+            router.push(`/classroom/activity`);
+            setSelectedReadingAssignment(assignment);
           }}
         >
           <Text className="font-semibold">Progress</Text>
