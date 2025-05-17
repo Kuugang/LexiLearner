@@ -13,7 +13,7 @@ export const useStories = () => {
   });
 };
 
-export const getStories = async (): Promise<ReadingContentType[]> => {
+const getStories = async (): Promise<ReadingContentType[]> => {
   try {
     const response = await axiosInstance.get(`${API_URL}/readingMaterials`);
 

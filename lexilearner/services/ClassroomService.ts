@@ -3,7 +3,7 @@ import { axiosInstance } from "@/utils/axiosInstance";
 
 import { User, Pupil } from "@/models/User";
 import { Classroom } from "@/models/Classroom";
-import { ReadingAssignment } from "@/models/ReadingMaterialAssignment";
+import { ReadingAssignment, ReadingAssignmentOverview } from "@/models/ReadingMaterialAssignment";
 import { useQuery } from "@tanstack/react-query";
 export { Pupil };
 
@@ -314,3 +314,25 @@ export const getLeaderboardByClassroomId = async (classroomId: string) => {
 
   return response.data.data;
 };
+
+const getReadingAssignmentsOverviewByClassroomId = async (
+  classroomId: string
+): Promise<ReadingAssignmentOverview[]> => {
+  const response = await axiosInstance.get(
+    `classroom/${classroomId}/readingAssignments/overview`,
+    { validateStatus: () => true }
+  );
+
+  if (response.status !== 200 && response.status !== 201) {
+    throw new Error(response.data.message);
+  }
+
+  return response.data.data;
+};
+
+export const useReadingAssigmentsWStats = (classroomId: string) => {
+  return useQuery({
+    queryKey: ["readingAssignmentsWStats"],
+    queryFn: () => getReadingAssignmentsOverviewByClassroomId(classroomId),
+  });
+}

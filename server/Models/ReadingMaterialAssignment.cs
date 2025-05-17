@@ -27,5 +27,6 @@ namespace LexiLearner.Models
         public required bool IsActive { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime UpdatedAt { get; set; }
+        public ICollection<ReadingAssignmentLog> ReadingAssignmentLogs { get; set; } = new List<ReadingAssignmentLog>();
     }
 }
