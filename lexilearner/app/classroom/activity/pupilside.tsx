@@ -4,10 +4,10 @@ import React from "react";
 import { useUserStore } from "@/stores/userStore";
 import { View, Text, Image, TouchableOpacity, ScrollView } from "react-native";
 import { useReadingAssignmentStore } from "@/stores/readingAssignmentStore";
-import { getReadingMaterialById } from "@/services/ReadingMaterialService";
+import { useGetReadingMaterialById } from "@/services/ReadingMaterialService";
+import ReadingContent from "@/components/ReadingContent";
 
 export default function activity() {
-  const user = useUserStore((state) => state.user);
   const selectedClassroom = useClassroomStore(
     (state) => state.selectedClassroom
   );
@@ -16,11 +16,13 @@ export default function activity() {
     (state) => state.selectedReadingAssignment
   );
 
-  const setSelectedReadingAssignment = useReadingAssignmentStore(
-    (state) => state.setSelectedReadingAssignment
+  const {
+    data: book,
+    isLoading: isBookLoading,
+    error,
+  } = useGetReadingMaterialById(
+    selectedReadingAssignment?.readingMaterialId ?? ""
   );
-
-
 
   return (
     <ScrollView>
@@ -60,7 +62,24 @@ export default function activity() {
                 ? "ACTIVE"
                 : "NOT ACTIVE"}
             </Text>
-
+            <Text>MinigameType: {selectedReadingAssignment?.minigameType}</Text>
+            {isBookLoading && <Text>Fetching reading material...</Text>}
+            {!isBookLoading && book && (
+              <ReadingContent
+                type="ScrollView"
+                id={book.id}
+                title={book.title}
+                author={book.author}
+                description={book.description}
+                cover={book.cover}
+                content={book.content}
+                genres={book.genres}
+                difficulty={book.difficulty}
+              />
+            )}
+            {!isBookLoading && !book && (
+              <Text>Reading material not found.</Text>
+            )}
           </View>
         </View>
       </View>

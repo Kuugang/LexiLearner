@@ -211,9 +211,9 @@ public class ClassroomController : ControllerBase {
         );
     }
     
-    [HttpPost("readingAssignments/{ReadingAssignmentId}/logs")]
+    [HttpPost("readingAssignments/{ReadingAssignmentId}/logs/{MinigameLogId}")]
     [Authorize]
-    public async Task<IActionResult> CreateAssignmentLog([FromRoute] Guid ReadingAssignmentId, [FromBody] Guid MinigameLogId)
+    public async Task<IActionResult> CreateAssignmentLog([FromRoute] Guid ReadingAssignmentId, [FromRoute] Guid MinigameLogId)
     {
         var assignmentLog = await _classroomService.CreateAssignmentLog(ReadingAssignmentId, MinigameLogId);
         return StatusCode(StatusCodes.Status201Created,

@@ -326,5 +326,20 @@ namespace LexiLearner.Services
 
             return minigames.Select(mg => new MinigameDTO(mg)).ToList();
         }
+
+        public async Task<MinigameLogDTO> GetMinigameLogByMIdRSId(Guid ReadingSessionId, Guid MinigameId)
+        {
+            var minigamelog = await _minigameRepository.GetMinigameLogByMIdRSId(ReadingSessionId, MinigameId);
+            
+            if (minigamelog == null)
+            {
+                throw new ApplicationExceptionBase(
+                  "Minigamelog not found.",
+                  "Failed to fetch minigamelog.",
+                  StatusCodes.Status404NotFound);
+            }
+
+            return new MinigameLogDTO(minigamelog);
+        }
     }
 }

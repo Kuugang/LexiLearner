@@ -3,8 +3,12 @@ import { axiosInstance } from "@/utils/axiosInstance";
 
 import { User, Pupil } from "@/models/User";
 import { Classroom } from "@/models/Classroom";
-import { ReadingAssignment, ReadingAssignmentOverview } from "@/models/ReadingMaterialAssignment";
-import { useQuery } from "@tanstack/react-query";
+import {
+  ReadingAssignment,
+  ReadingAssignmentOverview,
+} from "@/models/ReadingMaterialAssignment";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import axios from "axios";
 export { Pupil };
 
 export const createClassroom = async (classroomForm: Record<string, any>) => {
@@ -361,4 +365,33 @@ export const useReadingAssigmentsWStats = (classroomId: string) => {
     queryKey: ["readingAssignmentsWStats"],
     queryFn: () => getReadingAssignmentsOverviewByClassroomId(classroomId),
   });
-}
+};
+
+const createAssignmentLog = async (
+  readingAssignmentId: string,
+  minigamelogId: string
+) => {
+  const response = await axiosInstance.post(
+    `classroom/readingAssignments/${readingAssignmentId}/logs/${minigamelogId}`,
+    { validateStatus: () => true }
+  );
+
+  if (response.status !== 200 && response.status !== 201) {
+    console.log(response.data);
+    throw new Error(response.data.message);
+  }
+
+  return response.data;
+};
+
+export const useCreateAssignmentLog = () => {
+  return useMutation({
+    mutationFn: ({
+      readingAssignmentId,
+      minigamelogId,
+    }: {
+      readingAssignmentId: string;
+      minigamelogId: string;
+    }) => createAssignmentLog(readingAssignmentId, minigamelogId),
+  });
+};

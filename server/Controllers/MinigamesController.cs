@@ -153,6 +153,16 @@ namespace LexiLearner.Controllers
               new SuccessResponseDTO("Minigames found.", minigamelogs)
             );
         }
+        
+        [HttpGet("{minigameId}/sessions/{readingSessionId}/")]
+        [Authorize]
+        public async Task<IActionResult> GetMinigameLogByMGIdRSId([FromRoute] Guid minigameId, Guid readingSessionId)
+        {
+            var minigamelog = await _minigameService.GetMinigameLogByMIdRSId(readingSessionId, minigameId);
+            return StatusCode(StatusCodes.Status200OK,
+              new SuccessResponseDTO("Minigamelog found.", minigamelog)
+            );
+        }
 
         [HttpGet("{readingSessionId}/random")]
         [Authorize]
