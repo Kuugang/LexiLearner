@@ -11,3 +11,9 @@ export interface ReadingAssignment {
   cover: string;
   updatedAt: string;
 }
+
+export interface ReadingAssignmentOverview extends ReadingAssignment {
+  numberOfStudentsFinished: number;
+  averageScore: number;
+  averageDuration: number;
+}
