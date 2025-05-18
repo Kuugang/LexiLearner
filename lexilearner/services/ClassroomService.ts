@@ -302,32 +302,6 @@ const getReadingAssignments = async (
   return response.data.data;
 };
 
-const getReadingAssignmentById = async (readingAssignmentId: string) => {
-  const response = await axiosInstance.get(
-    `/classroom/readingAssignments/${readingAssignmentId}`,
-    {
-      validateStatus: () => true,
-    }
-  );
-
-  if (response.status !== 200 && response.status !== 201) {
-    throw new Error(response.data.message);
-  }
-
-  console.log("ACTIVTIY SERVICES:", response.data.data);
-  return response.data.data;
-};
-
-export const useGetReadingAssignmentById = (readingAssignmentId: string) => {
-  return useQuery({
-    queryKey: ["readingAssignment"],
-    queryFn: () => getReadingAssignmentById(readingAssignmentId),
-  });
-};
-
-export const updateReadingAssignment = async () => {};
-export const deleteReadingAssignment = async () => {};
-
 export const getLeaderboardByClassroomId = async (classroomId: string) => {
   const response = await axiosInstance.get(
     `/classroom/${classroomId}/leaderboard`,
@@ -347,7 +321,7 @@ const getReadingAssignmentsOverviewByClassroomId = async (
   classroomId: string
 ): Promise<ReadingAssignmentOverview[]> => {
   const response = await axiosInstance.get(
-    `classroom/${classroomId}/readingAssignments/overview`,
+    `/classroom/${classroomId}/readingAssignments/overview`,
     { validateStatus: () => true }
   );
 
@@ -359,6 +333,7 @@ const getReadingAssignmentsOverviewByClassroomId = async (
 };
 
 export const useReadingAssigmentsWStats = (classroomId: string) => {
+  console.log("CALLED IT");
   return useQuery({
     queryKey: ["readingAssignmentsWStats"],
     queryFn: () => getReadingAssignmentsOverviewByClassroomId(classroomId),

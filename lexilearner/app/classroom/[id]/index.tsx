@@ -55,8 +55,7 @@ export default function CurrentClassroom() {
     useCallback(() => {
       refetchAssignments();
 
-        setSelectedReadingAssignment(null);
-      
+      setSelectedReadingAssignment(null);
     }, [selectedClassroom?.id])
   );
 

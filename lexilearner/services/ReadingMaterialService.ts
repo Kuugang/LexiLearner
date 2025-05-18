@@ -50,7 +50,7 @@ export interface ReadingMaterialFilters {
   Title: string;
 }
 
-export const getReadingMaterialById = async (readingMaterialId: string) => {
+const getReadingMaterialById = async (readingMaterialId: string) => {
   const response = await axiosInstance.get(
     `/readingMaterials/${readingMaterialId}`,
     {
@@ -61,14 +61,14 @@ export const getReadingMaterialById = async (readingMaterialId: string) => {
   if (response.status !== 200 && response.status !== 201) {
     throw new Error(response.data.message);
   }
+  console.log("sad attempts", response.data.data.author);
   return response.data.data;
 };
 
 export const useGetReadingMaterialById = (readingMaterialId: string) => {
-  return useQuery<ReadingContentType, Error>({
-    queryKey: ["story"],
-    queryFn: () => {
-      return getReadingMaterialById(readingMaterialId);
-    },
+  return useQuery<ReadingContentType>({
+    queryKey: ["readingMaterial", readingMaterialId],
+    queryFn: () => getReadingMaterialById(readingMaterialId),
+    enabled: !!readingMaterialId,
   });
 };

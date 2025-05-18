@@ -1,3 +1,5 @@
+import { ReadingContentType } from "./ReadingContent";
+
 export interface ReadingAssignment {
   id: string;
   classroomId: string;
