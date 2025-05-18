@@ -11,8 +11,12 @@ import {
   runOnJS,
 } from "react-native-reanimated";
 import { useUserStore } from "@/stores/userStore";
+import { useReadingAssignmentStore } from "@/stores/readingAssignmentStore";
+// import { StackActions, useNavigation } from "@react-navigation/native";
+import { useClassroomStore } from "@/stores/classroomStore";
 
 export default function levelup() {
+  // const nav = useNavigation();
   const setUser = useUserStore((state) => state.setUser);
   const user = useUserStore((state) => state.user);
 
@@ -22,6 +26,13 @@ export default function levelup() {
 
   const progress = useSharedValue(0);
   const [displayValue, setDisplayValue] = React.useState(0);
+
+  const selectedReadingAssignment = useReadingAssignmentStore(
+    (state) => state.selectedReadingAssignment
+  );
+  const selectedClassroom = useClassroomStore(
+    (state) => state.selectedClassroom
+  );
 
   useEffect(() => {
     try {
@@ -65,7 +76,7 @@ export default function levelup() {
     () => Math.round(progress.value),
     (result) => {
       runOnJS(setDisplayValue)(result);
-    },
+    }
   );
 
   return (
@@ -101,15 +112,19 @@ export default function levelup() {
         <Button
           className="w-full bg-background border-appBlue border-b-4 rounded-xl"
           onPress={() => {
-            router.push({
-              pathname: "/minigames/results/recommendation",
-              params: {
-                data: data,
-              },
-            });
+            if (selectedReadingAssignment != null) {
+              router.dismiss();
+            } else {
+              router.push({
+                pathname: "/minigames/results/recommendation",
+                params: {
+                  data: data,
+                },
+              });
+            }
           }}
         >
-          <Text>Next</Text>
+          <Text>{selectedReadingAssignment != null ? "Finish" : "Next"}</Text>
         </Button>
       </View>
     </View>

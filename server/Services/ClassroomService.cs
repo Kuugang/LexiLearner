@@ -1054,9 +1054,49 @@ namespace LexiLearner.Services{
             return assignmentLog;
         }
 
-        public async Task<List<ReadingAssignmentLog>> GetAssignmentLogsByReadingAssignmentId(Guid ReadingAssignmentId)
+        public async Task<List<ReadingAssignmentLog>> GetAssignmentLogsByReadingAssignmentId(Guid ReadingAssignmentId, ClaimsPrincipal User)
         {
-            return await _classroomRepository.GetAssignmentLogsByReadingAssignmentId(ReadingAssignmentId);
+            User? user = await _userService.GetUserFromToken(User);
+            if (user == null)
+            {
+                throw new ApplicationExceptionBase("User not found.", "Failed getting assignment logs.", StatusCodes.Status404NotFound);
+            }
+
+            var userRole = await _userService.GetRole(user);
+            var readingAssignment = await GetReadingAssignmentById(ReadingAssignmentId);
+            var classroom = await GetByClassroomId(readingAssignment.ClassroomId);
+            if (classroom == null)
+            {
+                throw new ApplicationExceptionBase("Classroom not found.", "Failed getting assignment logs.", StatusCodes.Status404NotFound);
+
+            }
+
+            var assignmentLogs = new List<ReadingAssignmentLog>();
+
+            if (userRole == "Teacher")
+            {
+                Teacher? teacher = await _userService.GetTeacherByUserId(user.Id);
+                if (teacher == null || classroom.TeacherId != teacher.Id)
+                {
+                    throw new ApplicationExceptionBase("Teacher is not the teacher of the classroom.", "Failed getting assignment logs.", StatusCodes.Status404NotFound);
+                }
+
+                assignmentLogs = await _classroomRepository.GetAssignmentLogsByReadingAssignmentId(ReadingAssignmentId);
+                Console.WriteLine("fetching assignment logs of teacher");
+
+            } else if (userRole == "Pupil")
+            {
+                Pupil? pupil = await _userService.GetPupilByUserId(user.Id);
+                if (pupil == null)
+                {
+                    throw new ApplicationExceptionBase("Pupil is not found.", "Failed getting assignment logs.");
+                }
+
+                Console.WriteLine("fetching assignment logs of pupil");
+                assignmentLogs = await _classroomRepository.GetAssignmentLogByReadingAssignmentIdAndPupilId(ReadingAssignmentId, pupil.Id);
+            }
+            
+            return assignmentLogs;
         }
 
         public async Task<List<ReadingAssignmentLog>> GetAssignmentLogsByPupilId(Guid PupilId)
@@ -1175,7 +1215,8 @@ namespace LexiLearner.Services{
         public async Task<ReadingMaterialAssignmentDTO.Overview> GetReadingAssignmentStatByAssignment(ReadingMaterialAssignment ReadingAssignment)
         {
             var assignmentLogs = await _classroomRepository.GetAssignmentLogsByReadingAssignmentId(ReadingAssignment.Id);
-            int totalLogs = assignmentLogs.Count;
+            int numPupil = assignmentLogs.Select(ra => ra.MinigameLog.PupilId).Distinct().Count();
+            int totalLogs = assignmentLogs.Count();
             int totalScore = 0;
             int totalDuration = 0;
 
@@ -1216,7 +1257,7 @@ namespace LexiLearner.Services{
             double averageScore = totalLogs > 0 ? (double)totalScore / totalLogs : 0;
             double averageDuration = totalLogs > 0 ? (double)totalDuration / totalLogs : 0;
             
-            return new ReadingMaterialAssignmentDTO.Overview(ReadingAssignment, totalLogs, averageScore, averageDuration);
+            return new ReadingMaterialAssignmentDTO.Overview(ReadingAssignment, numPupil, averageScore, averageDuration);
         }
 
         public async Task<List<ReadingMaterialAssignmentDTO.Overview>> GetReadingAssignmentStatByClassroomId(Guid ClassroomId, ClaimsPrincipal User)
@@ -1262,27 +1303,17 @@ namespace LexiLearner.Services{
             return readingAssignmentStats;
         }
         
-        public async Task<ReadingAssignmentLog> GetAssignmentLogByReadingAssignmentIdAndPupilId(Guid ReadingAssignmentId, Guid PupilId)
-        {
-            var pupil = await _userService.GetPupilByPupilId(PupilId);
-            if (pupil == null)
-            {
-                throw new ApplicationExceptionBase(
-                    "Pupil not found",
-                    "Failed getting assignmentlog.",
-                    StatusCodes.Status404NotFound
-                );
-            }
-            
+        public async Task<List<ReadingAssignmentLog>> GetAssignmentLogByReadingAssignmentIdAndPupilId(Guid ReadingAssignmentId, Guid PupilId)
+        {    
             var readingAssignment = await GetReadingAssignmentById(ReadingAssignmentId);
 
-            var assignmentLog = await _classroomRepository.GetAssignmentLogByReadingAssignmentIdAndPupilId(ReadingAssignmentId, PupilId);
-            if (assignmentLog == null)
+            var assignmentLogs = await _classroomRepository.GetAssignmentLogByReadingAssignmentIdAndPupilId(ReadingAssignmentId, PupilId);
+            if (assignmentLogs == null)
             {
                 throw new ApplicationExceptionBase("Assignment log not found.", "Failed getting assignment log", StatusCodes.Status404NotFound);
             }
 
-            return assignmentLog;
+            return assignmentLogs;
         }
 
     }

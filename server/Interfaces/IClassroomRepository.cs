@@ -27,6 +27,6 @@ namespace LexiLearner.Interfaces{
 		Task<List<ReadingAssignmentLog>> GetAssignmentLogsByPupilId(Guid PupilId);
         Task<List<ReadingAssignmentLog>> GetAssignmentLogsByClassroomId(Guid ClassroomId);
         Task<List<ReadingAssignmentLog>> GetAssignmentLogsByClassroomIdAndPupilId(Guid ClassroomId, Guid PupilId);
-        Task<ReadingAssignmentLog?> GetAssignmentLogByReadingAssignmentIdAndPupilId(Guid ReadingAssignmentId, Guid PupilId);
+        Task<List<ReadingAssignmentLog>> GetAssignmentLogByReadingAssignmentIdAndPupilId(Guid ReadingAssignmentId, Guid PupilId);
 	}
 }

@@ -84,7 +84,7 @@ export function AddReadingAssignment() {
   );
 }
 
-export default function SetMinigameDropdown({
+export function SetMinigameDropdown({
   selected,
   setSelected,
 }: {
@@ -138,7 +138,9 @@ export default function SetMinigameDropdown({
               }}
               title={option.label}
               titleStyle={{ fontSize: 15, padding: 2 }}
-              style={{ backgroundColor: (selected === option.value ? '' : "white") }}
+              style={{
+                backgroundColor: selected === option.value ? "" : "white",
+              }}
             />
           ))}
         </Menu>

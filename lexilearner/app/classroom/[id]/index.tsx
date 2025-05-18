@@ -21,7 +21,10 @@ import ClassroomHeader from "@/components/Classroom/ClassroomHeader";
 import { useClassroomStore } from "@/stores/classroomStore";
 import { useUserStore } from "@/stores/userStore";
 import { useReadingAssignmentStore } from "@/stores/readingAssignmentStore";
-import { useActiveReadingAssignments } from "@/services/ClassroomService";
+import {
+  useActiveReadingAssignments,
+  useReadingAssigmentsWStats,
+} from "@/services/ClassroomService";
 import AssignmentCard from "@/components/Classroom/AssignmentCard";
 
 export default function CurrentClassroom() {
@@ -35,15 +38,24 @@ export default function CurrentClassroom() {
   const setReadingAssignments = useReadingAssignmentStore(
     (state) => state.setReadingAssignments
   );
+
+  const setSelectedReadingAssignment = useReadingAssignmentStore(
+    (state) => state.setSelectedReadingAssignment
+  );
+
   const {
     data: readingAssignments,
     isLoading: isReadingAssignmentsLoading,
     refetch: refetchAssignments,
-  } = useActiveReadingAssignments(selectedClassroom?.id || "");
+  } = user?.role === "Teacher"
+    ? useReadingAssigmentsWStats(selectedClassroom?.id || "")
+    : useActiveReadingAssignments(selectedClassroom?.id || "");
 
   useFocusEffect(
     useCallback(() => {
       refetchAssignments();
+
+      setSelectedReadingAssignment(null);
     }, [selectedClassroom?.id])
   );
 
