@@ -39,8 +39,7 @@ export default function activitysettings() {
   // needed. selectedReadingAssignment could change values (like choosing a different assignment)
   // useState only runs once, ignores future and dynamic changes. so OA (ga useState(selecreadingassign) ko before)
   // to ensure the state is concurrent with the sra, we use useeffect with sra as its dependency
-  // yes po gi comment ko ni wa nako kasabot aning async bullshit fuckshit
-  // TODO: erase comments kay profanity smile
+  // yes po gi comment ko ni wa nako kasabot
   useEffect(() => {
     if (selectedReadingAssignment) {
       setEditActivityForm(selectedReadingAssignment);
@@ -110,6 +109,7 @@ export default function activitysettings() {
                 }
                 onPress={async () => {
                   try {
+                    editActivityForm.readingMaterialId = selectedContent.id;
                     await updateReadingAssignment({
                       readingAssignment: editActivityForm,
                     });

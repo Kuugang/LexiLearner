@@ -1,6 +1,10 @@
 import ClassroomHeader from "@/components/Classroom/ClassroomHeader";
 import { Button } from "@/components/ui/button";
-import { useGetReadingMaterialById } from "@/services/ReadingMaterialService";
+import { ReadingContentType } from "@/models/ReadingContent";
+import {
+  useGetReadingMaterialById,
+  useStories,
+} from "@/services/ReadingMaterialService";
 import { useClassroomStore } from "@/stores/classroomStore";
 import { useReadingAssignmentStore } from "@/stores/readingAssignmentStore";
 import { useReadingContentStore } from "@/stores/readingContentStore";
@@ -16,26 +20,21 @@ export default function activity() {
   const selectedReadingAssignment = useReadingAssignmentStore(
     (state) => state.selectedReadingAssignment
   );
-  // reading material of current activity
+  const { data: contents, isLoading: isStoriesLoading, error } = useStories();
+  const content: ReadingContentType | undefined = contents?.find(
+    (content) => content.id === selectedReadingAssignment?.readingMaterialId
+  );
+
   const { selectedContent, setSelectedContent } = useReadingContentStore();
+  setSelectedContent(content!); // mo hope lng ko nga permi ni defined
 
-  const readingMaterialId = selectedReadingAssignment?.readingMaterialId ?? "";
-  const { data: currentReadingMaterial, isLoading } =
-    useGetReadingMaterialById(readingMaterialId);
-
-  if (!selectedReadingAssignment || !readingMaterialId || isLoading) {
+  if (!selectedReadingAssignment || isStoriesLoading) {
     return (
       <View className="flex-1 justify-center items-center">
         <Text>Loading...</Text>
       </View>
     );
   }
-
-  useEffect(() => {
-    if (currentReadingMaterial) {
-      setSelectedContent(currentReadingMaterial);
-    }
-  }, [currentReadingMaterial]);
 
   function formatDate(isoString: string) {
     const date = new Date(isoString);
@@ -44,8 +43,6 @@ export default function activity() {
     const year = date.getFullYear();
     return `${month}/${day}/${year}`;
   }
-
-  console.log("gigutomnakongl:", selectedContent?.title);
 
   return (
     <ScrollView>

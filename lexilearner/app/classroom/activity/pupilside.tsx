@@ -4,7 +4,6 @@ import React from "react";
 import { useUserStore } from "@/stores/userStore";
 import { View, Text, Image, TouchableOpacity, ScrollView } from "react-native";
 import { useReadingAssignmentStore } from "@/stores/readingAssignmentStore";
-import { getReadingMaterialById } from "@/services/ReadingMaterialService";
 
 export default function activity() {
   const user = useUserStore((state) => state.user);
@@ -19,8 +18,6 @@ export default function activity() {
   const setSelectedReadingAssignment = useReadingAssignmentStore(
     (state) => state.setSelectedReadingAssignment
   );
-
-
 
   return (
     <ScrollView>
@@ -60,7 +57,6 @@ export default function activity() {
                 ? "ACTIVE"
                 : "NOT ACTIVE"}
             </Text>
-
           </View>
         </View>
       </View>

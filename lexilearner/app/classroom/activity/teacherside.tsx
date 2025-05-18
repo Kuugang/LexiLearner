@@ -5,6 +5,8 @@ import React from "react";
 import { useUserStore } from "@/stores/userStore";
 import { View, Text, Image, TouchableOpacity, ScrollView } from "react-native";
 import { useReadingAssignmentStore } from "@/stores/readingAssignmentStore";
+import { useStories } from "@/services/ReadingMaterialService";
+import { ReadingContentType } from "@/models/ReadingContent";
 
 export default function activity() {
   const user = useUserStore((state) => state.user);
@@ -17,6 +19,10 @@ export default function activity() {
   );
   const setSelectedReadingAssignment = useReadingAssignmentStore(
     (state) => state.setSelectedReadingAssignment
+  );
+  const { data: contents, isLoading: isStoriesLoading, error } = useStories();
+  const selectedContent: ReadingContentType | undefined = contents?.find(
+    (content) => content.id === selectedReadingAssignment?.readingMaterialId
   );
 
   return (
@@ -57,9 +63,16 @@ export default function activity() {
                 ? "ACTIVE"
                 : "NOT ACTIVE"}
             </Text>
-            <Text>Number of students finished: {selectedReadingAssignment?.numberOfStudentsFinished}</Text>
-            <Text>Average Score: {selectedReadingAssignment?.averageScore}</Text>
-            <Text>Average Duration: {selectedReadingAssignment?.averageDuration}</Text>
+            <Text>
+              Number of students finished:{" "}
+              {selectedReadingAssignment?.numberOfStudentsFinished}
+            </Text>
+            <Text>
+              Average Score: {selectedReadingAssignment?.averageScore}
+            </Text>
+            <Text>
+              Average Duration: {selectedReadingAssignment?.averageDuration}
+            </Text>
           </View>
         </View>
       </View>
