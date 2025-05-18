@@ -150,7 +150,7 @@ namespace LexiLearner.Repository{
 
         public async Task<List<ReadingAssignmentLog>> GetAssignmentLogsByReadingAssignmentId(Guid ReadingAssignmentId)
         {
-            return await _context.ReadingAssignmentLog.Include(ra => ra.MinigameLog).Where(ra => ra.ReadingMaterialAssignmentId == ReadingAssignmentId).ToListAsync();
+            return await _context.ReadingAssignmentLog.Include(ra => ra.MinigameLog).Where(ra => ra.ReadingMaterialAssignmentId == ReadingAssignmentId).OrderBy(ra => ra.MinigameLog.PupilId).ThenByDescending(ra => ra.CompletedAt).ToListAsync();
         }
 
         public async Task<List<ReadingAssignmentLog>> GetAssignmentLogsByPupilId(Guid PupilId)
@@ -176,9 +176,9 @@ namespace LexiLearner.Repository{
                 .ToListAsync();
         }
 
-        public async Task<ReadingAssignmentLog?> GetAssignmentLogByReadingAssignmentIdAndPupilId(Guid ReadingAssignmentId, Guid PupilId)
+        public async Task<List<ReadingAssignmentLog>> GetAssignmentLogByReadingAssignmentIdAndPupilId(Guid ReadingAssignmentId, Guid PupilId)
         {
-            return await _context.ReadingAssignmentLog.Include(ra => ra.MinigameLog).FirstOrDefaultAsync(ra => ra.ReadingMaterialAssignmentId == ReadingAssignmentId && ra.MinigameLog.PupilId == PupilId);
+            return await _context.ReadingAssignmentLog.Include(ra => ra.MinigameLog).Where(ra => ra.ReadingMaterialAssignmentId == ReadingAssignmentId && ra.MinigameLog.PupilId == PupilId).OrderByDescending(ra => ra.CompletedAt).ToListAsync();
         }
     }
 }

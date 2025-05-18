@@ -231,13 +231,13 @@ public class ClassroomController : ControllerBase {
         );
     }
     
-    [HttpGet("readingAssignments/{ReadingAssignmentId}/logs/{PupilId}")]
+    [HttpGet("readingAssignments/{ReadingAssignmentId}/logs/pupils/{PupilId}")]
     [Authorize]
     public async Task<IActionResult> GetAssignmentLogByReadingAssignmentIdAndPupilId([FromRoute] Guid ReadingAssignmentId, [FromRoute] Guid PupilId)
     {
-        var assignmentLog = await _classroomService.GetAssignmentLogByReadingAssignmentIdAndPupilId(ReadingAssignmentId, PupilId);
+        var assignmentLogs = await _classroomService.GetAssignmentLogByReadingAssignmentIdAndPupilId(ReadingAssignmentId, PupilId);
         return StatusCode(StatusCodes.Status201Created,
-            new SuccessResponseDTO("Fetched assignment log successfully.", new ReadingAssignmentLogDTO(assignmentLog))
+            new SuccessResponseDTO("Fetched assignment logs successfully.", assignmentLogs.Select(asl => new ReadingAssignmentLogDTO(asl)))
         );
     }
     
@@ -245,7 +245,7 @@ public class ClassroomController : ControllerBase {
     [Authorize]
     public async Task<IActionResult> GetAssignmentLogsByReadingAssignmentId([FromRoute] Guid ReadingAssignmentId)
     {
-        var assignmentLogs = await _classroomService.GetAssignmentLogsByReadingAssignmentId(ReadingAssignmentId);
+        var assignmentLogs = await _classroomService.GetAssignmentLogsByReadingAssignmentId(ReadingAssignmentId, User);
         return StatusCode(StatusCodes.Status201Created,
             new SuccessResponseDTO("Fetched assignment logs successfully.", assignmentLogs.Select(a => new ReadingAssignmentLogDTO(a)))
         );

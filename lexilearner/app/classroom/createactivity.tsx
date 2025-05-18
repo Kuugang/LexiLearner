@@ -34,7 +34,7 @@ export default function createactivity() {
 
   const [selectedMinigameType, setSelectedMinigameType] = useState(
     MinigameType.TwoTruthsOneLie
-  ); // or your default
+  );
 
   const queryClient = useQueryClient();
   const [readingAssignmentForm, setReadingAssignmentForm] = useState({
@@ -112,6 +112,8 @@ export default function createactivity() {
                   try {
                     readingAssignmentForm.readingMaterialId =
                       selectedContent!.id;
+
+                    readingAssignmentForm.minigameType = selectedMinigameType;
 
                     const response = await createReadingAssignmentMutation({
                       classroomId: selectedClassroom!.id,

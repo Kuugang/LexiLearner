@@ -1,14 +1,12 @@
-import { useUserStore } from "@/stores/userStore";
 import { axiosInstance } from "@/utils/axiosInstance";
 
 import { User, Pupil } from "@/models/User";
-import { Classroom } from "@/models/Classroom";
 import {
   ReadingAssignment,
   ReadingAssignmentOverview,
 } from "@/models/ReadingMaterialAssignment";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import axios from "axios";
+import { ReadingAssignmentLog } from "@/models/ReadingAssignmentLog";
 export { Pupil };
 
 export const createClassroom = async (classroomForm: Record<string, any>) => {
@@ -393,5 +391,28 @@ export const useCreateAssignmentLog = () => {
       readingAssignmentId: string;
       minigamelogId: string;
     }) => createAssignmentLog(readingAssignmentId, minigamelogId),
+  });
+};
+
+const getReadingAssignmentLogsByReadingAssignmentId = async (
+  readingAssignmentId: string
+): Promise<ReadingAssignmentLog[]> => {
+  const response = await axiosInstance.get(
+    `classroom/readingAssignments/${readingAssignmentId}/logs`,
+    { validateStatus: () => true }
+  );
+
+  if (response.status !== 200 && response.status !== 201) {
+    throw new Error(response.data.message);
+  }
+
+  return response.data.data;
+};
+
+export const useGetReadingAssignmentLogs = (readingAssignmentId: string) => {
+  return useQuery({
+    queryKey: ["assignmentlogs"],
+    queryFn: () =>
+      getReadingAssignmentLogsByReadingAssignmentId(readingAssignmentId),
   });
 };
