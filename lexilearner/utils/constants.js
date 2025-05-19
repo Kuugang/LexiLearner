@@ -6,4 +6,4 @@
 // export const API_URL = "http://127.0.0.1:5144/api";
 // export const API_URL = "http://192.168.254.103:5144/api";
 // export const API_URL = "http://192.168.1.6:5144/api";
-export const API_URL = "http://192.168.100.35:5144/api";
+export const API_URL = "http://192.168.1.12:5144/api";
