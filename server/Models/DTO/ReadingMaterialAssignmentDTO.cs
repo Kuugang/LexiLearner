@@ -6,11 +6,13 @@ namespace LexiLearner.Models.DTO
         public Guid ClassroomId { get; set; }
         public Guid ReadingMaterialId { get; set; }
         public Guid MinigameId { get; set; }
+        public MinigameType MinigameType { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
         public bool IsActive { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
+        public string Cover { get; set; }
         
         public ReadingMaterialAssignmentDTO(ReadingMaterialAssignment ReadingMaterialAssignment)
         {
@@ -23,6 +25,44 @@ namespace LexiLearner.Models.DTO
             IsActive = ReadingMaterialAssignment.IsActive;
             CreatedAt = ReadingMaterialAssignment.CreatedAt;
             UpdatedAt = ReadingMaterialAssignment.UpdatedAt;
+            Cover = ReadingMaterialAssignment.ReadingMaterial.Cover;
+            MinigameType = ReadingMaterialAssignment.Minigame.MinigameType;
+        }
+        
+        public class Overview
+        {
+             public Guid Id { get; set; }
+            public Guid ClassroomId { get; set; }
+            public Guid ReadingMaterialId { get; set; }
+            public Guid MinigameId { get; set; }
+            public MinigameType MinigameType { get; set; }
+            public string Title { get; set; }
+            public string Description { get; set; }
+            public bool IsActive { get; set; }
+            public DateTime CreatedAt { get; set; }
+            public DateTime UpdatedAt { get; set; }
+            public string Cover { get; set; }
+            public int NumberOfStudentsFinished { get; set; }
+            public double AverageScore { get; set; }
+            public double AverageDuration { get; set; }
+            
+            public Overview(ReadingMaterialAssignment ReadingMaterialAssignment, int numberOfStudentsFinished, double averageScore, double averageDuration)
+            {
+                Id = ReadingMaterialAssignment.Id;
+                ClassroomId = ReadingMaterialAssignment.ClassroomId;
+                ReadingMaterialId = ReadingMaterialAssignment.ReadingMaterialId;
+                MinigameId = ReadingMaterialAssignment.MinigameId;
+                Title = ReadingMaterialAssignment.Title;
+                Description = ReadingMaterialAssignment.Description;
+                IsActive = ReadingMaterialAssignment.IsActive;
+                CreatedAt = ReadingMaterialAssignment.CreatedAt;
+                UpdatedAt = ReadingMaterialAssignment.UpdatedAt;
+                Cover = ReadingMaterialAssignment.ReadingMaterial.Cover;
+                MinigameType = ReadingMaterialAssignment.Minigame.MinigameType;
+                NumberOfStudentsFinished = numberOfStudentsFinished;
+                AverageScore = averageScore;
+                AverageDuration = averageDuration;
+            }
         }
         
         public class Create

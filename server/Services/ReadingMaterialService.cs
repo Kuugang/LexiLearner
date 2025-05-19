@@ -62,7 +62,7 @@ namespace LexiLearner.Services
         {
             User? user = await _userService.GetUserFromToken(token);
             Pupil Pupil = await _userService.GetPupilByUserId(user.Id);
-            var readingMats = await _readingMaterialRepository.GetRecommendations(Pupil.Id);
+            var readingMats = await _readingMaterialRepository.GetRecommendations(Pupil.Id, 3);
             return readingMats;
         }
 

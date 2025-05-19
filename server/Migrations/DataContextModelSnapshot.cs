@@ -289,6 +289,31 @@ namespace LexiLearner.Migrations
                     b.ToTable("PupilLeaderboard");
                 });
 
+            modelBuilder.Entity("LexiLearner.Models.ReadingAssignmentLog", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CompletedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("MinigameLogId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("ReadingMaterialAssignmentId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MinigameLogId")
+                        .IsUnique();
+
+                    b.HasIndex("ReadingMaterialAssignmentId");
+
+                    b.ToTable("ReadingAssignmentLog");
+                });
+
             modelBuilder.Entity("LexiLearner.Models.ReadingMaterial", b =>
                 {
                     b.Property<Guid>("Id")
@@ -404,7 +429,7 @@ namespace LexiLearner.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<DateTime>("CompletedAt")
+                    b.Property<DateTime?>("CompletedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<float>("CompletionPercentage")
@@ -807,6 +832,25 @@ namespace LexiLearner.Migrations
                     b.Navigation("Pupil");
                 });
 
+            modelBuilder.Entity("LexiLearner.Models.ReadingAssignmentLog", b =>
+                {
+                    b.HasOne("LexiLearner.Models.MinigameLog", "MinigameLog")
+                        .WithOne()
+                        .HasForeignKey("LexiLearner.Models.ReadingAssignmentLog", "MinigameLogId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("LexiLearner.Models.ReadingMaterialAssignment", "ReadingMaterialAssignment")
+                        .WithMany("ReadingAssignmentLogs")
+                        .HasForeignKey("ReadingMaterialAssignmentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("MinigameLog");
+
+                    b.Navigation("ReadingMaterialAssignment");
+                });
+
             modelBuilder.Entity("LexiLearner.Models.ReadingMaterialAssignment", b =>
                 {
                     b.HasOne("LexiLearner.Models.Classroom", "Classroom")
@@ -960,6 +1004,11 @@ namespace LexiLearner.Migrations
             modelBuilder.Entity("LexiLearner.Models.ReadingMaterial", b =>
                 {
                     b.Navigation("ReadingMaterialGenres");
+                });
+
+            modelBuilder.Entity("LexiLearner.Models.ReadingMaterialAssignment", b =>
+                {
+                    b.Navigation("ReadingAssignmentLogs");
                 });
 
             modelBuilder.Entity("LexiLearner.Models.User", b =>

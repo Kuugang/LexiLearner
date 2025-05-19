@@ -5,6 +5,8 @@ import { Minigame, MinigameType } from "@/models/Minigame";
 import { MinigameLog } from "@/models/MinigameLog";
 import { useReadingSessionStore } from "./readingSessionStore";
 import { useUserStore } from "./userStore";
+import { Achievement } from "@/models/Achievement";
+import achievements from "@/app/minigames/results/achievements";
 
 interface MiniGameStore {
   currentMinigame: Minigame | null;
@@ -20,6 +22,9 @@ interface MiniGameStore {
   gameOver: (result: Record<string, any>) => MinigameLog | null;
 
   incrementMinigamesIndex: () => void;
+
+  achievements: Achievement[];
+  setAchievements: (achievement: Achievement[]) => void;
 }
 
 export const useMiniGameStore = create<MiniGameStore>()(
@@ -44,13 +49,13 @@ export const useMiniGameStore = create<MiniGameStore>()(
 
         let logResult: Record<string, any> = {};
 
-        const startTime = get().gameStartTime;
+        const startTime = new Date(get().gameStartTime);
         if (!startTime) {
           console.warn("start time is null");
           return null;
         }
         const duration: number = Math.floor(
-          (Date.now() - startTime.getTime()) / 1000,
+          (Date.now() - startTime.getTime()) / 1000
         );
         logResult["duration"] = duration;
 
@@ -70,7 +75,7 @@ export const useMiniGameStore = create<MiniGameStore>()(
             logResult["score"] = result.score;
             break;
           case MinigameType.WordHunt:
-            logResult["score"] = result.answers;
+            logResult["score"] = result.score;
             logResult["streak"] = result.streak;
             logResult["correctAttempts"] = result.correctAttempts;
             logResult["incorrectAttempts"] = result.incorrectAttempts;
@@ -89,7 +94,6 @@ export const useMiniGameStore = create<MiniGameStore>()(
         }
 
         const user = useUserStore.getState().user;
-
         if (!user?.pupil?.id) {
           console.warn("pupil is null");
           return null;
@@ -109,6 +113,9 @@ export const useMiniGameStore = create<MiniGameStore>()(
         set((state) => ({
           minigamesIndex: state.minigamesIndex + 1,
         })),
+      achievements: [],
+      setAchievements: (achievements: Achievement[]) =>
+        set({ achievements: achievements }),
     }),
     {
       name: "game-store",
@@ -124,8 +131,8 @@ export const useMiniGameStore = create<MiniGameStore>()(
           await AsyncStorage.removeItem(name);
         },
       },
-    },
-  ),
+    }
+  )
 );
 
 type Choice = { choice: string; answer: boolean };
@@ -164,8 +171,8 @@ export const useTwoTruthsOneLieGameStore = create<TwoTruthsOneLieGameState>()(
           await AsyncStorage.removeItem(name);
         },
       },
-    },
-  ),
+    }
+  )
 );
 
 interface WordHuntGameState {
@@ -191,7 +198,7 @@ interface WordHuntGameState {
   decrementLives: () => void;
 }
 
-export const useWordHuntGameStore = create<WordHuntGameState>()(
+export const useWordHuntMinigameStore = create<WordHuntGameState>()(
   persist(
     (set) => ({
       correctAnswers: [],
@@ -258,8 +265,8 @@ export const useWordHuntGameStore = create<WordHuntGameState>()(
           await AsyncStorage.removeItem(name);
         },
       },
-    },
-  ),
+    }
+  )
 );
 
 interface WordsFromLettersGameState {
@@ -326,7 +333,7 @@ export const useWordsFromLettersMiniGameStore =
             state.usedIndices.forEach((letterIndex, guessIndex) => {
               if (letterIndex !== -1) {
                 const newPosition = shuffled.findIndex(
-                  (item) => item.originalIndex === letterIndex,
+                  (item) => item.originalIndex === letterIndex
                 );
                 if (newPosition !== -1) {
                   newUsedIndices[guessIndex] = newPosition;
@@ -411,8 +418,8 @@ export const useWordsFromLettersMiniGameStore =
             await AsyncStorage.removeItem(name);
           },
         },
-      },
-    ),
+      }
+    )
   );
 
 interface SentenceRearrangementGameState {
@@ -473,6 +480,7 @@ export const useSentenceRearrangementMiniGameStore =
               answers: [],
               currentAnswer: [],
               lives: 3,
+              parts: [],
             };
           }),
       }),
@@ -490,8 +498,8 @@ export const useSentenceRearrangementMiniGameStore =
             await AsyncStorage.removeItem(name);
           },
         },
-      },
-    ),
+      }
+    )
   );
 
 interface FillInTheBlankGameState {
@@ -554,6 +562,6 @@ export const useFillInTheBlankMiniGameStore = create<FillInTheBlankGameState>()(
           await AsyncStorage.removeItem(name);
         },
       },
-    },
-  ),
+    }
+  )
 );

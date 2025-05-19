@@ -13,8 +13,11 @@ interface ReadingSessionStore {
 
   updateReadingSessionProgress: (
     readingSessionId: string,
-    percentage: number,
+    percentage: number
   ) => void;
+
+  currentlyReading: ReadingSession[];
+  setCurrentlyReading: (currentlyReading: ReadingSession[]) => void;
 }
 
 export const useReadingSessionStore = create<ReadingSessionStore>()(
@@ -36,14 +39,14 @@ export const useReadingSessionStore = create<ReadingSessionStore>()(
           sessions.find(
             (session) =>
               session.readingMaterialId === readingMaterialId &&
-              session.completionPercentage < 100,
+              session.completionPercentage < 100
           ) ?? null
         );
       },
 
       updateReadingSessionProgress: (
         readingSessionId: string,
-        percentage: number,
+        percentage: number
       ) =>
         set((state) => ({
           sessions:
@@ -53,9 +56,12 @@ export const useReadingSessionStore = create<ReadingSessionStore>()(
                     ...session,
                     completionPercentage: percentage,
                   }
-                : session,
+                : session
             ) ?? null,
         })),
+      currentlyReading: [],
+      setCurrentlyReading: (currentlyReading: ReadingSession[]) =>
+        set({ currentlyReading: currentlyReading }),
     }),
     {
       name: "reading-session-store",
@@ -71,6 +77,6 @@ export const useReadingSessionStore = create<ReadingSessionStore>()(
           await AsyncStorage.removeItem(name);
         },
       },
-    },
-  ),
+    }
+  )
 );

@@ -13,39 +13,32 @@ import { Heart } from "lucide-react-native";
 import { Minigame, MinigameType } from "@/models/Minigame";
 import { useCreateMinigameLog } from "@/services/minigameService";
 
-export default function FillInTheBlank({ minigame }: { minigame: Minigame }) {
+export default function FillInTheBlank({
+  minigame,
+  nextGame,
+}: {
+  minigame: Minigame;
+  nextGame: () => void;
+}) {
   const { mutate: triggerCreateMinigameLog } = useCreateMinigameLog();
 
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
   const [answer, setAnswer] = useState<string | null>(null);
+  const {
+    choices,
+    phrases,
+    correctAnswer,
+    lives,
+    decrementLives,
+    setPhrases,
+    setCorrectAnswer,
+    setChoices,
+    answers,
+    addAnswer,
+    resetGameState,
+  } = useFillInTheBlankMiniGameStore();
 
-  const choices = useFillInTheBlankMiniGameStore((state) => state.choices);
-  const phrases = useFillInTheBlankMiniGameStore((state) => state.phrases);
-  const correctAnswer = useFillInTheBlankMiniGameStore(
-    (state) => state.correctAnswer,
-  );
-  const lives = useFillInTheBlankMiniGameStore((state) => state.lives);
-  const decrementLives = useFillInTheBlankMiniGameStore(
-    (state) => state.decrementLives,
-  );
-  const setPhrases = useFillInTheBlankMiniGameStore(
-    (state) => state.setPhrases,
-  );
-  const setCorrectAnswer = useFillInTheBlankMiniGameStore(
-    (state) => state.setCorrectAnswer,
-  );
-  const setChoices = useFillInTheBlankMiniGameStore(
-    (state) => state.setChoices,
-  );
-  const answers = useFillInTheBlankMiniGameStore((state) => state.answers);
-  const addAnswer = useFillInTheBlankMiniGameStore((state) => state.addAnswer);
-  const resetGameState = useFillInTheBlankMiniGameStore(
-    (state) => state.resetGameState,
-  );
-  const gameOver = useMiniGameStore((state) => state.gameOver);
-  const incrementMinigamesIndex = useMiniGameStore(
-    (state) => state.incrementMinigamesIndex,
-  );
+  const { gameOver, incrementMinigamesIndex } = useMiniGameStore();
 
   const shake = useSharedValue(0);
 
@@ -83,6 +76,7 @@ export default function FillInTheBlank({ minigame }: { minigame: Minigame }) {
     if (lives <= 0 || answer === correctAnswer) {
       try {
         let score = answer === correctAnswer ? 1 : 0;
+        console.log("FIll in the blank Game Over");
         const minigameLog = gameOver({
           answers,
           score,
@@ -97,7 +91,10 @@ export default function FillInTheBlank({ minigame }: { minigame: Minigame }) {
           type: MinigameType.FillInTheBlanks,
         });
 
-        incrementMinigamesIndex();
+        setTimeout(() => {
+          nextGame();
+          resetGameState();
+        }, 500);
       } catch (error) {
         console.error(
           "Error during Fill in the blank game over logic: ",
@@ -147,7 +144,9 @@ export default function FillInTheBlank({ minigame }: { minigame: Minigame }) {
         <View className="flex gap-12 py-16">
           <View className="flex gap-4">
             <View className="flex flex-row gap-2 justify-center items-center">
-              <Text className="text-3xl font-black">Fill in the Blank</Text>
+              <Text className="text-3xl font-black text-indigo-600 ">
+                Fill in the Blank
+              </Text>
             </View>
             <View className="flex flex-row justify-center gap-3">
               {Array.from({ length: lives }).map((_, i) => (
@@ -188,7 +187,7 @@ export default function FillInTheBlank({ minigame }: { minigame: Minigame }) {
                     className="shadow-xl shadow-blue-700 bg-white border border-gray-300 p-4 rounded-md w-full"
                   >
                     <TouchableOpacity onPress={() => handleAnswer(index)}>
-                      <Text className="text-2xl font-bold text-center">
+                      <Text className="text-xl font-semibold text-center">
                         {choice}
                       </Text>
                     </TouchableOpacity>

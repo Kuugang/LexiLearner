@@ -15,19 +15,10 @@ export default function ClassroomCard({ classroom }: ClassroomCardProps) {
   const setSelectedClassroom = useClassroomStore(
     (state) => state.setSelectedClassroom
   );
-  const selectedClassroom = useClassroomStore(
-    (state) => state.selectedClassroom
-  );
-
   const router = useRouter();
 
   const onPress = () => {
     setSelectedClassroom(classroom);
-    console.log("CURRENT CLASSROOM CARD TING FROM SETSELECTED:", classroom.id);
-    console.log(
-      "CURRENT CLASSROOM CARD TING FROM SELECTED:",
-      selectedClassroom?.name
-    );
     router.push(`/classroom/${classroom.id}`);
   };
 

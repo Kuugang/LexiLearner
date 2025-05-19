@@ -84,9 +84,9 @@ namespace LexiLearner.Controllers
         [Authorize]
         public async Task<IActionResult> Complete([FromRoute] Guid SessionId)
         {
-            await _minigameService.Complete(SessionId);
+            var data = await _minigameService.Complete(SessionId);
             return StatusCode(StatusCodes.Status200OK,
-              new SuccessResponseDTO("Session score recorded successfully.")
+              new SuccessResponseDTO("Session score recorded successfully.", data)
             );
         }
 
@@ -153,6 +153,16 @@ namespace LexiLearner.Controllers
               new SuccessResponseDTO("Minigames found.", minigamelogs)
             );
         }
+        
+        [HttpGet("{minigameId}/sessions/{readingSessionId}/")]
+        [Authorize]
+        public async Task<IActionResult> GetMinigameLogByMGIdRSId([FromRoute] Guid minigameId, Guid readingSessionId)
+        {
+            var minigamelog = await _minigameService.GetMinigameLogByMIdRSId(readingSessionId, minigameId);
+            return StatusCode(StatusCodes.Status200OK,
+              new SuccessResponseDTO("Minigamelog found.", minigamelog)
+            );
+        }
 
         [HttpGet("{readingSessionId}/random")]
         [Authorize]
@@ -172,6 +182,14 @@ namespace LexiLearner.Controllers
                 new SuccessResponseDTO("Successfully fetched minigames.", minigames)
             );
         }
-
+        
+        [HttpGet("readingmaterials/{readingMaterialId}/{minigameType}")]
+        public async Task<IActionResult> GetMinigamesByReadingMaterialIdAndType([FromRoute] Guid readingMaterialId, [FromRoute] MinigameType minigameType)
+        {
+            var minigames = await _minigameService.GetMinigamesByRMIdAndType(readingMaterialId, minigameType);
+            return StatusCode(StatusCodes.Status200OK,
+                new SuccessResponseDTO("Successfully fetched minigames.", minigames)
+            );
+        }
     }
 }

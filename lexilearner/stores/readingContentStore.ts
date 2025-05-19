@@ -8,7 +8,7 @@ interface ReadingContentStore {
   selectedContent: ReadingContentType | null;
 
   setContents: (contents: ReadingContentType[]) => void;
-  setSelectedContent: (content: ReadingContentType) => void;
+  setSelectedContent: (content: ReadingContentType | null) => void;
 }
 
 export const useReadingContentStore = create<ReadingContentStore>()(
@@ -18,7 +18,7 @@ export const useReadingContentStore = create<ReadingContentStore>()(
       selectedContent: null,
       setContents: (contents: ReadingContentType[]) =>
         set({ contents: contents }),
-      setSelectedContent: (content: ReadingContentType) =>
+      setSelectedContent: (content: ReadingContentType | null) =>
         set({ selectedContent: content }),
     }),
     {

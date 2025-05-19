@@ -2,6 +2,7 @@ import React from "react";
 import { Redirect, router } from "expo-router"; // Or useNavigation if using React Navigation
 import { useUserStore } from "@/stores/userStore";
 import { useMiniGameStore } from "@/stores/miniGameStore";
+import { useReadingAssignmentStore } from "@/stores/readingAssignmentStore";
 
 //Components
 import { ScrollView, View, Image } from "react-native";
@@ -11,13 +12,17 @@ import { Text } from "~/components/ui/text";
 const Index = () => {
   const user = useUserStore((state) => state.user);
   const currentMinigame = useMiniGameStore((state) => state.currentMinigame);
+  const setSelectedReadingAssignment = useReadingAssignmentStore(
+    (state) => state.setSelectedReadingAssignment
+  );
 
   if (user) {
+    setSelectedReadingAssignment(null);
     if (currentMinigame) {
       return <Redirect href="/minigames/play" />;
     } else {
     }
-    return <Redirect href="/library" />;
+    // return <Redirect href="/home" />;
   }
 
   return (

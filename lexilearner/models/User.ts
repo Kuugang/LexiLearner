@@ -1,24 +1,22 @@
 export interface User {
-  id: string;
-  email: string;
-  firstName: string;
-  lastName: string;
-  userName: string;
-  twoFactorEnabled: boolean;
-  phoneNumber: string;
-  role: string;
+    id: string;
+    email: string;
+    firstName: string;
+    lastName: string;
+    userName: string;
+    twoFactorEnabled: boolean;
+    phoneNumber: string;
+    role: string;
 
-  pupil?: Pupil;
+    pupil?: Pupil;
 }
 
 export interface TeacherProfile {
-  user: User;
+    user: User;
 }
 
 export interface Pupil {
-  firstName: string;
-  lastName: string;
-  id?: string;
-  age?: number;
-  level?: number;
+    id?: string;
+    age?: number;
+    level?: number;
 }

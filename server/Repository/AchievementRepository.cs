@@ -26,6 +26,13 @@ namespace LexiLearner.Repository
                 .ToListAsync();
         }
 
+
+        public async Task<PupilAchievement?> GetByName(Pupil Pupil, string AchievementName)
+        {
+            return await _context.PupilAchievement
+                .FirstOrDefaultAsync(pa => pa.Achievement.Name == AchievementName && pa.PupilId == Pupil.Id);
+        }
+
         public async Task AddPupilAchievement(PupilAchievement achievement)
         {
             await _context.PupilAchievement.AddAsync(achievement);

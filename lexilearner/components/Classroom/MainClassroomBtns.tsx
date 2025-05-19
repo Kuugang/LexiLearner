@@ -1,11 +1,13 @@
-import { View, Image, Button, TouchableOpacity } from "react-native";
+import { View, TouchableOpacity } from "react-native";
 import { Text } from "@/components/ui/text";
-import React from "react";
+import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { router } from "expo-router";
+import { MinigameType } from "@/models/Minigame";
+import { Ionicons } from "@expo/vector-icons";
+import { Menu, Button } from "react-native-paper";
 
-// TODO: iusa nlng ni nga btn oy dzuh tanginang copy paste css yan
 export function NewClassroomBtn() {
   return (
     <TouchableOpacity
@@ -67,7 +69,7 @@ export function AddReadingAssignment() {
   return (
     <TouchableOpacity
       onPress={() => {
-        // router.push("/classroom/createactivity");
+        router.push("/classroom/createactivity-choosebook");
       }}
     >
       <View className="border-2 rounded-xl border-lightGray my-4 border-b-4">
@@ -82,24 +84,66 @@ export function AddReadingAssignment() {
   );
 }
 
-export function Activity() {
+export function SetMinigameDropdown({
+  selected,
+  setSelected,
+}: {
+  selected: MinigameType;
+  setSelected: (val: MinigameType) => void;
+}) {
+  const [visible, setVisible] = useState(false);
+
+  const minigameOptions = [
+    { label: "2 Truths 1 Lie", value: MinigameType.TwoTruthsOneLie },
+    { label: "Fill in the Blanks", value: MinigameType.FillInTheBlanks },
+    { label: "Word Hunt", value: MinigameType.WordHunt },
+    {
+      label: "Sentence Rearrangement",
+      value: MinigameType.SentenceRearrangement,
+    },
+    { label: "Words From Letters", value: MinigameType.WordsFromLetters },
+  ];
+
+  const selectedLabel =
+    minigameOptions.find((option) => option.value === selected)?.label ??
+    "Select Minigame";
+
   return (
-    <View className="border-2 rounded-xl border-lightGray border-b-4 my-1 p-4">
-      <View className="items-center flex-row">
-        <Image
-          source={require("@/assets/images/cat-in-the-hat.png")}
-          resizeMode="contain"
-          className="rounded-xl"
-          alt="book for activity"
-          style={{ width: 125, height: 125 }}
-        />
-        <View className="flex-1">
-          <Text className="font-bold">Cat in the Hat</Text>
-          <Text>Learn what the cat has done for the day.</Text>
-          <TouchableOpacity className="w-[75%] bg-yellowOrange rounded-lg py-2 items-center mt-2 drop-shadow-custom">
-            <Text className="font-semibold">Progress</Text>
-          </TouchableOpacity>
-        </View>
+    <View className="flex flex-row items-center">
+      <Text className="font-bold mr-2">Set Minigame?</Text>
+      <View className="flex flex-1">
+        <Menu
+          visible={visible}
+          onDismiss={() => setVisible(false)}
+          anchor={
+            <TouchableOpacity
+              className="flex flex-row items-center space-between border-2 rounded-md border-lightGray p-2"
+              onPress={() => setVisible(true)}
+            >
+              <Text className="text-sm text-gray-500">{selectedLabel}</Text>
+              <Ionicons
+                name="chevron-down"
+                size={24}
+                style={{ marginLeft: "auto" }}
+              />
+            </TouchableOpacity>
+          }
+        >
+          {Object.entries(minigameOptions).map(([key, option]) => (
+            <Menu.Item
+              key={option.value}
+              onPress={() => {
+                setSelected(option.value);
+                setVisible(false);
+              }}
+              title={option.label}
+              titleStyle={{ fontSize: 15, padding: 2 }}
+              style={{
+                backgroundColor: selected === option.value ? "" : "white",
+              }}
+            />
+          ))}
+        </Menu>
       </View>
     </View>
   );

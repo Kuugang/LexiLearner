@@ -63,11 +63,7 @@ export const useAuthStore = create<AuthStore>()(
             };
 
             if (role === "Pupil") {
-              user.pupil = {
-                id: pupil.id,
-                level: pupil.level,
-                age: pupil.age,
-              };
+              user.pupil = pupil;
             }
 
             setUser(user);
@@ -103,6 +99,7 @@ export const useAuthStore = create<AuthStore>()(
             role,
             age,
             level,
+            pupil,
           } = response.data;
 
           const user: User = {
@@ -118,7 +115,12 @@ export const useAuthStore = create<AuthStore>()(
             level: level ?? 0,
           };
 
+          if (role === "Pupil") {
+            user.pupil = pupil;
+          }
+
           setUser(user);
+          console.log(user);
         } catch (error: any) {
           throw Error(
             error instanceof Error ? error.message : "Unknown error occurred",

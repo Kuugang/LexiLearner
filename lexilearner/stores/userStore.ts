@@ -6,12 +6,16 @@ import {
   updateProfile as apiUpdateProfile,
   deleteAccount as apiDeleteAccount,
 } from "~/services/UserService";
+import { Session } from "@/models/Session";
 
 type UserStore = {
   user: User | null;
   setUser: (user: User | null) => void;
   updateProfile: (form: Record<string, any>) => Promise<void>;
   deleteAccount: () => Promise<void>;
+
+  streak: number;
+  setStreak: (streak: number) => void;
 };
 
 export const useUserStore = create<UserStore>()(
@@ -24,24 +28,30 @@ export const useUserStore = create<UserStore>()(
           const response = await apiUpdateProfile(form);
           const data = response.data;
 
-          const updatedUser: User = {
-            id: data.id,
-            email: data.email,
-            firstName: data.firstName,
-            lastName: data.lastName,
-            userName: data.userName,
-            twoFactorEnabled: data.twoFactorEnabled,
-            phoneNumber: data.phoneNumber,
-            role: data.role,
-            //TODO: fix this
-            // age: data.age,
-            // level: data.level ?? 0,
-          };
+          set((state) => {
+            if (!state.user) return {};
 
-          set({ user: updatedUser });
+            return {
+              user: {
+                ...state.user,
+                pupil: {
+                  ...state.user.pupil,
+                  ...(data.age !== undefined && { age: data.age }),
+                },
+                id: state.user.id,
+                email: data.email,
+                firstName: data.firstName,
+                lastName: data.lastName,
+                userName: data.userName,
+                twoFactorEnabled: data.twoFactorEnabled,
+                phoneNumber: data.phoneNumber,
+                role: data.role,
+              },
+            };
+          });
         } catch (error: any) {
           throw new Error(
-            error instanceof Error ? error.message : "Unknown error occurred",
+            error instanceof Error ? error.message : "Unknown error occurred"
           );
         }
       },
@@ -49,6 +59,8 @@ export const useUserStore = create<UserStore>()(
         await apiDeleteAccount();
         set({ user: null });
       },
+      streak: 1,
+      setStreak: (streak: number) => set((state) => ({ streak: streak })),
     }),
     {
       name: "user-store",
@@ -64,6 +76,6 @@ export const useUserStore = create<UserStore>()(
           await AsyncStorage.removeItem(name);
         },
       },
-    },
-  ),
+    }
+  )
 );

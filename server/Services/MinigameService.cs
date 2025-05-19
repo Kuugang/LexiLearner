@@ -10,17 +10,21 @@ namespace LexiLearner.Services
     {
         private readonly IMinigameRepository _minigameRepository;
         private readonly IReadingMaterialService _readingMaterialService;
+        private readonly IReadingMaterialRepository _readingMaterialRepository;
         private readonly IPupilService _pupilService;
-        private readonly IUserService _userService;
         private readonly IReadingSessionService _readingSessionService;
+        private readonly IUserService _userService;
+        private readonly IAchievementService _achievementService;
         private readonly Random _random;
-        public MinigameService(IMinigameRepository minigameRepository, IReadingMaterialService readingMaterialService, IPupilService pupilService, IReadingSessionService readingSessionService, IUserService userService)
+        public MinigameService(IMinigameRepository minigameRepository, IReadingMaterialService readingMaterialService, IReadingMaterialRepository readingMaterialRepository, IPupilService pupilService, IReadingSessionService readingSessionService, IUserService userService, IAchievementService achievementService)
         {
             _minigameRepository = minigameRepository;
             _readingMaterialService = readingMaterialService;
+            _readingMaterialRepository = readingMaterialRepository;
             _pupilService = pupilService;
             _readingSessionService = readingSessionService;
             _userService = userService;
+            _achievementService = achievementService;
             _random = new Random();
         }
         public async Task<MinigameDTO> Create(MinigameType minigameType, MinigameDTO.Create request)
@@ -163,7 +167,7 @@ namespace LexiLearner.Services
         }
 
 
-        public async Task Complete(Guid SessionId)
+        public async Task<CompleteReadingSessionDTO> Complete(Guid SessionId)
         {
             var ReadingSession = await _readingSessionService.GetReadingSessionById(SessionId);
 
@@ -175,42 +179,35 @@ namespace LexiLearner.Services
 
 
             var Logs = await GetMinigameLogByReadingSessionId(SessionId);
-            var Minigames = await GetMinigamesByRMId(ReadingSession.ReadingMaterialId);
 
             int TotalScore = 0;
             int TotalMaxScore = 0;
 
-            foreach (var minigame in Minigames)
-            {
-                //TODO: put it metadata instead
-                TotalMaxScore += minigame.MaxScore;
-                // if (!string.IsNullOrEmpty(minigame.MetaData))
-                // {
-                //     // Parse JSON string into a dynamic object using System.Text.Json
-                //     var MetaData = JsonSerializer.Deserialize<JsonElement>(minigame.MetaData);
-
-                //     // Example: Access a field called "score"
-                //     if (MetaData.TryGetProperty("maxScore", out var maxScore))
-                //     {
-                //         TotalMaxScore += maxScore.GetInt32();
-                //     }
-                // }
-            }
-
             foreach (var log in Logs)
             {
+                TotalMaxScore += log.Minigame.MaxScore;
                 if (!string.IsNullOrEmpty(log.Result))
                 {
-                    var resultJson = JsonSerializer.Deserialize<JsonElement>(log.Result);
+                    var outerJsonElement = JsonSerializer.Deserialize<JsonElement>(log.Result);
 
-                    if (resultJson.TryGetProperty("score", out var resultScore))
+                    if (outerJsonElement.ValueKind == JsonValueKind.String)
                     {
-                        TotalScore += resultScore.GetInt32();
+                        var innerJson = outerJsonElement.GetString();
+                        var resultJson = JsonSerializer.Deserialize<JsonElement>(innerJson);
+
+                        if (resultJson.TryGetProperty("score", out var scoreElement) &&
+                            scoreElement.TryGetInt32(out var parsedScore))
+                        {
+                            TotalScore += parsedScore;
+                        }
                     }
                 }
             }
 
-            float ScorePercent = TotalScore / TotalScore;
+            float ScorePercent = (float)TotalScore / TotalMaxScore;
+            // Console.WriteLine("Total Score: " + TotalScore);
+            // Console.WriteLine("Total Max Score: " + TotalMaxScore);
+            // Console.WriteLine("Percent: " + ((float)TotalScore / TotalMaxScore));
 
             double MinigamePerformanceMultiplier = 0;
             if (ScorePercent == 1) MinigamePerformanceMultiplier = 1.5;
@@ -240,17 +237,23 @@ namespace LexiLearner.Services
             if (ReadingSessions.Count == 3) NumSessionsMultiplier = 0.25;
             if (ReadingSessions.Count == 2) NumSessionsMultiplier = 0.5;
             if (ReadingSessions.Count == 1) NumSessionsMultiplier = 1;
-
-            int FinalScore = Convert.ToInt32(BasePoints * NumSessionsMultiplier * MinigamePerformanceMultiplier);
+            // Console.WriteLine("Base Points: " + BasePoints);
+            // Console.WriteLine("NumSessionsMultiplier: " + NumSessionsMultiplier);
+            // Console.WriteLine("MinigamePerformanceMultiplier: " + MinigamePerformanceMultiplier);
+            int FinalScore = Convert.ToInt32(BasePoints * NumSessionsMultiplier + (TotalScore * MinigamePerformanceMultiplier));
             Pupil Pupil = ReadingSession.Pupil;
             Pupil.Level += FinalScore;
             await _minigameRepository.Complete(Pupil);
-            
-            await _userService.CreatePupilLeaderboardEntry(new PupilLeaderboardDTO.Create
+
+            var newAchievements = await _achievementService.AddBooksReadAchievement(Pupil);
+            var recommendations = await _readingMaterialRepository.GetRecommendations(Pupil.Id, 1);
+
+            return new CompleteReadingSessionDTO
             {
-                PupilId = Pupil.Id,
-                Level = Pupil.Level
-            });
+                Recommendations = recommendations,
+                Achievements = newAchievements,
+                Level = Pupil.Level,
+            };
         }
 
         public async Task<List<MinigameDTO>> GetRandomMinigames(Guid readingSessionId)
@@ -307,6 +310,36 @@ namespace LexiLearner.Services
             }
 
             return 0;
+        }
+        
+        
+        public async Task<List<MinigameDTO>> GetMinigamesByRMIdAndType(Guid readingMaterialId, MinigameType minigameType)
+        {
+            var minigames = await _minigameRepository.GetMinigamesByRMIdAndType(readingMaterialId, minigameType);
+            if (minigames == null)
+            {
+                throw new ApplicationExceptionBase(
+                  "Minigames not found.",
+                  $"Minigames with id {readingMaterialId} is not found.",
+                  StatusCodes.Status404NotFound);
+            }
+
+            return minigames.Select(mg => new MinigameDTO(mg)).ToList();
+        }
+
+        public async Task<MinigameLogDTO> GetMinigameLogByMIdRSId(Guid ReadingSessionId, Guid MinigameId)
+        {
+            var minigamelog = await _minigameRepository.GetMinigameLogByMIdRSId(ReadingSessionId, MinigameId);
+            
+            if (minigamelog == null)
+            {
+                throw new ApplicationExceptionBase(
+                  "Minigamelog not found.",
+                  "Failed to fetch minigamelog.",
+                  StatusCodes.Status404NotFound);
+            }
+
+            return new MinigameLogDTO(minigamelog);
         }
     }
 }

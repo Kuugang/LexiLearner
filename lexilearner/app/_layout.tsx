@@ -20,6 +20,7 @@ import { useColorScheme } from "~/lib/useColorScheme";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { useGlobalStore } from "@/stores/globalStore";
+import useScreenTime from "@/hooks/useScreenTime";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -44,6 +45,8 @@ export default function RootLayout() {
   const hasMounted = React.useRef(false);
   const { colorScheme, isDarkColorScheme } = useColorScheme();
   const [isColorSchemeLoaded, setIsColorSchemeLoaded] = React.useState(false);
+
+  useScreenTime();
 
   useIsomorphicLayoutEffect(() => {
     if (hasMounted.current) {

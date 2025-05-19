@@ -49,7 +49,6 @@ public class ClassroomController : ControllerBase {
 		);
     }
 
-    // TODO: feel nako better ni isame route with sa getbypupilID but kani lng sa for now DD:
     [HttpGet("teacher/me")]
     [Authorize("TeacherPolicy")]
     public async Task<IActionResult> GetByTeacherId() {
@@ -170,6 +169,17 @@ public class ClassroomController : ControllerBase {
             readingAssignments.Select(ra => new ReadingMaterialAssignmentDTO(ra)).ToList())
         );
     }
+
+    [HttpGet("readingAssignments/{ReadingAssignmentId}")]
+    [Authorize]
+    public async Task<IActionResult> GetReadingAssignmentById([FromRoute] Guid ReadingAssignmentId)
+    {
+        var readingAssignment = await _classroomService.GetReadingAssignmentById(ReadingAssignmentId);
+
+        return StatusCode(StatusCodes.Status200OK,
+            new SuccessResponseDTO("Reading Assignment fetched successfully.",
+            new ReadingMaterialAssignmentDTO(readingAssignment)));
+    }
     
     [HttpPut("readingAssignments/{ReadingAssignmentId}")]
     [Authorize("TeacherPolicy")]
@@ -198,6 +208,96 @@ public class ClassroomController : ControllerBase {
         var classroomLeaderboard = await _classroomService.GetLeaderboard(ClassroomId, User);
         return StatusCode(StatusCodes.Status200OK,
             new SuccessResponseDTO("Fetched classroom leaderboard successfully.", classroomLeaderboard)
+        );
+    }
+    
+    [HttpPost("readingAssignments/{ReadingAssignmentId}/logs/{MinigameLogId}")]
+    [Authorize]
+    public async Task<IActionResult> CreateAssignmentLog([FromRoute] Guid ReadingAssignmentId, [FromRoute] Guid MinigameLogId)
+    {
+        var assignmentLog = await _classroomService.CreateAssignmentLog(ReadingAssignmentId, MinigameLogId);
+        return StatusCode(StatusCodes.Status201Created,
+            new SuccessResponseDTO("Created assignment log successfully.", assignmentLog)
+        );
+    }
+    
+    [HttpGet("readingAssignments/logs/{ReadingAssignmentLogId}")]
+    [Authorize]
+    public async Task<IActionResult> GetAssignmentLogById([FromRoute] Guid ReadingAssignmentLogId)
+    {
+        var assignmentLog = await _classroomService.GetAssignmentLogById(ReadingAssignmentLogId);
+        return StatusCode(StatusCodes.Status201Created,
+            new SuccessResponseDTO("Fetched assignment log successfully.", new ReadingAssignmentLogDTO(assignmentLog))
+        );
+    }
+    
+    [HttpGet("readingAssignments/{ReadingAssignmentId}/logs/pupils/{PupilId}")]
+    [Authorize]
+    public async Task<IActionResult> GetAssignmentLogByReadingAssignmentIdAndPupilId([FromRoute] Guid ReadingAssignmentId, [FromRoute] Guid PupilId)
+    {
+        var assignmentLogs = await _classroomService.GetAssignmentLogByReadingAssignmentIdAndPupilId(ReadingAssignmentId, PupilId);
+        return StatusCode(StatusCodes.Status201Created,
+            new SuccessResponseDTO("Fetched assignment logs successfully.", assignmentLogs.Select(asl => new ReadingAssignmentLogDTO(asl)))
+        );
+    }
+    
+    [HttpGet("readingAssignments/{ReadingAssignmentId}/logs")]
+    [Authorize]
+    public async Task<IActionResult> GetAssignmentLogsByReadingAssignmentId([FromRoute] Guid ReadingAssignmentId)
+    {
+        var assignmentLogs = await _classroomService.GetAssignmentLogsByReadingAssignmentId(ReadingAssignmentId, User);
+        return StatusCode(StatusCodes.Status201Created,
+            new SuccessResponseDTO("Fetched assignment logs successfully.", assignmentLogs.Select(a => new ReadingAssignmentLogDTO(a)))
+        );
+    }
+    
+    [HttpGet("readingAssignments/logs/pupils/{PupilId}")]
+    [Authorize]
+    public async Task<IActionResult> GetAssignmentLogsByPupilId([FromRoute] Guid PupilId)
+    {
+        var assignmentLogs = await _classroomService.GetAssignmentLogsByPupilId(PupilId);
+        return StatusCode(StatusCodes.Status201Created,
+            new SuccessResponseDTO("Fetched assignment logs successfully.", assignmentLogs.Select(a => new ReadingAssignmentLogDTO(a)))
+        );
+    }
+    
+    [HttpGet("{ClassroomId}/readingAssignments/logs")]
+    [Authorize]
+    public async Task<IActionResult> GetAssignmentLogsByClassroomId([FromRoute] Guid ClassroomId)
+    {
+        var assignmentLogs = await _classroomService.GetAssignmentLogsByClassroomId(ClassroomId);
+        return StatusCode(StatusCodes.Status201Created,
+            new SuccessResponseDTO("Fetched assignment logs successfully.", assignmentLogs.Select(a => new ReadingAssignmentLogDTO(a)))
+        );
+    }
+    
+    [HttpGet("{ClassroomId}/readingAssignments/logs/pupils/{PupilId}")]
+    [Authorize]
+    public async Task<IActionResult> GetAssignmentLogsByClassroomIdAndPupilId([FromRoute] Guid ClassroomId, [FromRoute] Guid PupilId)
+    {
+        var assignmentLogs = await _classroomService.GetAssignmentLogsByClassroomIdAndPupilId(ClassroomId, PupilId);
+        return StatusCode(StatusCodes.Status201Created,
+            new SuccessResponseDTO("Fetched assignment logs successfully.", assignmentLogs.Select(a => new ReadingAssignmentLogDTO(a)))
+        );
+    }
+    
+    [HttpGet("readingAssignments/{ReadingAssigmentId}/overview")]
+    [Authorize("TeacherPolicy")]
+    public async Task<IActionResult> GetReadingAssignmentStatByAssignmentId([FromRoute] Guid ReadingAssigmentId)
+    {
+        var assignmentStat = await _classroomService.GetReadingAssignmentStatByAssignmentId(ReadingAssigmentId, User);
+        return StatusCode(StatusCodes.Status201Created,
+            new SuccessResponseDTO("Fetched assignment stats successfully.", assignmentStat)
+        );
+    }
+    
+    [HttpGet("{ClassroomId}/readingAssignments/overview")]
+    [Authorize("TeacherPolicy")]
+    public async Task<IActionResult> GetReadingAssignmentStatByClassroomId([FromRoute] Guid ClassroomId)
+    {
+        var assignmentStats = await _classroomService.GetReadingAssignmentStatByClassroomId(ClassroomId, User);
+        return StatusCode(StatusCodes.Status201Created,
+            new SuccessResponseDTO("Fetched assignment stats successfully.", assignmentStats)
         );
     }
 }

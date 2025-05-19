@@ -1,5 +1,4 @@
 import { useQuery } from "@tanstack/react-query";
-import { fetchStories } from "@/utils/mockup";
 
 import { axiosInstance } from "@/utils/axiosInstance";
 import { API_URL } from "../utils/constants";
@@ -14,10 +13,9 @@ export const useStories = () => {
   });
 };
 
-export const getStories = async (): Promise<ReadingContentType[]> => {
+const getStories = async (): Promise<ReadingContentType[]> => {
   try {
     const response = await axiosInstance.get(`${API_URL}/readingMaterials`);
-    console.log("stories fetched from api:", response.data.data);
 
     return response.data.data;
   } catch (error: any) {
@@ -35,7 +33,7 @@ export const getFilteredStories = async (
     const response = await axiosInstance.get(`${API_URL}/readingMaterials`, {
       params: filters,
     });
-    console.log("stories fetched from api:", response);
+    // console.log("stories fetched from api:", response);
 
     return response.data.data;
   } catch (error: any) {
@@ -52,7 +50,7 @@ export interface ReadingMaterialFilters {
   Title: string;
 }
 
-export const getReadingMaterialById = async (readingMaterialId: string) => {
+const getReadingMaterialById = async (readingMaterialId: string) => {
   const response = await axiosInstance.get(
     `/readingMaterials/${readingMaterialId}`,
     {
@@ -63,5 +61,14 @@ export const getReadingMaterialById = async (readingMaterialId: string) => {
   if (response.status !== 200 && response.status !== 201) {
     throw new Error(response.data.message);
   }
+  console.log("sad attempts", response.data.data.author);
   return response.data.data;
+};
+
+export const useGetReadingMaterialById = (readingMaterialId: string) => {
+  return useQuery<ReadingContentType>({
+    queryKey: ["readingMaterial", readingMaterialId],
+    queryFn: () => getReadingMaterialById(readingMaterialId),
+    enabled: !!readingMaterialId,
+  });
 };
