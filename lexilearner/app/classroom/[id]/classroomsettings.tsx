@@ -52,6 +52,8 @@ export default function ClassroomSettings() {
 
   const searchInputRef = useRef<SearchBarRef>(null);
   const user = useUserStore((state) => state.user);
+  const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const isClearing = useRef(false);
 
   const { data: enrolledPupils, isLoading: loadingPupils } = useQuery({
     queryKey: ["classroomPupils", selectedClassroom?.id],
@@ -64,53 +66,51 @@ export default function ClassroomSettings() {
 
   useEffect(() => {
     if (showAddPupilModal && searchInputRef.current) {
-      searchInputRef.current.allowKeyboardReturn();
-
       setTimeout(() => {
         if (searchInputRef.current) {
           searchInputRef.current.focus();
         }
       }, 100);
-
-      const keyboardDidHideSubscription = Keyboard.addListener(
-        "keyboardDidHide",
-        () => {
-          if (showAddPupilModal && searchInputRef.current) {
-            setTimeout(() => {
-              searchInputRef.current?.focus();
-            }, 50);
-          }
-        }
-      );
-
-      const keyboardWillHideSubscription = Keyboard.addListener(
-        "keyboardWillHide",
-        (event) => {
-          if (
-            showAddPupilModal &&
-            searchInputRef.current &&
-            searchText.length > 0
-          ) {
-            searchInputRef.current.focus();
-          }
-        }
-      );
-
-      return () => {
-        keyboardDidHideSubscription.remove();
-        keyboardWillHideSubscription.remove();
-      };
     }
-  }, [showAddPupilModal, searchText]);
+  }, [showAddPupilModal]);
 
+  // Debounced search effect
   useEffect(() => {
-    if (!showAddPupilModal || searchText.length <= 1) {
+    if (debounceTimerRef.current) {
+      clearTimeout(debounceTimerRef.current);
+    }
+
+    // Special handling for empty field - ensure keyboard stays visible
+    if (searchText.length === 0 && !isClearing.current) {
+      setTimeout(() => {
+        if (searchInputRef.current) {
+          searchInputRef.current.focus();
+        }
+      }, 100);
+    }
+
+    if (!showAddPupilModal) {
       setFilteredPupils([]);
       return;
     }
 
-    setSearching(true);
-    const performSearch = async () => {
+    // For empty or very short text, just clear results but keep keyboard
+    if (searchText.length <= 1) {
+      setFilteredPupils([]);
+      setSearching(false);
+      // Critical: Don't return early for empty text
+    }
+
+    if (searchText.length > 2) {
+      setSearching(true);
+    }
+
+    debounceTimerRef.current = setTimeout(async () => {
+      if (searchText.length <= 2) {
+        setSearching(false);
+        return;
+      }
+
       try {
         const results = await apiSearchPupils(searchText);
 
@@ -123,11 +123,12 @@ export default function ClassroomSettings() {
 
         setFilteredPupils(filteredResults);
 
+        // Ensure keyboard stays up after query completes
         setTimeout(() => {
-          if (searchInputRef.current) {
+          if (searchInputRef.current && !isClearing.current) {
             searchInputRef.current.focus();
           }
-        }, 10);
+        }, 200);
       } catch (error) {
         console.error("Error searching pupils:", error);
         const mockResults: Pupil[] = [
@@ -137,17 +138,22 @@ export default function ClassroomSettings() {
         ];
         setFilteredPupils(mockResults);
 
+        // Ensure keyboard stays up after query completes
         setTimeout(() => {
-          if (searchInputRef.current) {
+          if (searchInputRef.current && !isClearing.current) {
             searchInputRef.current.focus();
           }
-        }, 10);
+        }, 200);
       } finally {
         setSearching(false);
       }
-    };
+    }, 1000);
 
-    performSearch();
+    return () => {
+      if (debounceTimerRef.current) {
+        clearTimeout(debounceTimerRef.current);
+      }
+    };
   }, [searchText, enrolledPupils, showAddPupilModal]);
 
   const { mutateAsync: editClassroomMutation } = useMutation({
@@ -195,22 +201,11 @@ export default function ClassroomSettings() {
   });
 
   const handleSelectPupil = (pupil: Pupil) => {
-    if (searchInputRef.current) {
-      searchInputRef.current.preventKeyboardReturn();
-    }
-
     if (selectedPupils.some((p) => p.id === pupil.id)) {
       setSelectedPupils(selectedPupils.filter((p) => p.id !== pupil.id));
     } else {
       setSelectedPupils([...selectedPupils, pupil]);
     }
-
-    setTimeout(() => {
-      if (searchInputRef.current) {
-        searchInputRef.current.allowKeyboardReturn();
-        searchInputRef.current.focus();
-      }
-    }, 10);
   };
 
   const handleRemoveSelectedPupil = (pupilId: string) => {
@@ -220,10 +215,8 @@ export default function ClassroomSettings() {
   const handleAddSelectedPupils = async () => {
     if (selectedClassroom?.id && selectedPupils.length > 0) {
       try {
-        if (searchInputRef.current) {
-          searchInputRef.current.preventKeyboardReturn();
-        }
-
+        // Intentionally dismiss keyboard here
+        isClearing.current = true;
         Keyboard.dismiss();
 
         for (const pupil of selectedPupils) {
@@ -237,12 +230,12 @@ export default function ClassroomSettings() {
         setSearchText("");
         setShowAddPupilModal(false);
         console.log("Pupils added successfully");
+
+        setTimeout(() => {
+          isClearing.current = false;
+        }, 300);
       } catch (error) {
         console.error("Error adding pupils:", error);
-
-        if (searchInputRef.current) {
-          searchInputRef.current.focus();
-        }
       }
     }
   };
@@ -268,16 +261,24 @@ export default function ClassroomSettings() {
     return colors[hash % colors.length];
   };
 
+  const handleTextChange = (text: string) => {
+    setSearchText(text);
+  };
+
   const AddPupilModal = () => {
     const isClosingModal = useRef(false);
 
     const handleCloseModal = () => {
       isClosingModal.current = true;
-      searchInputRef.current?.preventKeyboardReturn();
+      isClearing.current = true;
       Keyboard.dismiss();
       setSearchText("");
       setSelectedPupils([]);
       setShowAddPupilModal(false);
+
+      setTimeout(() => {
+        isClearing.current = false;
+      }, 300);
     };
 
     return (
@@ -294,6 +295,7 @@ export default function ClassroomSettings() {
           zIndex: 50,
           height: "100%",
         }}
+        enabled={true}
       >
         <View className="flex-1 bg-white">
           {/* Header with Cancel, title, and Add button */}
@@ -324,25 +326,26 @@ export default function ClassroomSettings() {
             )}
           </View>
 
-          {/* Use SearchBar component with onClearPress to handle X button */}
+          {/* SearchBar component */}
           <View className="p-2 px-4 mb-3">
             <SearchBar
               placeholder="Search"
               initialValue={searchText}
-              onSearch={setSearchText}
+              onSearch={handleTextChange}
               ref={searchInputRef}
               debounceTime={1000}
+              blurOnSubmit={false}
+              isSearching={searching}
               onClearPress={() => {
-                if (searchInputRef.current) {
-                  searchInputRef.current.preventKeyboardReturn();
+                // Explicitly dismiss keyboard when X is pressed
+                isClearing.current = true;
+                Keyboard.dismiss();
+                setSearchText("");
 
-                  setTimeout(() => {
-                    if (!isClosingModal.current && searchInputRef.current) {
-                      searchInputRef.current.allowKeyboardReturn();
-                      searchInputRef.current.focus();
-                    }
-                  }, 10);
-                }
+                // Reset flag after delay
+                setTimeout(() => {
+                  isClearing.current = false;
+                }, 300);
               }}
             />
           </View>
@@ -356,7 +359,7 @@ export default function ClassroomSettings() {
                   className="pt-1 pb-1 px-2"
                   showsHorizontalScrollIndicator={false}
                   keyboardShouldPersistTaps="always"
-                  keyboardDismissMode="none"
+                  keyboardDismissMode="on-drag"
                 >
                   {selectedPupils.map((pupil) => {
                     const avatarColor = getRandomColor(
@@ -387,14 +390,9 @@ export default function ClassroomSettings() {
                               padding: 4,
                               zIndex: 10,
                             }}
-                            onPress={() => {
-                              handleRemoveSelectedPupil(pupil.id || "");
-                              setTimeout(() => {
-                                if (searchInputRef.current) {
-                                  searchInputRef.current.focus();
-                                }
-                              }, 50);
-                            }}
+                            onPress={() =>
+                              handleRemoveSelectedPupil(pupil.id || "")
+                            }
                             hitSlop={{
                               top: 10,
                               bottom: 10,
@@ -423,20 +421,20 @@ export default function ClassroomSettings() {
                     );
                   })}
                 </ScrollView>
-                <View className="border-b border-gray-200 mt-1" />
+                <View />
               </View>
             )}
 
             {/* Suggested Label */}
             <Text
               className="text-gray-500 text-lg font-medium px-4 mt-0"
-              style={{ marginBottom: -5 }}
+              style={{ marginBottom: 5 }}
             >
               Suggested
             </Text>
           </View>
 
-          {/* Pupil List */}
+          {/* Pupil List - using keyboardDismissMode="on-drag" to allow dismissal on scroll */}
           {searching ? (
             <View className="flex-1 justify-center items-center">
               <ActivityIndicator size="large" color="#0A84FF" />
@@ -444,8 +442,8 @@ export default function ClassroomSettings() {
           ) : (
             <ScrollView
               className="flex-1"
-              keyboardShouldPersistTaps="always"
-              keyboardDismissMode="none"
+              keyboardShouldPersistTaps="handled"
+              keyboardDismissMode="on-drag"
             >
               {filteredPupils.length > 0 ? (
                 <>
@@ -461,47 +459,47 @@ export default function ClassroomSettings() {
                     );
 
                     return (
-                      <TouchableOpacity
-                        key={pupil.id}
-                        className="flex-row items-center justify-between p-4 border-b border-gray-200"
-                        onPress={() => {
-                          handleSelectPupil(pupil);
-                          setTimeout(() => {
-                            if (searchInputRef.current) {
-                              searchInputRef.current.focus();
-                            }
-                          }, 50);
-                        }}
-                      >
-                        <View className="flex-row items-center">
-                          <View
-                            className="h-12 w-12 rounded-full overflow-hidden mr-3 justify-center items-center"
-                            style={{ backgroundColor: avatarColor }}
-                          >
-                            <Text className="text-white font-bold text-base">
-                              {initials.toUpperCase()}
+                      <View key={pupil.id}>
+                        <TouchableOpacity
+                          className="flex-row items-center justify-between py-3 px-3"
+                          onPress={() => handleSelectPupil(pupil)}
+                        >
+                          <View className="flex-row items-center">
+                            <View
+                              className="h-12 w-12 rounded-full overflow-hidden mr-3 justify-center items-center"
+                              style={{ backgroundColor: avatarColor }}
+                            >
+                              <Text className="text-white font-bold text-base">
+                                {initials.toUpperCase()}
+                              </Text>
+                            </View>
+                            <Text className="text-black text-base font-medium">
+                              {displayPupilName(pupil)}
                             </Text>
                           </View>
-                          <Text className="text-black text-base font-medium">
-                            {displayPupilName(pupil)}
-                          </Text>
-                        </View>
+                          <View
+                            className={`h-7 w-7 rounded-full border ${
+                              isSelected
+                                ? "bg-black-500 border-black-500 items-center justify-center"
+                                : "border-gray-400"
+                            }`}
+                          >
+                            {isSelected && (
+                              <Ionicons
+                                name="checkmark"
+                                size={18}
+                                color="black"
+                              />
+                            )}
+                          </View>
+                        </TouchableOpacity>
                         <View
-                          className={`h-7 w-7 rounded-full border ${
-                            isSelected
-                              ? "bg-black-500 border-black-500 items-center justify-center"
-                              : "border-gray-400"
-                          }`}
+                          className="flex-row"
+                          style={{ paddingLeft: 67, paddingRight: 8 }}
                         >
-                          {isSelected && (
-                            <Ionicons
-                              name="checkmark"
-                              size={18}
-                              color="black"
-                            />
-                          )}
+                          <View className="flex-1 border-b border-gray-200"></View>
                         </View>
-                      </TouchableOpacity>
+                      </View>
                     );
                   })}
                 </>
@@ -523,10 +521,6 @@ export default function ClassroomSettings() {
     );
   };
 
-  return (
-    <View className="flex-1">
-      <ScrollView className="bg-background p-8">
-        <BackHeader />
   function TeacherSettings() {
     return (
       <View className="flex-1">
@@ -560,159 +554,88 @@ export default function ClassroomSettings() {
             }
           />
 
-          <View className="py-1 relative z-40">
-            <Text className="font-bold">Add Pupil</Text>
-            <Input
-              className="border border-gray-300 rounded-md p-2 mt-2"
-              placeholder="Type pupil name..."
-              value={pupilName}
-              onChangeText={handlePupilNameChange}
-            />
+          {/* Add Pupil Button */}
+          <TouchableOpacity
+            className="mt-6 mb-2 p-3 bg-blue-500 rounded-md flex-row justify-left items-center"
+            onPress={() => setShowAddPupilModal(true)}
+          >
+            <Ionicons name="person-add-outline" size={20} color="black" />
+            <Text className="text-black font-semibold ml-2">Add Pupils</Text>
+          </TouchableOpacity>
 
-            {showDropdown && (
-              <View className="absolute z-50 top-20 w-full bg-white border border-gray-300 rounded-md shadow-md">
-                {searching ? (
-                  <View className="p-3 flex items-center justify-center">
+          {/* Current Pupils */}
+          <View className="py-4 mt-4">
+            <TouchableOpacity
+              className="flex-row justify-between items-center border border-gray-300 rounded-md p-3"
+              onPress={() => setShowCurrentPupils(!showCurrentPupils)}
+            >
+              <Text className="font-bold text-black">Current Pupils</Text>
+              <MaterialIcons
+                name={
+                  showCurrentPupils
+                    ? "keyboard-arrow-up"
+                    : "keyboard-arrow-down"
+                }
+                size={24}
+                color="#333"
+              />
+            </TouchableOpacity>
+
+            {showCurrentPupils ? (
+              <View className="border-x border-b border-gray-300 rounded-b-md bg-white">
+                {loadingPupils ? (
+                  <View className="p-4 items-center">
                     <ActivityIndicator size="small" color="#0000ff" />
-                    <Text className="text-gray-600 mt-2">Searching...</Text>
                   </View>
-                ) : filteredPupils.length > 0 ? (
-                  <ScrollView style={{ maxHeight: 150 }}>
-                    {filteredPupils.map((pupil) => (
-                      <TouchableOpacity
-                        key={pupil.id}
-                        className="p-3 border-b border-gray-200"
-                        onPress={() => handleSelectPupil(pupil)}
-                      >
-                        <Text>{displayPupilName(pupil)}</Text>
-                      </TouchableOpacity>
-                    ))}
-                  </ScrollView>
+                ) : enrolledPupils && enrolledPupils.length > 0 ? (
+                  <>
+                    {enrolledPupils.map((pupil) => {
+                      const avatarColor = getRandomColor(
+                        pupil.firstName + pupil.lastName
+                      );
+                      const initials = `${pupil.firstName?.charAt(0) || ""}${
+                        pupil.lastName?.charAt(0) || ""
+                      }`;
+
+                      return (
+                        <View
+                          key={pupil.id}
+                          className="p-3 border-b border-gray-200 flex-row items-center"
+                        >
+                          <View
+                            className="h-8 w-8 rounded-full overflow-hidden mr-3 justify-center items-center"
+                            style={{ backgroundColor: avatarColor }}
+                          >
+                            <Text className="text-white font-bold text-xs">
+                              {initials.toUpperCase()}
+                            </Text>
+                          </View>
+                          <Text className="text-black">
+                            {displayPupilName(pupil)}
+                          </Text>
+                        </View>
+                      );
+                    })}
+                  </>
                 ) : (
                   <View className="p-3">
-                    <Text className="text-gray-600">No pupils found</Text>
+                    <Text className="text-gray-500 italic">
+                      No pupils enrolled in this classroom yet
+                    </Text>
                   </View>
                 )}
               </View>
-            )}
-          </View>
-
-        {/* Add Pupil Button */}
-        <TouchableOpacity
-          className="mt-6 mb-2 p-3 bg-blue-500 rounded-md flex-row justify-left items-center"
-          onPress={() => setShowAddPupilModal(true)}
-        >
-          <Ionicons name="person-add-outline" size={20} color="black" />
-          <Text className="text-black font-semibold ml-2">Add Pupils</Text>
-        </TouchableOpacity>
-
-        {/* Current Pupils */}
-        <View className="py-4 mt-4">
-          <TouchableOpacity
-            className="flex-row justify-between items-center border border-gray-300 rounded-md p-3"
-            onPress={() => setShowCurrentPupils(!showCurrentPupils)}
-          >
-            <Text className="font-bold text-black">Current Pupils</Text>
-            <MaterialIcons
-              name={
-                showCurrentPupils ? "keyboard-arrow-up" : "keyboard-arrow-down"
-              }
-              size={24}
-              color="#333"
-            />
-          </TouchableOpacity>
-
-          {showCurrentPupils ? (
-            <View className="border-x border-b border-gray-300 rounded-b-md bg-white">
-              {loadingPupils ? (
-                <View className="p-4 items-center">
-                  <ActivityIndicator size="small" color="#0000ff" />
-                </View>
-              ) : enrolledPupils && enrolledPupils.length > 0 ? (
-                <>
-                  {enrolledPupils.map((pupil) => {
-                    const avatarColor = getRandomColor(
-                      pupil.firstName + pupil.lastName
-                    );
-                    const initials = `${pupil.firstName?.charAt(0) || ""}${
-                      pupil.lastName?.charAt(0) || ""
-                    }`;
-
-                    return (
-                      <View
-                        key={pupil.id}
-                        className="p-3 border-b border-gray-200 flex-row items-center"
-                      >
-                        <View
-                          className="h-8 w-8 rounded-full overflow-hidden mr-3 justify-center items-center"
-                          style={{ backgroundColor: avatarColor }}
-                        >
-                          <Text className="text-white font-bold text-xs">
-                            {initials.toUpperCase()}
-                          </Text>
-                        </View>
-                        <Text className="text-black">
-                          {displayPupilName(pupil)}
-                        </Text>
-                      </View>
-                    );
-                  })}
-                </>
-              ) : (
-                <View className="p-3">
-                  <Text className="text-gray-500 italic">
-                    No pupils enrolled in this classroom yet
-                  </Text>
-                </View>
-              )}
-            </View>
-          ) : null}
-        </View>
-
-        <View className="p-5 bottom-0">
-          <Button className="m-5 bg-yellow-500" onPress={() => {}}>
-            <Text className="text-black font-semibold">
-              Generate Classroom Report
-            </Text>
-          </Button>
-          <Button
-            className="mx-5 bg-yellow-500"
-            onPress={async () => {
-              if (selectedClassroom?.id) {
-                try {
-                  await editClassroomMutation({
-                    classroomForm: editClassroomForm,
-                    classroomId: selectedClassroom.id,
-                  });
-
-          <View className="py-4 mt-4">
-            <Text className="font-bold">Current Pupils</Text>
-            {loadingPupils ? (
-              <ActivityIndicator size="small" color="#0000ff" />
-            ) : enrolledPupils && enrolledPupils.length > 0 ? (
-              <View className="mt-2 border border-gray-200 rounded-md">
-                {enrolledPupils.map((pupil) => (
-                  <View
-                    key={pupil.id}
-                    className="p-3 border-b border-gray-200 flex-row justify-between items-center"
-                  >
-                    <Text>{displayPupilName(pupil)}</Text>
-                  </View>
-                ))}
-              </View>
-            ) : (
-              <Text className="text-gray-500 italic mt-2">
-                No pupils enrolled in this classroom yet
-              </Text>
-            )}
+            ) : null}
           </View>
 
           <View className="p-5 bottom-0">
-            <Button className="m-5" onPress={() => {}}>
-              <Text>Generate Classroom Report</Text>
+            <Button className="m-5 bg-yellow-500" onPress={() => {}}>
+              <Text className="text-black font-semibold">
+                Generate Classroom Report
+              </Text>
             </Button>
             <Button
-              className="mx-5"
+              className="mx-5 bg-yellow-500"
               onPress={async () => {
                 if (selectedClassroom?.id) {
                   try {
@@ -736,10 +659,10 @@ export default function ClassroomSettings() {
                 }
               }}
             >
-              <Text>Edit Classroom</Text>
+              <Text className="text-black font-semibold">Edit Classroom</Text>
             </Button>
             <Button
-              className="bg-orange m-5"
+              className="bg-red-500 m-5"
               onPress={async () => {
                 if (selectedClassroom?.id) {
                   try {
@@ -747,17 +670,19 @@ export default function ClassroomSettings() {
                       classroomId: selectedClassroom.id,
                     });
                     setSelectedClassroom(null);
-                    router.replace("/classroom");
+                    router.push("/classroom");
                   } catch (error) {
                     console.error("Error deleting classroom:", error);
                   }
                 }
               }}
             >
-              <Text>Delete Classroom</Text>
+              <Text className="text-white font-semibold">Delete Classroom</Text>
             </Button>
           </View>
         </ScrollView>
+
+        {showAddPupilModal && <AddPupilModal />}
       </View>
     );
   }
@@ -781,44 +706,6 @@ export default function ClassroomSettings() {
                     await leaveClassroomMutation({
                       classroomId: selectedClassroom?.id,
                     });
-
-                  router.back();
-                  console.log("Classroom edited successfully");
-                } catch (error) {
-                  console.error("Error editing classroom:", error);
-                }
-              } else {
-                console.error("Classroom ID is not available");
-              }
-            }}
-          >
-            <Text className="text-black font-semibold">Edit Classroom</Text>
-          </Button>
-          <Button
-            className="bg-red-500 m-5"
-            onPress={async () => {
-              if (selectedClassroom?.id) {
-                try {
-                  await deleteClassroomMutation({
-                    classroomId: selectedClassroom.id,
-                  });
-                  setSelectedClassroom(null);
-                  router.push("/classroom");
-                } catch (error) {
-                  console.error("Error deleting classroom:", error);
-                }
-              }
-            }}
-          >
-            <Text className="text-white font-semibold">Delete Classroom</Text>
-          </Button>
-        </View>
-      </ScrollView>
-
-      {showAddPupilModal && <AddPupilModal />}
-    </View>
-  );
-
                     setSelectedClassroom(null);
                     router.replace("/classroom");
                   } catch (error) {
@@ -827,7 +714,7 @@ export default function ClassroomSettings() {
                 }
               }}
             >
-              <Text>Leave Classroom</Text>
+              <Text className="text-black font-semibold">Leave Classroom</Text>
             </Button>
           </View>
         </ScrollView>
