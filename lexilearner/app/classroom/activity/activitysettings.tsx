@@ -110,6 +110,7 @@ export default function activitysettings() {
                 onPress={async () => {
                   try {
                     editActivityForm.readingMaterialId = selectedContent.id;
+                    editActivityForm.minigameType = selectedMinigameType;
                     await updateReadingAssignment({
                       readingAssignment: editActivityForm,
                     });
