@@ -16,6 +16,7 @@ import { Pupil } from "@/services/ClassroomService";
 import { router } from "expo-router";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import AddPupilModal from "./AddPupilModal";
+
 import { displayPupilName, getRandomColor } from "@/utils/utils";
 
 type TeacherSettingsProps = {
@@ -128,9 +129,21 @@ export default function TeacherSetting({
       } catch (error) {
         console.error("Error searching pupils:", error);
         const mockResults: Pupil[] = [
-          { id: "1", firstName: searchText, lastName: "Smith" },
-          { id: "2", firstName: searchText, lastName: "Johnson" },
-          { id: "3", firstName: searchText, lastName: "Williams" },
+          {
+            id: "1",
+            firstName: searchText,
+            lastName: "Smith",
+          },
+          {
+            id: "2",
+            firstName: searchText,
+            lastName: "Johnson",
+          },
+          {
+            id: "3",
+            firstName: searchText,
+            lastName: "Williams",
+          },
         ];
         setFilteredPupils(mockResults);
 
@@ -268,8 +281,9 @@ export default function TeacherSetting({
                 <>
                   {enrolledPupils.map((pupil) => {
                     const avatarColor = getRandomColor(
-                      pupil.firstName + pupil.lastName
+                      (pupil.firstName || "") + (pupil.lastName || "")
                     );
+
                     const initials = `${pupil.firstName?.charAt(0) || ""}${
                       pupil.lastName?.charAt(0) || ""
                     }`;
