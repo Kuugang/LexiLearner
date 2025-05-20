@@ -126,8 +126,9 @@ export default function AddPupilModal({
               >
                 {selectedPupils.map((pupil) => {
                   const avatarColor = getRandomColor(
-                    pupil.firstName + pupil.lastName
+                    (pupil.firstName || "") + (pupil.lastName || "")
                   );
+
                   const initials = `${pupil.firstName?.charAt(0) || ""}${
                     pupil.lastName?.charAt(0) || ""
                   }`;
@@ -212,8 +213,9 @@ export default function AddPupilModal({
               <>
                 {filteredPupils.map((pupil) => {
                   const avatarColor = getRandomColor(
-                    pupil.firstName + pupil.lastName
+                    (pupil.firstName || "") + (pupil.lastName || "")
                   );
+
                   const initials = `${pupil.firstName?.charAt(0) || ""}${
                     pupil.lastName?.charAt(0) || ""
                   }`;
