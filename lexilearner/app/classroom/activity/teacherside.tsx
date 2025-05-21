@@ -63,6 +63,9 @@ export default function activity() {
               <Text className="text-[24px] font-bold flex-wrap">
                 {selectedContent!.title}
               </Text>
+              <Text>
+                {selectedReadingAssignment?.minigameType}
+              </Text>
               <Text className="font-bold">
                 Created at: {formatDate(selectedReadingAssignment.createdAt)}
               </Text>

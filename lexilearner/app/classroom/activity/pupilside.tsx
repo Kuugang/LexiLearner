@@ -56,15 +56,11 @@ export default function activity() {
               resizeMode="contain"
             />
             <View className="flex flex-1 flex-col justify-center">
-              <Text
-                className="font-bold text-lg"
-              >
+              <Text className="font-bold text-lg">
                 {selectedReadingAssignment?.title}
               </Text>
 
-              <Text>
-                {selectedReadingAssignment?.description}
-              </Text>
+              <Text>{selectedReadingAssignment?.description}</Text>
 
               <Text>
                 MinigameType: {selectedReadingAssignment?.minigameType}
@@ -86,30 +82,30 @@ export default function activity() {
               <Text>Loading assignment...</Text>
             )}
             {!isBookLoading && book && !isLogsLoading && assignmentlogs && (
-              // <InteractionBlocker disabled={assignmentlogs.length > 0}>
-              <ReadingContent
-                type="ScrollView"
-                id={book.id}
-                title={book.title}
-                author={book.author}
-                description={book.description}
-                cover={book.cover}
-                content={book.content}
-                genres={book.genres}
-                difficulty={book.difficulty}
-              />
-              // </InteractionBlocker>
+              <InteractionBlocker disabled={assignmentlogs.length > 0}>
+                <ReadingContent
+                  type="ScrollView"
+                  id={book.id}
+                  title={book.title}
+                  author={book.author}
+                  description={book.description}
+                  cover={book.cover}
+                  content={book.content}
+                  genres={book.genres}
+                  difficulty={book.difficulty}
+                />
+              </InteractionBlocker>
             )}
 
             {!isBookLoading && !book && (
               <Text>Reading material not found.</Text>
             )}
             <View className="mt-5">
-              <Text className="font-bold">Attempts</Text>
+              <Text className="font-bold">Result:</Text>
               {!isLogsLoading &&
                 assignmentlogs &&
                 (assignmentlogs.length == 0 ? (
-                  <Text>No attempts found.</Text>
+                  <Text>You have not attempted this activity.</Text>
                 ) : (
                   assignmentlogs.map((item) => {
                     let parsedResult: ResultData = { score: 0, duration: 0 };
