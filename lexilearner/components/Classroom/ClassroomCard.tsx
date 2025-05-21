@@ -13,7 +13,7 @@ interface ClassroomCardProps {
 
 export default function ClassroomCard({ classroom }: ClassroomCardProps) {
   const setSelectedClassroom = useClassroomStore(
-    (state) => state.setSelectedClassroom
+    (state) => state.setSelectedClassroom,
   );
   const router = useRouter();
 
