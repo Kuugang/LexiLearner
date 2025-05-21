@@ -3,6 +3,7 @@ import {
   useRandomMinigames,
   useCompleteMinigameSession,
   useGetMinigameLogByMIDRSID,
+  useRandomMinigamesByRMId,
 } from "@/services/minigameService";
 import { useMiniGameStore } from "@/stores/miniGameStore";
 import { memo, useEffect } from "react";
@@ -24,20 +25,28 @@ import Animated, {
 import { Dimensions } from "react-native";
 import { router } from "expo-router";
 import { useCreateAssignmentLog } from "@/services/ClassroomService";
+import { useUserStore } from "@/stores/userStore";
+import { useReadingContentStore } from "@/stores/readingContentStore";
 
 const { width } = Dimensions.get("window");
 
 function Play() {
   const selectedReadingAssignment = useReadingAssignmentStore(
-    (state) => state.selectedReadingAssignment,
+    (state) => state.selectedReadingAssignment
+  );
+
+  const selectedReadingContent = useReadingContentStore(
+    (state) => state.selectedContent
   );
 
   const { mutateAsync: CreateAssignmentLog } = useCreateAssignmentLog();
 
   const translateX = useSharedValue(0);
 
+  const userRole = useUserStore((state) => state.user?.role);
+
   const currentReadingSession = useReadingSessionStore(
-    (state) => state.currentSession,
+    (state) => state.currentSession
   );
 
   const {
@@ -55,6 +64,12 @@ function Play() {
   const { mutateAsync: completeMinigamesSession } =
     useCompleteMinigameSession();
 
+  const selectedReadingContentId = selectedReadingContent?.id ?? "";
+  const {
+    data: randomMinigamesTeacher,
+    refetch: fetchRandomMinigamesForTeacher,
+  } = useRandomMinigamesByRMId(selectedReadingContentId);
+
   const { data: randomMinigames, refetch: fetchRandomMinigames } =
     useRandomMinigames(currentReadingSession.id);
 
@@ -66,13 +81,16 @@ function Play() {
     selectedReadingAssignment != null
       ? useGetMinigameLogByMIDRSID(
           selectedReadingAssignment?.minigameId ?? "",
-          currentReadingSession?.id,
+          currentReadingSession?.id
         )
       : { refetch: async () => undefined };
 
   useEffect(() => {
     if (selectedReadingAssignment) fetchAssignmentMinigame();
+    else if (userRole === "Teacher") fetchRandomMinigamesForTeacher();
     else fetchRandomMinigames();
+
+    setMinigamesIndex(0);
 
     if (currentMinigame) {
       translateX.value = withTiming(-width * minigamesIndex, {
@@ -90,10 +108,24 @@ function Play() {
     } else if (selectedReadingAssignment == null && randomMinigames != null) {
       setMinigames(randomMinigames);
       setCurrentMinigame(randomMinigames[minigamesIndex]);
+    } else if (
+      selectedReadingAssignment == null &&
+      randomMinigamesTeacher != null
+    ) {
+      setMinigames(randomMinigamesTeacher);
+      setCurrentMinigame(randomMinigamesTeacher[minigamesIndex]);
     }
-  }, [assignmentMinigame, randomMinigames]);
+  }, [assignmentMinigame, randomMinigames, randomMinigamesTeacher]);
 
   const handleFinishMinigamesSession = async () => {
+    if (userRole === "Teacher") {
+      setCurrentMinigame(null);
+      setMinigames([]);
+      setMinigamesIndex(0);
+      router.replace("/home");
+      return;
+    }
+
     try {
       const data = await completeMinigamesSession(currentReadingSession.id);
 
@@ -136,7 +168,7 @@ function Play() {
   };
 
   const nextGame = () => {
-    console.log("Next Game");
+    console.log("Next Game after ", minigamesIndex);
     const nextIndex = minigamesIndex + 1;
     if ((selectedReadingAssignment && nextIndex == 1) || nextIndex > 2) {
       handleFinishMinigamesSession();

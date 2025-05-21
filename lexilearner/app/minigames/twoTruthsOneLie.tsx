@@ -12,6 +12,7 @@ import {
 } from "@/stores/miniGameStore";
 import { Minigame, MinigameType } from "@/models/Minigame";
 import { useCreateMinigameLog } from "@/services/minigameService";
+import { useUserStore } from "@/stores/userStore";
 
 export default function TwoTruthsOneLie({
   minigame,
@@ -21,6 +22,8 @@ export default function TwoTruthsOneLie({
   nextGame: () => void;
 }) {
   const { mutate: triggerCreateMinigameLog } = useCreateMinigameLog();
+  const userRole = useUserStore((state) => state.user?.role);
+
   const [answered, setAnswered] = useState(false);
 
   const { choices, setChoices, setScore, resetGameState } =
@@ -45,6 +48,9 @@ export default function TwoTruthsOneLie({
     try {
       let score = answer === true ? 0 : 1;
       console.log("Two Truths 1 Lie Game Over");
+      if (userRole === "Pupil") {
+        
+
       const minigameLog = gameOver({ score });
 
       if (!minigameLog) {
@@ -55,7 +61,7 @@ export default function TwoTruthsOneLie({
         minigameLog,
         type: MinigameType.TwoTruthsOneLie,
       });
-
+    }
       setTimeout(() => {
         nextGame();
         resetGameState();

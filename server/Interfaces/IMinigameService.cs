@@ -1,4 +1,5 @@
-﻿using LexiLearner.Models;
+﻿using System.Security.Claims;
+using LexiLearner.Models;
 using LexiLearner.Models.DTO;
 
 namespace LexiLearner.Interfaces
@@ -8,6 +9,7 @@ namespace LexiLearner.Interfaces
         Task<MinigameDTO> Create(MinigameType minigameType, MinigameDTO.Create request);
         Task<MinigameDTO> GetMinigameById(Guid id);
         Task<List<MinigameDTO>> GetMinigames();
+        Task<List<MinigameDTO>> GetRandomMinigamesByRMId(Guid readingMaterialId);
         Task<List<MinigameDTO>> GetRandomMinigames(Guid readingSessionId);
         Task<List<MinigameDTO>> GetMinigamesByRMId(Guid readingMatId);
 

@@ -13,7 +13,7 @@ export default function Index() {
   const currentMinigame = useMiniGameStore((state) => state.currentMinigame);
 
   if (user) {
-    if (currentMinigame) {
+    if (currentMinigame && user.role === "Pupil") {
       return <Redirect href="/minigames/play" />;
     } else {
       return <Redirect href="/home" />;
