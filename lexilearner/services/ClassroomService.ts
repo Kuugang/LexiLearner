@@ -7,6 +7,7 @@ import {
 } from "@/models/ReadingMaterialAssignment";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { ReadingAssignmentLog } from "@/models/ReadingAssignmentLog";
+import { Classroom } from "@/models/Classroom";
 export { Pupil };
 
 export const createClassroom = async (classroomForm: Record<string, any>) => {
@@ -254,6 +255,22 @@ export const getPupilsFromClassroom = async (
     console.error("Error getting pupils from classroom:", error);
     return [];
   }
+};
+
+export const usePupilsFromClassroom = (selectedClassroom: Classroom) => {
+  return useQuery({
+    queryKey: ["classroomPupils", selectedClassroom?.id],
+    queryFn: () =>
+      selectedClassroom?.id
+        ? getPupilsFromClassroom(selectedClassroom.id)
+        : Promise.resolve([]),
+    enabled: !!selectedClassroom?.id,
+  });
+};
+
+export const usePupilsFromClassroomCount = (classroom: Classroom) => {
+  const { data = [] } = usePupilsFromClassroom(classroom);
+  return data?.length;
 };
 
 export const createReadingAssignment = async (variables: {

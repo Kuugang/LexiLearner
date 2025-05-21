@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { useClassroomStore } from "@/stores/classroomStore";
 import { Classroom } from "@/models/Classroom";
+import { usePupilsFromClassroomCount } from "@/services/ClassroomService";
 
 interface ClassroomCardProps {
   classroom: Classroom;
@@ -13,9 +14,10 @@ interface ClassroomCardProps {
 
 export default function ClassroomCard({ classroom }: ClassroomCardProps) {
   const setSelectedClassroom = useClassroomStore(
-    (state) => state.setSelectedClassroom,
+    (state) => state.setSelectedClassroom
   );
   const router = useRouter();
+  const studentCount = usePupilsFromClassroomCount(classroom);
 
   const onPress = () => {
     setSelectedClassroom(classroom);
@@ -30,9 +32,8 @@ export default function ClassroomCard({ classroom }: ClassroomCardProps) {
         <View className="flex-row justify-between items-center px-5 py-4 bg-white">
           <Text className="font-bold text-lg">{classroom.name}</Text>
           <Text className="text-gray-700">
-            {/* {classroom.studentCount}
-            {classroom.studentCount > 1 ? " Students" : " Student"} */}
-            12 Students
+            {studentCount}
+            {studentCount > 1 ? " Students" : " Student"}
           </Text>
         </View>
       </View>

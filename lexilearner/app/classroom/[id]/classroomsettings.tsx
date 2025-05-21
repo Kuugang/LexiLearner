@@ -10,6 +10,7 @@ import {
   searchPupils as apiSearchPupils,
   getPupilsFromClassroom,
   leaveClassroom as apiLeaveClassroom,
+  usePupilsFromClassroom,
 } from "@/services/ClassroomService";
 import TeacherSetting from "@/components/Classroom/TeacherSetting";
 import PupilSetting from "@/components/Classroom/PupilSetting";
@@ -26,14 +27,8 @@ export default function ClassroomSettings() {
 
   const user = useUserStore((state) => state.user);
 
-  const { data: enrolledPupils, isLoading: loadingPupils } = useQuery({
-    queryKey: ["classroomPupils", selectedClassroom?.id],
-    queryFn: () =>
-      selectedClassroom?.id
-        ? getPupilsFromClassroom(selectedClassroom.id)
-        : Promise.resolve([]),
-    enabled: !!selectedClassroom?.id,
-  });
+  const { data: enrolledPupils, isLoading: loadingPupils } =
+    usePupilsFromClassroom(selectedClassroom!); // GI BALHIN NAKOS SERVICES SO I CAN REUSE TTOTT
 
   const { mutateAsync: editClassroomMutation } = useMutation({
     mutationFn: ({
