@@ -84,16 +84,16 @@ namespace LexiLearner
 
             services.Configure<JwtOptions>(Configuration.GetSection("JWT"));
 
-           services.AddControllers()
-            .AddJsonOptions(options =>
-            {
-                options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
-                options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
-                options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-                options.AllowInputFormatterExceptionMessages = true;
-            });
+            services.AddControllers()
+             .AddJsonOptions(options =>
+             {
+                 options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+                 options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+                 options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+                 options.AllowInputFormatterExceptionMessages = true;
+             });
 
-            
+
 
             services.ConfigureApplicationCookie(options =>
             {
@@ -111,7 +111,8 @@ namespace LexiLearner
                 options.Filters.Add<GlobalExceptionFilter>();
             });
 
-            services.AddSingleton<IJWTService, JWTService>();
+            services.AddScoped<IJWTService, JWTService>();
+
             services.AddSingleton<IAuthorizationMiddlewareResultHandler, CustomAuthorizationMiddlewareResultHandler>();
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
@@ -221,7 +222,6 @@ namespace LexiLearner
             });
 
             // Register JwtAuthenticationService as middleware
-
             app.UseMiddleware<JWTMiddleware>();
 
             app.UseHttpsRedirection();

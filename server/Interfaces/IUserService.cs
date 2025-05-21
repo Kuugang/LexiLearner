@@ -14,8 +14,6 @@ namespace LexiLearner.Interfaces
         Task<User?> GetUserByEmail(string Email);
         Task<User?> GetUserByUsername(string Username);
 
-        Task<SuccessResponseDTO> Register(RegisterRequest RegisterRequest);
-
         Task<ResponseDTO> GetUserProfile(ClaimsPrincipal User);
         Task<ResponseDTO> GetPublicProfile(string Username);
 

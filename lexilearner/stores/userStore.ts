@@ -28,6 +28,7 @@ export const useUserStore = create<UserStore>()(
           const response = await apiUpdateProfile(form);
           const data = response.data;
 
+          console.log(data);
           set((state) => {
             if (!state.user) return {};
 
@@ -51,7 +52,7 @@ export const useUserStore = create<UserStore>()(
           });
         } catch (error: any) {
           throw new Error(
-            error instanceof Error ? error.message : "Unknown error occurred"
+            error instanceof Error ? error.message : "Unknown error occurred",
           );
         }
       },
@@ -76,6 +77,6 @@ export const useUserStore = create<UserStore>()(
           await AsyncStorage.removeItem(name);
         },
       },
-    }
-  )
+    },
+  ),
 );

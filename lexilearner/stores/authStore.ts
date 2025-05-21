@@ -4,6 +4,7 @@ import { useUserStore } from "./userStore";
 import { useGlobalStore } from "./globalStore";
 import { persist } from "zustand/middleware";
 import { Pupil, User } from "../models/User";
+import Toast from "react-native-toast-message";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import {
@@ -23,7 +24,6 @@ type AuthStore = {
 };
 
 const setUser = useUserStore.getState().setUser;
-const setIsLoading = useGlobalStore.getState().setIsLoading;
 
 export const useAuthStore = create<AuthStore>()(
   persist(
@@ -31,8 +31,7 @@ export const useAuthStore = create<AuthStore>()(
       login: async (email: string, password: string) => {
         try {
           let response = await apiLogin(email, password);
-
-          await AsyncStorage.setItem("bearerToken", response.data.token);
+          await AsyncStorage.setItem("accessToken", response.data.token);
 
           response = await getProfile();
 
@@ -67,6 +66,11 @@ export const useAuthStore = create<AuthStore>()(
             }
 
             setUser(user);
+            Toast.show({
+              type: "success",
+              text1: "Authentication Success",
+            });
+            router.replace("/home");
           } else {
             router.push({
               pathname: "/signup3",
@@ -74,9 +78,11 @@ export const useAuthStore = create<AuthStore>()(
             });
           }
         } catch (error: any) {
-          throw new Error(
-            error instanceof Error ? error.message : "Unknown error occurred",
-          );
+          Toast.show({
+            type: "error",
+            text1: "Authentication Failed",
+            text2: error.message,
+          });
         }
       },
 
@@ -84,7 +90,7 @@ export const useAuthStore = create<AuthStore>()(
         try {
           let response = await apiSignUp(registerForm);
 
-          await AsyncStorage.setItem("bearerToken", response.data.token);
+          await AsyncStorage.setItem("accessToken", response.data.token);
 
           response = await getProfile();
 
@@ -130,7 +136,7 @@ export const useAuthStore = create<AuthStore>()(
       logout: async () => {
         setUser(null);
 
-        await AsyncStorage.removeItem("bearerToken");
+        await AsyncStorage.removeItem("accessToken");
       },
 
       providerAuth: async (provider: number) => {
@@ -160,8 +166,7 @@ export const useAuthStore = create<AuthStore>()(
               return;
           }
 
-          setIsLoading(true);
-          await AsyncStorage.setItem("bearerToken", response.data.token);
+          await AsyncStorage.setItem("accessToken", response.data.token);
 
           let userProfileResponse = await getProfile();
 
@@ -195,6 +200,12 @@ export const useAuthStore = create<AuthStore>()(
             };
 
             setUser(user);
+
+            Toast.show({
+              type: "success",
+              text1: "Authentication Success",
+            });
+            router.replace("/home");
           } else {
             // Redirect user to profile setup screen
             router.push({
@@ -204,8 +215,6 @@ export const useAuthStore = create<AuthStore>()(
           }
         } catch (error) {
           console.error("Authentication failed:", error);
-        } finally {
-          setIsLoading(false);
         }
       },
     }),
