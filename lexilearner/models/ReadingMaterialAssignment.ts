@@ -1,3 +1,5 @@
+import { ReadingContentType } from "./ReadingContent";
+
 export interface ReadingAssignment {
   id: string;
   classroomId: string;
@@ -10,4 +12,10 @@ export interface ReadingAssignment {
   createdAt: string;
   cover: string;
   updatedAt: string;
+}
+
+export interface ReadingAssignmentOverview extends ReadingAssignment {
+  numberOfStudentsFinished: number;
+  averageScore: number;
+  averageDuration: number;
 }

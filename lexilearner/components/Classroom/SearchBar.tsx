@@ -23,9 +23,9 @@ interface SearchBarProps {
   debounceTime?: number;
   onClearPress?: () => void;
   isSearching?: boolean;
+  blurOnSubmit?: boolean;
 }
 
-// Create a ref interface
 export interface SearchBarRef {
   focus: () => void;
   preventKeyboardReturn: () => void;
@@ -43,6 +43,7 @@ const SearchBar = forwardRef<SearchBarRef, SearchBarProps>(
       debounceTime = 500,
       onClearPress,
       isSearching = false,
+      blurOnSubmit = false,
     },
     ref
   ) => {
@@ -52,6 +53,8 @@ const SearchBar = forwardRef<SearchBarRef, SearchBarProps>(
     const [shouldPreventKeyboardReturn, setShouldPreventKeyboardReturn] =
       useState(false);
     const isMountedRef = useRef(true);
+
+    const [isSearchProcessing, setIsSearchProcessing] = useState(false);
 
     useEffect(() => {
       isMountedRef.current = true;
@@ -88,39 +91,6 @@ const SearchBar = forwardRef<SearchBarRef, SearchBarProps>(
       }
     }, [initialValue]);
 
-    useEffect(() => {
-      let keyboardDidHideListener = Keyboard.addListener(
-        "keyboardDidHide",
-        () => {
-          if (
-            !shouldPreventKeyboardReturn &&
-            isMountedRef.current &&
-            inputRef.current
-          ) {
-            setTimeout(() => {
-              if (isMountedRef.current && inputRef.current) {
-                inputRef.current.focus();
-              }
-            }, 20);
-          }
-        }
-      );
-
-      let keyboardDidShowListener = Keyboard.addListener(
-        "keyboardDidShow",
-        () => {
-          if (shouldPreventKeyboardReturn && isMountedRef.current) {
-            setShouldPreventKeyboardReturn(false);
-          }
-        }
-      );
-
-      return () => {
-        keyboardDidHideListener.remove();
-        keyboardDidShowListener.remove();
-      };
-    }, [shouldPreventKeyboardReturn]);
-
     const handleChangeText = (text: string) => {
       setSearchText(text);
 
@@ -128,22 +98,15 @@ const SearchBar = forwardRef<SearchBarRef, SearchBarProps>(
         clearTimeout(debounceTimerRef.current);
       }
 
-      debounceTimerRef.current = setTimeout(() => {
-        if (isMountedRef.current) {
-          onSearch(text);
+      if (text.length > 2 || text === "") {
+        setIsSearchProcessing(true);
 
-          if (inputRef.current && isMountedRef.current) {
-            inputRef.current.focus();
-          }
-        }
-      }, debounceTime);
-
-      if (text === "" || text.length === 1) {
-        setTimeout(() => {
+        debounceTimerRef.current = setTimeout(() => {
           if (isMountedRef.current) {
             onSearch(text);
+            setIsSearchProcessing(false);
           }
-        }, 20);
+        }, debounceTime);
       }
     };
 
@@ -172,27 +135,29 @@ const SearchBar = forwardRef<SearchBarRef, SearchBarProps>(
         clearTimeout(debounceTimerRef.current);
       }
 
+      setIsSearchProcessing(true);
       onSearch(searchText);
+      setIsSearchProcessing(false);
 
       setTimeout(() => {
         if (inputRef.current && isMountedRef.current) {
           inputRef.current.focus();
         }
-      }, 10);
+      }, 50);
     };
 
     return (
       <View style={[styles.container, containerStyle]}>
         <View style={styles.searchContainer}>
-          {isSearching ? (
+          {/* {isSearching || isSearchProcessing ? (
             <ActivityIndicator
               size="small"
               color="#0A84FF"
               style={styles.searchIcon}
             />
-          ) : (
-            <Search size={20} color="#888" style={styles.searchIcon} />
-          )}
+          ) : ( */}
+          <Search size={20} color="#888" style={styles.searchIcon} />
+          {/* )} */}
           <TextInput
             ref={inputRef}
             style={styles.input}
@@ -207,13 +172,8 @@ const SearchBar = forwardRef<SearchBarRef, SearchBarProps>(
             onSubmitEditing={handleSubmitEditing}
             keyboardType="default"
             keyboardAppearance="default"
-            onEndEditing={(e) => {
-              e.preventDefault?.();
-
-              if (inputRef.current && !shouldPreventKeyboardReturn) {
-                setTimeout(() => inputRef.current?.focus(), 10);
-              }
-            }}
+            selectTextOnFocus={false}
+            enablesReturnKeyAutomatically={false}
           />
           {searchText.length > 0 && (
             <TouchableOpacity

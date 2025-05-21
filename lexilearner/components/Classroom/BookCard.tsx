@@ -51,7 +51,7 @@ function BookCard({ book, selected }: BookCardProps & { selected?: boolean }) {
       />
       <View style={{ padding: 8 }}>
         <Text numberOfLines={2} style={{ fontWeight: "bold", fontSize: 14 }}>
-          {book.title}
+          {book.title} BOOK CARD BITCH
         </Text>
         <Text numberOfLines={1} style={{ color: "#666", fontSize: 12 }}>
           {book.author}

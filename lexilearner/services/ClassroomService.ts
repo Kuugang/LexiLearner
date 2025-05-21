@@ -1,10 +1,12 @@
-import { useUserStore } from "@/stores/userStore";
 import { axiosInstance } from "@/utils/axiosInstance";
 
 import { User, Pupil } from "@/models/User";
-import { Classroom } from "@/models/Classroom";
-import { ReadingAssignment } from "@/models/ReadingMaterialAssignment";
-import { useQuery } from "@tanstack/react-query";
+import {
+  ReadingAssignment,
+  ReadingAssignmentOverview,
+} from "@/models/ReadingMaterialAssignment";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { ReadingAssignmentLog } from "@/models/ReadingAssignmentLog";
 export { Pupil };
 
 export const createClassroom = async (classroomForm: Record<string, any>) => {
@@ -300,32 +302,6 @@ const getReadingAssignments = async (
   return response.data.data;
 };
 
-const getReadingAssignmentById = async (readingAssignmentId: string) => {
-  const response = await axiosInstance.get(
-    `/classroom/readingAssignments/${readingAssignmentId}`,
-    {
-      validateStatus: () => true,
-    }
-  );
-
-  if (response.status !== 200 && response.status !== 201) {
-    throw new Error(response.data.message);
-  }
-
-  console.log("ACTIVTIY SERVICES:", response.data.data);
-  return response.data.data;
-};
-
-export const useGetReadingAssignmentById = (readingAssignmentId: string) => {
-  return useQuery({
-    queryKey: ["readingAssignment"],
-    queryFn: () => getReadingAssignmentById(readingAssignmentId),
-  });
-};
-
-export const updateReadingAssignment = async () => {};
-export const deleteReadingAssignment = async () => {};
-
 export const getLeaderboardByClassroomId = async (classroomId: string) => {
   const response = await axiosInstance.get(
     `/classroom/${classroomId}/leaderboard`,
@@ -339,4 +315,79 @@ export const getLeaderboardByClassroomId = async (classroomId: string) => {
   }
 
   return response.data.data;
+};
+
+const getReadingAssignmentsOverviewByClassroomId = async (
+  classroomId: string
+): Promise<ReadingAssignmentOverview[]> => {
+  const response = await axiosInstance.get(
+    `/classroom/${classroomId}/readingAssignments/overview`,
+    { validateStatus: () => true }
+  );
+
+  if (response.status !== 200 && response.status !== 201) {
+    throw new Error(response.data.message);
+  }
+
+  return response.data.data;
+};
+
+export const useReadingAssigmentsWStats = (classroomId: string) => {
+  console.log("CALLED IT");
+  return useQuery({
+    queryKey: ["readingAssignmentsWStats"],
+    queryFn: () => getReadingAssignmentsOverviewByClassroomId(classroomId),
+  });
+};
+
+const createAssignmentLog = async (
+  readingAssignmentId: string,
+  minigamelogId: string
+) => {
+  const response = await axiosInstance.post(
+    `classroom/readingAssignments/${readingAssignmentId}/logs/${minigamelogId}`,
+    { validateStatus: () => true }
+  );
+
+  if (response.status !== 200 && response.status !== 201) {
+    console.log(response.data);
+    throw new Error(response.data.message);
+  }
+
+  return response.data;
+};
+
+export const useCreateAssignmentLog = () => {
+  return useMutation({
+    mutationFn: ({
+      readingAssignmentId,
+      minigamelogId,
+    }: {
+      readingAssignmentId: string;
+      minigamelogId: string;
+    }) => createAssignmentLog(readingAssignmentId, minigamelogId),
+  });
+};
+
+const getReadingAssignmentLogsByReadingAssignmentId = async (
+  readingAssignmentId: string
+): Promise<ReadingAssignmentLog[]> => {
+  const response = await axiosInstance.get(
+    `classroom/readingAssignments/${readingAssignmentId}/logs`,
+    { validateStatus: () => true }
+  );
+
+  if (response.status !== 200 && response.status !== 201) {
+    throw new Error(response.data.message);
+  }
+
+  return response.data.data;
+};
+
+export const useGetReadingAssignmentLogs = (readingAssignmentId: string) => {
+  return useQuery({
+    queryKey: ["assignmentlogs"],
+    queryFn: () =>
+      getReadingAssignmentLogsByReadingAssignmentId(readingAssignmentId),
+  });
 };

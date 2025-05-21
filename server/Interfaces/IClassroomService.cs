@@ -25,8 +25,8 @@ namespace LexiLearner.Interfaces{
 		Task<List<ClassroomEnrollmentDTO.Leaderboard>> GetLeaderboard(Guid ClassroomId, ClaimsPrincipal User);
 		Task<ReadingAssignmentLogDTO> CreateAssignmentLog(Guid ReadingAssignmentId, Guid MinigameLogId);
 		Task<ReadingAssignmentLog> GetAssignmentLogById(Guid ReadingAssignmentLogId);
-        Task<ReadingAssignmentLog> GetAssignmentLogByReadingAssignmentIdAndPupilId(Guid ReadingAssignmentId, Guid PupilId);
-		Task<List<ReadingAssignmentLog>> GetAssignmentLogsByReadingAssignmentId(Guid ReadingAssignmentId);
+        Task<List<ReadingAssignmentLog>> GetAssignmentLogByReadingAssignmentIdAndPupilId(Guid ReadingAssignmentId, Guid PupilId);
+		Task<List<ReadingAssignmentLog>> GetAssignmentLogsByReadingAssignmentId(Guid ReadingAssignmentId, ClaimsPrincipal User);
 		Task<List<ReadingAssignmentLog>> GetAssignmentLogsByPupilId(Guid PupilId);
         Task<List<ReadingAssignmentLog>> GetAssignmentLogsByClassroomId(Guid ClassroomId);
         Task<List<ReadingAssignmentLog>> GetAssignmentLogsByClassroomIdAndPupilId(Guid ClassroomId, Guid PupilId);

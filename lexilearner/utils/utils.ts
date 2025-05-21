@@ -1,8 +1,10 @@
+import { Pupil } from "@/services/ClassroomService";
+
 export const decodeToken = (token: string) => {
   try {
-    const base64Url = token.split(".")[1]; // Get payload part
-    const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/"); // Fix encoding
-    return JSON.parse(atob(base64)); // Decode Base64 & parse JSON
+    const base64Url = token.split(".")[1];
+    const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+    return JSON.parse(atob(base64));
   } catch (error) {
     console.error("Invalid token", error);
     return null;
@@ -12,7 +14,7 @@ export const decodeToken = (token: string) => {
 export const validateField = (
   name: string,
   value: string,
-  form: Record<string, any> = {},
+  form: Record<string, any> = {}
 ) => {
   switch (name) {
     case "firstName":
@@ -61,4 +63,25 @@ export const validateField = (
     default:
       return "";
   }
+};
+
+export const displayPupilName = (pupil: Pupil): string => {
+  return `${pupil.firstName} ${pupil.lastName}`;
+};
+
+export const getRandomColor = (name: string) => {
+  const colors = [
+    "#845EC2",
+    "#D65DB1",
+    "#FF6F91",
+    "#FF9671",
+    "#FFC75F",
+    "#F9F871",
+    "#0089BA",
+    "#2C73D2",
+  ];
+  const hash = name.split("").reduce((acc, char) => {
+    return char.charCodeAt(0) + acc;
+  }, 0);
+  return colors[hash % colors.length];
 };

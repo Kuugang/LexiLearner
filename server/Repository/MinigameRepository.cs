@@ -75,5 +75,10 @@ namespace LexiLearner.Repository
                 .Where(mg => mg.ReadingMaterialId == readingMaterialId && mg.MinigameType == minigameType)
                 .ToListAsync();
         }
+
+        public async Task<MinigameLog?> GetMinigameLogByMIdRSId(Guid ReadingSessionId, Guid MinigameId)
+        {
+            return await _dataContext.MinigameLog.FirstOrDefaultAsync(mgl => mgl.MinigameId == MinigameId && mgl.ReadingSessionId == ReadingSessionId);
+        }
     }
 }

@@ -1,7 +1,7 @@
-import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { ReadingAssignment } from '@/models/ReadingMaterialAssignment';
+import { create } from "zustand";
+import { persist } from "zustand/middleware";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { ReadingAssignment } from "@/models/ReadingMaterialAssignment";
 
 interface ReadingAssignmentStore {
   readingAssignments: ReadingAssignment[];
@@ -28,7 +28,7 @@ export const useReadingAssignmentStore = create<ReadingAssignmentStore>()(
         })),
     }),
     {
-      name: 'reading-assignment-store',
+      name: "reading-assignment-store",
       storage: {
         getItem: async (name) => {
           const value = await AsyncStorage.getItem(name);
