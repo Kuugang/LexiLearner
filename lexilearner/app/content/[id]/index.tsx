@@ -45,17 +45,19 @@ function ContentIndex() {
 
         <BackHeader />
 
-        {/* <Image
-          // TODO: MURAG NAA DIRI AKONG PROBLEMA!
+        <Image
           source={{
             uri: selectedContent.cover,
           }}
           className="rounded-lg mr-4"
           style={{ width: 130, height: 185 }}
           alt=""
-        /> */}
+        />
 
-        <Text className="text-2xl font-bold">{selectedContent.title}</Text>
+        <View className="flex flex-row items-center">
+          <Text className="text-2xl font-bold">{selectedContent.title}</Text>
+          <MaterialDifficulty difficulty={selectedContent.difficulty} />
+        </View>
         {selectedContent.author && (
           <Text className="text-lg mb-2">{selectedContent.author}</Text>
         )}
@@ -73,7 +75,7 @@ function ContentIndex() {
             </Button>
             <Text className="font-bold">Read</Text>
           </View>
-
+          {/* 
           <View className="flex flex-col justify-center items-center gap-2">
             <Button
               style={{ borderRadius: "100%", width: 65, height: 65 }}
@@ -83,7 +85,7 @@ function ContentIndex() {
               <FontAwesomeIcon size={30} icon={faPlus} />
             </Button>
             <Text className="font-bold">Add to Library</Text>
-          </View>
+          </View> */}
         </View>
 
         {selectedContent.description && (
@@ -100,3 +102,30 @@ function ContentIndex() {
   );
 }
 export default memo(ContentIndex);
+
+export function MaterialDifficulty({ difficulty }: { difficulty: number }) {
+  var difficultyName, difficultyColor;
+  switch (true) {
+    case difficulty <= 40:
+      difficultyName = "Easy";
+      difficultyColor = "#90E190";
+      break;
+    case difficulty <= 80:
+      difficultyName = "Medium";
+      difficultyColor = "#99D6E9";
+      break;
+    case difficulty <= 100:
+      difficultyName = "Hard";
+      difficultyColor = "#FF663E";
+      break;
+  }
+
+  return (
+    <View
+      className="ml-3 px-4 py-1 rounded-xl"
+      style={{ backgroundColor: difficultyColor }}
+    >
+      <Text className="font-bold text-md">{difficultyName}</Text>
+    </View>
+  );
+}
