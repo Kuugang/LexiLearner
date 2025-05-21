@@ -23,38 +23,23 @@ import {
   getLoginStreak,
   getPupilAchievements,
   getTotalSession,
+  useProfileStats,
 } from "@/services/UserService";
 import { useQueries, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useCallback, useEffect, useState } from "react";
 import { useMiniGameStore } from "@/stores/miniGameStore";
 import { AwardIcon } from "@/components/AchievementDisplay";
 import { Achievement } from "@/models/Achievement";
+import { Progress } from "@/components/ui/progress";
+import { ProgressBar } from "@/components/Classroom/ProgressBar";
 
 export default function Profile() {
   const user = useUserStore((state) => state.user);
   const setAchievements = useMiniGameStore((state) => state.setAchievements);
   const isPupil = user?.role === "Pupil";
 
-  const [achievementsQuery, screenTimeQuery, loginStreakQuery] = useQueries({
-    queries: [
-      {
-        queryKey: ["achievements"],
-        queryFn: getPupilAchievements,
-        enabled: isPupil,
-      },
-      {
-        queryKey: ["totalSession"],
-        queryFn: getTotalSession,
-        refetchOnWindowFocus: true,
-        enabled: isPupil,
-      },
-      {
-        queryKey: ["loginStreak"],
-        queryFn: getLoginStreak,
-        enabled: isPupil,
-      },
-    ],
-  });
+  const [achievementsQuery, screenTimeQuery, loginStreakQuery] =
+    useProfileStats(isPupil);
 
   if (
     achievementsQuery.isLoading ||
@@ -138,6 +123,7 @@ export default function Profile() {
           </View>
           {user?.role === "Pupil" && (
             <>
+              <ProgressBar level={user!.pupil!.level!} />
               <Text className="text-xl font-bold">Overview</Text>
 
               <View className="grid grid-cols-2 gap-2">
@@ -147,7 +133,7 @@ export default function Profile() {
                   icon={<Flame color="red" />}
                 />
                 <ProfileStat
-                  level={"10"}
+                  level={"10"} // TODO: ang number nila uie
                   description="Books Read"
                   icon={<Book color="blue" />}
                 />
