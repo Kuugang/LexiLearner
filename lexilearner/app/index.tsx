@@ -9,20 +9,16 @@ import { ScrollView, View, Image } from "react-native";
 import { Button } from "~/components/ui/button";
 import { Text } from "~/components/ui/text";
 
-const Index = () => {
+export default function Index() {
   const user = useUserStore((state) => state.user);
   const currentMinigame = useMiniGameStore((state) => state.currentMinigame);
-  const setSelectedReadingAssignment = useReadingAssignmentStore(
-    (state) => state.setSelectedReadingAssignment
-  );
 
   if (user) {
-    setSelectedReadingAssignment(null);
     if (currentMinigame) {
       return <Redirect href="/minigames/play" />;
     } else {
+      return <Redirect href="/home" />;
     }
-    return <Redirect href="/profile" />;
   }
 
   return (
@@ -72,6 +68,4 @@ const Index = () => {
       </View>
     </ScrollView>
   );
-};
-
-export default React.memo(Index);
+}

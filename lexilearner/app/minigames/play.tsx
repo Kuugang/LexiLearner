@@ -29,7 +29,7 @@ const { width } = Dimensions.get("window");
 
 function Play() {
   const selectedReadingAssignment = useReadingAssignmentStore(
-    (state) => state.selectedReadingAssignment
+    (state) => state.selectedReadingAssignment,
   );
 
   const { mutateAsync: CreateAssignmentLog } = useCreateAssignmentLog();
@@ -37,7 +37,7 @@ function Play() {
   const translateX = useSharedValue(0);
 
   const currentReadingSession = useReadingSessionStore(
-    (state) => state.currentSession
+    (state) => state.currentSession,
   );
 
   const {
@@ -55,49 +55,43 @@ function Play() {
   const { mutateAsync: completeMinigamesSession } =
     useCompleteMinigameSession();
 
-  const {
-    data: rawMinigames,
-    isLoading: minigamesLoading,
-    refetch: fetchRandomMinigames,
-  } = selectedReadingAssignment != null
-    ? useGetMinigameById(selectedReadingAssignment.minigameId)
-    : useRandomMinigames(currentReadingSession.id);
+  const { data: randomMinigames, refetch: fetchRandomMinigames } =
+    useRandomMinigames(currentReadingSession.id);
 
-  // for the reading assignment activity
-  const randomMinigames = Array.isArray(rawMinigames)
-    ? rawMinigames
-    : rawMinigames
-    ? [rawMinigames]
-    : [];
+  const assignmentMinigameId = selectedReadingAssignment?.minigameId ?? "";
+  const { data: assignmentMinigame, refetch: fetchAssignmentMinigame } =
+    useGetMinigameById(assignmentMinigameId);
 
   const { refetch: refetchMinigameLog } =
-    (selectedReadingAssignment != null) ? useGetMinigameLogByMIDRSID(
-      selectedReadingAssignment?.minigameId ?? "",
-      currentReadingSession?.id
-    ) : { refetch: async () => undefined };
+    selectedReadingAssignment != null
+      ? useGetMinigameLogByMIDRSID(
+          selectedReadingAssignment?.minigameId ?? "",
+          currentReadingSession?.id,
+        )
+      : { refetch: async () => undefined };
 
   useEffect(() => {
-    console.log("Onload " + minigamesIndex);
-    if (!currentMinigame) {
-      console.log(selectedReadingAssignment == null);
-      if (selectedReadingAssignment != null && minigamesIndex == 1) {
-        handleFinishMinigamesSession();
-      }
-      fetchRandomMinigames();
-    } else {
+    if (selectedReadingAssignment) fetchAssignmentMinigame();
+    else fetchRandomMinigames();
+
+    if (currentMinigame) {
       translateX.value = withTiming(-width * minigamesIndex, {
         duration: 300,
       });
     }
-    console.log(minigames.map((m) => m.minigameType));
   }, []);
 
   useEffect(() => {
-    if (minigamesLoading || !randomMinigames || currentMinigame) return;
+    if (currentMinigame) return;
 
-    setMinigames(randomMinigames);
-    setCurrentMinigame(randomMinigames[minigamesIndex]);
-  }, [minigamesLoading]);
+    if (selectedReadingAssignment != null && assignmentMinigame != null) {
+      setMinigames([assignmentMinigame]);
+      setCurrentMinigame(assignmentMinigame);
+    } else if (selectedReadingAssignment == null && randomMinigames != null) {
+      setMinigames(randomMinigames);
+      setCurrentMinigame(randomMinigames[minigamesIndex]);
+    }
+  }, [assignmentMinigame, randomMinigames]);
 
   const handleFinishMinigamesSession = async () => {
     try {
@@ -134,7 +128,7 @@ function Play() {
     } catch (error) {
       if (error instanceof Error) {
         console.error("Failed to complete minigames session:", error.message);
-        console.error(error.stack);
+        console.error(error);
       } else {
         console.error("Failed to complete minigames session:", error);
       }

@@ -279,20 +279,56 @@ namespace LexiLearner.Services
                     StatusCodes.Status404NotFound
                 );
             }
-
-            // getting 3 minigames with distinct types
-            minigames = minigames
-                .GroupBy(m => m.MinigameType)
-                .OrderBy(_ => _random.Next())
-                .Take(Math.Min(3, minigames.GroupBy(m => m.MinigameType).Count()))
-                .Select(group =>
+            
+            // --- Adaptive Section Start ---
+            var averageScoreDict = await _minigameRepository.GetAvgNormalizedScoreByType(readingSession.PupilId, readingSession.ReadingMaterialId);
+            
+            foreach (MinigameType type in Enum.GetValues(typeof(MinigameType)))
+            {
+                if (!averageScoreDict.ContainsKey(type))
                 {
-                    var minigamesOfType = group.ToList();
-                    return minigamesOfType[_random.Next(minigamesOfType.Count)];
-                })
+                    averageScoreDict[type] = 0.0;
+                }
+            }
+            
+            // getting the 3 weakest types
+            var weakTypes = averageScoreDict
+                .OrderBy(kvp => kvp.Value)
+                .Take(3)
+                .Select(kvp => kvp.Key)
+                .ToList();        
+
+            // pick minigames of weak types, fill up to 3 with random others if needed
+            var selectedMinigames = minigames
+                .Where(mg => weakTypes.Contains(mg.MinigameType))
+                .GroupBy(mg => mg.MinigameType)
+                .Select(group => group.OrderBy(_ => _random.Next()).First())
                 .ToList();
 
-            return minigames.Select(mg => new MinigameDTO(mg)).ToList();
+
+            if (selectedMinigames.Count < 3)
+            {
+                var remaining = minigames
+                    .Where(mg => !selectedMinigames.Any(sel => sel.MinigameType == mg.MinigameType))
+                    .GroupBy(mg => mg.MinigameType)
+                    .Select(group => group.OrderBy(_ => _random.Next()).First())
+                    .ToList();
+
+                selectedMinigames.AddRange(remaining.Take(3 - selectedMinigames.Count));
+            }
+            // // getting 3 minigames with distinct types
+            // minigames = minigames
+            //     .GroupBy(m => m.MinigameType)
+            //     .OrderBy(_ => _random.Next())
+            //     .Take(Math.Min(3, minigames.GroupBy(m => m.MinigameType).Count()))
+            //     .Select(group =>
+            //     {
+            //         var minigamesOfType = group.ToList();
+            //         return minigamesOfType[_random.Next(minigamesOfType.Count)];
+            //     })
+            //     .ToList();
+
+            return selectedMinigames.Select(mg => new MinigameDTO(mg)).ToList();
         }
 
         private static int GetMaxScore(MinigameType type, MinigameDTO.Create request)
