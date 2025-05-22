@@ -12,6 +12,7 @@ import { Text } from "~/components/ui/text";
 import { Heart } from "lucide-react-native";
 import { Minigame, MinigameType } from "@/models/Minigame";
 import { useCreateMinigameLog } from "@/services/minigameService";
+import { useUserStore } from "@/stores/userStore";
 
 export default function FillInTheBlank({
   minigame,
@@ -21,6 +22,7 @@ export default function FillInTheBlank({
   nextGame: () => void;
 }) {
   const { mutate: triggerCreateMinigameLog } = useCreateMinigameLog();
+  const userRole = useUserStore((state) => state.user?.role);
 
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
   const [answer, setAnswer] = useState<string | null>(null);
@@ -77,6 +79,9 @@ export default function FillInTheBlank({
       try {
         let score = answer === correctAnswer ? 1 : 0;
         console.log("FIll in the blank Game Over");
+        if (userRole === "Pupil") {
+          
+
         const minigameLog = gameOver({
           answers,
           score,
@@ -90,7 +95,7 @@ export default function FillInTheBlank({
           minigameLog,
           type: MinigameType.FillInTheBlanks,
         });
-
+      }
         setTimeout(() => {
           nextGame();
           resetGameState();

@@ -14,12 +14,10 @@ namespace LexiLearner.Middlewares
     public class JWTMiddleware
     {
         private readonly RequestDelegate _next;
-        private readonly IJWTService _jwtService;
 
-        public JWTMiddleware(RequestDelegate next, IJWTService jwtService)
+        public JWTMiddleware(RequestDelegate next)
         {
             _next = next;
-            _jwtService = jwtService;
         }
 
         public async Task InvokeAsync(HttpContext context)
@@ -28,6 +26,7 @@ namespace LexiLearner.Middlewares
 
             if (!string.IsNullOrEmpty(token))
             {
+                var _jwtService = context.RequestServices.GetRequiredService<IJWTService>();
                 var principal = _jwtService.ValidateToken(token);
                 if (principal != null)
                 {

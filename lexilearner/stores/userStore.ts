@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { User } from "../models/User";
+import { User, extractUser } from "../models/User";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
   updateProfile as apiUpdateProfile,
@@ -29,8 +29,15 @@ export const useUserStore = create<UserStore>()(
           const data = response.data;
 
           set((state) => {
-            if (!state.user) return {};
+            if (!state.user) {
+              const user = extractUser(response.data);
 
+              return {
+                user: {
+                  ...user,
+                },
+              };
+            }
             return {
               user: {
                 ...state.user,
@@ -51,7 +58,7 @@ export const useUserStore = create<UserStore>()(
           });
         } catch (error: any) {
           throw new Error(
-            error instanceof Error ? error.message : "Unknown error occurred"
+            error instanceof Error ? error.message : "Unknown error occurred",
           );
         }
       },
@@ -76,6 +83,6 @@ export const useUserStore = create<UserStore>()(
           await AsyncStorage.removeItem(name);
         },
       },
-    }
-  )
+    },
+  ),
 );

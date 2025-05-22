@@ -4,6 +4,11 @@ import { useGlobalStore } from "~/stores/globalStore";
 import { router } from "expo-router";
 import { useAuthStore } from "@/stores/authStore";
 import { validateField } from "@/utils/utils";
+import { getProfile } from "@/services/UserService";
+import { login as apiLogin } from "@/services/AuthService";
+import { extractUser, User } from "@/models/User";
+import { useUserStore } from "@/stores/userStore";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 //Components
 import { ScrollView, TouchableOpacity, View } from "react-native";
@@ -17,7 +22,7 @@ import { faGoogle, faFacebook } from "@fortawesome/free-brands-svg-icons";
 import BackHeader from "../BackHeader";
 
 export default function Login() {
-  const login = useAuthStore((state) => state.login);
+  const setUser = useUserStore.getState().setUser;
   const providerAuth = useAuthStore((state) => state.providerAuth);
   const setIsLoading = useGlobalStore((state) => state.setIsLoading);
 
@@ -33,27 +38,6 @@ export default function Login() {
     password: "",
   });
 
-  const handleProviderAuth = async (provider: number) => {
-    try {
-      setIsLoading(true);
-      await providerAuth(provider);
-
-      Toast.show({
-        type: "success",
-        text1: "Authentication Success",
-      });
-      router.replace("/home");
-    } catch (error: any) {
-      Toast.show({
-        type: "error",
-        text1: "Authentication Failed",
-        text2: error.message,
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   const handleLogin = async () => {
     const newErrors: any = {};
     Object.keys(form).forEach((field) => {
@@ -67,19 +51,37 @@ export default function Login() {
       return;
     }
 
+    setIsLoading(true);
     try {
-      setIsLoading(true);
-      await login(form.email, form.password);
-      router.push("/home");
+      let response = await apiLogin(form.email, form.password);
+      await AsyncStorage.setItem("accessToken", response.data.accessToken);
+      await AsyncStorage.setItem(
+        "refreshToken",
+        response.data.refreshToken.token,
+      );
 
-      Toast.show({
-        type: "success",
-        text1: "Login Success",
-      });
+      response = await getProfile();
+
+      const userData = response.data;
+
+      if (userData) {
+        const user = extractUser(response.data);
+        setUser(user);
+        Toast.show({
+          type: "success",
+          text1: "Authentication Success",
+        });
+        router.replace("/home");
+      } else {
+        router.push({
+          pathname: "/signup3",
+          params: { fromProviderAuth: "false" },
+        });
+      }
     } catch (error: any) {
       Toast.show({
         type: "error",
-        text1: "Login Failed",
+        text1: "Authentication Failed",
         text2: error.message,
       });
     } finally {
@@ -190,7 +192,7 @@ export default function Login() {
               <Button
                 className="bg-white shadow-md rounded-lg"
                 onPress={() => {
-                  handleProviderAuth(0);
+                  providerAuth(0);
                 }}
               >
                 <FontAwesomeIcon icon={faGoogle} />
@@ -199,7 +201,7 @@ export default function Login() {
               <Button
                 className="bg-white shadow-md rounded-lg"
                 onPress={() => {
-                  handleProviderAuth(1);
+                  providerAuth(1);
                 }}
               >
                 <FontAwesomeIcon icon={faFacebook} />

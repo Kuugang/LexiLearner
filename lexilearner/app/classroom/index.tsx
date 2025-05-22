@@ -27,7 +27,6 @@ const extractArrayFromResponse = (data: any): any[] => {
 };
 
 export default function ClassroomScreen() {
-  console.log("RERENDER TEST HAHAHA");
   const classroom = useClassroomStore((state) => state.classrooms);
   const setClassroom = useClassroomStore((state) => state.setClassrooms);
   const user = useUserStore((state) => state.user);
@@ -69,8 +68,8 @@ export default function ClassroomScreen() {
   const classroomArray = Array.isArray(classroom)
     ? classroom
     : classroom && typeof classroom === "object" && "$values" in classroom
-    ? (classroom as any).$values
-    : [];
+      ? (classroom as any).$values
+      : [];
 
   return (
     <ScrollView className="bg-white">

@@ -29,11 +29,14 @@ import { useCallback, useEffect, useState } from "react";
 import { useMiniGameStore } from "@/stores/miniGameStore";
 import { AwardIcon } from "@/components/AchievementDisplay";
 import { Achievement } from "@/models/Achievement";
+import { ActivityIndicator } from "react-native-paper";
 
 export default function Profile() {
   const user = useUserStore((state) => state.user);
   const setAchievements = useMiniGameStore((state) => state.setAchievements);
   const isPupil = user?.role === "Pupil";
+  console.log("USER: ", user);
+  console.log(isPupil);
 
   const [achievementsQuery, screenTimeQuery, loginStreakQuery] = useQueries({
     queries: [
@@ -62,8 +65,9 @@ export default function Profile() {
     loginStreakQuery.isLoading
   ) {
     return (
-      <View>
-        <Text>Loading...</Text>
+      <View className="flex-1 justify-center items-center absolute inset-0 z-50">
+        <ActivityIndicator size="large" color="#0000ff" />
+        <Text className="mt-2">Loading...</Text>
       </View>
     );
   }
@@ -122,7 +126,7 @@ export default function Profile() {
                   <View className="flex flex-row gap-2 items-center">
                     <Zap color="#FFD43B" />
                     <Text className="text-lg font-bold">
-                      {user?.pupil?.level}
+                      {user?.pupil?.level ? user?.pupil?.level : 0}
                     </Text>
                   </View>
                   <Text className="text-sm text-gray-800">
@@ -184,7 +188,7 @@ export default function Profile() {
                   {achievementsQuery.data.map(
                     (a: Achievement, index: number) => (
                       <AwardIcon badge={`${a.badge}`} key={index} />
-                    )
+                    ),
                   )}
                 </View>
               </View>

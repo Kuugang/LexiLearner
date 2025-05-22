@@ -29,6 +29,8 @@ namespace LexiLearner.Data
         public DbSet<ReadingAssignmentLog> ReadingAssignmentLog { get; set; }
         public DbSet<PupilLeaderboard> PupilLeaderboard { get; set; }
 
+        public DbSet<RefreshToken> RefreshToken { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -46,17 +48,17 @@ namespace LexiLearner.Data
                 .HasForeignKey<Teacher>(t => t.UserId)
                 .IsRequired();
 
-			// ReadingContent has 1 genre
-			// modelBuilder.Entity<ReadingMaterial>()
-			//     .HasOne(rc => rc.Genre)
-			//     .WithMany()
-			//     .HasForeignKey(rc => rc.GenreId)
-			//     .IsRequired();
+            // ReadingContent has 1 genre
+            // modelBuilder.Entity<ReadingMaterial>()
+            //     .HasOne(rc => rc.Genre)
+            //     .WithMany()
+            //     .HasForeignKey(rc => rc.GenreId)
+            //     .IsRequired();
 
-			modelBuilder.Entity<ReadingMaterialGenre>()
-			 .HasKey(rmg => new { rmg.ReadingMaterialId, rmg.GenreId });
+            modelBuilder.Entity<ReadingMaterialGenre>()
+             .HasKey(rmg => new { rmg.ReadingMaterialId, rmg.GenreId });
 
-			modelBuilder.Entity<ReadingMaterialGenre>()
+            modelBuilder.Entity<ReadingMaterialGenre>()
                 .HasOne(rg => rg.ReadingMaterial)
                 .WithMany(r => r.ReadingMaterialGenres)
                 .HasForeignKey(rg => rg.ReadingMaterialId);
@@ -117,17 +119,17 @@ namespace LexiLearner.Data
                 .HasOne(rma => rma.Classroom)
                 .WithMany(c => c.ReadingMaterialAssignments)
                 .HasForeignKey(rma => rma.ClassroomId);
-            
+
             modelBuilder.Entity<ReadingMaterialAssignment>()
                 .HasOne(rma => rma.Minigame)
                 .WithMany()
                 .HasForeignKey(rma => rma.MinigameId);
-            
+
             modelBuilder.Entity<ReadingMaterialAssignment>()
                 .HasOne(rma => rma.ReadingMaterial)
                 .WithMany()
                 .HasForeignKey(rma => rma.ReadingMaterialId);
-            
+
             modelBuilder.Entity<ReadingAssignmentLog>()
                 .HasOne(ral => ral.ReadingMaterialAssignment)
                 .WithMany(ra => ra.ReadingAssignmentLogs)
@@ -137,7 +139,7 @@ namespace LexiLearner.Data
                 .HasOne(ral => ral.MinigameLog)
                 .WithOne()
                 .HasForeignKey<ReadingAssignmentLog>(ral => ral.MinigameLogId);
-               
+
             modelBuilder.Entity<PupilLeaderboard>()
                 .HasKey(pl => new { pl.PupilId, pl.Level });
         }

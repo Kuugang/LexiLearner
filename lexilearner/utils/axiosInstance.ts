@@ -7,7 +7,7 @@ export const axiosInstance = axios.create({
 });
 
 axiosInstance.interceptors.request.use(async (config) => {
-  const token = await AsyncStorage.getItem("bearerToken");
+  const token = await AsyncStorage.getItem("accessToken");
   if (token) {
     config.headers["Authorization"] = `Bearer ${token}`;
   }

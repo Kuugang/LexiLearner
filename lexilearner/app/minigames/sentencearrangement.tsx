@@ -14,6 +14,7 @@ import { Text } from "~/components/ui/text";
 import { Heart } from "lucide-react-native";
 import { Minigame, MinigameType } from "@/models/Minigame";
 import { useCreateMinigameLog } from "@/services/minigameService";
+import { useUserStore } from "@/stores/userStore";
 
 // Consistent colors for parts - alternate between these two
 const PART_COLORS = ["#FFFFFF", "#7dd3fc"];
@@ -116,6 +117,8 @@ export default function SentenceArrangement({
     [minigame.metaData],
   );
 
+  const userRole = useUserStore((state) => state.user?.role);
+
   const { mutate: triggerCreateMinigameLog } = useCreateMinigameLog();
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
   const [feedback, setFeedback] = useState("");
@@ -178,6 +181,8 @@ export default function SentenceArrangement({
         const score = isCorrect ? 1 : 0;
 
         console.log("Sentence Rearrangement Game Over");
+        if (userRole === "Pupil") {
+
         const minigameLog = gameOver({ answers, score });
 
         if (!minigameLog) {
@@ -187,7 +192,7 @@ export default function SentenceArrangement({
         triggerCreateMinigameLog({
           minigameLog,
           type: MinigameType.SentenceRearrangement,
-        });
+        });}
 
         setTimeout(() => {
           nextGame();
