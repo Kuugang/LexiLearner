@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { User } from "../models/User";
+import { User, extractUser } from "../models/User";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
   updateProfile as apiUpdateProfile,
@@ -28,10 +28,16 @@ export const useUserStore = create<UserStore>()(
           const response = await apiUpdateProfile(form);
           const data = response.data;
 
-          console.log(data);
           set((state) => {
-            if (!state.user) return {};
+            if (!state.user) {
+              const user = extractUser(response.data);
 
+              return {
+                user: {
+                  ...user,
+                },
+              };
+            }
             return {
               user: {
                 ...state.user,

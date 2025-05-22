@@ -35,6 +35,8 @@ export default function Profile() {
   const user = useUserStore((state) => state.user);
   const setAchievements = useMiniGameStore((state) => state.setAchievements);
   const isPupil = user?.role === "Pupil";
+  console.log("USER: ", user);
+  console.log(isPupil);
 
   const [achievementsQuery, screenTimeQuery, loginStreakQuery] = useQueries({
     queries: [

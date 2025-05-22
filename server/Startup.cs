@@ -150,11 +150,10 @@ namespace LexiLearner
                 options.SignIn.RequireConfirmedAccount = false;
                 options.SignIn.RequireConfirmedEmail = false;
             })
+            .AddUserValidator<OptionalEmailUserValidator<User>>()
             .AddEntityFrameworkStores<DataContext>()
             .AddDefaultTokenProviders()
             .AddTokenProvider<DataProtectorTokenProvider<User>>("MyApp");
-
-            services.AddTransient<IUserValidator<User>, OptionalEmailUserValidator<User>>();
 
             // Configure Authentication
             services.AddAuthentication(options =>
