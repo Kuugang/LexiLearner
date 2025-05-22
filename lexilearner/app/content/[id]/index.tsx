@@ -8,11 +8,16 @@ import { Button } from "@/components/ui/button";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faBookOpen, faPlus } from "@fortawesome/free-solid-svg-icons";
 import BackHeader from "@/components/BackHeader";
+import { useExtractDriveFileId } from "@/hooks/useExtractDriveFileId";
 
 function ContentIndex() {
   const selectedContent = useReadingContentStore(
     (state) => state.selectedContent
   );
+  const fileId = useExtractDriveFileId(selectedContent!.cover);
+  const imageUrl = fileId
+    ? `https://drive.google.com/uc?export=view&id=${fileId}`
+    : undefined;
 
   if (!selectedContent) {
     return (
@@ -47,7 +52,7 @@ function ContentIndex() {
 
         <Image
           source={{
-            uri: selectedContent.cover,
+            uri: imageUrl,
           }}
           className="rounded-lg mr-4"
           style={{ width: 130, height: 185 }}

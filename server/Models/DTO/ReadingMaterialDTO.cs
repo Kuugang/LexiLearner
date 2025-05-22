@@ -22,6 +22,8 @@ namespace LexiLearner.Models.DTO
       public int? Word_Count { get; set; }
       [JsonPropertyName("passage")]
       public required string Passage { get; set; }
+      [JsonPropertyName("cover")]
+      public string? Cover { get; set; }
       [JsonPropertyName("minigames")]
       public required JsonMinigame Minigames { get; set; } 
     }

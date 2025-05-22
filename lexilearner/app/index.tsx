@@ -17,7 +17,7 @@ export default function Index() {
     if (currentMinigame) {
       return <Redirect href="/minigames/play" />;
     } else {
-      return <Redirect href="/home" />;
+      // return <Redirect href="/home" />;
     }
   }
 
