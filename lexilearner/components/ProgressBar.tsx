@@ -9,7 +9,7 @@ import {
   Keyboard,
   Text,
 } from "react-native";
-import { Progress } from "../ui/progress";
+import { Progress } from "./ui/progress";
 import { Crown } from "lucide-react-native";
 
 function TierName(level: number) {

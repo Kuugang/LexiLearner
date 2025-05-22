@@ -32,7 +32,7 @@ import { AwardIcon } from "@/components/AchievementDisplay";
 import { Achievement } from "@/models/Achievement";
 import { ActivityIndicator } from "react-native-paper";
 import { Progress } from "@/components/ui/progress";
-import { ProgressBar } from "@/components/Classroom/ProgressBar";
+import { ProgressBar } from "@/components/ProgressBar";
 
 export default function Profile() {
   const user = useUserStore((state) => state.user);
