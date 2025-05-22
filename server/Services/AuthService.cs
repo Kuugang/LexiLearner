@@ -168,8 +168,17 @@ namespace LexiLearner.Services
 
             string FacebookId = FacebookUser["id"]?.ToString();
 
-            var user = await _userManager.FindByLoginAsync("Facebook", FacebookId);
-            user = await _userService.GetUserByEmail(FacebookUser["email"]?.ToString());
+            User user;
+            string email = FacebookUser["email"]?.ToString();
+            if (!string.IsNullOrWhiteSpace(email))
+            {
+                user = await _userService.GetUserByEmail(email);
+            }
+            else
+            {
+                user = null;
+            }
+
             if (user == null)
             {
                 var passwordHasher = new PasswordHasher<object>();
@@ -178,7 +187,7 @@ namespace LexiLearner.Services
 
                 user = new User
                 {
-                    Email = FacebookUser["email"]?.ToString(),
+                    Email = email,
                     UserName = FacebookUser["name"]?.ToString().Replace(" ", ""),
                     FirstName = FacebookUser["first_name"]?.ToString(),
                     LastName = FacebookUser["last_name"]?.ToString(),
