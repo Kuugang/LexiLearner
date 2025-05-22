@@ -10,6 +10,10 @@ import { useEffect, useState } from "react";
 import { useClassroomStore } from "@/stores/classroomStore";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useUserStore } from "@/stores/userStore";
+import LoadingScreen from "@/components/LoadingScreen";
+import { useFocusEffect } from "expo-router";
+import { useCallback } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 
 const extractArrayFromResponse = (data: any): any[] => {
   if (!data) return [];
@@ -27,9 +31,16 @@ const extractArrayFromResponse = (data: any): any[] => {
 };
 
 export default function ClassroomScreen() {
-  const classroom = useClassroomStore((state) => state.classrooms);
-  const setClassroom = useClassroomStore((state) => state.setClassrooms);
   const user = useUserStore((state) => state.user);
+  const queryClient = useQueryClient();
+
+  useFocusEffect(
+    useCallback(() => {
+      queryClient.invalidateQueries({
+        queryKey: ["classroomsData", user?.role],
+      });
+    }, [user?.role])
+  );
 
   const {
     data: classrooms,
@@ -41,19 +52,9 @@ export default function ClassroomScreen() {
     enabled: !!user?.role,
   });
 
-  useEffect(() => {
-    if (classrooms) {
-      const classroomArray = extractArrayFromResponse(classrooms);
-      console.log("Extracted classrooms:", classroomArray.length);
-      setClassroom(classroomArray);
-    }
-  }, [classrooms, setClassroom]);
-
   if (isLoading) {
     return (
-      <View className="flex-1 justify-center items-center">
-        <Text>Loading...</Text>
-      </View>
+      <LoadingScreen visible={isLoading} overlay={true} message="Loading..." />
     );
   }
 
@@ -65,11 +66,7 @@ export default function ClassroomScreen() {
     );
   }
 
-  const classroomArray = Array.isArray(classroom)
-    ? classroom
-    : classroom && typeof classroom === "object" && "$values" in classroom
-      ? (classroom as any).$values
-      : [];
+  const classroomArray = extractArrayFromResponse(classrooms);
 
   return (
     <ScrollView className="bg-white">
@@ -94,7 +91,6 @@ export default function ClassroomScreen() {
           ) : (
             <JoinClassroomBtn />
           )}
-
           {Array.isArray(classroomArray) && classroomArray.length > 0 ? (
             classroomArray.map((item) => (
               <ClassroomCard key={item.id} classroom={item} />
