@@ -62,7 +62,7 @@ export default function CurrentClassroom() {
   useEffect(() => {
     if (readingAssignments) {
       setReadingAssignments(readingAssignments);
-      console.log("READING ASSIGNMENTS:", readingAssignments);
+      // console.log("READING ASSIGNMENTS:", readingAssignments.index));
     }
   }, [readingAssignments, setReadingAssignments]);
 

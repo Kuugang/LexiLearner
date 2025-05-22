@@ -46,7 +46,6 @@ export default function Step3() {
           type: "success",
           text1: "Registration Success",
         });
-        refreshAccessToken();
         router.push("/home");
       }
     } catch (error: any) {

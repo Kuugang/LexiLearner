@@ -17,15 +17,21 @@ function HomeScreen() {
   const { data: stories, isLoading: isStoriesLoading } = useStories();
   const [showStreak, setShowStreakModal] = useState(false);
   const user = useUserStore((state) => state.user);
+  const lastLoginStreak = useUserStore((state) => state.lastLoginStreak);
+  const setLastLoginStreak = useUserStore((state) => state.setLastLoginStreak);
 
   // Show streak modal when component mounts
   useEffect(() => {
     // Check if it's a new day since last login or first-time user
     // This is where you would add your logic to determine if the streak should be shown
     // For demo purposes, we'll just show it after a short delay
-    if (user?.role === "Pupil"){
+
+    const today = new Date().toISOString().split("T")[0];
+    console.log("TODAY", today, "LOGINTREAKS:", lastLoginStreak);
+    if (today !== lastLoginStreak && user?.role === "Pupil") {
       const timer = setTimeout(() => {
         setShowStreakModal(true);
+        setLastLoginStreak(today);
       }, 500);
 
       return () => clearTimeout(timer);
@@ -171,7 +177,7 @@ Originally created by Dr. Seuss himself, Beginner Books are fun, funny, and easy
       <View className="flex-1 gap-4 w-full p-8">
         <Text className="text-2xl font-bold">Explore</Text>
         {isStoriesLoading && <Text>Loading stories...</Text>}
-        <View className="flex flex-row gap-3 flex-wrap">
+        <View className="flex flex-row justify-between flex-wrap">
           {!isStoriesLoading && Array.isArray(stories) && stories?.length > 0
             ? stories?.map((item) => (
                 <View key={item.id}>

@@ -3,11 +3,18 @@ import { View, Text, Image, TouchableOpacity } from "react-native";
 import { router } from "expo-router";
 import { ReadingContentType } from "@/models/ReadingContent";
 import { useReadingContentStore } from "@/stores/readingContentStore";
+import { useExtractDriveFileId } from "@/hooks/useExtractDriveFileId";
 
 function ReadingContent(props: ReadingContentType) {
   const setSelectedContent = useReadingContentStore(
     (state) => state.setSelectedContent
   );
+  const fileId = useExtractDriveFileId(props.cover);
+  const imageUrl = fileId
+    ? `https://drive.google.com/uc?export=view&id=${fileId}`
+    : undefined;
+
+  // console.log(imageUrl);
 
   const onPress = () => {
     setSelectedContent(props);
@@ -23,7 +30,7 @@ function ReadingContent(props: ReadingContentType) {
       >
         <Image
           source={{
-            uri: props.cover,
+            uri: imageUrl,
           }}
           className="rounded-lg mr-4"
           style={{ width: 100, height: 140 }}
@@ -50,7 +57,7 @@ function ReadingContent(props: ReadingContentType) {
       >
         <Image
           source={{
-            uri: props.cover,
+            uri: imageUrl,
           }}
           style={{ width: "100%", height: 140 }}
           resizeMode="contain"
