@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import { Text } from "@/components/ui/text";
 import {
   ScrollView,
@@ -18,6 +18,8 @@ import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import AddPupilModal from "./AddPupilModal";
 
 import { displayPupilName, getRandomColor } from "@/utils/utils";
+import ConfirmModal from "../Modal";
+import LoadingScreen from "../LoadingScreen";
 
 type TeacherSettingsProps = {
   selectedClassroom: any;
@@ -26,7 +28,7 @@ type TeacherSettingsProps = {
   loadingPupils: boolean;
   editClassroomMutation: any;
   deleteClassroomMutation: any;
-
+  removePupilMutation: any;
   addPupilMutation: any;
   apiSearchPupils: (query: string) => Promise<Pupil[]>;
 };
@@ -39,6 +41,7 @@ export default function TeacherSetting({
   editClassroomMutation,
   deleteClassroomMutation,
   addPupilMutation,
+  removePupilMutation,
   apiSearchPupils,
 }: TeacherSettingsProps) {
   const [editClassroomForm, setEditClassroomForm] = useState({
@@ -52,6 +55,21 @@ export default function TeacherSetting({
   const [searching, setSearching] = useState(false);
   const [showCurrentPupils, setShowCurrentPupils] = useState(false);
   const [selectedPupils, setSelectedPupils] = useState<Pupil[]>([]);
+
+  const [showRemovePupilModal, setShowRemovePupilModal] = useState(false);
+  const [pupilToRemove, setPupilToRemove] = useState<{
+    id: string;
+    name: string;
+  } | null>(null);
+  const [showDeleteClassroomModal, setShowDeleteClassroomModal] =
+    useState(false);
+  const [showEditClassroomModal, setShowEditClassroomModal] = useState(false);
+  const [showAddPupilsConfirmModal, setShowAddPupilsConfirmModal] =
+    useState(false);
+  const [showCancelAddPupilsModal, setShowCancelAddPupilsModal] =
+    useState(false);
+
+  const [isLoading, setIsLoading] = useState(false);
 
   const searchInputRef = useRef<SearchBarRef>(null);
   const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
@@ -170,6 +188,76 @@ export default function TeacherSetting({
     };
   }, [searchText, enrolledPupils, showAddPupilModal, apiSearchPupils]);
 
+  const handleCancelAddPupilModal = () => {
+    if (selectedPupils.length >= 2) {
+      setShowCancelAddPupilsModal(true);
+    } else {
+      handleConfirmCancelAddPupils();
+    }
+  };
+
+  const handleConfirmCancelAddPupils = () => {
+    isClearing.current = true;
+    Keyboard.dismiss();
+    setSearchText("");
+    setSelectedPupils([]);
+    setShowAddPupilModal(false);
+    setShowCancelAddPupilsModal(false);
+    setTimeout(() => {
+      isClearing.current = false;
+    }, 300);
+  };
+
+  const handleDeleteClassroomPress = () => {
+    setShowDeleteClassroomModal(true);
+  };
+
+  const handleConfirmDeleteClassroom = async () => {
+    if (selectedClassroom?.id) {
+      try {
+        setIsLoading(true);
+        await deleteClassroomMutation({
+          classroomId: selectedClassroom.id,
+        });
+        setSelectedClassroom(null);
+        setShowDeleteClassroomModal(false);
+        router.push("/classroom");
+      } catch (error) {
+        console.error("Error deleting classroom:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+  };
+
+  const handleEditClassroomPress = () => {
+    setShowEditClassroomModal(true);
+  };
+
+  const handleConfirmEditClassroom = async () => {
+    if (selectedClassroom?.id) {
+      try {
+        await editClassroomMutation({
+          classroomForm: editClassroomForm,
+          classroomId: selectedClassroom.id,
+        });
+
+        setSelectedClassroom({
+          ...selectedClassroom,
+          ...editClassroomForm,
+        });
+
+        setShowEditClassroomModal(false);
+        router.back();
+        console.log("Classroom edited successfully");
+      } catch (error) {
+        console.error("Error editing classroom:", error);
+      }
+    } else {
+      console.error("Classroom ID is not available");
+    }
+  };
+
   const handleSelectPupil = (pupil: Pupil) => {
     if (selectedPupils.some((p) => p.id === pupil.id)) {
       setSelectedPupils(selectedPupils.filter((p) => p.id !== pupil.id));
@@ -181,6 +269,47 @@ export default function TeacherSetting({
   const handleRemoveSelectedPupil = (pupilId: string) => {
     setSelectedPupils(selectedPupils.filter((p) => p.id !== pupilId));
   };
+
+  const handleRemovePupilPress = (pupilId: string, pupilName: string) => {
+    setPupilToRemove({ id: pupilId, name: pupilName });
+    setShowRemovePupilModal(true);
+  };
+
+  const handleConfirmRemovePupil = async () => {
+    if (selectedClassroom?.id && pupilToRemove) {
+      try {
+        setIsLoading(true);
+        await removePupilMutation({
+          classroomId: selectedClassroom.id,
+          pupilId: pupilToRemove.id,
+        });
+        setShowRemovePupilModal(false);
+        setPupilToRemove(null);
+        console.log("Pupil removed successfully");
+      } catch (error) {
+        console.error("Error removing pupil:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+  };
+
+  const handleRemovePupil = useCallback(
+    async (pupilId: string) => {
+      if (selectedClassroom?.id && pupilId) {
+        try {
+          await removePupilMutation({
+            classroomId: selectedClassroom.id,
+            pupilId: pupilId,
+          });
+          console.log("Pupil removed successfully");
+        } catch (error) {
+          console.error("Error removing pupil:", error);
+        }
+      }
+    },
+    [selectedClassroom?.id, removePupilMutation]
+  );
 
   const handleAddSelectedPupils = async () => {
     if (selectedClassroom?.id && selectedPupils.length > 0) {
@@ -205,6 +334,43 @@ export default function TeacherSetting({
         }, 300);
       } catch (error) {
         console.error("Error adding pupils:", error);
+      }
+    }
+  };
+
+  const handleAddSelectedPupilsPress = () => {
+    if (selectedPupils.length > 0) {
+      setShowAddPupilsConfirmModal(true);
+    }
+  };
+
+  const handleConfirmAddPupils = async () => {
+    if (selectedClassroom?.id && selectedPupils.length > 0) {
+      try {
+        setIsLoading(true);
+        isClearing.current = true;
+        Keyboard.dismiss();
+
+        for (const pupil of selectedPupils) {
+          await addPupilMutation({
+            classroomId: selectedClassroom.id,
+            pupilId: pupil.id || "",
+          });
+        }
+
+        setSelectedPupils([]);
+        setSearchText("");
+        setShowAddPupilModal(false);
+        setShowAddPupilsConfirmModal(false);
+        console.log("Pupils added successfully");
+
+        setTimeout(() => {
+          isClearing.current = false;
+        }, 300);
+      } catch (error) {
+        console.error("Error adding pupils:", error);
+      } finally {
+        setIsLoading(false);
       }
     }
   };
@@ -291,19 +457,32 @@ export default function TeacherSetting({
                     return (
                       <View
                         key={pupil.id}
-                        className="p-3 border-b border-gray-200 flex-row items-center"
+                        className="p-3 border-b border-gray-200 flex-row items-center justify-between"
                       >
-                        <View
-                          className="h-8 w-8 rounded-full overflow-hidden mr-3 justify-center items-center"
-                          style={{ backgroundColor: avatarColor }}
-                        >
-                          <Text className="text-white font-bold text-xs">
-                            {initials.toUpperCase()}
+                        <View className="flex-row items-center flex-1">
+                          <View
+                            className="h-8 w-8 rounded-full overflow-hidden mr-3 justify-center items-center"
+                            style={{ backgroundColor: avatarColor }}
+                          >
+                            <Text className="text-white font-bold text-xs">
+                              {initials.toUpperCase()}
+                            </Text>
+                          </View>
+                          <Text className="text-black">
+                            {displayPupilName(pupil)}
                           </Text>
                         </View>
-                        <Text className="text-black">
-                          {displayPupilName(pupil)}
-                        </Text>
+                        <TouchableOpacity
+                          onPress={() =>
+                            handleRemovePupilPress(
+                              pupil.id || "",
+                              displayPupilName(pupil)
+                            )
+                          }
+                          hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+                        >
+                          <Ionicons name="close" size={16} color="#ef4444" />
+                        </TouchableOpacity>
                       </View>
                     );
                   })}
@@ -320,53 +499,21 @@ export default function TeacherSetting({
         </View>
 
         <View className="p-5 bottom-0">
-          <Button className="m-5 bg-yellow-500" onPress={() => {}}>
+          {/* disables sa ni ha  */}
+          {/* <Button className="m-5 bg-yellow-500" onPress={() => {}}>
             <Text className="text-black font-semibold">
               Generate Classroom Report
             </Text>
-          </Button>
+          </Button>  */}
           <Button
             className="mx-5 bg-yellow-500"
-            onPress={async () => {
-              if (selectedClassroom?.id) {
-                try {
-                  await editClassroomMutation({
-                    classroomForm: editClassroomForm,
-                    classroomId: selectedClassroom.id,
-                  });
-
-                  setSelectedClassroom({
-                    ...selectedClassroom,
-                    ...editClassroomForm,
-                  });
-
-                  router.back();
-                  console.log("Classroom edited successfully");
-                } catch (error) {
-                  console.error("Error editing classroom:", error);
-                }
-              } else {
-                console.error("Classroom ID is not available");
-              }
-            }}
+            onPress={handleEditClassroomPress}
           >
             <Text className="text-black font-semibold">Edit Classroom</Text>
           </Button>
           <Button
             className="bg-red-500 m-5"
-            onPress={async () => {
-              if (selectedClassroom?.id) {
-                try {
-                  await deleteClassroomMutation({
-                    classroomId: selectedClassroom.id,
-                  });
-                  setSelectedClassroom(null);
-                  router.push("/classroom");
-                } catch (error) {
-                  console.error("Error deleting classroom:", error);
-                }
-              }
-            }}
+            onPress={handleDeleteClassroomPress}
           >
             <Text className="text-white font-semibold">Delete Classroom</Text>
           </Button>
@@ -383,22 +530,85 @@ export default function TeacherSetting({
           showNoResults={showNoResults}
           handleSelectPupil={handleSelectPupil}
           handleRemoveSelectedPupil={handleRemoveSelectedPupil}
-          handleAddSelectedPupils={handleAddSelectedPupils}
+          handleAddSelectedPupils={handleAddSelectedPupilsPress}
           handleTextChange={handleTextChange}
           searchInputRef={searchInputRef}
           isClearing={isClearing}
-          onClose={() => {
-            isClearing.current = true;
-            Keyboard.dismiss();
-            setSearchText("");
-            setSelectedPupils([]);
-            setShowAddPupilModal(false);
-            setTimeout(() => {
-              isClearing.current = false;
-            }, 300);
-          }}
+          onClose={handleCancelAddPupilModal}
         />
       )}
+
+      <ConfirmModal
+        visible={showCancelAddPupilsModal}
+        title="Cancel Adding Pupils"
+        message={`You have ${selectedPupils.length} pupils selected. Are you sure you want to cancel without adding them?`}
+        confirmText="Discard"
+        cancelText="Cancel"
+        onConfirm={handleConfirmCancelAddPupils}
+        onCancel={() => setShowCancelAddPupilsModal(false)}
+        icon="close"
+        highlightedText={selectedPupils.length.toString()}
+      />
+      <ConfirmModal
+        visible={showAddPupilsConfirmModal}
+        title="Add Pupils"
+        message={`Add ${selectedPupils.length} pupil${
+          selectedPupils.length > 1 ? "s" : ""
+        } to your classroom?`}
+        confirmText="Add"
+        cancelText="Cancel"
+        onConfirm={handleConfirmAddPupils}
+        onCancel={() => setShowAddPupilsConfirmModal(false)}
+        icon="person-add"
+      />
+
+      <ConfirmModal
+        visible={showRemovePupilModal}
+        title="Remove Pupil"
+        message={`Are you sure to remove ${pupilToRemove?.name} in your classroom?`}
+        confirmText="Remove"
+        cancelText="Cancel"
+        onConfirm={handleConfirmRemovePupil}
+        onCancel={() => {
+          setShowRemovePupilModal(false);
+          setPupilToRemove(null);
+        }}
+        icon="person-remove"
+        highlightedText={pupilToRemove?.name}
+      />
+
+      <ConfirmModal
+        visible={showDeleteClassroomModal}
+        title="Delete Classroom"
+        message={`Are you sure you want to delete your classroom ${selectedClassroom?.name}? This action cannot be undone.`}
+        confirmText="Delete"
+        cancelText="Cancel"
+        onConfirm={handleConfirmDeleteClassroom}
+        onCancel={() => setShowDeleteClassroomModal(false)}
+        icon="delete"
+        highlightedText={selectedClassroom?.name}
+      />
+
+      <ConfirmModal
+        visible={showEditClassroomModal}
+        title="Edit Classroom"
+        message={`Are you sure you want to save changes to your Classroom's name into ${editClassroomForm?.name} and description ${editClassroomForm?.description}?`}
+        confirmText="Save"
+        cancelText="Cancel"
+        onConfirm={handleConfirmEditClassroom}
+        onCancel={() => setShowEditClassroomModal(false)}
+        icon="edit"
+        highlightedText={[
+          editClassroomForm.name,
+          editClassroomForm.description,
+        ]}
+      />
+
+      <LoadingScreen
+        visible={isLoading}
+        overlay={true}
+        message="Processing..."
+      />
     </View>
   );
 }
