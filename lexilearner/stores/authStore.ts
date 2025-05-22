@@ -3,7 +3,8 @@ import { create } from "zustand";
 import { useUserStore } from "./userStore";
 import { useGlobalStore } from "./globalStore";
 import { persist } from "zustand/middleware";
-import { Pupil, User } from "../models/User";
+import { extractUser, Pupil, User } from "../models/User";
+import Toast from "react-native-toast-message";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import {
@@ -12,115 +13,34 @@ import {
   signInWithGoogle,
   signInWithFacebook,
   tokenAuth,
+  refreshAccessToken,
 } from "../services/AuthService";
 import { getProfile } from "@/services/UserService";
 
 type AuthStore = {
-  login: (email: string, password: string) => void;
   signup: (registerForm: Record<string, any>) => void;
   logout: () => void;
   providerAuth: (provider: number) => void;
 };
 
 const setUser = useUserStore.getState().setUser;
-const setIsLoading = useGlobalStore.getState().setIsLoading;
 
 export const useAuthStore = create<AuthStore>()(
   persist(
     (set) => ({
-      login: async (email: string, password: string) => {
-        try {
-          let response = await apiLogin(email, password);
-
-          await AsyncStorage.setItem("bearerToken", response.data.token);
-
-          response = await getProfile();
-
-          const userData = response.data;
-
-          if (userData) {
-            const {
-              id,
-              email,
-              firstName,
-              lastName,
-              userName,
-              twoFactorEnabled,
-              phoneNumber,
-              role,
-              pupil,
-            } = userData;
-
-            const user: User = {
-              id: id,
-              email: email,
-              firstName: firstName,
-              lastName: lastName,
-              userName: userName,
-              twoFactorEnabled: twoFactorEnabled,
-              phoneNumber: phoneNumber,
-              role: role,
-            };
-
-            if (role === "Pupil") {
-              user.pupil = pupil;
-            }
-
-            setUser(user);
-          } else {
-            router.push({
-              pathname: "/signup3",
-              params: { fromProviderAuth: "false" },
-            });
-          }
-        } catch (error: any) {
-          throw new Error(
-            error instanceof Error ? error.message : "Unknown error occurred",
-          );
-        }
-      },
-
       signup: async (registerForm: Record<string, any>) => {
         try {
           let response = await apiSignUp(registerForm);
 
-          await AsyncStorage.setItem("bearerToken", response.data.token);
+          await AsyncStorage.setItem("accessToken", response.data.accessToken);
+          await AsyncStorage.setItem(
+            "refreshToken",
+            response.data.refreshToken,
+          );
 
           response = await getProfile();
-
-          const {
-            id,
-            email,
-            firstName,
-            lastName,
-            userName,
-            twoFactorEnabled,
-            phoneNumber,
-            role,
-            age,
-            level,
-            pupil,
-          } = response.data;
-
-          const user: User = {
-            id: id,
-            email: email,
-            firstName: firstName,
-            lastName: lastName,
-            userName: userName,
-            twoFactorEnabled: twoFactorEnabled,
-            phoneNumber: phoneNumber,
-            role: role,
-            age: age,
-            level: level ?? 0,
-          };
-
-          if (role === "Pupil") {
-            user.pupil = pupil;
-          }
-
+          const user = extractUser(response.data);
           setUser(user);
-          console.log(user);
         } catch (error: any) {
           throw Error(
             error instanceof Error ? error.message : "Unknown error occurred",
@@ -129,15 +49,14 @@ export const useAuthStore = create<AuthStore>()(
       },
       logout: async () => {
         setUser(null);
-
-        await AsyncStorage.removeItem("bearerToken");
+        await AsyncStorage.removeItem("accessToken");
       },
 
       providerAuth: async (provider: number) => {
         try {
-          let token;
-          let response;
-          let signIn;
+          let token: string | null;
+          let response: Record<string, any>;
+          let signIn: any;
 
           switch (provider) {
             case 0:
@@ -160,41 +79,25 @@ export const useAuthStore = create<AuthStore>()(
               return;
           }
 
-          setIsLoading(true);
-          await AsyncStorage.setItem("bearerToken", response.data.token);
+          await AsyncStorage.setItem("accessToken", response.data.accessToken);
+          await AsyncStorage.setItem(
+            "refreshToken",
+            response.data.refreshToken.token,
+          );
 
           let userProfileResponse = await getProfile();
 
           const userData = userProfileResponse.data;
 
           if (userData) {
-            const {
-              id,
-              email,
-              firstName,
-              lastName,
-              userName,
-              twoFactorEnabled,
-              phoneNumber,
-              role,
-              age,
-              level,
-            } = userData;
-
-            const user: User = {
-              id: id,
-              email: email,
-              firstName: firstName,
-              lastName: lastName,
-              userName: userName,
-              twoFactorEnabled: twoFactorEnabled,
-              phoneNumber: phoneNumber,
-              role: role,
-              age: age,
-              level: level ?? 0,
-            };
-
+            const user = extractUser(userData);
             setUser(user);
+            refreshAccessToken();
+            Toast.show({
+              type: "success",
+              text1: "Authentication Success",
+            });
+            router.replace("/home");
           } else {
             // Redirect user to profile setup screen
             router.push({
@@ -204,8 +107,6 @@ export const useAuthStore = create<AuthStore>()(
           }
         } catch (error) {
           console.error("Authentication failed:", error);
-        } finally {
-          setIsLoading(false);
         }
       },
     }),

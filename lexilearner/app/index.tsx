@@ -1,23 +1,24 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Redirect, router } from "expo-router"; // Or useNavigation if using React Navigation
 import { useUserStore } from "@/stores/userStore";
 import { useMiniGameStore } from "@/stores/miniGameStore";
-import { useReadingAssignmentStore } from "@/stores/readingAssignmentStore";
 
 //Components
 import { ScrollView, View, Image } from "react-native";
 import { Button } from "~/components/ui/button";
 import { Text } from "~/components/ui/text";
+import { refreshAccessToken } from "@/services/AuthService";
 
 export default function Index() {
   const user = useUserStore((state) => state.user);
   const currentMinigame = useMiniGameStore((state) => state.currentMinigame);
 
   if (user) {
-    if (currentMinigame) {
+    refreshAccessToken();
+    if (currentMinigame && user.role === "Pupil") {
       return <Redirect href="/minigames/play" />;
     } else {
-      // return <Redirect href="/home" />;
+      return <Redirect href="/home" />;
     }
   }
 

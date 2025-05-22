@@ -1,5 +1,4 @@
 import { Platform } from "react-native";
-import { API_URL } from "../utils/constants";
 
 import {
   GoogleSignin,
@@ -20,6 +19,11 @@ import {
   LoginManager,
 } from "react-native-fbsdk-next";
 import { axiosInstance } from "@/utils/axiosInstance";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useUserStore } from "@/stores/userStore";
+import { router } from "expo-router";
+
+const setUser = useUserStore.getState().setUser;
 
 interface AuthResponse {
   message: string;
@@ -68,6 +72,29 @@ export const signUp = async (registerForm: Record<string, any>) => {
   }
 
   return response.data;
+};
+
+export const refreshAccessToken = async () => {
+  const response = await axiosInstance.post(
+    "/auth/refresh",
+    {
+      refreshToken: await AsyncStorage.getItem("refreshToken"),
+      accessToken: await AsyncStorage.getItem("accessToken"),
+    },
+    {
+      validateStatus: () => true,
+    },
+  );
+
+  console.log("Refresh Access Token");
+  if (response.status !== 200 && response.status !== 201) {
+    console.warn(response.data.message);
+    setUser(null);
+    await AsyncStorage.removeItem("accessToken");
+    router.replace("/");
+    return;
+  }
+  await AsyncStorage.setItem("accessToken", response.data.data);
 };
 
 export const tokenAuth = async (

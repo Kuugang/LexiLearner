@@ -13,6 +13,7 @@ import { useWordHuntMinigameStore } from "@/stores/miniGameStore";
 import { useMiniGameStore } from "@/stores/miniGameStore";
 import { Minigame, MinigameType } from "@/models/Minigame";
 import { useCreateMinigameLog } from "@/services/minigameService";
+import { useUserStore } from "@/stores/userStore";
 
 function WordHuntBtn({
     word,
@@ -78,6 +79,7 @@ export default function WordHunt({
     nextGame: () => void;
 }) {
     const { mutate: triggerCreateMinigameLog } = useCreateMinigameLog();
+    const userRole = useUserStore((state) => state.user?.role);
 
     const {
         correctAnswers,
@@ -144,6 +146,9 @@ export default function WordHunt({
                 const score = correctAttempts.length;
 
                 console.log("Word Hunt Game Over");
+
+                if (userRole === "Pupil") {
+
                 const minigameLog = gameOver({
                     score,
                     correctAttempts,
@@ -159,6 +164,7 @@ export default function WordHunt({
                     minigameLog,
                     type: MinigameType.WordHunt,
                 });
+                }
 
                 setTimeout(() => {
                     nextGame();

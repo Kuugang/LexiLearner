@@ -158,7 +158,7 @@ namespace LexiLearner.Repository
                 .Where(s => s.UserId == userId)
                 .ToListAsync();
         }
-        
+
         public async Task<List<PupilLeaderboard>> GetPupilLeaderboardByPupilId(Guid pupilId)
         {
             return await _context.PupilLeaderboard
@@ -166,7 +166,7 @@ namespace LexiLearner.Repository
                 .OrderByDescending(pl => pl.Level)
                 .ToListAsync();
         }
-        
+
         public async Task<PupilLeaderboard> CreatePupilLeaderboardEntry(PupilLeaderboard pupilLeaderboard)
         {
             _context.Attach(pupilLeaderboard.Pupil);

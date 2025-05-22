@@ -30,6 +30,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useMiniGameStore } from "@/stores/miniGameStore";
 import { AwardIcon } from "@/components/AchievementDisplay";
 import { Achievement } from "@/models/Achievement";
+import { ActivityIndicator } from "react-native-paper";
 import { Progress } from "@/components/ui/progress";
 import { ProgressBar } from "@/components/Classroom/ProgressBar";
 
@@ -38,8 +39,26 @@ export default function Profile() {
   const setAchievements = useMiniGameStore((state) => state.setAchievements);
   const isPupil = user?.role === "Pupil";
 
-  const [achievementsQuery, screenTimeQuery, loginStreakQuery] =
-    useProfileStats(isPupil);
+  const [achievementsQuery, screenTimeQuery, loginStreakQuery] = useQueries({
+    queries: [
+      {
+        queryKey: ["achievements"],
+        queryFn: getPupilAchievements,
+        enabled: isPupil,
+      },
+      {
+        queryKey: ["totalSession"],
+        queryFn: getTotalSession,
+        refetchOnWindowFocus: true,
+        enabled: isPupil,
+      },
+      {
+        queryKey: ["loginStreak"],
+        queryFn: getLoginStreak,
+        enabled: isPupil,
+      },
+    ],
+  });
 
   if (
     achievementsQuery.isLoading ||
@@ -47,8 +66,9 @@ export default function Profile() {
     loginStreakQuery.isLoading
   ) {
     return (
-      <View>
-        <Text>Loading...</Text>
+      <View className="flex-1 justify-center items-center absolute inset-0 z-50">
+        <ActivityIndicator size="large" color="#0000ff" />
+        <Text className="mt-2">Loading...</Text>
       </View>
     );
   }
@@ -107,7 +127,7 @@ export default function Profile() {
                   <View className="flex flex-row gap-2 items-center">
                     <Zap color="#FFD43B" />
                     <Text className="text-lg font-bold">
-                      {user?.pupil?.level}
+                      {user?.pupil?.level ? user?.pupil?.level : 0}
                     </Text>
                   </View>
                   <Text className="text-sm text-gray-800">

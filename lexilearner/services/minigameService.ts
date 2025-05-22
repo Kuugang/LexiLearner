@@ -32,6 +32,31 @@ export const getRandomMinigames = async (
   }
 };
 
+const getRandomMinigamesByRMId = async (
+  readingMaterialId: string
+): Promise<Minigame[]> => {
+  try {
+    const response = await axiosInstance.get(
+      `${API_URL}/minigames/readingmaterials/${readingMaterialId}/random`
+    );
+
+    return response.data.data;
+  } catch (error: any) {
+    console.error("Error fetching minigames:", error);
+    throw new Error(
+      error?.response?.data?.message || "Failed to fetch minigames."
+    );
+  }
+};
+
+export const useRandomMinigamesByRMId = (readingMaterialId: string) => {
+  return useQuery<Minigame[], Error>({
+    queryKey: ["random-minigames", readingMaterialId],
+    queryFn: () => getRandomMinigamesByRMId(readingMaterialId),
+    enabled: false,
+  });
+};
+
 export const useGetMinigameById = (minigameId: string) => {
   return useQuery<Minigame, Error>({
     queryKey: ["minigame", minigameId],

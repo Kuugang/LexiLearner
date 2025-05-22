@@ -28,7 +28,7 @@ function HomeScreen() {
 
     const today = new Date().toISOString().split("T")[0];
     console.log("TODAY", today, "LOGINTREAKS:", lastLoginStreak);
-    if (today !== lastLoginStreak) {
+    if (today !== lastLoginStreak && user?.role === "Pupil") {
       const timer = setTimeout(() => {
         setShowStreakModal(true);
         setLastLoginStreak(today);

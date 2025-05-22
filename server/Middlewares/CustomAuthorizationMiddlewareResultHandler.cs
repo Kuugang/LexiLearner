@@ -14,7 +14,6 @@ public class CustomAuthorizationMiddlewareResultHandler : IAuthorizationMiddlewa
         {
             context.Response.StatusCode = StatusCodes.Status403Forbidden;
             context.Response.ContentType = "application/json";
-
             var problemDetails = new
             {
                 message = "Authorization failed",

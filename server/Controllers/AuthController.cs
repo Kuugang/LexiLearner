@@ -1,10 +1,7 @@
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
-using System.IdentityModel.Tokens.Jwt;
-using System.Text;
-using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Authorization;
 
+using LexiLearner.Models;
 using LexiLearner.Models.DTO;
 using LexiLearner.Interfaces;
 
@@ -13,20 +10,19 @@ using LexiLearner.Interfaces;
 [Route("api/auth")]
 public class AuthController : ControllerBase
 {
-    private readonly IUserService _userService;
     private readonly IAuthService _authService;
+    private readonly IJWTService _jwtService;
 
-    public AuthController(IUserService userService, IAuthService authService)
+    public AuthController(IAuthService authService, IJWTService jwtService)
     {
-        _userService = userService;
         _authService = authService;
+        _jwtService = jwtService;
     }
 
     [HttpPost("register")]
     public async Task<IActionResult> Register([FromBody] RegisterRequest request)
     {
-        
-        var response = await _userService.Register(request);
+        var response = await _authService.Register(request);
         return StatusCode(StatusCodes.Status201Created, response);
     }
 
@@ -38,12 +34,12 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("2fa/verify")]
-    public async Task<IActionResult> Verify2FA([FromBody]TwoFactorRequest request)
+    public async Task<IActionResult> Verify2FA([FromBody] TwoFactorRequest request)
     {
         var response = await _authService.ValidateTwoFactorTokenAsync(request);
-    
-        return response is SuccessResponseDTO success 
-            ? Ok(success) 
+
+        return response is SuccessResponseDTO success
+            ? Ok(success)
             : StatusCode(((ErrorResponseDTO)response).StatusCode, response);
     }
 
@@ -59,9 +55,16 @@ public class AuthController : ControllerBase
         };
 
 
-        Console.WriteLine(response.Data);
-        return response is SuccessResponseDTO success 
-            ? Ok(success) 
+        return response is SuccessResponseDTO success
+            ? Ok(success)
             : StatusCode(((ErrorResponseDTO)response).StatusCode, response);
+    }
+
+    [HttpPost("refresh")]
+    public async Task<IActionResult> Refresh([FromBody] RefreshTokensDTO RefreshTokensDTO)
+    {
+        var response = await _jwtService.RefreshAccessToken(RefreshTokensDTO);
+        return StatusCode(StatusCodes.Status200OK,
+                new SuccessResponseDTO("Successfully refreshed access token.", response));
     }
 }

@@ -58,12 +58,58 @@ namespace LexiLearner.Services
 
             string role = await _userService.GetRole(user);
 
-            var token = _jwtService.GenerateJWTToken(user.Id, user.UserName!, role);
-
+            var JWTDTO = await _jwtService.GenerateTokens(user.Id, role);
             //await _userService.RecordLoginAsync(user.Id);
 
-            return new SuccessResponseDTO("Login successful", new JWTDTO(token));
+            return new SuccessResponseDTO("Login successful", JWTDTO);
         }
+
+        public async Task<SuccessResponseDTO> Register(RegisterRequest RegisterRequest)
+        {
+            var userByEmail = await _userService.GetUserByEmail(RegisterRequest.Email);
+
+            if (userByEmail != null)
+            {
+                throw new ApplicationExceptionBase(
+                    $"User with email {RegisterRequest.Email} already exists.",
+                    "User registration failed.",
+                    StatusCodes.Status409Conflict
+                );
+            }
+
+            var user = new User
+            {
+                Email = RegisterRequest.Email,
+                UserName = RegisterRequest.UserName,
+                FirstName = RegisterRequest.FirstName,
+                LastName = RegisterRequest.LastName,
+                SecurityStamp = Guid.NewGuid().ToString()
+            };
+            user = await _userRepository.Create(user, RegisterRequest.Password);
+            await _userRepository.CreateProfile(user, RegisterRequest.Role);
+
+            // If the user is a pupil, create a leaderboard entry
+            if (RegisterRequest.Role == "Pupil")
+            {
+                var pupil = await _userRepository.GetPupilByUserId(user.Id);
+                if (pupil != null)
+                {
+                    var leaderboardEntry = new PupilLeaderboard
+                    {
+                        PupilId = pupil.Id,
+                        Pupil = pupil,
+                        Level = pupil.Level // Default level (e.g., 0)
+                    };
+
+                    await _userRepository.CreatePupilLeaderboardEntry(leaderboardEntry);
+                }
+            }
+
+            var JWTDTO = await _jwtService.GenerateTokens(user.Id, RegisterRequest.Role);
+
+            return new SuccessResponseDTO("User created successfully", JWTDTO);
+        }
+
 
         public async Task<ResponseDTO> VerifyGoogleTokenAsync(string token)
         {
@@ -102,9 +148,9 @@ namespace LexiLearner.Services
             await _userManager.AddLoginAsync(user, new UserLoginInfo("Google", GoogleId, "Google"));
 
             string role = await _userService.GetRole(user);
-            var jwtToken = _jwtService.GenerateJWTToken(user.Id, user.UserName!, role);
+            var JWTDTO = await _jwtService.GenerateTokens(user.Id, role);
 
-            return new SuccessResponseDTO("Google authentication successful", new JWTDTO(jwtToken));
+            return new SuccessResponseDTO("Google authentication successful", JWTDTO);
         }
 
         public async Task<ResponseDTO> VerifyFacebookTokenAsync(string token)
@@ -122,8 +168,17 @@ namespace LexiLearner.Services
 
             string FacebookId = FacebookUser["id"]?.ToString();
 
-            var user = await _userManager.FindByLoginAsync("Facebook", FacebookId);
-            user = await _userService.GetUserByEmail(FacebookUser["email"]?.ToString());
+            User user;
+            string email = FacebookUser["email"]?.ToString();
+            if (!string.IsNullOrWhiteSpace(email))
+            {
+                user = await _userService.GetUserByEmail(email);
+            }
+            else
+            {
+                user = null;
+            }
+
             if (user == null)
             {
                 var passwordHasher = new PasswordHasher<object>();
@@ -132,7 +187,7 @@ namespace LexiLearner.Services
 
                 user = new User
                 {
-                    Email = FacebookUser["email"]?.ToString(),
+                    Email = email,
                     UserName = FacebookUser["name"]?.ToString().Replace(" ", ""),
                     FirstName = FacebookUser["first_name"]?.ToString(),
                     LastName = FacebookUser["last_name"]?.ToString(),
@@ -143,9 +198,9 @@ namespace LexiLearner.Services
             await _userManager.AddLoginAsync(user, new UserLoginInfo("Facebook", FacebookId, "Facebook"));
 
             string role = await _userService.GetRole(user);
-            var jwtToken = _jwtService.GenerateJWTToken(user.Id, user.UserName!, role);
+            var JWTDTO = await _jwtService.GenerateTokens(user.Id, role);
 
-            return new SuccessResponseDTO("Login successful", new JWTDTO(jwtToken));
+            return new SuccessResponseDTO("Login successful", JWTDTO);
         }
 
 
@@ -173,7 +228,8 @@ namespace LexiLearner.Services
             if (await _userManager.VerifyTwoFactorTokenAsync(user, "Email", request.Token))
             {
                 string role = await _userService.GetRole(user);
-                return new SuccessResponseDTO("Two Factor Authentication successful", new JWTDTO(_jwtService.GenerateJWTToken(user.Id, user.UserName!, role)));
+                var JWTDTO = await _jwtService.GenerateTokens(user.Id, role);
+                return new SuccessResponseDTO("Two Factor Authentication successful", JWTDTO);
             }
 
             return new ErrorResponseDTO("Invalid or expired two-factor authentication token.", "TokenMismatch", 400);

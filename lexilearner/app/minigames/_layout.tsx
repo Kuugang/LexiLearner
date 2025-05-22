@@ -5,11 +5,11 @@ import { Stack } from "expo-router";
 export default function MinigamesLayout() {
   return (
     <Stack screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="wordhunt" />
-      <Stack.Screen name="wordfromletters" />
-      <Stack.Screen name="2truths1lie" />
-      {/* <Stack.Screen name="fillintheblanks" />
-      <Stack.Screen name="sentencearrangement" /> */}
+      <Stack.Screen name="WordHunt" />
+      <Stack.Screen name="wordsfromletters" />
+      <Stack.Screen name="twoTruthsOneLie" />
+      <Stack.Screen name="fillintheblanks" />
+      <Stack.Screen name="sentencearrangement" />
     </Stack>
   );
 }
