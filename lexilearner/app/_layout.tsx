@@ -21,6 +21,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { useGlobalStore } from "@/stores/globalStore";
 import useScreenTime from "@/hooks/useScreenTime";
+import LoadingScreen from "@/components/LoadingScreen";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -70,24 +71,11 @@ export default function RootLayout() {
   return (
     <ThemeProvider value={isDarkColorScheme ? DARK_THEME : LIGHT_THEME}>
       <QueryClientProvider client={queryClient}>
-        {isLoading && (
-          <View
-            style={{
-              position: "absolute",
-              top: 0,
-              left: 0,
-              width: "100%",
-              height: "100%",
-              backgroundColor: "rgba(0,0,0,0.2)",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              zIndex: 999,
-            }}
-          >
-            <ActivityIndicator size="large" color="#ffffff" />
-          </View>
-        )}
+        <LoadingScreen
+          visible={isLoading}
+          overlay={true}
+          message="Give us a moment..."
+        />
 
         <StatusBar style={"dark"} />
         <SafeAreaView className="flex-1 bg-background">

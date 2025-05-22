@@ -8,6 +8,7 @@ import {
   deleteClassroom as apiDeleteClassroom,
   addPupilToClassroom as apiAddPupilToClassroom,
   searchPupils as apiSearchPupils,
+  removePupilFromClassroom as apiRemovePupilFromClassroom,
   getPupilsFromClassroom,
   leaveClassroom as apiLeaveClassroom,
 } from "@/services/ClassroomService";
@@ -78,6 +79,22 @@ export default function ClassroomSettings() {
       });
     },
   });
+
+  const { mutateAsync: removePupilMutation } = useMutation({
+    mutationFn: ({
+      classroomId,
+      pupilId,
+    }: {
+      classroomId: string;
+      pupilId: string;
+    }) => apiRemovePupilFromClassroom(classroomId, pupilId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["classroomPupils", selectedClassroom?.id],
+      });
+    },
+  });
+
   // buwag nani ha
   return user?.role === "Teacher" ? (
     <TeacherSetting
@@ -88,6 +105,7 @@ export default function ClassroomSettings() {
       editClassroomMutation={editClassroomMutation}
       deleteClassroomMutation={deleteClassroomMutation}
       addPupilMutation={addPupilMutation}
+      removePupilMutation={removePupilMutation}
       apiSearchPupils={apiSearchPupils}
     />
   ) : (
