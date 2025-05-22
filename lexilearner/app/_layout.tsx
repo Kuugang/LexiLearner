@@ -20,6 +20,7 @@ import { useColorScheme } from "~/lib/useColorScheme";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { useGlobalStore } from "@/stores/globalStore";
+import useRefreshToken from "@/hooks/useRefreshToken";
 import useScreenTime from "@/hooks/useScreenTime";
 import LoadingScreen from "@/components/LoadingScreen";
 
@@ -48,6 +49,7 @@ export default function RootLayout() {
   const [isColorSchemeLoaded, setIsColorSchemeLoaded] = React.useState(false);
 
   useScreenTime();
+  useRefreshToken();
 
   useIsomorphicLayoutEffect(() => {
     if (hasMounted.current) {
