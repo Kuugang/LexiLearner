@@ -29,8 +29,8 @@ export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
 
   const [form, setForm] = useState({
-    email: "mrekajojab@gmail.com",
-    password: "Maotka1!",
+    email: "hak@g.com",
+    password: "Angel!123",
   });
 
   const [formErrors, setFormErrors] = useState({

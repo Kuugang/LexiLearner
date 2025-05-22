@@ -1,13 +1,11 @@
 import ReadingContent from "@/components/ReadingContent";
 import { ReadingContentType } from "@/models/ReadingContent";
-import { getReadingMaterialById as apiGetReadingMaterialById } from "@/services/ReadingMaterialService";
 import { getIncompleteReadingSessions } from "@/services/ReadingSessionService";
 import { useReadingSessionStore } from "@/stores/readingSessionStore";
 import { useQuery } from "@tanstack/react-query";
-import React from "react";
+import React, { useEffect } from "react";
 import { ScrollView, Text, View } from "react-native";
 
-//TODO: persist to storage why the heck is it sigeg refetching that is so sad
 function library() {
   const currentlyReading = useReadingSessionStore(
     (state) => state.currentlyReading
@@ -22,7 +20,11 @@ function library() {
     enabled: !!currentlyReading,
   });
 
-  setCurrentlyReading(readingMaterials);
+  useEffect(() => {
+    if (readingMaterials) {
+      setCurrentlyReading(readingMaterials);
+    }
+  }, [readingMaterials]);
 
   if (isLoading) {
     return (
@@ -37,7 +39,7 @@ function library() {
       <View>
         <View className="flex p-8">
           <Text className="text-[24px] font-bold">Continue Reading</Text>
-          <View className="flex flex-row flex-wrap gap-[12px]">
+          <View className="flex flex-row flex-wrap justify-between">
             {readingMaterials?.map(
               (material: ReadingContentType, index: number) => (
                 <View key={index}>

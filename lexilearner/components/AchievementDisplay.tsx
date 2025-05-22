@@ -1,11 +1,6 @@
 import { Text } from "@/components/ui/text";
+import { useExtractDriveFileId } from "@/hooks/useExtractDriveFileId";
 import { View, Image } from "react-native";
-
-function extractDriveFileId(url: string): string | null {
-  // Matches both /file/d/FILEID/ and id=FILEID
-  const match = url.match(/\/d\/([a-zA-Z0-9_-]+)|id=([a-zA-Z0-9_-]+)/);
-  return match ? match[1] || match[2] : null;
-}
 
 export function AchievementDisplay({
   title,
@@ -16,7 +11,7 @@ export function AchievementDisplay({
   description: string;
   badge: string;
 }) {
-  const fileId = extractDriveFileId(badge);
+  const fileId = useExtractDriveFileId(badge);
   const imageUrl = fileId
     ? `https://drive.google.com/uc?export=view&id=${fileId}`
     : undefined;
@@ -37,7 +32,7 @@ export function AchievementDisplay({
 }
 
 export function AwardIcon({ badge }: { badge: string }) {
-  const fileId = extractDriveFileId(badge);
+  const fileId = useExtractDriveFileId(badge);
   const imageUrl = fileId
     ? `https://drive.google.com/uc?export=view&id=${fileId}`
     : undefined;

@@ -113,12 +113,13 @@ function Explore() {
         });
 
   return (
-    <ScrollView className="bg-background">
+    <ScrollView className="bg-background ">
       <View className="flex flex-row gap-2 items-center w-full p-4">
         <TouchableOpacity onPress={() => router.push("/(tabs)/profile")}>
           <CircleUser color="#FFD43B" size={30} />
         </TouchableOpacity>
 
+        {/* TODO: HARDCODED PMN DIAY NI HSAHS */}
         <View>
           <Flame color="red" size={30} />
           <Text className="text-red-500 font-bold absolute -bottom-1 -right-1">
@@ -181,13 +182,13 @@ function Explore() {
       </View>
 
       {!filteredStories && (
-        <View className="flex-1 w-full px-4">
-          <View className="grid grid-cols-2 gap-4">
+        <View className="flex-1 w-full px-8 py-2">
+          <View className="grid grid-cols-2 gap-2">
             {genres.map((genre) => {
               return (
                 <TouchableOpacity
                   key={genre}
-                  className={`flex items-center justify-around p-4 rounded-xl bg-orange-500`}
+                  className={`flex items-center justify-around p-4 border-2 rounded-xl border-lightGray border-b-4`}
                   onPress={() => toggleGenre(genre)}
                 >
                   {/* TODO:  */}

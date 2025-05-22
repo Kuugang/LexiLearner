@@ -23,6 +23,7 @@ import {
   getLoginStreak,
   getPupilAchievements,
   getTotalSession,
+  useProfileStats,
 } from "@/services/UserService";
 import { useQueries, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useCallback, useEffect, useState } from "react";
@@ -30,13 +31,13 @@ import { useMiniGameStore } from "@/stores/miniGameStore";
 import { AwardIcon } from "@/components/AchievementDisplay";
 import { Achievement } from "@/models/Achievement";
 import { ActivityIndicator } from "react-native-paper";
+import { Progress } from "@/components/ui/progress";
+import { ProgressBar } from "@/components/ProgressBar";
 
 export default function Profile() {
   const user = useUserStore((state) => state.user);
   const setAchievements = useMiniGameStore((state) => state.setAchievements);
   const isPupil = user?.role === "Pupil";
-  console.log("USER: ", user);
-  console.log(isPupil);
 
   const [achievementsQuery, screenTimeQuery, loginStreakQuery] = useQueries({
     queries: [
@@ -142,6 +143,7 @@ export default function Profile() {
           </View>
           {user?.role === "Pupil" && (
             <>
+              <ProgressBar level={user!.pupil!.level!} />
               <Text className="text-xl font-bold">Overview</Text>
 
               <View className="grid grid-cols-2 gap-2">
@@ -151,7 +153,7 @@ export default function Profile() {
                   icon={<Flame color="red" />}
                 />
                 <ProfileStat
-                  level={"10"}
+                  level={"10"} // TODO: ang number nila uie
                   description="Books Read"
                   icon={<Book color="blue" />}
                 />
@@ -188,7 +190,7 @@ export default function Profile() {
                   {achievementsQuery.data.map(
                     (a: Achievement, index: number) => (
                       <AwardIcon badge={`${a.badge}`} key={index} />
-                    ),
+                    )
                   )}
                 </View>
               </View>

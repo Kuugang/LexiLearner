@@ -71,7 +71,7 @@ namespace LexiLearner.Data
                             Description = dto.Description,
                             Content = dto.Passage,
                             Difficulty = (float)readabilityService.CalculateFleschScore(dto.Passage),
-                            Cover = "",
+                            Cover = dto.Cover!, //TODO story covers null surpressor ting lang sa
                             IsDepEd = true,
                             ReadingMaterialGenres = new List<ReadingMaterialGenre>()
                         };

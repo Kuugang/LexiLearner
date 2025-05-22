@@ -1,7 +1,7 @@
 import { axiosInstance } from "@/utils/axiosInstance";
 
 import { API_URL } from "../utils/constants";
-import { useQuery } from "@tanstack/react-query";
+import { useQueries, useQuery } from "@tanstack/react-query";
 
 export const getProfile = async () => {
     try {
@@ -131,4 +131,27 @@ export const getPupilAchievements = async () => {
     }
 
     return response.data.data;
+};
+
+export const useProfileStats = (isPupil: boolean) => {
+  return useQueries({
+    queries: [
+      {
+        queryKey: ["achievements"],
+        queryFn: getPupilAchievements,
+        enabled: isPupil,
+      },
+      {
+        queryKey: ["totalSession"],
+        queryFn: getTotalSession,
+        refetchOnWindowFocus: true,
+        enabled: isPupil,
+      },
+      {
+        queryKey: ["loginStreak"],
+        queryFn: getLoginStreak,
+        enabled: isPupil,
+      },
+    ],
+  });
 };

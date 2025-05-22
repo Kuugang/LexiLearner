@@ -16,12 +16,16 @@ type UserStore = {
 
   streak: number;
   setStreak: (streak: number) => void;
+
+  lastLoginStreak: string | null;
+  setLastLoginStreak: (date: string) => void;
 };
 
 export const useUserStore = create<UserStore>()(
   persist(
     (set) => ({
       user: null,
+      lastLoginStreak: null,
       setUser: (user: UserStore["user"]) => set({ user }),
       updateProfile: async (form: Record<string, any>) => {
         try {
@@ -68,6 +72,8 @@ export const useUserStore = create<UserStore>()(
       },
       streak: 1,
       setStreak: (streak: number) => set((state) => ({ streak: streak })),
+      setLastLoginStreak: (date: string) =>
+        set((state) => ({ lastLoginStreak: date })),
     }),
     {
       name: "user-store",
