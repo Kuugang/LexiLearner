@@ -23,7 +23,7 @@ type AddPupilModalProps = {
   showNoResults: boolean;
   handleSelectPupil: (pupil: Pupil) => void;
   handleRemoveSelectedPupil: (pupilId: string) => void;
-  handleAddSelectedPupils: () => Promise<void>;
+  handleAddSelectedPupils: () => void;
   handleTextChange: (text: string) => void;
   searchInputRef: React.RefObject<SearchBarRef>;
   isClearing: React.MutableRefObject<boolean>;
