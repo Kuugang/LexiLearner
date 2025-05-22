@@ -23,11 +23,13 @@ function HomeScreen() {
     // Check if it's a new day since last login or first-time user
     // This is where you would add your logic to determine if the streak should be shown
     // For demo purposes, we'll just show it after a short delay
-    const timer = setTimeout(() => {
-      setShowStreakModal(true);
-    }, 500);
+    if (user?.role === "Pupil"){
+      const timer = setTimeout(() => {
+        setShowStreakModal(true);
+      }, 500);
 
-    return () => clearTimeout(timer);
+      return () => clearTimeout(timer);
+    }
   }, []);
 
   const streak = useUserStore((state) => state.streak);

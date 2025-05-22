@@ -41,6 +41,7 @@ import {
 import { ReadingSession } from "@/models/ReadingSession";
 import { router } from "expo-router";
 import BackHeader from "@/components/BackHeader";
+import { useUserStore } from "@/stores/userStore";
 
 export default function Read() {
   const { width } = useWindowDimensions();
@@ -86,6 +87,8 @@ export default function Read() {
   const { mutateAsync: createReadingSession } = useCreateReadingSession();
   const { mutateAsync: updateReadingSession } = useUpdateReadingSession();
 
+  const userRole = useUserStore((state) => state.user?.role);
+
   if (!selectedContent) {
     return null;
   }
@@ -95,6 +98,7 @@ export default function Read() {
   // }));
   useEffect(() => {
     if (!isContentReady) return;
+    if (userRole === "Teacher") return;
 
     const initSession = async () => {
       let pastSession = getPastSession(selectedContent.id);
@@ -126,7 +130,7 @@ export default function Read() {
     return () => {
       backHandler.remove();
     };
-  }, [isContentReady]);
+  }, [isContentReady, userRole]);
 
   const fetchTranslation = async (word: string) => {
     const existingTranslation = getTranslation(word);
@@ -343,6 +347,12 @@ export default function Read() {
   }, [isContentReady, onCheckpoint, contentHeight, visibleHeight]);
 
   const handleFinishReadingSession = async () => {
+    if (userRole === "Teacher"){
+      router.replace({
+        pathname: "/minigames/play",
+      });
+    }
+
     if (!currentSessionRef.current) return;
 
     const updatedSession = {

@@ -10,4 +10,6 @@
 // export const API_URL = "http://192.168.1.12:5144/api";
 
 //JAKE
-export const API_URL = "http://192.168.254.104:5144/api";
+// export const API_URL = "http://192.168.254.104:5144/api";
+
+export const API_URL = "http://192.168.100.35:5144/api";

@@ -15,7 +15,7 @@ export default function Index() {
 
     if (user) {
         refreshAccessToken();
-        if (currentMinigame) {
+        if (currentMinigame && user.role === "Pupil") {
             return <Redirect href="/minigames/play" />;
         } else {
             return <Redirect href="/home" />;

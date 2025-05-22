@@ -14,6 +14,7 @@ import { CorrectSound } from "@/utils/sounds";
 import { Progress } from "@/components/ui/progress";
 import { Minigame, MinigameType } from "@/models/Minigame";
 import { useCreateMinigameLog } from "@/services/minigameService";
+import { useUserStore } from "@/stores/userStore";
 
 export default function WordsFromLetters({
   minigame,
@@ -23,7 +24,7 @@ export default function WordsFromLetters({
   nextGame: () => void;
 }) {
   const { mutate: triggerCreateMinigameLog } = useCreateMinigameLog();
-
+  const userRole = useUserStore((state) => state.user?.role);
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
   const {
     lives,
@@ -99,20 +100,23 @@ export default function WordsFromLetters({
     if (lives <= 0 || correctAnswers.length === words.length) {
       try {
         console.log("Words from letters Game Over");
-        const minigameLog = gameOver({
-          correctAnswers,
-          incorrectAnswers,
-          streak,
-        });
 
-        if (!minigameLog) {
-          throw Error("Minigame Log is null");
+        if (userRole === "Pupil"){
+          const minigameLog = gameOver({
+            correctAnswers,
+            incorrectAnswers,
+            streak,
+          });
+
+          if (!minigameLog) {
+            throw Error("Minigame Log is null");
+          }
+
+          triggerCreateMinigameLog({
+            minigameLog,
+            type: MinigameType.WordsFromLetters,
+          });
         }
-
-        triggerCreateMinigameLog({
-          minigameLog,
-          type: MinigameType.WordsFromLetters,
-        });
 
         setTimeout(() => {
           nextGame();

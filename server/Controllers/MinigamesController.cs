@@ -174,10 +174,10 @@ namespace LexiLearner.Controllers
             );
         }
 
-        [HttpGet("readingmaterials/{readingMaterialId}")]
+        [HttpGet("readingmaterials/{readingMaterialId}/random")]
         public async Task<IActionResult> GetMinigamesByReadingMaterialId([FromRoute] Guid readingMaterialId)
         {
-            var minigames = await _minigameService.GetMinigamesByRMId(readingMaterialId);
+            var minigames = await _minigameService.GetRandomMinigamesByRMId(readingMaterialId);
             return StatusCode(StatusCodes.Status200OK,
                 new SuccessResponseDTO("Successfully fetched minigames.", minigames)
             );

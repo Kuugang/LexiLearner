@@ -3,6 +3,7 @@ using LexiLearner.Exceptions;
 using LexiLearner.Interfaces;
 using LexiLearner.Models;
 using LexiLearner.Models.DTO;
+using Org.BouncyCastle.Crypto.Generators;
 
 namespace LexiLearner.Services
 {
@@ -254,6 +255,33 @@ namespace LexiLearner.Services
                 Achievements = newAchievements,
                 Level = Pupil.Level,
             };
+        }
+        
+        public async Task<List<MinigameDTO>> GetRandomMinigamesByRMId(Guid readingMaterialId)
+        {
+            var minigames = await _minigameRepository.GetMinigamesByRMId(readingMaterialId);
+
+            if (minigames == null || !minigames.Any())
+            {
+                throw new ApplicationExceptionBase(
+                    "No minigames found for reading material.",
+                    "Fetching minigames for the reading material failed.",
+                    StatusCodes.Status404NotFound
+                );
+            }
+            
+            minigames = minigames
+                .GroupBy(m => m.MinigameType)
+                .OrderBy(_ => _random.Next())
+                .Take(Math.Min(3, minigames.GroupBy(m => m.MinigameType).Count()))
+                .Select(group =>
+                {
+                    var minigamesOfType = group.ToList();
+                    return minigamesOfType[_random.Next(minigamesOfType.Count)];
+                })
+                .ToList();
+
+            return minigames.Select(mg => new MinigameDTO(mg)).ToList();
         }
 
         public async Task<List<MinigameDTO>> GetRandomMinigames(Guid readingSessionId)
