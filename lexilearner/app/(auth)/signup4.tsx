@@ -2,6 +2,7 @@ import { useState } from "react";
 import { router } from "expo-router";
 import { useUserStore } from "@/stores/userStore";
 import { useGlobalStore } from "@/stores/globalStore";
+import { refreshAccessToken } from "@/services/AuthService";
 import Toast from "react-native-toast-message";
 
 import SignUp4 from "@/components/Auth/SignUp4";
@@ -26,6 +27,7 @@ export default function Step4() {
         type: "success",
         text1: "Registration Success",
       });
+      refreshAccessToken();
       router.replace("/home");
     } catch (error: any) {
       Toast.show({

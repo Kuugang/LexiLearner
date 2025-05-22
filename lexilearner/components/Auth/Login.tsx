@@ -6,7 +6,7 @@ import { useAuthStore } from "@/stores/authStore";
 import { validateField } from "@/utils/utils";
 import { getProfile } from "@/services/UserService";
 import { login as apiLogin } from "@/services/AuthService";
-import { User } from "@/models/User";
+import { extractUser, User } from "@/models/User";
 import { useUserStore } from "@/stores/userStore";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -65,33 +65,7 @@ export default function Login() {
       const userData = response.data;
 
       if (userData) {
-        const {
-          id,
-          email,
-          firstName,
-          lastName,
-          userName,
-          twoFactorEnabled,
-          phoneNumber,
-          role,
-          pupil,
-        } = userData;
-
-        const user: User = {
-          id: id,
-          email: email,
-          firstName: firstName,
-          lastName: lastName,
-          userName: userName,
-          twoFactorEnabled: twoFactorEnabled,
-          phoneNumber: phoneNumber,
-          role: role,
-        };
-
-        if (role === "Pupil") {
-          user.pupil = pupil;
-        }
-
+        const user = extractUser(response.data);
         setUser(user);
         Toast.show({
           type: "success",

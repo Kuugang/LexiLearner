@@ -8,6 +8,7 @@ import { RegisterFormContext } from "./_layout";
 import { useUserStore } from "@/stores/userStore";
 import { useAuthStore } from "@/stores/authStore";
 import { useGlobalStore } from "@/stores/globalStore";
+import { refreshAccessToken } from "@/services/AuthService";
 
 import SignUp3 from "@/components/Auth/SignUp3";
 
@@ -36,7 +37,7 @@ export default function Step3() {
       if (fromProviderAuth) {
         await updateProfile(form);
       } else {
-        await signup(form);
+        signup(form);
       }
       if (form.role === "Pupil") {
         router.push("/signup4");
@@ -45,13 +46,13 @@ export default function Step3() {
           type: "success",
           text1: "Registration Success",
         });
+        refreshAccessToken();
         router.push("/home");
       }
     } catch (error: any) {
-      console.log("Form data being submitted:", form);
       Toast.show({
         type: "error",
-        text1: "Registration Failed bbb",
+        text1: "Registration Failed.",
         text2: error.message || "Unknown error occurred",
       });
     } finally {
