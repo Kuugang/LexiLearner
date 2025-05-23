@@ -12,6 +12,8 @@ import { Input } from "~/components/ui/input";
 
 import { CircleUser, Search, Flame } from "lucide-react-native";
 import { useUserStore } from "@/stores/userStore";
+import { StreakIcon } from "@/components/Streak";
+import { HeaderSearchBar } from "@/components/HeaderSearchBar";
 
 function HomeScreen() {
   const { data: stories, isLoading: isStoriesLoading } = useStories();
@@ -64,51 +66,15 @@ function HomeScreen() {
   return (
     <ScrollView className="bg-background">
       {/* TODO: MAKE THIS INTO COMPONENT*/}
-      <View className="flex flex-row gap-2 items-center w-full p-4">
-        <TouchableOpacity onPress={() => router.push("/(tabs)/profile")}>
-          <CircleUser color="#FFD43B" size={30} />
-        </TouchableOpacity>
-
-        {user?.role === "Teacher" ? null : (
-          <View>
-            <LoginStreak
-              isVisible={showStreak}
-              onClose={() => setShowStreakModal(false)}
-              // streakCount={streakCount}
-              activeWeekdays={activeWeekdays}
-            />
-
-            <TouchableOpacity onPress={() => setShowStreakModal(true)}>
-              <View style={{ position: "relative" }}>
-                <Flame color="red" size={30} />
-                <Text className="text-red-500 font-bold absolute -bottom-1 -right-1">
-                  {streak}
-                </Text>
-              </View>
-            </TouchableOpacity>
-          </View>
-        )}
-
-        <View className="relative flex-1">
-          <Search
-            size={20}
-            color="#888"
-            style={{
-              position: "absolute",
-              left: 10,
-              top: 12,
-              zIndex: 1,
-            }}
-          />
-          <Input
-            className="pl-10 py-3 rounded-lg w-full"
-            onFocus={() => router.push("/explore")}
-            placeholder="Search for stories..."
-            aria-labelledby="label-for-searchStories"
-            aria-errormessage="inputError"
-          />
-        </View>
-      </View>
+      <HeaderSearchBar
+        user={user}
+        streak={streak}
+        showStreak={showStreak}
+        setShowStreakModal={setShowStreakModal}
+        activeWeekdays={activeWeekdays}
+        onSearchFocus={() => router.push("/explore")}
+        placeholder="Search for stories..."
+      />
 
       <View
         className="flex flex-row items-center px-4 py-4 bg-yellowOrange"
@@ -124,7 +90,7 @@ function HomeScreen() {
               fontWeight: "bold",
               flexWrap: "wrap",
             }}
-            className="text-orange"
+            className="text-black"
           >
             Ready for a Journey?
           </Text>
