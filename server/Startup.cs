@@ -100,6 +100,22 @@ namespace LexiLearner
                 });
 
                 options.RejectionStatusCode = 429;
+                options.OnRejected = async (context, token) =>
+                    {
+                        context.HttpContext.Response.ContentType = "application/json";
+                        context.HttpContext.Response.StatusCode = 429;
+
+                        var response = new
+                        {
+                            StatusCode = 429,
+                            Error = "Too many requests. Please try again later."
+                        };
+
+                        var json = System.Text.Json.JsonSerializer.Serialize(response);
+
+                        await context.HttpContext.Response.WriteAsync(json, token);
+                    };
+
             });
 
 
