@@ -7,7 +7,7 @@ import { useGlobalStore } from "@/stores/globalStore";
 import { useAuthStore } from "@/stores/authStore";
 
 //Components
-import { View, ScrollView, Image } from "react-native";
+import { View, ScrollView, Image, Pressable } from "react-native";
 import { Text } from "@/components/ui/text";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -125,11 +125,17 @@ export default function Settings() {
 
       <View className="justify-around">
         <View className="flex items-center justify-center gap-4">
-          <Image
-            source={require("@/assets/images/leeseopp.png")}
-            className="rounded-full border-4 w-32 h-32"
-            alt="User profile pic"
-          />
+          <Pressable
+            onPress={() => {
+              console.log("WHAT");
+            }}
+          >
+            <Image
+              source={require("@/assets/images/leeseopp.png")}
+              className="rounded-full border-4 w-32 h-32"
+              alt="User profile pic"
+            />
+          </Pressable>
 
           <Text className="text-2xl font-bold">Profile</Text>
         </View>
