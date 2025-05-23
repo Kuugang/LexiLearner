@@ -20,16 +20,19 @@ import {
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
 
-import {
-  Search,
-  ListFilter,
-  Check,
-  CircleUser,
-  Flame,
-} from "lucide-react-native";
+import { Search, ListFilter, Check, CircleUser } from "lucide-react-native";
 import { ReadingContentType } from "@/models/ReadingContent";
+import { StreakIcon } from "@/components/Streak";
+import { useUserStore } from "@/stores/userStore";
+import { HeaderSearchBar } from "@/components/HeaderSearchBar";
 
 function Explore() {
+  const streak = useUserStore((state) => state.streak);
+  const activeWeekdays = [true, true, true, false, false, false, false];
+
+  const [showStreak, setShowStreakModal] = useState(false);
+  const user = useUserStore((state) => state.user);
+
   const { data: stories, isLoading: isStoriesLoading } = useStories();
   const [query, setQuery] = useState<string>("");
   const [selectedGenres, setSelectedGenres] = useState<Set<string>>(new Set());
@@ -113,40 +116,16 @@ function Explore() {
         });
 
   return (
-    <ScrollView className="bg-background ">
-      <View className="flex flex-row gap-2 items-center w-full p-4">
-        <TouchableOpacity onPress={() => router.push("/(tabs)/profile")}>
-          <CircleUser color="#FFD43B" size={30} />
-        </TouchableOpacity>
-
-        {/* TODO: HARDCODED PMN DIAY NI HSAHS */}
-        <View>
-          <Flame color="red" size={30} />
-          <Text className="text-red-500 font-bold absolute -bottom-1 -right-1">
-            3
-          </Text>
-        </View>
-
-        <View className="relative flex-1">
-          <Search
-            size={20}
-            color="#888"
-            style={{
-              position: "absolute",
-              left: 10,
-              top: 12,
-              zIndex: 1,
-            }}
-          />
-          <Input
-            className="pl-10 py-3 rounded-lg w-full"
-            onChangeText={(value: string) => setQuery(value)}
-            placeholder="Search for stories..."
-            aria-labelledby="label-for-searchStories"
-            aria-errormessage="inputError"
-          />
-        </View>
-      </View>
+    <ScrollView className="bg-background">
+      <HeaderSearchBar
+        user={user}
+        streak={streak}
+        showStreak={showStreak}
+        setShowStreakModal={setShowStreakModal}
+        activeWeekdays={activeWeekdays}
+        onSearchFocus={() => router.push("/explore")}
+        placeholder="Search for stories..."
+      />
 
       <View className="flex flex-row justify-end">
         <DropdownMenu>

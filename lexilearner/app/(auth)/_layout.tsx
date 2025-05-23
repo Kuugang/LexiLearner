@@ -13,8 +13,17 @@ interface RegisterFormContextType {
 }
 
 // Provide a default value to prevent 'null' errors
-export const RegisterFormContext =
-  createContext<RegisterFormContextType | null>(null);
+const RegisterFormContext = createContext<RegisterFormContextType | null>(null);
+
+export function useRegisterFormContext() {
+  const context = useContext(RegisterFormContext);
+  if (!context) {
+    throw new Error(
+      "useRegisterFormContext must be used within a RegisterFormProvider",
+    );
+  }
+  return context;
+}
 
 export default function AuthLayout() {
   const [registerForm, setRegisterForm] = useState<Record<string, any>>({
