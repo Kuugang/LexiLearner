@@ -6,7 +6,6 @@ import {
 } from "@/services/ReadingMaterialService";
 import { router } from "expo-router";
 
-// Components
 import ReadingContent from "@/components/ReadingContent";
 import { View, ScrollView, Text, TouchableOpacity } from "react-native";
 import { Button } from "~/components/ui/button";
@@ -69,34 +68,6 @@ function Explore() {
     "Passage",
   ];
 
-  // useEffect(() => {
-  //   if (hasUserInteracted || query.trim() !== "") {
-  //     const fetchFiltered = async () => {
-  //       setIsFilterLoading(true);
-  //       setFilterError(null);
-
-  //       const filters: ReadingMaterialFilters = {
-  //         Genre: Array.from(selectedGenres),
-  //         Title: query.trim(),
-  //       };
-
-  //       try {
-  //         const data = await getFilteredStories(filters);
-  //         setFilteredStories(data);
-  //       } catch (error) {
-  //         setFilterError(error);
-  //         setFilteredStories(null);
-  //       } finally {
-  //         setIsFilterLoading(false);
-  //       }
-  //     };
-
-  //     fetchFiltered();
-  //   } else {
-  //     setFilteredStories(null);
-  //   }
-  // }, [selectedGenres, query, hasUserInteracted]);
-
   const filteredStories =
     selectedGenres.size === 0 && query.trim() === ""
       ? null
@@ -123,11 +94,12 @@ function Explore() {
         showStreak={showStreak}
         setShowStreakModal={setShowStreakModal}
         activeWeekdays={activeWeekdays}
-        onSearchFocus={() => router.push("/explore")}
         placeholder="Search for stories..."
+        searchValue={query}
+        onSearchChange={setQuery}
       />
 
-      <View className="flex flex-row justify-end">
+      <View className="flex flex-row justify-end px-4 py-2">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline">
@@ -170,7 +142,6 @@ function Explore() {
                   className={`flex items-center justify-around p-4 border-2 rounded-xl border-lightGray border-b-4`}
                   onPress={() => toggleGenre(genre)}
                 >
-                  {/* TODO:  */}
                   <Text className="font-semibold text-center">{genre}</Text>
                 </TouchableOpacity>
               );
@@ -180,7 +151,7 @@ function Explore() {
       )}
 
       {filteredStories && filteredStories.length > 0 && (
-        <View className="flex flex-col gap-2">
+        <View className="flex flex-col gap-2 px-4">
           {filteredStories?.map((item) => (
             <ReadingContent
               key={item.id}
@@ -195,6 +166,14 @@ function Explore() {
               difficulty={item.difficulty}
             />
           ))}
+        </View>
+      )}
+
+      {filteredStories && filteredStories.length === 0 && (
+        <View className="flex-1 items-center justify-center p-8">
+          <Text className="text-gray-500 text-center">
+            No stories found matching your search criteria.
+          </Text>
         </View>
       )}
     </ScrollView>
