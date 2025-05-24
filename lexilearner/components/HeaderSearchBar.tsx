@@ -1,9 +1,9 @@
-// components/HeaderSearchBar.tsx
 import React from "react";
-import { View, TouchableOpacity } from "react-native";
+import { View, TouchableOpacity, Pressable } from "react-native";
 import { router } from "expo-router";
-import { CircleUser, Search } from "lucide-react-native";
+import { CircleUser, Search, X } from "lucide-react-native";
 import { Text } from "~/components/ui/text";
+import { Input } from "~/components/ui/input";
 import { StreakIcon } from "@/components/Streak";
 import LoginStreak from "@/components/LoginStreak";
 
@@ -13,8 +13,12 @@ interface HeaderSearchBarProps {
   showStreak: boolean;
   setShowStreakModal: (show: boolean) => void;
   activeWeekdays: boolean[];
-  onSearchFocus?: () => void;
   placeholder?: string;
+  searchValue: string;
+  onSearchChange: (text: string) => void;
+  onSearchFocus?: () => void;
+  onSearchBlur?: () => void;
+  onClearSearch?: () => void;
 }
 
 export const HeaderSearchBar: React.FC<HeaderSearchBarProps> = ({
@@ -23,8 +27,12 @@ export const HeaderSearchBar: React.FC<HeaderSearchBarProps> = ({
   showStreak,
   setShowStreakModal,
   activeWeekdays,
-  onSearchFocus,
   placeholder = "Search stories...",
+  searchValue,
+  onSearchChange,
+  onSearchFocus,
+  onSearchBlur,
+  onClearSearch,
 }) => {
   const STREAK_COLOR = "#FF663E";
 
@@ -61,22 +69,66 @@ export const HeaderSearchBar: React.FC<HeaderSearchBarProps> = ({
         </View>
       )}
 
-      <View className="flex-1">
-        <TouchableOpacity
-          onPress={onSearchFocus}
-          activeOpacity={0.8}
+      <View className="flex-1 relative">
+        {/* Search Icon */}
+        <Search
+          size={18}
+          color="#6B7280"
+          style={{
+            position: "absolute",
+            left: 16,
+            top: 14,
+            zIndex: 1,
+          }}
+        />
+
+        {/* Input Field jake bajo*/}
+        <Input
+          className="rounded-full w-full"
+          value={searchValue}
+          onChangeText={onSearchChange}
+          onFocus={onSearchFocus}
+          onBlur={onSearchBlur}
+          placeholder={placeholder}
+          autoCorrect={false}
+          autoCapitalize="none"
+          returnKeyType="search"
+          clearButtonMode="never"
+          selectTextOnFocus={false}
+          placeholderTextColor="#9CA3AF"
           style={{
             backgroundColor: "#D1D5DB",
             borderRadius: 25,
-            paddingVertical: 8,
+            height: 44,
+            paddingVertical: 0,
             paddingHorizontal: 20,
-            flexDirection: "row",
-            alignItems: "center",
+            paddingLeft: 50,
+            paddingRight: searchValue ? 45 : 20,
+            fontSize: 16,
+            lineHeight: 20,
+            textAlignVertical: "center",
+            includeFontPadding: false,
           }}
-        >
-          <Search size={20} color="#6B7280" style={{ marginRight: 12 }} />
-          <Text style={{ color: "#6B7280", fontSize: 16 }}>{placeholder}</Text>
-        </TouchableOpacity>
+        />
+
+        {/* Clear Button */}
+        {searchValue ? (
+          <Pressable
+            onPress={onClearSearch}
+            style={{
+              position: "absolute",
+              right: 12,
+              top: 12,
+              zIndex: 1,
+              padding: 4,
+              backgroundColor: "rgba(255, 255, 255, 0.8)",
+              borderRadius: 12,
+            }}
+            hitSlop={{ top: 10, right: 10, bottom: 10, left: 10 }}
+          >
+            <X size={16} color="#6B7280" />
+          </Pressable>
+        ) : null}
       </View>
     </View>
   );
