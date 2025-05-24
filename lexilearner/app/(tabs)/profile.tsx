@@ -1,5 +1,6 @@
 import { router, useFocusEffect } from "expo-router";
 import { useUserStore } from "@/stores/userStore";
+import { API_URL } from "@/utils/constants";
 
 import { ScrollView, View, Image } from "react-native";
 
@@ -105,7 +106,13 @@ export default function Profile() {
       >
         <View className="h-32 w-32 rounded-full border-[5px] border-white">
           <Image
-            source={require("@/assets/images/leeseopp.png")}
+            source={
+              user?.avatar
+                ? {
+                    uri: `${API_URL.replace(/\/api\/?$/, "/")}${user.avatar.replace(/^\/+/, "")}`,
+                  }
+                : require("@/assets/images/default_pfp.png")
+            }
             className="rounded-full shadow-lg w-full h-full"
             resizeMode="contain"
             alt="User profile pic"
@@ -190,7 +197,7 @@ export default function Profile() {
                   {achievementsQuery.data.map(
                     (a: Achievement, index: number) => (
                       <AwardIcon badge={`${a.badge}`} key={index} />
-                    )
+                    ),
                   )}
                 </View>
               </View>

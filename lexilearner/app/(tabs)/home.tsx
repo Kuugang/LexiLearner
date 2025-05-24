@@ -114,8 +114,8 @@ function HomeScreen() {
         <ScrollView horizontal={true}>
           {recommendations &&
             recommendations.length > 0 &&
-            recommendations.map((r) => (
-              <View className="w-[90vw]">
+            recommendations.map((r, index) => (
+              <View className="w-[90vw]" key={index}>
                 <ReadingContent
                   type={"Recommended"}
                   id={r.id}

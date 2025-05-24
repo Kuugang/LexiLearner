@@ -113,7 +113,7 @@ public class UsersController : ControllerBase
         return StatusCode(StatusCodes.Status200OK,
           new SuccessResponseDTO("Leaderboard fetched successfully.", new PupilLeaderboardDTO(pupilLeaderboards.First())));
     }
-    
+
     [HttpGet("me/leaderboard/history")]
     [Authorize]
     public async Task<IActionResult> GetLeaderBoardHistory()
@@ -123,18 +123,18 @@ public class UsersController : ControllerBase
         return StatusCode(StatusCodes.Status200OK,
           new SuccessResponseDTO("Leaderboard history fetched successfully.", pupilLeaderboards.Select(l => new PupilLeaderboardDTO(l)).ToList()));
     }
-    
+
     [HttpPost("me/sessions")]
     [Authorize]
     public async Task<IActionResult> CreateSession()
     {
         var session = await _userService.CreateSession(User);
-        
+
 
         return StatusCode(StatusCodes.Status201Created,
           new SuccessResponseDTO("Session created successfully.", session));
     }
-    
+
     [HttpGet("me/sessions/{sessionId}")]
     [Authorize]
     public async Task<IActionResult> GetSessionById(Guid sessionId)
@@ -145,7 +145,7 @@ public class UsersController : ControllerBase
             ? StatusCode(StatusCodes.Status200OK, new SuccessResponseDTO("Session fetched successfully.", new SessionDTO(session)))
             : StatusCode(StatusCodes.Status404NotFound, new ErrorResponseDTO("Session not found.", 404));
     }
-    
+
     [HttpPut("me/sessions/{SessionId}")]
     [Authorize]
     public async Task<IActionResult> EndSession(Guid sessionId)
@@ -155,20 +155,23 @@ public class UsersController : ControllerBase
         return session != null
             ? StatusCode(StatusCodes.Status200OK, new SuccessResponseDTO("Session ended successfully.", session))
             : StatusCode(StatusCodes.Status404NotFound, new ErrorResponseDTO("Session not found.", StatusCodes.Status404NotFound));
-    }  
+    }
 
     [HttpGet("me/sessions")]
     [Authorize]
-    public async Task<IActionResult> GetTotalSession() {
+    public async Task<IActionResult> GetTotalSession()
+    {
         var user = await _userService.GetUserFromToken(User);
-        if(user == null) {
+        if (user == null)
+        {
             return StatusCode(StatusCodes.Status404NotFound, new ErrorResponseDTO("User not found.", StatusCodes.Status404NotFound));
         }
 
         var userId = user.Id.ToString();
         var sessions = await _userService.GetSessionsByUserId(userId);
 
-        if(sessions == null) {
+        if (sessions == null)
+        {
             return StatusCode(StatusCodes.Status404NotFound, new ErrorResponseDTO("No sessions found.", StatusCodes.Status404NotFound));
         }
 
@@ -176,9 +179,9 @@ public class UsersController : ControllerBase
         var totalDuration = sessions.Sum(s => s.Duration ?? 0);
         return StatusCode(StatusCodes.Status200OK, new SuccessResponseDTO("Total session duration fetched successfully.", totalDuration));
     }
-    
+
     [HttpGet("search")]
-    [Authorize] 
+    [Authorize]
     public async Task<IActionResult> SearchUsers([FromQuery] string query, [FromQuery] string role)
     {
         if (string.IsNullOrEmpty(query))
@@ -188,7 +191,7 @@ public class UsersController : ControllerBase
 
         // Fix parameter order here - role comes first in the interface
         var users = await _userService.SearchUsersByRoleAsync(role, query);
-        
+
         if (users == null || !users.Any())
         {
             // Return an empty array directly (not wrapped in another object)
@@ -198,7 +201,7 @@ public class UsersController : ControllerBase
         // Return users directly without extra nesting
         return Ok(new SuccessResponseDTO("Users found.", users));
     }
-    
+
     [HttpGet("leaderboard")]
     [Authorize]
     public async Task<IActionResult> GetGlobal10Leaderboard()
@@ -210,7 +213,7 @@ public class UsersController : ControllerBase
             leaderboards.Select(l => new PupilLeaderboardDTO(l)).ToList())
         );
     }
-    
+
     [HttpGet("leaderboard/{pupilId}")]
     [Authorize]
     public async Task<IActionResult> GetPupilLeaderboardByPupilId(Guid pupilId)
@@ -220,7 +223,7 @@ public class UsersController : ControllerBase
         return StatusCode(StatusCodes.Status200OK,
           new SuccessResponseDTO("Leaderboard fetched successfully.", new PupilLeaderboardDTO(pupilLeaderboards.First())));
     }
-    
+
     [HttpGet("leaderboard/{pupilId}/history")]
     [Authorize]
     public async Task<IActionResult> GetPupilLeaderboardHistoryByPupilId(Guid pupilId)
