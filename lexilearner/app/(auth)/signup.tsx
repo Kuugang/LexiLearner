@@ -1,26 +1,28 @@
 import React, { useContext, useState, useEffect } from "react";
-import SignUp1 from "@/components/Auth/SignUp1";
-import { View, Text, Alert, ActivityIndicator } from "react-native";
 import { router } from "expo-router";
+import { useGlobalStore } from "@/stores/globalStore";
 import { validateField } from "@/utils/utils";
 import { checkUserExist } from "@/services/UserService";
-import { RegisterFormContext } from "./_layout";
+import { useRegisterFormContext } from "./_layout";
+import { useAuthStore } from "@/stores/authStore";
 
-// Define error state type for type safety
-interface FormErrors {
-  username: string;
-  email: string;
-  password: string;
-  confirmPassword: string;
-  firstName: string;
-  lastName: string;
-  role: string;
-}
+//Components
+import { TouchableOpacity, View, ScrollView, Text, Alert } from "react-native";
+import { Eye, EyeOff, Mail, KeyRound, UserRound } from "lucide-react-native";
+import { Button } from "~/components/ui/button";
+import { Input } from "~/components/ui/input";
+
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import { faGoogle, faFacebook } from "@fortawesome/free-brands-svg-icons";
+import BackHeader from "@/components/BackHeader";
 
 export default function Step1() {
-  const context = useContext(RegisterFormContext);
-  const [isLoading, setIsLoading] = useState(false);
-  const [formErrors, setFormErrors] = useState<FormErrors>({
+  const { isLoading, setIsLoading } = useGlobalStore();
+  const { registerForm, setRegisterForm } = useRegisterFormContext();
+  const providerAuth = useAuthStore((state) => state.providerAuth);
+
+  const [showPassword, setShowPassword] = React.useState(false);
+  const [formErrors, setFormErrors] = useState<Record<string, any>>({
     username: "",
     email: "",
     password: "",
@@ -30,26 +32,8 @@ export default function Step1() {
     role: "",
   });
 
-  // Clear errors when form data changes
-  useEffect(() => {
-    if (context?.registerForm) {
-      setFormErrors({
-        username: "",
-        email: "",
-        password: "",
-        confirmPassword: "",
-        firstName: "",
-        lastName: "",
-        role: "",
-      });
-    }
-  }, [context?.registerForm]);
-
   const validateForm = () => {
-    if (!context?.registerForm) return false;
-
-    const registerForm = context.registerForm;
-    const newErrors: FormErrors = {
+    const newErrors: Record<string, any> = {
       username: "",
       email: "",
       password: "",
@@ -79,14 +63,13 @@ export default function Step1() {
   };
 
   const checkExistingUser = async () => {
-    if (!context?.registerForm) return false;
-
-    const registerForm = context.registerForm;
-    const newErrors: FormErrors = { ...formErrors };
+    const newErrors: Record<string, any> = { ...formErrors };
     let isValid = true;
 
     try {
       // Check email
+      console.log(registerForm.email + " " + registerForm.username);
+      console.log(registerForm.username);
       const emailResponse = await checkUserExist("email", registerForm.email);
       console.log("Email check complete:", emailResponse);
 
@@ -98,7 +81,7 @@ export default function Step1() {
       console.error("Email check failed:", error);
       Alert.alert(
         "Connection Error",
-        "Unable to verify email. Please check your connection and try again."
+        "Unable to verify email. Please check your connection and try again.",
       );
       return false;
     }
@@ -107,7 +90,7 @@ export default function Step1() {
       // Check username
       const usernameResponse = await checkUserExist(
         "username",
-        registerForm.username
+        registerForm.username,
       );
       console.log("Username check complete:", usernameResponse);
 
@@ -119,7 +102,7 @@ export default function Step1() {
       console.error("Username check failed:", error);
       Alert.alert(
         "Connection Error",
-        "Unable to verify username. Please check your connection and try again."
+        "Unable to verify username. Please check your connection and try again.",
       );
       return false;
     }
@@ -129,27 +112,22 @@ export default function Step1() {
   };
 
   const handleStep = async () => {
-    if (isLoading) return; // Prevent multiple submissions
+    if (isLoading) return;
 
     try {
-      console.log("Starting registration step 1 validation");
       setIsLoading(true);
+      console.log("Starting registration step 1 validation");
 
       // Validate form fields
-      const isFormValid = validateForm();
-      if (!isFormValid) {
+      if (!validateForm()) {
         console.log("Form validation failed");
-        setIsLoading(false);
         return;
       }
 
       console.log("Form validation passed, checking if user exists");
 
-      // Check if user exists
-      const isUserNew = await checkExistingUser();
-      if (!isUserNew) {
+      if (!(await checkExistingUser())) {
         console.log("User already exists");
-        setIsLoading(false);
         return;
       }
 
@@ -159,42 +137,208 @@ export default function Step1() {
       console.error("Unexpected error in registration process:", error);
       Alert.alert(
         "Registration Error",
-        "Something went wrong. Please try again later."
+        "Something went wrong. Please try again later.",
       );
     } finally {
       setIsLoading(false);
     }
   };
 
-  if (!context?.registerForm) {
-    return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <Text>Loading registration form...</Text>
-      </View>
-    );
-  }
-
-  // Assuming SignUp1 component doesn't have isLoading prop based on the error
   return (
-    <>
-      <SignUp1 formErrors={formErrors} handleStep={handleStep} />
-      {isLoading && (
-        <View
-          style={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            backgroundColor: "rgba(0,0,0,0.3)",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <ActivityIndicator size="large" color="#0000ff" />
-          <Text style={{ marginTop: 10, color: "#fff" }}>Verifying...</Text>
+    <ScrollView className="bg-yellowOrange">
+      <View className="flex-1 gap-12 p-8 h-full justify-around">
+        <BackHeader />
+
+        <View className="flex flex-col gap-4">
+          <Text className="font-bold text-2xl">Let's Get Started!</Text>
+
+          <View className="flex gap-2">
+            <View className="relative">
+              <UserRound
+                size={20}
+                color="#888"
+                style={{
+                  position: "absolute",
+                  left: 10,
+                  top: 12,
+                  zIndex: 1,
+                }}
+              />
+              <Input
+                className="pl-10 py-2 rounded-xl shadow-xl"
+                placeholder="Username"
+                value={registerForm.username}
+                onChangeText={(value: string) =>
+                  setRegisterForm({ ...registerForm, username: value })
+                }
+                aria-labelledby="inputLabel"
+                aria-errormessage="inputError"
+              />
+            </View>
+            {formErrors.username && (
+              <Text className="text-destructive">{formErrors.username}</Text>
+            )}
+          </View>
+
+          {/* Email Field */}
+          <View className="flex gap-2">
+            <View className="relative">
+              <Mail
+                size={20}
+                color="#888"
+                style={{
+                  position: "absolute",
+                  left: 10,
+                  top: 12,
+                  zIndex: 1,
+                }}
+              />
+              <Input
+                className="pl-10 py-2 rounded-xl shadow-xl"
+                placeholder="Email"
+                value={registerForm.email}
+                onChangeText={(value: string) =>
+                  setRegisterForm({ ...registerForm, email: value })
+                }
+                aria-labelledby="inputLabel"
+                aria-errormessage="inputError"
+              />
+            </View>
+            {formErrors.email && (
+              <Text className="text-destructive">{formErrors.email}</Text>
+            )}
+          </View>
+
+          <View className="flex gap-2">
+            <View>
+              <View className="relative">
+                <KeyRound
+                  size={20}
+                  color="#888"
+                  style={{
+                    position: "absolute",
+                    left: 10,
+                    top: 12,
+                    zIndex: 1,
+                  }}
+                />
+
+                <Input
+                  className="pl-10 py-2 rounded-xl shadow-xl"
+                  placeholder="Password"
+                  value={registerForm.password}
+                  secureTextEntry={showPassword ? false : true}
+                  onChangeText={(value: string) =>
+                    setRegisterForm({ ...registerForm, password: value })
+                  }
+                  aria-labelledby="inputLabel"
+                  aria-errormessage="inputError"
+                />
+              </View>
+
+              <TouchableOpacity
+                onPress={() => setShowPassword((prev) => !prev)}
+                className="absolute right-2 top-1/2 -translate-y-1/2 h-6 w-6 p-0 text-muted-foreground"
+              >
+                {showPassword ? (
+                  <EyeOff size={20} color="#888" />
+                ) : (
+                  <Eye size={20} color="#888" />
+                )}
+              </TouchableOpacity>
+            </View>
+            {formErrors.password && (
+              <Text className="text-destructive">{formErrors.password}</Text>
+            )}
+          </View>
+
+          <View className="flex gap-2">
+            <View>
+              <View className="relative">
+                <KeyRound
+                  size={20}
+                  color="#888"
+                  style={{
+                    position: "absolute",
+                    left: 10,
+                    top: 12,
+                    zIndex: 1,
+                  }}
+                />
+
+                <Input
+                  className="pl-10 py-2 rounded-xl shadow-xl"
+                  placeholder="Password"
+                  value={registerForm.confirmPassword}
+                  secureTextEntry={showPassword ? false : true}
+                  onChangeText={(value: string) =>
+                    setRegisterForm({ ...registerForm, confirmPassword: value })
+                  }
+                  aria-labelledby="inputLabel"
+                  aria-errormessage="inputError"
+                />
+              </View>
+
+              <TouchableOpacity
+                onPress={() => setShowPassword((prev) => !prev)}
+                className="absolute right-2 top-1/2 -translate-y-1/2 h-6 w-6 p-0 text-muted-foreground"
+              >
+                {showPassword ? (
+                  <EyeOff size={20} color="#888" />
+                ) : (
+                  <Eye size={20} color="#888" />
+                )}
+              </TouchableOpacity>
+            </View>
+            {formErrors.confirmPassword && (
+              <Text className="text-destructive">
+                {formErrors.confirmPassword}
+              </Text>
+            )}
+          </View>
         </View>
-      )}
-    </>
+
+        <View>
+          <Button
+            className="bg-orange rounded-lg"
+            onPress={() => {
+              handleStep();
+            }}
+          >
+            <Text className="text-white font-bold">Sign Up</Text>
+          </Button>
+
+          <View className="flex gap-3">
+            <View className="w-full flex flex-row items-center gap-2 mt-4">
+              <View className="flex-1 h-px bg-black" />
+              <Text className="text-primary-0 mx-2 text-sm">
+                OR CONTINUE WITH
+              </Text>
+              <View className="flex-1 h-px bg-black" />
+            </View>
+
+            <View className="flex flex-row gap-3 w-full justify-center items-center">
+              <Button
+                className="bg-white shadow-md rounded-lg"
+                onPress={() => {
+                  providerAuth(0);
+                }}
+              >
+                <FontAwesomeIcon icon={faGoogle} />
+              </Button>
+
+              <Button
+                className="bg-white shadow-md rounded-lg"
+                onPress={() => {
+                  providerAuth(1);
+                }}
+              >
+                <FontAwesomeIcon icon={faFacebook} />
+              </Button>
+            </View>
+          </View>
+        </View>
+      </View>
+    </ScrollView>
   );
 }

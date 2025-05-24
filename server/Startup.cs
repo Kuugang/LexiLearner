@@ -5,6 +5,8 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.FileProviders;
 using System.Text.Json.Serialization;
+using System.Threading.RateLimiting;
+
 using DotNetEnv;
 
 using Microsoft.AspNetCore.Mvc;
@@ -20,7 +22,6 @@ using LexiLearner.Services;
 using LexiLearner.Repository;
 using LexiLearner.Validators;
 using LexiLearner.Extensions;
-using System.Text.Json.Serialization;
 
 
 namespace LexiLearner
@@ -81,6 +82,43 @@ namespace LexiLearner
                 });
             });
             services.AddMemoryCache();
+            services.AddRateLimiter(options =>
+            {
+                options.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(httpContext =>
+                {
+                    var ipAddress = httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown";
+
+                    return RateLimitPartition.GetFixedWindowLimiter(
+                        partitionKey: ipAddress,
+                        factory: _ => new FixedWindowRateLimiterOptions
+                        {
+                            PermitLimit = 10,
+                            Window = TimeSpan.FromSeconds(10),
+                            QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
+                            QueueLimit = 0
+                        });
+                });
+
+                options.RejectionStatusCode = 429;
+                options.OnRejected = async (context, token) =>
+                    {
+                        context.HttpContext.Response.ContentType = "application/json";
+                        context.HttpContext.Response.StatusCode = 429;
+
+                        var response = new
+                        {
+                            StatusCode = 429,
+                            Error = "Too many requests. Please try again later."
+                        };
+
+                        var json = System.Text.Json.JsonSerializer.Serialize(response);
+
+                        await context.HttpContext.Response.WriteAsync(json, token);
+                    };
+
+            });
+
+
 
             services.Configure<JwtOptions>(Configuration.GetSection("JWT"));
 
@@ -222,6 +260,7 @@ namespace LexiLearner
 
             // Register JwtAuthenticationService as middleware
             app.UseMiddleware<JWTMiddleware>();
+            app.UseRateLimiter();
 
             app.UseHttpsRedirection();
 
