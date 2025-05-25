@@ -3,6 +3,7 @@ export interface User {
   email: string;
   firstName: string;
   lastName: string;
+  avatar: string;
   userName: string;
   twoFactorEnabled: boolean;
   phoneNumber: string;
@@ -29,6 +30,7 @@ export function extractUser(data: Record<string, any>): User {
     email,
     firstName,
     lastName,
+    avatar,
     userName,
     twoFactorEnabled,
     phoneNumber,
@@ -41,6 +43,7 @@ export function extractUser(data: Record<string, any>): User {
     email: email,
     firstName: firstName,
     lastName: lastName,
+    avatar: avatar,
     userName: userName,
     twoFactorEnabled: twoFactorEnabled,
     phoneNumber: phoneNumber,

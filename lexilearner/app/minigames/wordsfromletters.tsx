@@ -35,7 +35,7 @@ export default function WordsFromLetters({
     setWords,
     guess,
     setGuess,
-    storeShuffleLetters,
+    shuffleLetters,
     usedIndices,
     addUsedIndex,
     removeUsedIndex,
@@ -49,11 +49,6 @@ export default function WordsFromLetters({
     resetStreak,
     resetGameState,
   } = useWordsFromLettersMiniGameStore();
-
-  const shuffleLetters = useCallback(storeShuffleLetters, [
-    letters,
-    usedIndices,
-  ]);
 
   const { gameOver, incrementMinigamesIndex } = useMiniGameStore();
 
@@ -101,7 +96,7 @@ export default function WordsFromLetters({
       try {
         console.log("Words from letters Game Over");
 
-        if (userRole === "Pupil"){
+        if (userRole === "Pupil") {
           const minigameLog = gameOver({
             correctAnswers,
             incorrectAnswers,
@@ -202,7 +197,9 @@ export default function WordsFromLetters({
             />
 
             <View className="flex flex-col gap-2 justify-center items-center">
-              <TouchableOpacity onPress={shuffleLetters}>
+              <TouchableOpacity
+                onPress={useCallback(shuffleLetters, [letters, usedIndices])}
+              >
                 <Shuffle size={30} color="black" />
               </TouchableOpacity>
 

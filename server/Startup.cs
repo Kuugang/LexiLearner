@@ -93,7 +93,7 @@ namespace LexiLearner
                         factory: _ => new FixedWindowRateLimiterOptions
                         {
                             PermitLimit = 10,
-                            Window = TimeSpan.FromSeconds(10),
+                            Window = TimeSpan.FromSeconds(1),
                             QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
                             QueueLimit = 0
                         });

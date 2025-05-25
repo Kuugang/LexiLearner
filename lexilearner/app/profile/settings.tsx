@@ -1,13 +1,18 @@
 import { router } from "expo-router";
 import { useEffect, useState } from "react";
 import { checkUserExist } from "@/services/UserService";
-import { validateField } from "@/utils/utils";
+import {
+  getChangedFields,
+  getFormDataImageFromPickerAsset,
+  validateField,
+} from "@/utils/utils";
 import { useUserStore } from "@/stores/userStore";
 import { useGlobalStore } from "@/stores/globalStore";
 import { useAuthStore } from "@/stores/authStore";
+import * as ImagePicker from "expo-image-picker";
 
 //Components
-import { View, ScrollView, Image } from "react-native";
+import { View, ScrollView, Image, Pressable } from "react-native";
 import { Text } from "@/components/ui/text";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -19,27 +24,28 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "~/components/ui/dialog";
 import BackHeader from "@/components/BackHeader";
 import Toast from "react-native-toast-message";
+import { User } from "@/models/User";
+import { API_URL } from "@/utils/constants";
 
 export default function Settings() {
   const [deleteAccountDialogOpen, setDeleteAccountDialogOpen] =
     useState<boolean>(false);
   const [isProfileChanged, setIsProfileChanged] = useState(false);
+  const [avatarFile, setAvatarFile] = useState<any>(null);
   const setIsLoading = useGlobalStore((state) => state.setIsLoading);
-  const user = useUserStore((state) => state.user);
   const updateProfile = useUserStore((state) => state.updateProfile);
   const deleteAccount = useUserStore((state) => state.deleteAccount);
 
   const logout = useAuthStore((state) => state.logout);
 
-  const [profile, setProfile] = useState({
-    firstName: user?.firstName,
-    lastName: user?.lastName,
-    username: user?.userName,
-  });
+  const user = useUserStore((state) => state.user);
+
+  const [profile, setProfile] = useState<User>(
+    user ? { ...user } : ({} as User),
+  );
 
   const [formErrors, setFormErrors] = useState({
     firstName: "",
@@ -48,11 +54,13 @@ export default function Settings() {
   });
 
   useEffect(() => {
-    if (
-      profile.firstName === user?.firstName &&
-      profile.lastName === user?.lastName &&
-      profile.username === user?.userName
-    ) {
+    if (user) {
+      setProfile({ ...user });
+    }
+  }, [user]);
+
+  useEffect(() => {
+    if (JSON.stringify(user) === JSON.stringify(profile)) {
       setIsProfileChanged(false);
       return;
     }
@@ -60,26 +68,35 @@ export default function Settings() {
   }, [profile]);
 
   const handleUpdateProfile = async () => {
+    setIsLoading(true);
     try {
-      setIsLoading(true);
       const newErrors: any = {};
       Object.keys(profile).forEach((field) => {
         const error = validateField(field, profile[field], profile);
         if (error === "") return;
         newErrors[field] = error;
       });
-      setFormErrors(newErrors);
 
       if (
-        (await checkUserExist("username", profile.username as string))
-          .statusCode == 200 &&
-        profile.username !== user?.userName
+        profile.userName !== user?.userName &&
+        (await checkUserExist("username", profile.userName)).statusCode === 200
       ) {
-        setFormErrors({ ...formErrors, username: "Username is already taken" });
+        newErrors["username"] = "Username is already taken";
       }
+
+      setFormErrors(newErrors);
       if (Object.keys(newErrors).length > 0) return;
 
-      await updateProfile(profile);
+      const changes = getChangedFields(user, profile);
+      if (Object.keys(changes).length > 0) {
+        if (changes.avatar) {
+          changes.avatar = avatarFile;
+        }
+        await updateProfile(changes);
+      } else {
+        console.log("No changes to update");
+      }
+
       Toast.show({
         type: "success",
         text1: "Profile Updated",
@@ -118,6 +135,22 @@ export default function Settings() {
       setIsLoading(false);
     }
   };
+  const openImagePicker = async () => {
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      if (!result.canceled) {
+        const image = await getFormDataImageFromPickerAsset(result.assets[0]);
+        setAvatarFile(image);
+        setProfile({ ...profile, avatar: image.uri });
+      }
+    }
+  };
 
   return (
     <ScrollView className="bg-background p-8">
@@ -125,11 +158,23 @@ export default function Settings() {
 
       <View className="justify-around">
         <View className="flex items-center justify-center gap-4">
-          <Image
-            source={require("@/assets/images/leeseopp.png")}
-            className="rounded-full border-4 w-32 h-32"
-            alt="User profile pic"
-          />
+          <Pressable onPress={openImagePicker}>
+            <Image
+              source={
+                avatarFile
+                  ? {
+                      uri: avatarFile.uri,
+                    }
+                  : user?.avatar
+                    ? {
+                        uri: `${API_URL.replace(/\/api\/?$/, "/")}${user.avatar.replace(/^\/+/, "")}`,
+                      }
+                    : require("@/assets/images/default_pfp.png")
+              }
+              className="rounded-full w-32 h-32"
+              alt="User profile pic"
+            />
+          </Pressable>
 
           <Text className="text-2xl font-bold">Profile</Text>
         </View>
@@ -156,19 +201,22 @@ export default function Settings() {
             onChangeText={(value: string) =>
               setProfile({ ...profile, lastName: value })
             }
-          ></Input>
+          />
         </View>
 
         <View className="py-1">
           <Text>Username</Text>
 
           <Input
-            placeholder={profile.username}
-            value={profile.username}
+            placeholder={profile.userName}
+            value={profile.userName}
             onChangeText={(value: string) =>
-              setProfile({ ...profile, username: value })
+              setProfile({ ...profile, userName: value })
             }
-          ></Input>
+          />
+          {formErrors.username && (
+            <Text className="text-destructive">{formErrors.username}</Text>
+          )}
         </View>
 
         <View className="py-1">

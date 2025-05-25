@@ -1,7 +1,8 @@
 import { axiosInstance } from "@/utils/axiosInstance";
 
 import { API_URL } from "../utils/constants";
-import { useQueries, useQuery } from "@tanstack/react-query";
+import { useQueries } from "@tanstack/react-query";
+import { makeMultipartFormDataRequest } from "@/utils/utils";
 import { getAllReadingSessions } from "./ReadingSessionService";
 import { ReadingContentType } from "@/models/ReadingContent";
 
@@ -19,29 +20,14 @@ export const getProfile = async () => {
 };
 
 export const updateProfile = async (updateProfileForm: Record<string, any>) => {
-  const requestData = new FormData();
+  const response = await makeMultipartFormDataRequest(
+    `/users/me`,
+    updateProfileForm,
+    "PUT",
+    null
+  );
 
-  Object.keys(updateProfileForm).forEach((key) => {
-    const value = updateProfileForm[key];
-    if (value instanceof File || value instanceof Blob) {
-      requestData.append(key, value);
-    } else {
-      requestData.append(key, value?.toString());
-    }
-  });
-
-  try {
-    const response = await axiosInstance.put(`/users/me`, requestData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
-
-    return response.data;
-  } catch (error: any) {
-    const message = error.response?.data?.message || "";
-    throw Error(message);
-  }
+  return await response.json();
 };
 
 export const checkUserExist = async (fieldType: string, fieldValue: string) => {

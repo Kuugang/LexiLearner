@@ -32,34 +32,18 @@ export const useUserStore = create<UserStore>()(
           const response = await apiUpdateProfile(form);
           const data = response.data;
 
-          set((state) => {
-            if (!state.user) {
-              const user = extractUser(response.data);
-
-              return {
-                user: {
-                  ...user,
-                },
-              };
-            }
-            return {
-              user: {
-                ...state.user,
-                pupil: {
-                  ...state.user.pupil,
-                  ...(data.age !== undefined && { age: data.age }),
-                },
-                id: state.user.id,
-                email: data.email,
-                firstName: data.firstName,
-                lastName: data.lastName,
-                userName: data.userName,
-                twoFactorEnabled: data.twoFactorEnabled,
-                phoneNumber: data.phoneNumber,
-                role: data.role,
-              },
-            };
-          });
+          set((state) => ({
+            user: state.user
+              ? {
+                  ...state.user,
+                  ...data,
+                  pupil: {
+                    ...state.user.pupil,
+                    ...(data.age && { age: data.age }),
+                  },
+                }
+              : extractUser(data),
+          }));
         } catch (error: any) {
           throw new Error(
             error instanceof Error ? error.message : "Unknown error occurred",

@@ -34,7 +34,9 @@ namespace LexiLearner.Models.DTO
 
         public ProfileDTO(User user, Pupil pupil, bool Public = false)
         {
+            //TODO: BATI KAAYO ANG CODE
             SetupFields(user, Public);
+            pupil.User = null;
             Pupil = pupil;
             Role = Roles.Pupil.ToString();
         }
@@ -78,13 +80,13 @@ namespace LexiLearner.Models.DTO
             LastLoginDate = streak.LastLoginDate;
         }
     }
-    
+
     public class PupilLeaderboardDTO
     {
         public Guid Id { get; set; }
         public Guid PupilId { get; set; }
         public int Level { get; set; }
-        public DateTime RecordedAt { get; set; } 
+        public DateTime RecordedAt { get; set; }
 
         public PupilLeaderboardDTO(PupilLeaderboard pupilLeaderboard)
         {
@@ -93,7 +95,7 @@ namespace LexiLearner.Models.DTO
             Level = pupilLeaderboard.Level;
             RecordedAt = pupilLeaderboard.RecordedAt;
         }
-        
+
         public class Create
         {
             public required Guid PupilId { get; set; }

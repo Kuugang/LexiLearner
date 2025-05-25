@@ -1,4 +1,8 @@
 import { Pupil } from "@/services/ClassroomService";
+import axios from "axios";
+import * as FileSystem from "expo-file-system";
+import * as ImagePicker from "expo-image-picker";
+import { API_URL } from "./constants";
 
 export const decodeToken = (token: string) => {
   try {
@@ -14,7 +18,7 @@ export const decodeToken = (token: string) => {
 export const validateField = (
   name: string,
   value: string,
-  form: Record<string, any> = {}
+  form: Record<string, any> = {},
 ) => {
   switch (name) {
     case "firstName":
@@ -84,4 +88,90 @@ export const getRandomColor = (name: string) => {
     return char.charCodeAt(0) + acc;
   }, 0);
   return colors[hash % colors.length];
+};
+
+//shallow?
+export const getChangedFields = (
+  original: any,
+  updated: any,
+): Record<string, any> => {
+  const changes: any = {};
+  for (const key in updated) {
+    if (updated[key] !== original[key]) {
+      changes[key] = updated[key];
+    }
+  }
+  return changes;
+};
+
+export const getFormDataImageFromPickerAsset = async (
+  asset: ImagePicker.ImagePickerAsset,
+) => {
+  const fileUri = asset.uri;
+  const fileInfo = await FileSystem.getInfoAsync(fileUri);
+
+  if (!fileInfo.exists) {
+    throw new Error("File does not exist");
+  }
+  const extension =
+    asset.fileName?.match(/\.[0-9a-z]+$/i)?.[0].slice(1) ?? "jpeg";
+
+  const file = {
+    uri: fileUri,
+    type: asset.type + "/" + extension,
+    name: asset.fileName,
+  };
+  console.log(file);
+  return file;
+};
+
+export const makeMultipartFormDataRequest = async (
+  path: string,
+  data: Record<string, any> | null = null,
+  method: "PUT" | "POST",
+  headers: Record<string, string> | null = null,
+) => {
+  const formData = new FormData();
+  if (data) {
+    for (const prop in data) {
+      if (Object.prototype.hasOwnProperty.call(data, prop)) {
+        const value = data[prop];
+
+        if (
+          value &&
+          typeof value === "object" &&
+          ("mime" in value || "type" in value || "uri" in value)
+        ) {
+          const fileData = {
+            uri: value.uri,
+            type: value.mime || value.type || "image/jpeg",
+            name: value.name || `file_${Date.now()}.jpg`,
+          };
+
+          console.log("Appending file:", prop, fileData);
+          formData.append(prop, fileData as any);
+        } else if (value !== null && value !== undefined) {
+          console.log("Appending field:", prop, value);
+          formData.append(prop, String(value));
+        }
+      }
+    }
+  }
+
+  const url = `${API_URL}${path}`;
+
+  const AsyncStorage =
+    require("@react-native-async-storage/async-storage").default;
+  const token = await AsyncStorage.getItem("accessToken");
+
+  return fetch(url, {
+    method: method,
+    headers: {
+      Accept: "application/json",
+      ...(token && { Authorization: `Bearer ${token}` }),
+      ...headers,
+      "Content-Type": "multipart/form-data",
+    },
+    body: formData,
+  });
 };

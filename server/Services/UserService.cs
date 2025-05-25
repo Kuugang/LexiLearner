@@ -106,6 +106,14 @@ namespace LexiLearner.Services
         public async Task<ResponseDTO> GetUserProfile(ClaimsPrincipal token)
         {
             User? user = await GetUserFromToken(token);
+            if (user == null)
+            {
+                throw new ApplicationExceptionBase(
+                    $"User does not exist",
+                    "User Profile Fetched Failed",
+                    StatusCodes.Status404NotFound
+                );
+            }
             string role = await GetRole(user);
 
             var response = new SuccessResponseDTO("User profile fetched successfully", null);
@@ -242,6 +250,7 @@ namespace LexiLearner.Services
             if (UpdateProfileDTO.Avatar != null)
             {
                 user.Avatar = _fileUploadService.Upload(UpdateProfileDTO.Avatar, "Avatar\\");
+                update = true;
             }
 
             if (update) //TODO: should use entity state
