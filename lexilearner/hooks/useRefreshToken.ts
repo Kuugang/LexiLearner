@@ -11,7 +11,7 @@ export default function useRefreshToken() {
       () => {
         refreshAccessToken();
       },
-      7 * 60 * 1000,
+      5 * 60 * 1000,
     );
     return () => clearInterval(interval);
   }, [user]);
