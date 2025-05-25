@@ -17,7 +17,7 @@ export default function choosebook() {
         <View className="p-8">
           <BackHeader />
           {isStoriesLoading && <Text>Loading stories...</Text>}
-          <View className="flex flex-row flex-wrap m-4">
+          <View className="flex flex-row flex-wrap gap-4">
             {!isStoriesLoading && Array.isArray(stories) && stories.length > 0
               ? stories.map((item) => (
                   <BookCard

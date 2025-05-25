@@ -4,6 +4,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { ReadingContentType } from "@/models/ReadingContent";
 import { useReadingContentStore } from "@/stores/readingContentStore";
 import { useRouter } from "expo-router";
+import { useGetCoverFromGDrive } from "@/hooks/useExtractDriveFileId";
 
 interface BookCardProps {
   book: ReadingContentType;
@@ -13,6 +14,7 @@ function BookCard({ book, selected }: BookCardProps & { selected?: boolean }) {
   const setSelectedContent = useReadingContentStore(
     (state) => state.setSelectedContent
   );
+  const imageUrl = useGetCoverFromGDrive(book.cover);
 
   const screenWidth = require("react-native").Dimensions.get("window").width;
   const cardWidth = screenWidth / 3;
@@ -40,7 +42,7 @@ function BookCard({ book, selected }: BookCardProps & { selected?: boolean }) {
       onPress={handlePress}
     >
       <Image
-        source={{ uri: book.cover }}
+        source={{ uri: imageUrl }}
         style={{
           width: "100%",
           height: 120,
@@ -51,7 +53,7 @@ function BookCard({ book, selected }: BookCardProps & { selected?: boolean }) {
       />
       <View style={{ padding: 8 }}>
         <Text numberOfLines={2} style={{ fontWeight: "bold", fontSize: 14 }}>
-          {book.title} BOOK CARD BITCH
+          {book.title}
         </Text>
         <Text numberOfLines={1} style={{ color: "#666", fontSize: 12 }}>
           {book.author}

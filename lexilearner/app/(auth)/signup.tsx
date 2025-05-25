@@ -319,7 +319,7 @@ export default function Step1() {
 
             <View className="flex flex-row gap-3 w-full justify-center items-center">
               <Button
-                className="bg-white shadow-md rounded-lg"
+                className="bg-white border rounded-xl border-dropShadowColor my-4 p-4 border-b-4"
                 onPress={() => {
                   providerAuth(0);
                 }}
@@ -328,7 +328,7 @@ export default function Step1() {
               </Button>
 
               <Button
-                className="bg-white shadow-md rounded-lg"
+                className="bg-white border rounded-xl border-dropShadowColor my-4 p-4 border-b-4"
                 onPress={() => {
                   providerAuth(1);
                 }}

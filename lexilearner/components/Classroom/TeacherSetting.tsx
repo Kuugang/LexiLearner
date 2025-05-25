@@ -392,7 +392,7 @@ export default function TeacherSetting({
           <Text className="font-bold">Classroom Name</Text>
           <View>
             <Input
-              className="border border-gray-300 rounded-md p-2 mt-2"
+              className="border border-lightGray rounded-md p-2 my-2"
               placeholder={editClassroomForm.name}
               value={editClassroomForm.name}
               onChangeText={(value: string) =>
@@ -414,7 +414,7 @@ export default function TeacherSetting({
 
         {/* Add Pupil Button */}
         <TouchableOpacity
-          className="mt-6 mb-2 p-3 bg-blue-500 rounded-md flex-row justify-left items-center"
+          className="mt-6 mb-2 p-3 rounded-md flex-row justify-left items-center border border-lightGray rounded-md"
           onPress={() => setShowAddPupilModal(true)}
         >
           <Ionicons name="person-add-outline" size={20} color="black" />
@@ -424,7 +424,7 @@ export default function TeacherSetting({
         {/* Current Pupils */}
         <View className="py-4 mt-4">
           <TouchableOpacity
-            className="flex-row justify-between items-center border border-gray-300 rounded-md p-3"
+            className="flex-row justify-between items-center border border-lightGray rounded-md p-3"
             onPress={() => setShowCurrentPupils(!showCurrentPupils)}
           >
             <Text className="font-bold text-black">Current Pupils</Text>
@@ -438,7 +438,7 @@ export default function TeacherSetting({
           </TouchableOpacity>
 
           {showCurrentPupils ? (
-            <View className="border-x border-b border-gray-300 rounded-b-md bg-white">
+            <View className="border-x border-b border-lightGray rounded-b-md">
               {loadingPupils ? (
                 <View className="p-4 items-center">
                   <ActivityIndicator size="small" color="#0000ff" />
@@ -506,13 +506,13 @@ export default function TeacherSetting({
             </Text>
           </Button>  */}
           <Button
-            className="mx-5 bg-yellow-500"
+            className="mx-4 bg-yellowOrange"
             onPress={handleEditClassroomPress}
           >
             <Text className="text-black font-semibold">Edit Classroom</Text>
           </Button>
           <Button
-            className="bg-red-500 m-5"
+            className="bg-orange m-4"
             onPress={handleDeleteClassroomPress}
           >
             <Text className="text-white font-semibold">Delete Classroom</Text>

@@ -10,7 +10,14 @@ import { useClassroomStore } from "@/stores/classroomStore";
 import { useReadingAssignmentStore } from "@/stores/readingAssignmentStore";
 import { router } from "expo-router";
 import React, { useEffect, useState } from "react";
-import { View, Text, Image, TouchableOpacity, ScrollView } from "react-native";
+import {
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+  ScrollView,
+  Switch,
+} from "react-native";
 import { PaperProvider } from "react-native-paper";
 import { Button } from "@/components/ui/button";
 import { useReadingContentStore } from "@/stores/readingContentStore";
@@ -29,12 +36,11 @@ export default function activitysettings() {
   const [selectedMinigameType, setSelectedMinigameType] = useState(
     MinigameType.TwoTruthsOneLie
   );
-  const { selectedContent, setSelectedContent } = useReadingContentStore();
-
+  const { selectedContent } = useReadingContentStore();
   const { mutateAsync: updateReadingAssignment } = useUpdateReadingAssignment();
-
   const [editActivityForm, setEditActivityForm] =
     useState<ReadingAssignment | null>(null);
+  const [isActive, setIsActive] = useState(true);
 
   // needed. selectedReadingAssignment could change values (like choosing a different assignment)
   // useState only runs once, ignores future and dynamic changes. so OA (ga useState(selecreadingassign) ko before)
@@ -54,6 +60,9 @@ export default function activitysettings() {
     );
   }
 
+  const activityStatus = () => {
+    setIsActive((previous) => !previous);
+  };
   return (
     <PaperProvider>
       <View className="flex-1">
@@ -61,8 +70,6 @@ export default function activitysettings() {
           <View className="p-8">
             <BackHeader />
             <View className="py-8">
-              <Text className="text-[22px] font-bold">Create New Activity</Text>
-
               <View className="flex justify-center items-center mt-4">
                 <BookCard book={selectedContent} />
               </View>
@@ -101,8 +108,20 @@ export default function activitysettings() {
                 />
               </View>
 
+              <View className="flex flex-row items-center">
+                <Text className="font-bold">Switch activity to active?</Text>
+                <View style={{ transform: [{ scaleX: 1.2 }, { scaleY: 1.2 }] }}>
+                  <Switch
+                    onValueChange={activityStatus}
+                    value={isActive}
+                    trackColor={{ true: "#D2A45F", false: "#B33A3A" }}
+                    thumbColor={isActive ? "#FFCD37" : "#FF663E"}
+                  />
+                </View>
+              </View>
+
               <Button
-                className="bg-yellowOrange m-5 shadow-main"
+                className="m-5 bg-yellowOrange border rounded-xl border-dropShadowColor my-4 border-b-4"
                 disabled={
                   !editActivityForm.title.trim() ||
                   !editActivityForm.description.trim()
@@ -111,6 +130,7 @@ export default function activitysettings() {
                   try {
                     editActivityForm.readingMaterialId = selectedContent.id;
                     editActivityForm.minigameType = selectedMinigameType;
+                    editActivityForm.isActive = isActive;
                     await updateReadingAssignment({
                       readingAssignment: editActivityForm,
                     });
