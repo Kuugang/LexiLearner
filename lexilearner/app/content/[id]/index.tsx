@@ -31,7 +31,7 @@ function ContentIndex() {
   return (
     <>
       <ScrollView
-        className="flex flex-col z-50 p-8 gap-6 bg-background"
+        className="flex flex-col z-50 p-8 gap-6 bg-white"
         contentContainerStyle={{ alignItems: "center", gap: 24 }}
       >
         <View
@@ -39,9 +39,8 @@ function ContentIndex() {
             zIndex: -1,
             position: "absolute",
             width: "120%",
-            height: 160,
           }}
-          className="-top-8 -left-8 bg-lightGrayOrange"
+          className="-top-8 -left-8 bg-yellowOrange h-[25vh] w-full"
         />
 
         <BackHeader />

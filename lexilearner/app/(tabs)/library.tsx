@@ -38,7 +38,7 @@ function library() {
     <ScrollView className="bg-background">
       <View>
         <View className="flex p-8">
-          <Text className="text-[24px] font-bold">Continue Reading</Text>
+          <Text className="text-[24px] font-bold py-3">Continue Reading</Text>
           <View className="flex flex-row flex-wrap gap-4">
             {readingMaterials?.map(
               (material: ReadingContentType, index: number) => (

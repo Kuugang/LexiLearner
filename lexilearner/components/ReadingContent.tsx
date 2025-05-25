@@ -1,4 +1,4 @@
-import { memo } from "react";
+import { memo, useMemo } from "react";
 import { View, Text, Image, TouchableOpacity } from "react-native";
 import { router } from "expo-router";
 import { ReadingContentType } from "@/models/ReadingContent";
@@ -9,8 +9,10 @@ function ReadingContent(props: ReadingContentType) {
   const setSelectedContent = useReadingContentStore(
     (state) => state.setSelectedContent
   );
-  const imageUrl = useGetCoverFromGDrive(props.cover);
-
+  const imageUrl = useMemo(
+    () => useGetCoverFromGDrive(props.cover),
+    [props.cover]
+  );
   const onPress = () => {
     setSelectedContent(props);
     router.push(`/content/${props.id}`);
@@ -74,7 +76,7 @@ function ReadingContent(props: ReadingContentType) {
       >
         <Image
           source={{
-            uri: props.cover,
+            uri: imageUrl,
           }}
           style={{ width: 100, height: 140 }}
           resizeMode="contain"

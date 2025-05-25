@@ -44,7 +44,7 @@ export default function Settings() {
   const user = useUserStore((state) => state.user);
 
   const [profile, setProfile] = useState<User>(
-    user ? { ...user } : ({} as User),
+    user ? { ...user } : ({} as User)
   );
 
   const [formErrors, setFormErrors] = useState({
@@ -166,17 +166,20 @@ export default function Settings() {
                       uri: avatarFile.uri,
                     }
                   : user?.avatar
-                    ? {
-                        uri: `${API_URL.replace(/\/api\/?$/, "/")}${user.avatar.replace(/^\/+/, "")}`,
-                      }
-                    : require("@/assets/images/default_pfp.png")
+                  ? {
+                      uri: `${API_URL.replace(
+                        /\/api\/?$/,
+                        "/"
+                      )}${user.avatar.replace(/^\/+/, "")}`,
+                    }
+                  : require("@/assets/images/default_pfp.png")
               }
               className="rounded-full w-32 h-32"
               alt="User profile pic"
             />
           </Pressable>
 
-          <Text className="text-2xl font-bold">Profile</Text>
+          <Text className="text-2xl font-bold m-4 mb-6">Profile</Text>
         </View>
 
         <View className="py-1">
@@ -194,7 +197,7 @@ export default function Settings() {
         </View>
 
         <View className="py-1">
-          <Text>Last Name</Text>
+          <Text className="font-bold">Last Name</Text>
           <Input
             placeholder={profile.lastName}
             value={profile.lastName}
@@ -205,7 +208,7 @@ export default function Settings() {
         </View>
 
         <View className="py-1">
-          <Text>Username</Text>
+          <Text className="font-bold">Username</Text>
 
           <Input
             placeholder={profile.userName}
@@ -220,7 +223,7 @@ export default function Settings() {
         </View>
 
         <View className="py-1">
-          <Text>Email</Text>
+          <Text className="font-bold">Email</Text>
 
           <Input
             editable={false}
@@ -229,58 +232,70 @@ export default function Settings() {
           ></Input>
         </View>
 
-        <View className="py-5">
-          <Text>Password</Text>
+        <View className="py-1">
+          <Text className="font-bold">Password</Text>
           <Input placeholder="******"></Input>
         </View>
-
+        <View className="m-5"></View>
         {isProfileChanged && (
-          <Button onPress={() => handleUpdateProfile()} className="my-2">
-            <Text>EDIT ACCOUNT</Text>
+          <Button
+            variant="dropshadow"
+            size={null}
+            onPress={() => handleUpdateProfile()}
+            className="my-2 bg-yellowOrange"
+          >
+            <Text>Confirm Edit</Text>
           </Button>
         )}
-
-        {/* <Button onPress={() => handleDeleteAccount()} className="my-2"> */}
-        {/*   <Text>DELETE ACCOUNT</Text> */}
-        {/* </Button> */}
 
         <Dialog
           open={deleteAccountDialogOpen}
           onOpenChange={setDeleteAccountDialogOpen}
         >
           <Button
-            variant="outline"
+            variant="dropshadow"
+            size={null}
             onPress={() => setDeleteAccountDialogOpen(true)}
+            className="bg-orange"
           >
-            <Text className="text-destructive">Delete Account</Text>
+            <Text className="font-bold text-white">Delete Account</Text>
           </Button>
-          <DialogContent className="sm:max-w-[425px]">
+
+          <DialogContent className="sm:max-w-[425px] bg-white">
             <DialogHeader>
               <DialogTitle>Delete Account</DialogTitle>
               <DialogDescription>
                 Are you sure you want to delete your account?
               </DialogDescription>
             </DialogHeader>
-            <DialogFooter className="flex flex-row justify-center">
-              <Button onPress={() => handleDeleteAccount()}>
-                <Text className="text-destructive">Yes</Text>
+            <DialogFooter className="flex flex-row justify-center ">
+              <Button
+                onPress={() => handleDeleteAccount()}
+                className="bg-orange border border-orange"
+              >
+                <Text className="font-bold text-white px-8">Yes</Text>
               </Button>
-              <Button onPress={() => setDeleteAccountDialogOpen(false)}>
-                <Text>No</Text>
+              <Button
+                onPress={() => setDeleteAccountDialogOpen(false)}
+                className="border border-lightGray bg-white"
+              >
+                <Text className="font-bold px-8">No</Text>
               </Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>
 
         <Button
+          variant="dropshadow"
+          size={null}
           onPress={() => {
             logout();
             router.dismissAll();
             router.replace("/");
           }}
-          className="my-2"
+          className="bg-yellowOrange"
         >
-          <Text>LOG OUT</Text>
+          <Text className="font-bold">Log Out</Text>
         </Button>
       </View>
     </ScrollView>

@@ -14,7 +14,7 @@ export function AchievementDisplay({
   const imageUrl = useGetCoverFromGDrive(badge);
 
   return (
-    <View className="p-5 mb-4 w-full bg-lightBlue rounded-xl shadow-main flex flex-row items-center">
+    <View className="p-5 mb-4 w-full bg-lightBlue rounded-xl border rounded-xl border-dropShadowColor border-b-4 flex flex-row items-center">
       {imageUrl && (
         <Image source={{ uri: imageUrl }} className="h-[30px] w-[30px] mr-4 " />
       )}
@@ -31,7 +31,7 @@ export function AchievementDisplay({
 export function AwardIcon({ badge }: { badge: string }) {
   const imageUrl = useGetCoverFromGDrive(badge);
   return (
-    <View className="p-4 rounded-md bg-yellowOrange border-2 rounded-xl border-lightGray border-b-4 my-1 p-4">
+    <View className="p-4 rounded-md bg-yellowOrange border-2 rounded-xl border-dropShadowColor border-b-4 my-1 p-4">
       {imageUrl && (
         <Image source={{ uri: imageUrl }} className="h-[30px] w-[30px]" />
       )}

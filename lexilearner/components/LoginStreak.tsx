@@ -106,7 +106,7 @@ const LoginStreak: React.FC<LoginStreakProps> = ({ isVisible, onClose }) => {
             {
               width: 320,
               height: 500,
-              backgroundColor: "#FFF1F8", // Light pink background
+              backgroundColor: "#FEFDF8",
               borderRadius: 16,
               alignItems: "center",
               shadowColor: "#000",

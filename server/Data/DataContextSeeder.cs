@@ -15,24 +15,23 @@ namespace LexiLearner.Data
             {
                 var genres = new List<Genre>()
                 {
-                new Genre { Name = "Science Fiction" },
-                new Genre { Name = "Mystery" },
-                new Genre { Name = "Supernatural" },
-                new Genre { Name = "Fantasy" },
-                new Genre { Name = "Political Intrigue" },
-                new Genre { Name = "Paranormal" },
-                new Genre { Name = "Romance" },
-                new Genre { Name = "Horror" },
-                new Genre { Name = "Thriller" },
-                new Genre { Name = "Coming of Age" },
-                new Genre { Name = "Historical Fiction" },
-                new Genre { Name = "Drama" },
+
                 new Genre { Name = "Adventure" },
+                new Genre { Name = "Romance" },
+                new Genre { Name = "Drama" },
                 new Genre { Name = "Comedy" },
-                new Genre { Name = "Metafiction" },
-                new Genre { Name = "Short story" },
+                new Genre { Name = "Fantasy" },
+                new Genre { Name = "Horror" },
+                new Genre { Name = "Mystery" },
+                new Genre { Name = "Science Fiction" },
+                new Genre { Name = "History" },
+                new Genre { Name = "Coming of Age" },
+                new Genre { Name = "Non-Fiction" },
+                new Genre { Name = "Fiction" },
                 new Genre { Name = "Passage" },
-                new Genre { Name = "Novel" },
+                new Genre { Name = "Animal" },
+                new Genre { Name = "Poetry" },
+                new Genre { Name = "Educational" },
                 };
 
                 await context.Genre.AddRangeAsync(genres);

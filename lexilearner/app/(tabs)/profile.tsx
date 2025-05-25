@@ -20,20 +20,12 @@ import {
 
 import ProfileStat from "@/components/ProfileStat";
 import BackHeader from "@/components/BackHeader";
-import {
-  getLoginStreak,
-  getPupilAchievements,
-  getTotalSession,
-  useProfileStats,
-} from "@/services/UserService";
-import { useQueries, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useCallback, useEffect, useState } from "react";
+import { useProfileStats } from "@/services/UserService";
 import { useMiniGameStore } from "@/stores/miniGameStore";
 import { AwardIcon } from "@/components/AchievementDisplay";
 import { Achievement } from "@/models/Achievement";
 import { ActivityIndicator } from "react-native-paper";
-import { Progress } from "@/components/ui/progress";
-import { ProgressBar } from "@/components/ProgressBar";
+import { ProgressBar, CurrentTierName } from "@/components/ProgressBar";
 
 export default function Profile() {
   const user = useUserStore((state) => state.user);
@@ -91,19 +83,27 @@ export default function Profile() {
         className="flex p-8 gap-4"
         style={{ position: "relative", bottom: 90 }}
       >
-        <View className="h-32 w-32 rounded-full border-[5px] border-white">
-          <Image
-            source={
-              user?.avatar
-                ? {
-                    uri: `${API_URL.replace(/\/api\/?$/, "/")}${user.avatar.replace(/^\/+/, "")}`,
-                  }
-                : require("@/assets/images/default_pfp.png")
-            }
-            className="rounded-full shadow-lg w-full h-full"
-            resizeMode="contain"
-            alt="User profile pic"
-          />
+        <View className="flex flex-row justify-between items-end">
+          <View className="h-32 w-32 rounded-full border-[5px] border-white">
+            <Image
+              source={
+                user?.avatar
+                  ? {
+                      uri: `${API_URL.replace(
+                        /\/api\/?$/,
+                        "/"
+                      )}${user.avatar.replace(/^\/+/, "")}`,
+                    }
+                  : require("@/assets/images/default_pfp.png")
+              }
+              className="rounded-full shadow-lg w-full h-full"
+              resizeMode="contain"
+              alt="User profile pic"
+            />
+          </View>
+          <View className="self-end">
+            <CurrentTierName level={user?.pupil?.level!} />
+          </View>
         </View>
 
         <View className="w-full mt-4 flex gap-4">
@@ -140,31 +140,35 @@ export default function Profile() {
               <ProgressBar level={user!.pupil!.level!} />
               <Text className="text-xl font-bold">Overview</Text>
 
-              <View className="grid grid-cols-2 gap-2">
-                <ProfileStat
-                  level={`${loginStreakQuery.data.longestStreak}`}
-                  description="Longest Streak"
-                  icon={<Flame color="red" />}
-                />
-                <ProfileStat
-                  level={`${totalBooksQuery.data}`} // TODO: ang number nila uie
-                  description="Books Read"
-                  icon={<Book color="blue" />}
-                />
-                <ProfileStat
-                  level={
-                    screenTimeQuery !== undefined
-                      ? formatScreenTime(screenTimeQuery.data)
-                      : "0"
-                  }
-                  description="Total Screentime"
-                  icon={<Smartphone color="black" />}
-                />
-                <ProfileStat
-                  level={`${achievementsQuery.data.length}`}
-                  description="Achievements"
-                  icon={<Star color="#FFD43B" />}
-                />
+              <View className="flex flex-col flex-wrap justify-between">
+                <View className="flex flex-row">
+                  <ProfileStat
+                    level={`${loginStreakQuery.data.longestStreak}`}
+                    description="Longest Streak"
+                    icon={<Flame color="red" />}
+                  />
+                  <ProfileStat
+                    level={`${totalBooksQuery.data}`}
+                    description="Books Read"
+                    icon={<Book color="blue" />}
+                  />
+                </View>
+                <View className="flex flex-row">
+                  <ProfileStat
+                    level={
+                      screenTimeQuery !== undefined
+                        ? formatScreenTime(screenTimeQuery.data)
+                        : "0"
+                    }
+                    description="Total Screentime"
+                    icon={<Smartphone color="black" />}
+                  />
+                  <ProfileStat
+                    level={`${achievementsQuery.data.length}`}
+                    description="Achievements"
+                    icon={<Star color="#FFD43B" />}
+                  />
+                </View>
               </View>
 
               <View className="my-4">
@@ -184,7 +188,7 @@ export default function Profile() {
                   {achievementsQuery.data.map(
                     (a: Achievement, index: number) => (
                       <AwardIcon badge={`${a.badge}`} key={index} />
-                    ),
+                    )
                   )}
                 </View>
               </View>

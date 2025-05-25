@@ -78,6 +78,16 @@ export function ProgressBar({ level }: { level: number }) {
   );
 }
 
+export function CurrentTierName({ level }: { level: number }) {
+  const tierName = TierName(level);
+
+  return (
+    <View className="px-6 py-1 bg-lightBlue rounded-md">
+      <Text className="font-bold">{tierName}</Text>
+    </View>
+  );
+}
+
 function getTierThresholds(level: number): [number, number] {
   const tierLevels = [0, 100, 250, 500, 1000, 2000, 3500, 5500, 8000, 12000];
   let currLevel, nextLevel;

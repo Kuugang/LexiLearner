@@ -50,22 +50,22 @@ function Explore() {
   };
 
   const genres: string[] = [
-    "Science Fiction",
-    "Mystery",
-    "Supernatural",
-    "Fantasy",
-    "Political Intrigue",
-    "Paranormal",
-    "Romance",
-    "Horror",
-    "Thriller",
-    "Coming of Age",
-    "Historical Fiction",
-    "Drama",
     "Adventure",
+    "Romance",
+    "Drama",
     "Comedy",
-    "Metafiction",
+    "Fantasy",
+    "Horror",
+    "Mystery",
+    "Science Fiction",
+    "History",
+    "Coming of Age",
+    "Non-Fiction",
+    "Fiction",
     "Passage",
+    "Animal",
+    "Poetry",
+    "Educational",
   ];
 
   const filteredStories =
@@ -137,13 +137,15 @@ function Explore() {
           <View className="grid grid-cols-2 gap-2">
             {genres.map((genre) => {
               return (
-                <TouchableOpacity
+                <Button
+                  variant="dropshadow"
+                  size={null}
                   key={genre}
-                  className={`flex items-center justify-around p-4 border-2 rounded-xl border-lightGray border-b-4`}
+                  className={`border-lightGray !border-2 !my-0`}
                   onPress={() => toggleGenre(genre)}
                 >
                   <Text className="font-semibold text-center">{genre}</Text>
-                </TouchableOpacity>
+                </Button>
               );
             })}
           </View>
@@ -151,7 +153,7 @@ function Explore() {
       )}
 
       {filteredStories && filteredStories.length > 0 && (
-        <View className="flex flex-col gap-2 px-4">
+        <View className="flex flex-col gap-2 px-8">
           {filteredStories?.map((item) => (
             <ReadingContent
               key={item.id}
