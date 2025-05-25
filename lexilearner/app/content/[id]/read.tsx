@@ -413,16 +413,9 @@ export default function Read() {
           onLayout={(e) => {
             const height = e.nativeEvent.layout.height;
             setVisibleHeight(height);
-
-            if (contentHeight > 0 && contentHeight <= height) {
-              setScrollEndReached(true);
-            }
           }}
           onContentSizeChange={(w, h) => {
             setContentHeight(h);
-            if (visibleHeight > 0 && h <= visibleHeight) {
-              setScrollEndReached(true);
-            }
           }}
           onLoad={(elapsedTimeInMs) => {
             setIsContentReady(true);
