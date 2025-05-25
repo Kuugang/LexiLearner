@@ -18,7 +18,7 @@ export default function Index() {
     if (currentMinigame && user.role === "Pupil") {
       return <Redirect href="/minigames/play" />;
     } else {
-      return <Redirect href="/home" />;
+      // return <Redirect href="/home" />;
     }
   }
 

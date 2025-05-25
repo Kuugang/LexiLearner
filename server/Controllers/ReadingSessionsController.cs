@@ -11,14 +11,15 @@ public class ReadingSessionsController : ControllerBase
 	private readonly IReadingSessionService _sessionService;
 	public ReadingSessionsController(IReadingSessionService sessionService)
 	{
-	_sessionService = sessionService;
+		_sessionService = sessionService;
 	}
-  
+
 	[HttpPost("{readingMaterialId}")]
 	[Authorize]
-	public async Task<IActionResult> Create([FromRoute] Guid readingMaterialId){
+	public async Task<IActionResult> Create([FromRoute] Guid readingMaterialId)
+	{
 		var readingSession = await _sessionService.Create(readingMaterialId, User);
-		return StatusCode(StatusCodes.Status201Created, 
+		return StatusCode(StatusCodes.Status201Created,
 			new SuccessResponseDTO("Reading session successfully created", readingSession)
 		);
 	}
@@ -52,7 +53,7 @@ public class ReadingSessionsController : ControllerBase
 			new SuccessResponseDTO("Reading session fetched.", new ReadingSessionDTO(readingSession))
 		);
 	}
-	
+
 	[HttpGet("incomplete/readingmaterials")]
 	[Authorize("PupilPolicy")]
 	public async Task<IActionResult> GetIncompleteReadingSessionsByPupilId()
@@ -63,7 +64,7 @@ public class ReadingSessionsController : ControllerBase
 			new SuccessResponseDTO("Currently reading materials fetched.", readingMaterials.Select(rm => new ReadingMaterialResponseDTO(rm)))
 		);
 	}
-	
+
 	[HttpGet("incomplete")]
 	[Authorize]
 	public async Task<IActionResult> GetIncompleteReadingSessions()
@@ -73,5 +74,14 @@ public class ReadingSessionsController : ControllerBase
 		return StatusCode(StatusCodes.Status200OK,
 			new SuccessResponseDTO("Currently reading sessions fetched.", readingSessions.Select(rs => new ReadingSessionDTO(rs)))
 		);
+	}
+
+	[HttpGet("history")]
+	[Authorize]
+	public async Task<IActionResult> GetHistoryReadingMaterialsByPupilId()
+	{
+		var readingMaterials = await _sessionService.GetReadingMaterialsHistory(User);
+		return StatusCode(StatusCodes.Status200OK,
+		new SuccessResponseDTO("History reading sessions fetched.",readingMaterials.Select(r=>new ReadingMaterialResponseDTO(r))));
 	}
 }

@@ -31,7 +31,7 @@ function HomeScreen() {
   const lastLoginStreak = useUserStore((state) => state.lastLoginStreak);
   const setLastLoginStreak = useUserStore((state) => state.setLastLoginStreak);
   const setSelectedContent = useReadingContentStore(
-    (state) => state.setSelectedContent,
+    (state) => state.setSelectedContent
   );
 
   // Search state
@@ -73,7 +73,7 @@ function HomeScreen() {
           ?.toLowerCase()
           .includes(query.trim().toLowerCase());
         const matchesGenre = story.genres?.some((genre: string) =>
-          genre.toLowerCase().includes(query.trim().toLowerCase()),
+          genre.toLowerCase().includes(query.trim().toLowerCase())
         );
 
         return matchesTitle || matchesAuthor || matchesGenre;
@@ -82,7 +82,7 @@ function HomeScreen() {
       setSearchResults(filtered);
       setIsSearching(false);
     },
-    [stories],
+    [stories]
   );
 
   useEffect(() => {
@@ -113,14 +113,14 @@ function HomeScreen() {
         setSearchQuery("");
         setSearchResults([]);
       };
-    }, []),
+    }, [])
   );
 
   const streak = useUserStore((state) => state.streak);
   const activeWeekdays = [true, true, true, false, false, false, false];
 
   const [screenWidth, setScreenWidth] = useState(
-    Dimensions.get("window").width,
+    Dimensions.get("window").width
   );
 
   useEffect(() => {
@@ -128,7 +128,7 @@ function HomeScreen() {
       "change",
       ({ window }) => {
         setScreenWidth(window.width);
-      },
+      }
     );
 
     return () => {

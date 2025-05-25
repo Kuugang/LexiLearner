@@ -39,7 +39,7 @@ function library() {
       <View>
         <View className="flex p-8">
           <Text className="text-[24px] font-bold">Continue Reading</Text>
-          <View className="flex flex-row flex-wrap justify-between">
+          <View className="flex flex-row flex-wrap gap-4">
             {readingMaterials?.map(
               (material: ReadingContentType, index: number) => (
                 <View key={index}>
