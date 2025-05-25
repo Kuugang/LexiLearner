@@ -34,8 +34,9 @@ export default function achievementslist() {
       </View>
 
       <View className="p-5 my-8 items-center justify-center flex flex-col">
-        {achievements.map((achievement: Achievement) => (
+        {achievements.map((achievement: Achievement, index) => (
           <AchievementDisplay
+            key={index}
             badge={achievement.badge}
             title={achievement.name}
             description={achievement.description}

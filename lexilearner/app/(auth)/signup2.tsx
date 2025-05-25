@@ -4,7 +4,7 @@ import { useRegisterFormContext } from "./_layout";
 import { checkUserExist } from "@/services/UserService";
 import { validateField } from "@/utils/utils";
 
-import { View, ScrollView } from "react-native";
+import { View, ScrollView, TouchableOpacity } from "react-native";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Text } from "~/components/ui/text";
@@ -34,7 +34,7 @@ export default function Step2() {
       const error = validateField(
         field,
         form[field as keyof typeof form],
-        form,
+        form
       );
       if (error == "") return;
       newErrors[field] = error;
@@ -148,14 +148,14 @@ export default function Step2() {
           </View>
         </View>
 
-        <Button
-          className="bg-orange rounded-lg"
+        <TouchableOpacity
+          className="bg-orange border border-dropShadowColor rounded-xl border-b-4 p-3 items-center"
           onPress={() => {
             handleStep();
           }}
         >
-          <Text className="text-white text-2xl font-bold">Continue</Text>
-        </Button>
+          <Text className="text-white text-md font-bold">Continue</Text>
+        </TouchableOpacity>
       </View>
     </ScrollView>
   );

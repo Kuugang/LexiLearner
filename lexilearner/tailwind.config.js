@@ -22,8 +22,10 @@ module.exports = {
         mutedYellowOrange: "rgb(180,174,149)",
         lightGrayOrange: "rgb(255, 233, 173)",
         lightBlue: "rgb(153,214,233)",
-        blue: "rgb(103,152,192)",
-        green: "rgb(144,225,144)",
+        difficultyBlue: "rgb(103,152,192)",
+        difficultyGreen: "rgb(144,225,144)",
+
+        dropShadowColor: "rgba(48,27,68,0.25)",
 
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",

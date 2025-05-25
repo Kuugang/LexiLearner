@@ -4,7 +4,7 @@ import { useUserStore } from "@/stores/userStore";
 import { useMiniGameStore } from "@/stores/miniGameStore";
 
 //Components
-import { ScrollView, View, Image } from "react-native";
+import { ScrollView, View, Image, TouchableOpacity } from "react-native";
 import { Button } from "~/components/ui/button";
 import { Text } from "~/components/ui/text";
 import { refreshAccessToken } from "@/services/AuthService";
@@ -24,48 +24,50 @@ export default function Index() {
 
   return (
     <ScrollView
-      className="bg-yellowOrange"
+      className="bg-yellowOrange h-full"
       contentContainerStyle={{
         flexGrow: 1,
         justifyContent: "space-around",
         alignItems: "center",
       }}
     >
-      <View className="absolute w-[600px] h-[600px] bg-background-0 rounded-full -top-20 left-0 -z-10"></View>
-      {/* Illustration */}
-      <Image
-        source={require("@/assets/images/woman-reading.png")}
-        className="absolute top-16 left-1/2 -translate-x-1/2 w-60 h-60"
-        resizeMode="contain"
-        alt=""
-      />
+      <View className="h-[60vh] w-full rounded-bl-[40px] bg-white">
+        <View className="flex-1 justify-between">
+          <Text className="text-orange font-bold text-[30px] m-12 mt-18">
+            Improve reading,{"\n"}Improve fun!
+          </Text>
+          <Image
+            source={require("@/assets/images/Juicy/girl-with-pencil.png")}
+            className="w-[40vh] h-[40vh] self-end"
+            resizeMode="contain"
+          />
+        </View>
+      </View>
 
-      {/* Title */}
-      <Text className="text-3xl font-bold text-gray-900 mt-72">
-        LexiLearner
-      </Text>
+      {/* <View className="absolute w-[600px] h-[600px] bg-background-0 rounded-full -top-20 left-0 -z-10"></View> */}
 
-      {/* Buttons Section */}
-      <View className="w-full mt-12 space-y-4 gap-2 px-6">
-        {/* Register Button */}
-        <Button
-          onPress={() => {
-            router.push("/signup");
-          }}
-          className="w-full bg-orange rounded-lg"
-        >
-          <Text className="text-white text-lg font-bold">Register</Text>
-        </Button>
+      <View className="flex-1 w-full flex flex-col justify-around items-center">
+        <Text className="text-[30px] font-bold text-orange mt-8">
+          LexiLearner
+        </Text>
 
-        {/* Log In Button */}
-        <Button
-          onPress={() => {
-            router.push("/signin");
-          }}
-          className="w-full border border-orange bg-white rounded-lg "
-        >
-          <Text className="text-orange text-lg font-bold">Log In</Text>
-        </Button>
+        <View className="w-full gap-2 px-6 items-center">
+          <TouchableOpacity
+            onPress={() => router.push("/signup")}
+            className="w-4/5 bg-orange border border-dropShadowColor rounded-xl border-b-4 p-3 items-center"
+          >
+            <Text className="text-white text-md font-bold">Register</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={() => router.push("/signin")}
+            className="w-4/5 border border-dropShadowColor bg-white rounded-xl border-b-4 p-3 items-center"
+          >
+            <Text className="text-orange text-md font-bold leading-tight">
+              Log In
+            </Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </ScrollView>
   );

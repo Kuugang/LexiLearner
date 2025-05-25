@@ -170,14 +170,14 @@ const SignIn = () => {
         </View>
 
         <View>
-          <Button
-            className="bg-orange rounded-lg"
+          <TouchableOpacity
+            className="bg-orange border border-dropShadowColor rounded-xl border-b-4 p-3 items-center"
             onPress={() => {
               handleLogin();
             }}
           >
-            <Text className="text-white text-2xl font-bold">Log In</Text>
-          </Button>
+            <Text className="text-white text-md font-bold">Log In</Text>
+          </TouchableOpacity>
 
           <View className="flex gap-3">
             <View className="w-full flex flex-row items-center gap-2 mt-4">
