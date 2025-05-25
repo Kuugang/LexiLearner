@@ -9,6 +9,9 @@ interface ReadingContentStore {
 
   setContents: (contents: ReadingContentType[]) => void;
   setSelectedContent: (content: ReadingContentType | null) => void;
+
+  fontSize: number;
+  setFontSize: (size: number) => void;
 }
 
 export const useReadingContentStore = create<ReadingContentStore>()(
@@ -16,10 +19,12 @@ export const useReadingContentStore = create<ReadingContentStore>()(
     (set) => ({
       contents: [],
       selectedContent: null,
+      fontSize: 16,
       setContents: (contents: ReadingContentType[]) =>
         set({ contents: contents }),
       setSelectedContent: (content: ReadingContentType | null) =>
         set({ selectedContent: content }),
+      setFontSize: (size: number) => set({ fontSize: size }),
     }),
     {
       name: "reading-content-store",

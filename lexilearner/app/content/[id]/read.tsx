@@ -42,12 +42,14 @@ import { ReadingSession } from "@/models/ReadingSession";
 import { router } from "expo-router";
 import BackHeader from "@/components/BackHeader";
 import { useUserStore } from "@/stores/userStore";
+import ReadContentHeader from "@/components/ReadContentHeader";
 
 export default function Read() {
   const { width } = useWindowDimensions();
   const selectedContent = useReadingContentStore(
     (state) => state.selectedContent
   );
+  const fontSize = useReadingContentStore((state) => state.fontSize);
 
   const scrollPercentageRef = useRef(0);
   const lastOffsetY = useRef(0);
@@ -269,25 +271,33 @@ export default function Read() {
     }));
   }, [paragraphs]);
 
-  const ParagraphItem = memo(({ words }: { words: string[] }) => {
-    return (
-      <View className="flex-row flex-wrap mb-2">
-        {words.map((word, wordIndex) => (
-          <Pressable
-            key={wordIndex}
-            onPress={() => handleWordPress(word)}
-            className="mr-1 mb-1"
-          >
-            <Text className="text-black">{word}</Text>
-          </Pressable>
-        ))}
-      </View>
-    );
-  });
+  // [angel] edit text styling
+  console.log("deba", fontSize);
+  const ParagraphItem = memo(
+    ({ words, fontSize }: { words: string[]; fontSize: number }) => {
+      return (
+        <View className="flex-row flex-wrap mb-2">
+          {words.map((word, wordIndex) => (
+            <Pressable
+              key={wordIndex}
+              onPress={() => handleWordPress(word)}
+              className="mr-1 mb-1"
+            >
+              <Text className="text-black" style={{ fontSize: 16 }}>
+                {word}
+              </Text>
+            </Pressable>
+          ))}
+        </View>
+      );
+    }
+  );
 
   const renderParagraph = useCallback(
-    ({ item }: { item: any }) => <ParagraphItem words={item.words} />,
-    []
+    ({ item }: { item: any }) => (
+      <ParagraphItem words={item.words} fontSize={fontSize} />
+    ),
+    [fontSize]
   );
 
   const estimatedItemSize = useMemo(() => {
@@ -347,7 +357,7 @@ export default function Read() {
   }, [isContentReady, onCheckpoint, contentHeight, visibleHeight]);
 
   const handleFinishReadingSession = async () => {
-    if (userRole === "Teacher"){
+    if (userRole === "Teacher") {
       router.replace({
         pathname: "/minigames/play",
       });
@@ -369,8 +379,8 @@ export default function Read() {
 
   return (
     <>
-      <View style={{ flex: 1 }} className="bg-background">
-        <BackHeader />
+      <View style={{ flex: 1, padding: 8 }} className="bg-background">
+        <ReadContentHeader title={selectedContent.title} />
         {!isContentReady && (
           <View className="flex-1 justify-center items-center absolute inset-0 z-50">
             <ActivityIndicator size="large" color="#0000ff" />

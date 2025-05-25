@@ -3,6 +3,8 @@ import { axiosInstance } from "@/utils/axiosInstance";
 import { API_URL } from "../utils/constants";
 import { useQueries } from "@tanstack/react-query";
 import { makeMultipartFormDataRequest } from "@/utils/utils";
+import { getAllReadingSessions } from "./ReadingSessionService";
+import { ReadingContentType } from "@/models/ReadingContent";
 
 export const getProfile = async () => {
   try {
@@ -12,7 +14,7 @@ export const getProfile = async () => {
   } catch (error: any) {
     console.error("Error fetching profile:", error);
     throw new Error(
-      error?.response?.data?.message || "Failed to fetch profile",
+      error?.response?.data?.message || "Failed to fetch profile"
     );
   }
 };
@@ -22,7 +24,7 @@ export const updateProfile = async (updateProfileForm: Record<string, any>) => {
     `/users/me`,
     updateProfileForm,
     "PUT",
-    null,
+    null
   );
 
   return await response.json();
@@ -33,7 +35,7 @@ export const checkUserExist = async (fieldType: string, fieldValue: string) => {
     `/users/check-user?fieldType=${fieldType}&fieldValue=${fieldValue}`,
     {
       validateStatus: () => true,
-    },
+    }
   );
 
   if (response.status === 429) {
@@ -141,6 +143,12 @@ export const useProfileStats = (isPupil: boolean) => {
       {
         queryKey: ["loginStreak"],
         queryFn: getLoginStreak,
+        enabled: isPupil,
+      },
+      {
+        queryKey: ["readingSessions"],
+        queryFn: getAllReadingSessions,
+        select: (data: any) => data.length,
         enabled: isPupil,
       },
     ],

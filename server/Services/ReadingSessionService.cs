@@ -113,6 +113,29 @@ namespace LexiLearner.Services
             return await _readingSessionRepository.GetReadingMaterialsRead(PupilId);
         }
 
+        public async Task<List<ReadingMaterial>> GetReadingMaterialsHistory(ClaimsPrincipal User) {
+            User? user = await _userService.GetUserFromToken(User);
+
+            if (user == null) {
+                throw new ApplicationExceptionBase(
+                    $"User does not exist",
+                    "Fetching reading materials history failed.",
+                    StatusCodes.Status404NotFound
+                );
+            }
+
+            var pupil = await _userService.GetPupilByUserId(user.Id);
+            if (pupil == null) {
+                throw new ApplicationExceptionBase(
+                    $"User is not a pupil",
+                    "Fetching reading materials history failed.",
+                    StatusCodes.Status404NotFound
+                );
+            }
+
+            return await _readingSessionRepository.GetReadingMaterialsRead(pupil.Id);
+        }
+
         public async Task<List<ReadingSession>> GetIncompleteReadingSessionsByPupil(ClaimsPrincipal User)
         {
             User? user = await _userService.GetUserFromToken(User);
