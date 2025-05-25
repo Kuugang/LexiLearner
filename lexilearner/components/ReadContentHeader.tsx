@@ -18,7 +18,13 @@ import {
 } from "lucide-react-native";
 import { useReadingContentStore } from "@/stores/readingContentStore";
 
-export default function ReadContentHeader({ title }: { title: string }) {
+export default function ReadContentHeader({
+  title,
+  handleBack,
+}: {
+  title: string;
+  handleBack: () => void;
+}) {
   const fontSize = useReadingContentStore((state) => state.fontSize);
   const setFontSize = useReadingContentStore((state) => state.setFontSize);
 
@@ -32,13 +38,11 @@ export default function ReadContentHeader({ title }: { title: string }) {
     setFontSize(size);
   };
 
-  console.log("rch", fontSize);
-
   return (
     <View className="drop-shadow-lg">
       <View className="flex flex-row px-6 py-4 items-center justify-between ">
         <View className="flex flex-row">
-          <BackHeader />
+          <BackHeader onPress={handleBack} />
           <Text className="text-xl px-4 font-bold">{title}</Text>
         </View>
         {/* <View className="flex flex-row">

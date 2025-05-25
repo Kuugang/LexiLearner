@@ -47,7 +47,7 @@ import ReadContentHeader from "@/components/ReadContentHeader";
 export default function Read() {
   const { width } = useWindowDimensions();
   const selectedContent = useReadingContentStore(
-    (state) => state.selectedContent
+    (state) => state.selectedContent,
   );
   const fontSize = useReadingContentStore((state) => state.fontSize);
 
@@ -73,17 +73,17 @@ export default function Read() {
 
   const getTranslation = useTranslationStore((state) => state.getTranslation);
   const storeTranslation = useTranslationStore(
-    (state) => state.storeTranslation
+    (state) => state.storeTranslation,
   );
 
   const setCurrentSession = useReadingSessionStore(
-    (state) => state.setCurrentSession
+    (state) => state.setCurrentSession,
   );
   const getPastSession = useReadingSessionStore(
-    (state) => state.getPastSession
+    (state) => state.getPastSession,
   );
   const updateReadingSessionProgress = useReadingSessionStore(
-    (state) => state.updateReadingSessionProgress
+    (state) => state.updateReadingSessionProgress,
   );
 
   const { mutateAsync: createReadingSession } = useCreateReadingSession();
@@ -98,6 +98,7 @@ export default function Read() {
   // useReadingSessionStore.setState(() => ({
   //   sessions: null,
   // }));
+
   useEffect(() => {
     if (!isContentReady) return;
     if (userRole === "Teacher") return;
@@ -116,23 +117,27 @@ export default function Read() {
     initSession();
 
     const backAction = () => {
-      updateReadingSessionProgress(
-        currentSessionRef.current!!.id,
-        scrollPercentageRef.current
-      );
-      setCurrentSession(null);
+      handleBack();
       return false;
     };
 
     const backHandler = BackHandler.addEventListener(
       "hardwareBackPress",
-      backAction
+      backAction,
     );
 
     return () => {
       backHandler.remove();
     };
   }, [isContentReady, userRole]);
+
+  const handleBack = () => {
+    updateReadingSessionProgress(
+      currentSessionRef.current!!.id,
+      scrollPercentageRef.current,
+    );
+    setCurrentSession(null);
+  };
 
   const fetchTranslation = async (word: string) => {
     const existingTranslation = getTranslation(word);
@@ -155,7 +160,7 @@ export default function Read() {
           headers: {
             "Content-Type": "application/x-www-form-urlencoded",
           },
-        }
+        },
       );
       storeTranslation(word, data.result);
       setTranslation(data.result);
@@ -168,7 +173,7 @@ export default function Read() {
   const fetchDefinition = useCallback(async (word: string) => {
     try {
       const { data } = await axios.get(
-        `https://corsproxy.io/?url=https://googledictionary.freecollocation.com/meaning?word=${word}`
+        `https://corsproxy.io/?url=https://googledictionary.freecollocation.com/meaning?word=${word}`,
       );
       return data;
     } catch (error) {
@@ -238,7 +243,7 @@ export default function Read() {
         setIsDefinitionLoading(false);
       }
     },
-    [fetchDefinition, getDefinition, storeDefinition]
+    [fetchDefinition, getDefinition, storeDefinition],
   );
 
   const handleWordPress = useCallback(
@@ -248,7 +253,7 @@ export default function Read() {
       setDefinitionVisible(true);
       handleDisplayDefinition(cleanedWord);
     },
-    [handleDisplayDefinition]
+    [handleDisplayDefinition],
   );
 
   const handlePronounce = useCallback(() => {
@@ -271,8 +276,6 @@ export default function Read() {
     }));
   }, [paragraphs]);
 
-  // [angel] edit text styling
-  console.log("deba", fontSize);
   const ParagraphItem = memo(
     ({ words, fontSize }: { words: string[]; fontSize: number }) => {
       return (
@@ -290,14 +293,14 @@ export default function Read() {
           ))}
         </View>
       );
-    }
+    },
   );
 
   const renderParagraph = useCallback(
     ({ item }: { item: any }) => (
       <ParagraphItem words={item.words} fontSize={fontSize} />
     ),
-    [fontSize]
+    [fontSize],
   );
 
   const estimatedItemSize = useMemo(() => {
@@ -380,7 +383,10 @@ export default function Read() {
   return (
     <>
       <View style={{ flex: 1, padding: 8 }} className="bg-background">
-        <ReadContentHeader title={selectedContent.title} />
+        <ReadContentHeader
+          title={selectedContent.title}
+          handleBack={handleBack}
+        />
         {!isContentReady && (
           <View className="flex-1 justify-center items-center absolute inset-0 z-50">
             <ActivityIndicator size="large" color="#0000ff" />

@@ -29,8 +29,8 @@ const SignIn = () => {
   const [showPassword, setShowPassword] = useState(false);
 
   const [form, setForm] = useState({
-    email: "hak@g.com",
-    password: "Angel!123",
+    email: "mrekajojab@gmail.com",
+    password: "Maotka1!",
   });
 
   const [formErrors, setFormErrors] = useState({
@@ -57,7 +57,7 @@ const SignIn = () => {
       await AsyncStorage.setItem("accessToken", response.data.accessToken);
       await AsyncStorage.setItem(
         "refreshToken",
-        response.data.refreshToken.token
+        response.data.refreshToken.token,
       );
 
       response = await getProfile();
