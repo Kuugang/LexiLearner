@@ -416,6 +416,11 @@ export default function Read() {
           }}
           onContentSizeChange={(w, h) => {
             setContentHeight(h);
+
+            if (!isContentReady) return;
+            if (visibleHeight > 0 && h <= visibleHeight) {
+              setScrollEndReached(true);
+            }
           }}
           onLoad={(elapsedTimeInMs) => {
             setIsContentReady(true);
