@@ -2,6 +2,8 @@ import { axiosInstance } from "@/utils/axiosInstance";
 
 import { API_URL } from "../utils/constants";
 import { useQueries, useQuery } from "@tanstack/react-query";
+import { getAllReadingSessions } from "./ReadingSessionService";
+import { ReadingContentType } from "@/models/ReadingContent";
 
 export const getProfile = async () => {
   try {
@@ -11,7 +13,7 @@ export const getProfile = async () => {
   } catch (error: any) {
     console.error("Error fetching profile:", error);
     throw new Error(
-      error?.response?.data?.message || "Failed to fetch profile",
+      error?.response?.data?.message || "Failed to fetch profile"
     );
   }
 };
@@ -47,7 +49,7 @@ export const checkUserExist = async (fieldType: string, fieldValue: string) => {
     `/users/check-user?fieldType=${fieldType}&fieldValue=${fieldValue}`,
     {
       validateStatus: () => true,
-    },
+    }
   );
 
   if (response.status === 429) {
@@ -155,6 +157,12 @@ export const useProfileStats = (isPupil: boolean) => {
       {
         queryKey: ["loginStreak"],
         queryFn: getLoginStreak,
+        enabled: isPupil,
+      },
+      {
+        queryKey: ["readingSessions"],
+        queryFn: getAllReadingSessions,
+        select: (data: any) => data.length,
         enabled: isPupil,
       },
     ],

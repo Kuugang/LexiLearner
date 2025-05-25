@@ -39,31 +39,18 @@ export default function Profile() {
   const setAchievements = useMiniGameStore((state) => state.setAchievements);
   const isPupil = user?.role === "Pupil";
 
-  const [achievementsQuery, screenTimeQuery, loginStreakQuery] = useQueries({
-    queries: [
-      {
-        queryKey: ["achievements"],
-        queryFn: getPupilAchievements,
-        enabled: isPupil,
-      },
-      {
-        queryKey: ["totalSession"],
-        queryFn: getTotalSession,
-        refetchOnWindowFocus: true,
-        enabled: isPupil,
-      },
-      {
-        queryKey: ["loginStreak"],
-        queryFn: getLoginStreak,
-        enabled: isPupil,
-      },
-    ],
-  });
+  const [
+    achievementsQuery,
+    screenTimeQuery,
+    loginStreakQuery,
+    totalBooksQuery,
+  ] = useProfileStats(isPupil);
 
   if (
     achievementsQuery.isLoading ||
     screenTimeQuery.isLoading ||
-    loginStreakQuery.isLoading
+    loginStreakQuery.isLoading ||
+    totalBooksQuery.isLoading
   ) {
     return (
       <View className="flex-1 justify-center items-center absolute inset-0 z-50">
@@ -153,7 +140,7 @@ export default function Profile() {
                   icon={<Flame color="red" />}
                 />
                 <ProfileStat
-                  level={"10"} // TODO: ang number nila uie
+                  level={`${totalBooksQuery.data}`} // TODO: ang number nila uie
                   description="Books Read"
                   icon={<Book color="blue" />}
                 />

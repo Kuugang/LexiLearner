@@ -49,6 +49,7 @@ export default function Read() {
   const selectedContent = useReadingContentStore(
     (state) => state.selectedContent
   );
+  const fontSize = useReadingContentStore((state) => state.fontSize);
 
   const scrollPercentageRef = useRef(0);
   const lastOffsetY = useRef(0);
@@ -270,26 +271,33 @@ export default function Read() {
     }));
   }, [paragraphs]);
 
-  // edit text styling
-  const ParagraphItem = memo(({ words }: { words: string[] }) => {
-    return (
-      <View className="flex-row flex-wrap mb-2">
-        {words.map((word, wordIndex) => (
-          <Pressable
-            key={wordIndex}
-            onPress={() => handleWordPress(word)}
-            className="mr-1 mb-1"
-          >
-            <Text className="text-black font-bold">{word}</Text>
-          </Pressable>
-        ))}
-      </View>
-    );
-  });
+  // [angel] edit text styling
+  console.log("deba", fontSize);
+  const ParagraphItem = memo(
+    ({ words, fontSize }: { words: string[]; fontSize: number }) => {
+      return (
+        <View className="flex-row flex-wrap mb-2">
+          {words.map((word, wordIndex) => (
+            <Pressable
+              key={wordIndex}
+              onPress={() => handleWordPress(word)}
+              className="mr-1 mb-1"
+            >
+              <Text className="text-black" style={{ fontSize: 16 }}>
+                {word}
+              </Text>
+            </Pressable>
+          ))}
+        </View>
+      );
+    }
+  );
 
   const renderParagraph = useCallback(
-    ({ item }: { item: any }) => <ParagraphItem words={item.words} />,
-    []
+    ({ item }: { item: any }) => (
+      <ParagraphItem words={item.words} fontSize={fontSize} />
+    ),
+    [fontSize]
   );
 
   const estimatedItemSize = useMemo(() => {

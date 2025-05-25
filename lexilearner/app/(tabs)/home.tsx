@@ -143,7 +143,7 @@ Originally created by Dr. Seuss himself, Beginner Books are fun, funny, and easy
       <View className="flex-1 gap-4 w-full p-8">
         <Text className="text-2xl font-bold">Explore</Text>
         {isStoriesLoading && <Text>Loading stories...</Text>}
-        <View className="flex flex-row justify-between flex-wrap">
+        <View className="flex flex-row gap-4 flex-wrap">
           {!isStoriesLoading && Array.isArray(stories) && stories?.length > 0
             ? stories?.map((item) => (
                 <View key={item.id}>
