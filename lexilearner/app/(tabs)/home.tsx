@@ -25,9 +25,11 @@ import { HeaderSearchBar } from "@/components/HeaderSearchBar";
 
 function HomeScreen() {
   const { data: stories, isLoading: isStoriesLoading } = useStories();
-  const { data: recommendations } = useRecommendedStories();
   const [showStreak, setShowStreakModal] = useState(false);
   const user = useUserStore((state) => state.user);
+  const { data: recommendations } = useRecommendedStories(
+    user?.role === "Pupil" // ADDED: only pupils get recommendations
+  );
   const lastLoginStreak = useUserStore((state) => state.lastLoginStreak);
   const setLastLoginStreak = useUserStore((state) => state.setLastLoginStreak);
   const setSelectedContent = useReadingContentStore(
@@ -211,39 +213,20 @@ function HomeScreen() {
               </View>
             ) : searchResults.length > 0 ? (
               <View className="flex flex-col gap-4">
-                {searchResults.map((item) => (
-                  <TouchableOpacity
-                    key={item.id}
-                    onPress={() => handleResultPress(item)}
-                    activeOpacity={0.7}
-                    className="flex flex-row gap-4 p-4 bg-white rounded-lg shadow-sm border border-gray-100"
-                  >
-                    <Image
-                      source={{ uri: item.cover }}
-                      style={{
-                        width: 80,
-                        height: 120,
-                        borderRadius: 6,
-                      }}
-                      resizeMode="cover"
+                {searchResults.map((item, index) => (
+                  <TouchableOpacity onPress={() => handleResultPress(item)}>
+                    <ReadingContent
+                      key={index}
+                      type="QueryView"
+                      id={item.id}
+                      title={item.title}
+                      author={item.author}
+                      description={item.description}
+                      cover={item.cover}
+                      content={item.content}
+                      genres={item.genres}
+                      difficulty={item.difficulty}
                     />
-                    <View className="flex-1">
-                      <Text className="font-bold text-lg mb-1">
-                        {item.title}
-                      </Text>
-                      {item.author && (
-                        <Text className="text-gray-600 mb-2">
-                          By {item.author}
-                        </Text>
-                      )}
-                      <Text
-                        className="text-gray-700 text-sm leading-5"
-                        numberOfLines={4}
-                        ellipsizeMode="tail"
-                      >
-                        {item.description}
-                      </Text>
-                    </View>
                   </TouchableOpacity>
                 ))}
               </View>
@@ -292,28 +275,31 @@ function HomeScreen() {
               />
             </View>
 
-            <View className="flex-1  w-full h-60 p-4">
-              <Text className="text-2xl font-bold">Recommended</Text>
-              <ScrollView horizontal={true}>
-                {recommendations &&
-                  recommendations.length > 0 &&
-                  recommendations.map((r, index) => (
-                    <View className="w-[90vw]" key={index}>
-                      <ReadingContent
-                        type={"Recommended"}
-                        id={r.id}
-                        content={r.content}
-                        title={r.title}
-                        author={r.author}
-                        description={r.description}
-                        cover={r.cover}
-                        genres={r.genres}
-                        difficulty={r.difficulty}
-                      />
-                    </View>
-                  ))}
-              </ScrollView>
-            </View>
+            {user?.role === "Pupil" && (
+              <View className="flex-1  w-full h-60 p-4">
+                <Text className="text-2xl px-4 font-bold">Recommended</Text>
+                <ScrollView horizontal={true}>
+                  {recommendations &&
+                    recommendations.length > 0 &&
+                    recommendations.map((r, index) => (
+                      <View className="w-[90vw]" key={index}>
+                        <ReadingContent
+                          type={"Recommended"}
+                          id={r.id}
+                          content={r.content}
+                          title={r.title}
+                          author={r.author}
+                          description={r.description}
+                          cover={r.cover}
+                          genres={r.genres}
+                          difficulty={r.difficulty}
+                        />
+                      </View>
+                    ))}
+                </ScrollView>
+              </View>
+            )}
+
             <View className="flex-1 gap-4 w-full p-8">
               <Text className="text-2xl font-bold">Explore</Text>
               {isStoriesLoading && <Text>Loading stories...</Text>}

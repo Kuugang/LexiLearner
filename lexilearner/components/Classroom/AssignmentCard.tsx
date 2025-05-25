@@ -7,6 +7,7 @@ import {
 import { router } from "expo-router";
 import { useUserStore } from "@/stores/userStore";
 import { useReadingAssignmentStore } from "@/stores/readingAssignmentStore";
+import { useGetCoverFromGDrive } from "@/hooks/useExtractDriveFileId";
 
 interface AssignmentCardProps {
   assignment: ReadingAssignment;
@@ -17,6 +18,7 @@ function AssignmentCard({ assignment }: AssignmentCardProps) {
   const setSelectedReadingAssignment = useReadingAssignmentStore(
     (state) => state.setSelectedReadingAssignment
   );
+  const imageUrl = useGetCoverFromGDrive(assignment.cover);
 
   return (
     <View
@@ -25,11 +27,7 @@ function AssignmentCard({ assignment }: AssignmentCardProps) {
     >
       <View>
         <Image
-          source={
-            assignment.cover !== ""
-              ? assignment.cover
-              : require("@/assets/images/reading-assignment.png")
-          }
+          source={{ uri: imageUrl }}
           resizeMode="contain"
           className="rounded-xl"
           alt="book for activity"

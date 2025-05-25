@@ -1,16 +1,10 @@
 import { AchievementDisplay } from "@/components/AchievementDisplay";
 import BackHeader from "@/components/BackHeader";
-import { Button } from "@/components/ui/button";
 import { Text } from "@/components/ui/text";
 import { Achievement } from "@/models/Achievement";
-import { getPupilAchievements } from "@/services/UserService";
 import { useMiniGameStore } from "@/stores/miniGameStore";
-import { useQuery } from "@tanstack/react-query";
-import { router } from "expo-router";
-import { Settings } from "lucide-react-native";
 import { StyleSheet, ScrollView, View, Image } from "react-native";
 
-// sakto ba diri nga folder? HUHUHUHUUH
 export default function achievementslist() {
   const achievements = useMiniGameStore((state) => state.achievements);
 
@@ -34,8 +28,9 @@ export default function achievementslist() {
       </View>
 
       <View className="p-5 my-8 items-center justify-center flex flex-col">
-        {achievements.map((achievement: Achievement) => (
+        {achievements.map((achievement: Achievement, index) => (
           <AchievementDisplay
+            key={index}
             badge={achievement.badge}
             title={achievement.name}
             description={achievement.description}

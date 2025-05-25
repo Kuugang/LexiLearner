@@ -1,21 +1,18 @@
-import { memo } from "react";
+import { memo, useMemo } from "react";
 import { View, Text, Image, TouchableOpacity } from "react-native";
 import { router } from "expo-router";
 import { ReadingContentType } from "@/models/ReadingContent";
 import { useReadingContentStore } from "@/stores/readingContentStore";
-import { useExtractDriveFileId } from "@/hooks/useExtractDriveFileId";
+import { useGetCoverFromGDrive } from "@/hooks/useExtractDriveFileId";
 
 function ReadingContent(props: ReadingContentType) {
   const setSelectedContent = useReadingContentStore(
     (state) => state.setSelectedContent
   );
-  const fileId = useExtractDriveFileId(props.cover);
-  const imageUrl = fileId
-    ? `https://drive.google.com/uc?export=view&id=${fileId}`
-    : undefined;
-
-  // console.log(imageUrl);
-
+  const imageUrl = useMemo(
+    () => useGetCoverFromGDrive(props.cover),
+    [props.cover]
+  );
   const onPress = () => {
     setSelectedContent(props);
     router.push(`/content/${props.id}`);
@@ -79,7 +76,7 @@ function ReadingContent(props: ReadingContentType) {
       >
         <Image
           source={{
-            uri: props.cover,
+            uri: imageUrl,
           }}
           style={{ width: 100, height: 140 }}
           resizeMode="contain"

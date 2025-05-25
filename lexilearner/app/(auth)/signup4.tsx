@@ -5,7 +5,7 @@ import { useGlobalStore } from "@/stores/globalStore";
 import { refreshAccessToken } from "@/services/AuthService";
 import Toast from "react-native-toast-message";
 
-import { Platform } from "react-native";
+import { Platform, TouchableOpacity } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import {
@@ -116,14 +116,14 @@ export default function Step4() {
           </Text>
         )}
 
-        <Button
-          className="bg-orange rounded-lg mt-6"
+        <TouchableOpacity
+          className="bg-orange border border-dropShadowColor w-full rounded-xl border-b-4 p-3 items-center"
           onPress={() => {
             handleStep();
           }}
         >
-          <Text className="text-white text-2xl font-bold">Finish</Text>
-        </Button>
+          <Text className="text-white text-md font-bold">Finish</Text>
+        </TouchableOpacity>
       </View>
     </ScrollView>
   );

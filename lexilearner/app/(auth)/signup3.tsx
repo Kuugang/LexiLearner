@@ -86,7 +86,12 @@ export default function Step3() {
             }}
           >
             <View
-              className={`h-60 w-60 p-2 rounded-full ${registerForm.role === "Teacher" || providerRegisterForm.role === "Teacher" ? "bg-orange scale-105" : ""}}`}
+              className={`h-60 w-60 p-2 rounded-full ${
+                registerForm.role === "Teacher" ||
+                providerRegisterForm.role === "Teacher"
+                  ? "bg-orange scale-105"
+                  : ""
+              }}`}
             >
               <Image
                 source={require("@/assets/images/role-teacher.png")}
@@ -116,7 +121,12 @@ export default function Step3() {
             }}
           >
             <View
-              className={`h-60 w-60 p-2 rounded-full ${registerForm.role === "Pupil" || providerRegisterForm.role === "Pupil" ? "bg-orange scale-105" : ""}}`}
+              className={`h-60 w-60 p-2 rounded-full ${
+                registerForm.role === "Pupil" ||
+                providerRegisterForm.role === "Pupil"
+                  ? "bg-orange scale-105"
+                  : ""
+              }}`}
             >
               <Image
                 source={require("@/assets/images/role-pupil.png")}
@@ -134,14 +144,14 @@ export default function Step3() {
           </Text>
         )}
 
-        <Button
-          className="bg-orange rounded-lg mt-6"
+        <TouchableOpacity
+          className="bg-orange border border-dropShadowColor rounded-xl border-b-4 p-3 items-center"
           onPress={() => {
             handleStep();
           }}
         >
-          <Text className="text-white text-2xl font-bold">Continue</Text>
-        </Button>
+          <Text className="text-white text-md font-bold">Continue</Text>
+        </TouchableOpacity>
       </View>
     </ScrollView>
   );

@@ -40,7 +40,7 @@ export default function ClassroomCard({ classroom }: ClassroomCardProps) {
       : "Loading...";
   return (
     <Pressable onPress={onPress}>
-      <View className="rounded-xl overflow-hidden border-b-4 border-lightGray bg-white my-2">
+      <View className="rounded-xl overflow-hidden border-b-4 border-lightGray border bg-white my-2">
         <View className="bg-yellowOrange h-24 w-full" />
 
         <View className="flex-row justify-between items-center px-5 py-4 bg-white">

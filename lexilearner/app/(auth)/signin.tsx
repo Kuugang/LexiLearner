@@ -29,8 +29,8 @@ const SignIn = () => {
   const [showPassword, setShowPassword] = useState(false);
 
   const [form, setForm] = useState({
-    email: "mrekajojab@gmail.com",
-    password: "Maotka1!",
+    email: "hak@g.com",
+    password: "Angel!123",
   });
 
   const [formErrors, setFormErrors] = useState({
@@ -57,7 +57,7 @@ const SignIn = () => {
       await AsyncStorage.setItem("accessToken", response.data.accessToken);
       await AsyncStorage.setItem(
         "refreshToken",
-        response.data.refreshToken.token,
+        response.data.refreshToken.token
       );
 
       response = await getProfile();
@@ -170,14 +170,14 @@ const SignIn = () => {
         </View>
 
         <View>
-          <Button
-            className="bg-orange rounded-lg"
+          <TouchableOpacity
+            className="bg-orange border border-dropShadowColor rounded-xl border-b-4 p-3 items-center"
             onPress={() => {
               handleLogin();
             }}
           >
-            <Text className="text-white text-2xl font-bold">Log In</Text>
-          </Button>
+            <Text className="text-white text-md font-bold">Log In</Text>
+          </TouchableOpacity>
 
           <View className="flex gap-3">
             <View className="w-full flex flex-row items-center gap-2 mt-4">
@@ -190,7 +190,7 @@ const SignIn = () => {
 
             <View className="flex flex-row gap-3 w-full justify-center items-center">
               <Button
-                className="bg-white shadow-md rounded-lg"
+                className="bg-white border rounded-xl border-dropShadowColor my-4 p-4 border-b-4"
                 onPress={() => {
                   providerAuth(0);
                 }}
@@ -199,7 +199,7 @@ const SignIn = () => {
               </Button>
 
               <Button
-                className="bg-white shadow-md rounded-lg"
+                className="bg-white border rounded-xl border-dropShadowColor my-4 p-4 border-b-4"
                 onPress={() => {
                   providerAuth(1);
                 }}

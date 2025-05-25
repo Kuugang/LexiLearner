@@ -81,7 +81,7 @@ export default function Step1() {
       console.error("Email check failed:", error);
       Alert.alert(
         "Connection Error",
-        "Unable to verify email. Please check your connection and try again.",
+        "Unable to verify email. Please check your connection and try again."
       );
       return false;
     }
@@ -90,7 +90,7 @@ export default function Step1() {
       // Check username
       const usernameResponse = await checkUserExist(
         "username",
-        registerForm.username,
+        registerForm.username
       );
       console.log("Username check complete:", usernameResponse);
 
@@ -102,7 +102,7 @@ export default function Step1() {
       console.error("Username check failed:", error);
       Alert.alert(
         "Connection Error",
-        "Unable to verify username. Please check your connection and try again.",
+        "Unable to verify username. Please check your connection and try again."
       );
       return false;
     }
@@ -137,7 +137,7 @@ export default function Step1() {
       console.error("Unexpected error in registration process:", error);
       Alert.alert(
         "Registration Error",
-        "Something went wrong. Please try again later.",
+        "Something went wrong. Please try again later."
       );
     } finally {
       setIsLoading(false);
@@ -299,14 +299,14 @@ export default function Step1() {
         </View>
 
         <View>
-          <Button
-            className="bg-orange rounded-lg"
+          <TouchableOpacity
+            className="bg-orange border border-dropShadowColor rounded-xl border-b-4 border-l border-r-1 p-3 items-center"
             onPress={() => {
               handleStep();
             }}
           >
-            <Text className="text-white font-bold">Sign Up</Text>
-          </Button>
+            <Text className="text-white text-md font-bold">Sign Up</Text>
+          </TouchableOpacity>
 
           <View className="flex gap-3">
             <View className="w-full flex flex-row items-center gap-2 mt-4">
@@ -319,7 +319,7 @@ export default function Step1() {
 
             <View className="flex flex-row gap-3 w-full justify-center items-center">
               <Button
-                className="bg-white shadow-md rounded-lg"
+                className="bg-white border rounded-xl border-dropShadowColor my-4 p-4 border-b-4"
                 onPress={() => {
                   providerAuth(0);
                 }}
@@ -328,7 +328,7 @@ export default function Step1() {
               </Button>
 
               <Button
-                className="bg-white shadow-md rounded-lg"
+                className="bg-white border rounded-xl border-dropShadowColor my-4 p-4 border-b-4"
                 onPress={() => {
                   providerAuth(1);
                 }}

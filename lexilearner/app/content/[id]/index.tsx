@@ -8,17 +8,13 @@ import { Button } from "@/components/ui/button";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faBookOpen, faPlus } from "@fortawesome/free-solid-svg-icons";
 import BackHeader from "@/components/BackHeader";
-import { useExtractDriveFileId } from "@/hooks/useExtractDriveFileId";
+import { useGetCoverFromGDrive } from "@/hooks/useExtractDriveFileId";
 
 function ContentIndex() {
   const selectedContent = useReadingContentStore(
     (state) => state.selectedContent
   );
-  const fileId = useExtractDriveFileId(selectedContent!.cover);
-  const imageUrl = fileId
-    ? `https://drive.google.com/uc?export=view&id=${fileId}`
-    : undefined;
-
+  const imageUrl = useGetCoverFromGDrive(selectedContent!.cover);
   if (!selectedContent) {
     return (
       <ScrollView
@@ -35,7 +31,7 @@ function ContentIndex() {
   return (
     <>
       <ScrollView
-        className="flex flex-col z-50 p-8 gap-6 bg-background"
+        className="flex flex-col z-50 p-8 gap-6 bg-white"
         contentContainerStyle={{ alignItems: "center", gap: 24 }}
       >
         <View
@@ -43,9 +39,8 @@ function ContentIndex() {
             zIndex: -1,
             position: "absolute",
             width: "120%",
-            height: 160,
           }}
-          className="-top-8 -left-8 bg-lightGrayOrange"
+          className="-top-8 -left-8 bg-yellowOrange h-[25vh] w-full"
         />
 
         <BackHeader />

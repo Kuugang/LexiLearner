@@ -1,6 +1,6 @@
 import { View } from "react-native";
 import { Text } from "@/components/ui/text";
-import { ReactNode } from "react";
+import { memo, ReactNode } from "react";
 
 interface ProfileStatsProps {
   level: string;
@@ -8,18 +8,16 @@ interface ProfileStatsProps {
   icon?: ReactNode;
 }
 
-function ProfileStats({ level, description, icon }: ProfileStatsProps) {
+function ProfileStat({ level, description, icon }: ProfileStatsProps) {
   return (
-    <View className="flex flex-row gap-3 items-center p-3 border-2 rounded-xl border-lightGray">
+    <View className="w-[48%] m-1 p-3 flex flex-row items-center gap-3 border-2 rounded-xl border-lightGray">
       <View>{icon}</View>
-      <View>
+      <View className="flex-1">
         <Text className="text-md font-bold">{level}</Text>
-        <Text className="text-sm text-gray-700" style={{ flexWrap: "wrap" }}>
-          {description}
-        </Text>
+        <Text className="text-sm text-gray-700">{description}</Text>
       </View>
     </View>
   );
 }
 
-export default ProfileStats;
+export default memo(ProfileStat);

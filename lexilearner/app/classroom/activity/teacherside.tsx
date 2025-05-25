@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { router } from "expo-router";
 import { useReadingContentStore } from "@/stores/readingContentStore";
 import { StarsIcon, TimerIcon, Users2 } from "lucide-react-native";
+import { useGetCoverFromGDrive } from "@/hooks/useExtractDriveFileId";
 
 export default function activity() {
   const user = useUserStore((state) => state.user);
@@ -21,15 +22,13 @@ export default function activity() {
   const selectedReadingAssignment = useReadingAssignmentStore(
     (state) => state.selectedReadingAssignment as ReadingAssignmentOverview
   );
-  const setSelectedReadingAssignment = useReadingAssignmentStore(
-    (state) => state.setSelectedReadingAssignment
-  );
 
   const { setSelectedContent } = useReadingContentStore();
   const { data: contents, isLoading: isStoriesLoading, error } = useStories();
   const selectedContent: ReadingContentType | undefined = contents?.find(
     (content) => content.id === selectedReadingAssignment?.readingMaterialId
   );
+  const imageUrl = useGetCoverFromGDrive(selectedContent!.cover);
 
   useEffect(() => {
     if (selectedContent) {
@@ -55,7 +54,7 @@ export default function activity() {
         <View className="p-8">
           <View className="flex flex-row">
             <Image
-              source={require("@/assets/images/land-of-stories.png")}
+              source={{ uri: imageUrl }}
               className="w-[100px] h-[140px] rounded-lg flex-1"
               resizeMode="contain"
             />
@@ -63,9 +62,7 @@ export default function activity() {
               <Text className="text-[24px] font-bold flex-wrap">
                 {selectedContent!.title}
               </Text>
-              <Text>
-                {selectedReadingAssignment?.minigameType}
-              </Text>
+              <Text>{selectedReadingAssignment?.minigameType}</Text>
               <Text className="font-bold">
                 Created at: {formatDate(selectedReadingAssignment.createdAt)}
               </Text>
