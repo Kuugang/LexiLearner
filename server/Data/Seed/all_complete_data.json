@@ -22612,9 +22612,9 @@
       "SentenceRearrangement": [
         {
           "correctAnswer": [
-            "she liked lambs.",
             "Jasmine asked",
-            "her mother if"
+            "her mother if",
+            "she liked lambs."
           ],
           "parts": ["Jasmine asked", "her mother if", "she liked lambs."],
           "explanation": "The sentence begins with Jasmine's action ('Jasmine asked'), followed by the context ('her mother if'), and ends with the subject of the question ('she liked lambs')."
