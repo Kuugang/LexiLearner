@@ -41,14 +41,12 @@ namespace LexiLearner
                 claims.Add(new Claim(ClaimTypes.Role, role));
             }
 
-            var expiration = DateTime.UtcNow.AddHours(3);
-
             var secret = Environment.GetEnvironmentVariable("JWT_SECRET");
             var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret));
             var tokenDescriptor = new JwtSecurityToken(
                 issuer: _configuration["JWT:ValidIssuer"],
                 audience: _configuration["JWT:ValidAudience"],
-                expires: DateTime.Now.AddMinutes(3),
+                expires: DateTime.Now.AddMinutes(10),
                 claims: claims,
                 signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
             );

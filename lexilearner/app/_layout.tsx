@@ -24,6 +24,10 @@ import useRefreshToken from "@/hooks/useRefreshToken";
 import useScreenTime from "@/hooks/useScreenTime";
 import LoadingScreen from "@/components/LoadingScreen";
 
+import { LogBox } from "react-native";
+LogBox.ignoreLogs(["Warning: ..."]);
+LogBox.ignoreAllLogs();
+
 SplashScreen.preventAutoHideAsync();
 
 const queryClient = new QueryClient();
