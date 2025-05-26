@@ -412,7 +412,6 @@ export default function TeacherSetting({
           }
         />
 
-        {/* Add Pupil Button */}
         <TouchableOpacity
           className="mt-6 mb-2 p-3 rounded-md flex-row justify-left items-center border border-lightGray rounded-md"
           onPress={() => setShowAddPupilModal(true)}
@@ -421,7 +420,6 @@ export default function TeacherSetting({
           <Text className="text-black font-semibold ml-2">Add Pupils</Text>
         </TouchableOpacity>
 
-        {/* Current Pupils */}
         <View className="py-4 mt-4">
           <TouchableOpacity
             className="flex-row justify-between items-center border border-lightGray rounded-md p-3"

@@ -25,6 +25,7 @@ import useScreenTime from "@/hooks/useScreenTime";
 import LoadingScreen from "@/components/LoadingScreen";
 
 import { LogBox } from "react-native";
+import LoadingScreenForm from "@/components/LoadingScreenForm";
 LogBox.ignoreLogs(["Warning: ..."]);
 LogBox.ignoreAllLogs();
 
@@ -77,11 +78,7 @@ export default function RootLayout() {
   return (
     <ThemeProvider value={isDarkColorScheme ? DARK_THEME : LIGHT_THEME}>
       <QueryClientProvider client={queryClient}>
-        <LoadingScreen
-          visible={isLoading}
-          overlay={true}
-          message="Give us a moment..."
-        />
+        <LoadingScreenForm visible={isLoading} />
 
         <StatusBar style={"dark"} />
         <SafeAreaView className="flex-1 bg-background">
