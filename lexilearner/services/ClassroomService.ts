@@ -334,6 +334,13 @@ export const getLeaderboardByClassroomId = async (classroomId: string) => {
   return response.data.data;
 };
 
+export const useGetLeaderboardByClassroomId = (classroomId: string) => {
+  return useQuery({
+    queryFn: () => getLeaderboardByClassroomId(classroomId),
+    queryKey: ["leaderboard", classroomId],
+  });
+};
+
 const getReadingAssignmentsOverviewByClassroomId = async (
   classroomId: string
 ): Promise<ReadingAssignmentOverview[]> => {

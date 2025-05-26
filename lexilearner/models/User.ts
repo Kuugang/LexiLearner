@@ -24,6 +24,15 @@ export interface Pupil {
   level?: number;
 }
 
+export interface PupilInClassroom {
+  id: string;
+  classroomId: string;
+  firstName: string;
+  lastName: string;
+  level: number;
+  pupilId: string;
+}
+
 export function extractUser(data: Record<string, any>): User {
   const {
     id,
