@@ -102,7 +102,9 @@ export default function Profile() {
             />
           </View>
           <View className="self-end">
-            <CurrentTierName level={user?.pupil?.level!} />
+            {user?.role === "Pupil" && (
+              <CurrentTierName level={user?.pupil?.level!} />
+            )}
           </View>
         </View>
 

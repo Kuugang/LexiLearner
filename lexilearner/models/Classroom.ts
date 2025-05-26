@@ -6,6 +6,7 @@ export interface Classroom {
   joinCode: string;
   name: string;
   description?: string;
+  pupilCount?: number;
 }
 
 export interface ClassroomEnrollment {

@@ -17,15 +17,6 @@ export default function ClassroomCard({ classroom }: ClassroomCardProps) {
     (state) => state.setSelectedClassroom
   );
   const router = useRouter();
-  const [studentCount, setStudentCount] = useState<number | null>(null);
-
-  useEffect(() => {
-    const fetchPupils = async () => {
-      const pupils = await getPupilsFromClassroom(classroom.id);
-      setStudentCount(pupils.length);
-    };
-    fetchPupils();
-  }, [classroom.id]);
 
   const onPress = () => {
     setSelectedClassroom(classroom);
@@ -33,10 +24,10 @@ export default function ClassroomCard({ classroom }: ClassroomCardProps) {
   };
 
   const displayText =
-    studentCount !== null
-      ? studentCount === 1
-        ? "1 Student"
-        : `${studentCount} Students`
+    classroom.pupilCount !== null
+      ? classroom.pupilCount === 1
+        ? "1 Pupil"
+        : `${classroom.pupilCount} Pupils`
       : "Loading...";
   return (
     <Pressable onPress={onPress}>

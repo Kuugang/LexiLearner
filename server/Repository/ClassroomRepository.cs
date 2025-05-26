@@ -26,7 +26,7 @@ namespace LexiLearner.Repository{
 
         public async Task<List<Classroom>> GetByTeacherId(Guid TeacherId)
         {
-            return await _context.Classroom.Where(c => c.TeacherId == TeacherId).ToListAsync();
+            return await _context.Classroom.Include(c => c.ClassroomEnrollments).Where(c => c.TeacherId == TeacherId).ToListAsync();
         }
 
         public async Task Update(Classroom Classroom)

@@ -1,56 +1,31 @@
 import { Text } from "@/components/ui/text";
-import { StyleSheet, ScrollView, View, Image } from "react-native";
+import { ScrollView, View, Image } from "react-native";
 import {
   JoinClassroomBtn,
   NewClassroomBtn,
 } from "../../components/Classroom/MainClassroomBtns";
 import ClassroomCard from "../../components/Classroom/ClassroomCard";
-import { getByRoleId as apiGetRoleById } from "@/services/ClassroomService";
-import { useEffect, useState } from "react";
-import { useClassroomStore } from "@/stores/classroomStore";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useGetClassroomsByRole } from "@/services/ClassroomService";
 import { useUserStore } from "@/stores/userStore";
 import LoadingScreen from "@/components/LoadingScreen";
 import { useFocusEffect } from "expo-router";
 import { useCallback } from "react";
-import { useQueryClient } from "@tanstack/react-query";
-
-const extractArrayFromResponse = (data: any): any[] => {
-  if (!data) return [];
-
-  if (data.data && data.data.$values) return data.data.$values;
-
-  if (data.$values) return data.$values;
-
-  if (Array.isArray(data)) return data;
-
-  if (data.data && Array.isArray(data.data)) return data.data;
-
-  console.warn("Could not extract array from response:", data);
-  return [];
-};
 
 export default function ClassroomScreen() {
   const user = useUserStore((state) => state.user);
-  const queryClient = useQueryClient();
-
-  useFocusEffect(
-    useCallback(() => {
-      queryClient.invalidateQueries({
-        queryKey: ["classroomsData", user?.role],
-      });
-    }, [user?.role])
-  );
 
   const {
     data: classrooms,
     isLoading,
     isError,
-  } = useQuery({
-    queryFn: () => apiGetRoleById(user?.role || ""),
-    queryKey: ["classroomsData", user?.role],
-    enabled: !!user?.role,
-  });
+    refetch: refetchClassrooms,
+  } = useGetClassroomsByRole(user?.role ?? "Pupil");
+
+  useFocusEffect(
+    useCallback(() => {
+      refetchClassrooms();
+    }, [user?.role, refetchClassrooms])
+  );
 
   if (isLoading) {
     return (
@@ -65,8 +40,6 @@ export default function ClassroomScreen() {
       </View>
     );
   }
-
-  const classroomArray = extractArrayFromResponse(classrooms);
 
   return (
     <ScrollView className="bg-white">
@@ -91,9 +64,12 @@ export default function ClassroomScreen() {
           ) : (
             <JoinClassroomBtn />
           )}
-          {Array.isArray(classroomArray) && classroomArray.length > 0 ? (
-            classroomArray.map((item) => (
-              <ClassroomCard key={item.id} classroom={item} />
+          {!isLoading &&
+          classrooms &&
+          Array.isArray(classrooms) &&
+          classrooms.length > 0 ? (
+            classrooms.map((item) => (
+              <ClassroomCard key={item.id} classroom={{ ...item }} />
             ))
           ) : (
             <Text className="text-center mt-4">No classrooms found</Text>
