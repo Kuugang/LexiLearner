@@ -34,7 +34,7 @@ export const joinClassroom = async (joinCode: string) => {
   return response.data;
 };
 
-export const getByRoleId = async (role: string) => {
+const getByRoleId = async (role: string): Promise<Classroom[]> => {
   let response;
   if (role === "Teacher") {
     response = await axiosInstance.get("/classroom/teacher/me", {
@@ -49,7 +49,15 @@ export const getByRoleId = async (role: string) => {
   if (response.status !== 200 && response.status !== 201) {
     throw new Error(response.data.message);
   }
-  return response.data;
+
+  return response.data.data;
+};
+
+export const useGetClassroomsByRole = (role: string) => {
+  return useQuery<Classroom[], Error>({
+    queryKey: ["classroomsData", role],
+    queryFn: () => getByRoleId(role)
+});
 };
 
 export const editClassroom = async (

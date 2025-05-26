@@ -1,14 +1,14 @@
 import ClassroomHeader from "@/components/Classroom/ClassroomHeader";
 import { ReadingAssignmentOverview } from "@/models/ReadingMaterialAssignment";
 import { useClassroomStore } from "@/stores/classroomStore";
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect } from "react";
 import { useUserStore } from "@/stores/userStore";
 import { View, Text, Image, TouchableOpacity, ScrollView } from "react-native";
 import { useReadingAssignmentStore } from "@/stores/readingAssignmentStore";
 import { useStories } from "@/services/ReadingMaterialService";
 import { ReadingContentType } from "@/models/ReadingContent";
 import { Button } from "@/components/ui/button";
-import { router } from "expo-router";
+import { router, useFocusEffect } from "expo-router";
 import { useReadingContentStore } from "@/stores/readingContentStore";
 import { StarsIcon, TimerIcon, Users2 } from "lucide-react-native";
 import { useGetCoverFromGDrive } from "@/hooks/useExtractDriveFileId";
@@ -24,17 +24,37 @@ export default function activity() {
   );
 
   const { setSelectedContent } = useReadingContentStore();
-  const { data: contents, isLoading: isStoriesLoading, error } = useStories();
+  const { data: contents, isLoading: isStoriesLoading } = useStories();
   const selectedContent: ReadingContentType | undefined = contents?.find(
     (content) => content.id === selectedReadingAssignment?.readingMaterialId
   );
-  const imageUrl = useGetCoverFromGDrive(selectedContent!.cover);
+
+  const imageUrl = useGetCoverFromGDrive(selectedReadingAssignment!.cover);
 
   useEffect(() => {
-    if (selectedContent) {
-      setSelectedContent(selectedContent);
+    if (selectedReadingAssignment && contents) {
+      const selectedContent = contents.find(
+        (content) => content.id === selectedReadingAssignment.readingMaterialId
+      );
+      if (selectedContent) {
+        setSelectedContent(selectedContent);
+      }
     }
-  }, [selectedContent]);
+  }, [selectedReadingAssignment, contents, setSelectedContent]);
+
+  useFocusEffect(
+    useCallback(() => {
+      if (selectedReadingAssignment && contents) {
+        const selectedContent = contents.find(
+          (content) =>
+            content.id === selectedReadingAssignment.readingMaterialId
+        );
+        if (selectedContent) {
+          setSelectedContent(selectedContent);
+        }
+      }
+    }, [selectedReadingAssignment, contents, setSelectedContent])
+  );
 
   function formatDate(isoString: string) {
     const date = new Date(isoString);
@@ -60,7 +80,7 @@ export default function activity() {
             />
             <View className="flex-1">
               <Text className="text-[24px] font-bold flex-wrap">
-                {selectedContent!.title}
+                {selectedReadingAssignment.title}
               </Text>
               <Text>{selectedReadingAssignment?.minigameType}</Text>
               <Text className="font-bold">
@@ -77,7 +97,7 @@ export default function activity() {
           <View>
             <View>
               <Text className="font-bold text-[24px]">
-                {selectedReadingAssignment.title}
+                Book to read: {selectedContent?.title}
               </Text>
               <Text className="text-[16px]">
                 {selectedReadingAssignment.description}

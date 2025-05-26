@@ -9,6 +9,7 @@ namespace LexiLearner.Models.DTO{
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
         public string JoinCode { get; set; }
+        public int? PupilCount { get; set; }
 
         public ClassroomDTO(Classroom classroom)
         {
@@ -19,6 +20,7 @@ namespace LexiLearner.Models.DTO{
             CreatedAt = classroom.CreatedAt;
             UpdatedAt = classroom.UpdatedAt;
             JoinCode = classroom.JoinCode;
+            PupilCount = classroom.ClassroomEnrollments?.Count ?? 0;
         }
         public class ReadClassroom{ 
             public ReadClassroom() { // ning suon rakos tomnam food nako DD:
