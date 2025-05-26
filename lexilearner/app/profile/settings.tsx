@@ -16,23 +16,17 @@ import { View, ScrollView, Image, Pressable } from "react-native";
 import { Text } from "@/components/ui/text";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "~/components/ui/dialog";
+import ConfirmModal from "@/components/Modal";
 import BackHeader from "@/components/BackHeader";
 import Toast from "react-native-toast-message";
 import { User } from "@/models/User";
 import { API_URL } from "@/utils/constants";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Settings() {
-  const [deleteAccountDialogOpen, setDeleteAccountDialogOpen] =
+  const [deleteAccountModalVisible, setDeleteAccountModalVisible] =
     useState<boolean>(false);
+  const [logoutModalVisible, setLogoutModalVisible] = useState<boolean>(false);
   const [isProfileChanged, setIsProfileChanged] = useState(false);
   const [avatarFile, setAvatarFile] = useState<any>(null);
   const setIsLoading = useGlobalStore((state) => state.setIsLoading);
@@ -122,7 +116,7 @@ export default function Settings() {
         text1: "Goodbye for now 👋",
         text2: "Your account has been deleted. We're sad to see you go!",
       });
-      setDeleteAccountDialogOpen(false);
+      setDeleteAccountModalVisible(false);
 
       router.replace("/");
     } catch (error: any) {
@@ -135,6 +129,13 @@ export default function Settings() {
       setIsLoading(false);
     }
   };
+
+  const handleLogout = () => {
+    logout();
+    router.dismissAll();
+    router.replace("/");
+  };
+
   const openImagePicker = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -153,151 +154,145 @@ export default function Settings() {
   };
 
   return (
-    <ScrollView className="bg-background p-8">
-      <BackHeader />
+    <SafeAreaView className="flex-1 bg-background">
+      <ScrollView className="bg-background p-8">
+        <BackHeader />
 
-      <View className="justify-around">
-        <View className="flex items-center justify-center gap-4">
-          <Pressable onPress={openImagePicker}>
-            <Image
-              source={
-                avatarFile
-                  ? {
-                      uri: avatarFile.uri,
-                    }
-                  : user?.avatar
-                  ? {
-                      uri: `${API_URL.replace(
-                        /\/api\/?$/,
-                        "/"
-                      )}${user.avatar.replace(/^\/+/, "")}`,
-                    }
-                  : require("@/assets/images/default_pfp.png")
+        <View className="justify-around">
+          <View className="flex items-center justify-center gap-4">
+            <Pressable onPress={openImagePicker}>
+              <Image
+                source={
+                  avatarFile
+                    ? {
+                        uri: avatarFile.uri,
+                      }
+                    : user?.avatar
+                    ? {
+                        uri: `${API_URL.replace(
+                          /\/api\/?$/,
+                          "/"
+                        )}${user.avatar.replace(/^\/+/, "")}`,
+                      }
+                    : require("@/assets/images/default_pfp.png")
+                }
+                className="rounded-full w-32 h-32"
+                alt="User profile pic"
+              />
+            </Pressable>
+
+            <Text className="text-2xl font-bold m-4 mb-6">Profile</Text>
+          </View>
+
+          <View className="py-1">
+            <Text className="font-bold">First Name</Text>
+            <Input
+              placeholder={profile.firstName}
+              value={profile.firstName}
+              onChangeText={(value: string) =>
+                setProfile({ ...profile, firstName: value })
               }
-              className="rounded-full w-32 h-32"
-              alt="User profile pic"
+            ></Input>
+            {formErrors.firstName && (
+              <Text className="text-destructive">{formErrors.firstName}</Text>
+            )}
+          </View>
+
+          <View className="py-1">
+            <Text className="font-bold">Last Name</Text>
+            <Input
+              placeholder={profile.lastName}
+              value={profile.lastName}
+              onChangeText={(value: string) =>
+                setProfile({ ...profile, lastName: value })
+              }
             />
-          </Pressable>
+          </View>
 
-          <Text className="text-2xl font-bold m-4 mb-6">Profile</Text>
-        </View>
+          <View className="py-1">
+            <Text className="font-bold">Username</Text>
 
-        <View className="py-1">
-          <Text className="font-bold">First Name</Text>
-          <Input
-            placeholder={profile.firstName}
-            value={profile.firstName}
-            onChangeText={(value: string) =>
-              setProfile({ ...profile, firstName: value })
-            }
-          ></Input>
-          {formErrors.firstName && (
-            <Text className="text-destructive">{formErrors.firstName}</Text>
+            <Input
+              placeholder={profile.userName}
+              value={profile.userName}
+              onChangeText={(value: string) =>
+                setProfile({ ...profile, userName: value })
+              }
+            />
+            {formErrors.username && (
+              <Text className="text-destructive">{formErrors.username}</Text>
+            )}
+          </View>
+
+          <View className="py-1">
+            <Text className="font-bold">Email</Text>
+
+            <Input
+              editable={false}
+              placeholder={user?.email}
+              value={user?.email}
+            ></Input>
+          </View>
+
+          <View className="py-1">
+            <Text className="font-bold">Password</Text>
+            <Input placeholder="******"></Input>
+          </View>
+          <View className="m-5"></View>
+          {isProfileChanged && (
+            <Button
+              variant="dropshadow"
+              size={null}
+              onPress={() => handleUpdateProfile()}
+              className="my-2 bg-yellowOrange"
+            >
+              <Text>Confirm Edit</Text>
+            </Button>
           )}
-        </View>
 
-        <View className="py-1">
-          <Text className="font-bold">Last Name</Text>
-          <Input
-            placeholder={profile.lastName}
-            value={profile.lastName}
-            onChangeText={(value: string) =>
-              setProfile({ ...profile, lastName: value })
-            }
-          />
-        </View>
-
-        <View className="py-1">
-          <Text className="font-bold">Username</Text>
-
-          <Input
-            placeholder={profile.userName}
-            value={profile.userName}
-            onChangeText={(value: string) =>
-              setProfile({ ...profile, userName: value })
-            }
-          />
-          {formErrors.username && (
-            <Text className="text-destructive">{formErrors.username}</Text>
-          )}
-        </View>
-
-        <View className="py-1">
-          <Text className="font-bold">Email</Text>
-
-          <Input
-            editable={false}
-            placeholder={user?.email}
-            value={user?.email}
-          ></Input>
-        </View>
-
-        <View className="py-1">
-          <Text className="font-bold">Password</Text>
-          <Input placeholder="******"></Input>
-        </View>
-        <View className="m-5"></View>
-        {isProfileChanged && (
           <Button
             variant="dropshadow"
             size={null}
-            onPress={() => handleUpdateProfile()}
-            className="my-2 bg-yellowOrange"
-          >
-            <Text>Confirm Edit</Text>
-          </Button>
-        )}
-
-        <Dialog
-          open={deleteAccountDialogOpen}
-          onOpenChange={setDeleteAccountDialogOpen}
-        >
-          <Button
-            variant="dropshadow"
-            size={null}
-            onPress={() => setDeleteAccountDialogOpen(true)}
+            onPress={() => setDeleteAccountModalVisible(true)}
             className="bg-orange"
           >
             <Text className="font-bold text-white">Delete Account</Text>
           </Button>
 
-          <DialogContent className="sm:max-w-[425px] bg-white">
-            <DialogHeader>
-              <DialogTitle>Delete Account</DialogTitle>
-              <DialogDescription>
-                Are you sure you want to delete your account?
-              </DialogDescription>
-            </DialogHeader>
-            <DialogFooter className="flex flex-row justify-center ">
-              <Button
-                onPress={() => handleDeleteAccount()}
-                className="bg-orange border border-orange"
-              >
-                <Text className="font-bold text-white px-8">Yes</Text>
-              </Button>
-              <Button
-                onPress={() => setDeleteAccountDialogOpen(false)}
-                className="border border-lightGray bg-white"
-              >
-                <Text className="font-bold px-8">No</Text>
-              </Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
+          <Button
+            variant="dropshadow"
+            size={null}
+            onPress={() => setLogoutModalVisible(true)}
+            className="bg-yellowOrange mb-16"
+          >
+            <Text className="font-bold">Log Out</Text>
+          </Button>
+        </View>
+      </ScrollView>
 
-        <Button
-          variant="dropshadow"
-          size={null}
-          onPress={() => {
-            logout();
-            router.dismissAll();
-            router.replace("/");
-          }}
-          className="bg-yellowOrange"
-        >
-          <Text className="font-bold">Log Out</Text>
-        </Button>
-      </View>
-    </ScrollView>
+      <ConfirmModal
+        visible={deleteAccountModalVisible}
+        title="Delete Account"
+        message="Are you sure you want to permanently delete your account? This action cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        onConfirm={handleDeleteAccount}
+        onCancel={() => setDeleteAccountModalVisible(false)}
+        icon="close"
+        highlightedText="permanently"
+      />
+
+      <ConfirmModal
+        visible={logoutModalVisible}
+        title="Log Out"
+        message="Are you sure you want to log out of your account?"
+        confirmText="Log Out"
+        cancelText="Cancel"
+        onConfirm={handleLogout}
+        onCancel={() => setLogoutModalVisible(false)}
+        icon="logout"
+        highlightedText=""
+      />
+    </SafeAreaView>
   );
 }

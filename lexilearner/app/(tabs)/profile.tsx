@@ -26,6 +26,8 @@ import { AwardIcon } from "@/components/AchievementDisplay";
 import { Achievement } from "@/models/Achievement";
 import { ActivityIndicator } from "react-native-paper";
 import { ProgressBar, CurrentTierName } from "@/components/ProgressBar";
+import { StreakIcon } from "@/components/Streak";
+const STREAK_COLOR = "#FF663E";
 
 export default function Profile() {
   const user = useUserStore((state) => state.user);
@@ -145,7 +147,7 @@ export default function Profile() {
                   <ProfileStat
                     level={`${loginStreakQuery.data.longestStreak}`}
                     description="Longest Streak"
-                    icon={<Flame color="red" />}
+                    icon={<StreakIcon color={STREAK_COLOR} size={28} />}
                   />
                   <ProfileStat
                     level={`${totalBooksQuery.data}`}

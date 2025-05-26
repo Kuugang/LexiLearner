@@ -30,7 +30,6 @@ import { FlashList } from "@shopify/flash-list";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { Input } from "~/components/ui/input";
 import { faVolumeUp } from "@fortawesome/free-solid-svg-icons";
-
 import { Check } from "lucide-react-native";
 
 import { useReadingSessionStore } from "@/stores/readingSessionStore";
@@ -43,11 +42,13 @@ import { router } from "expo-router";
 import BackHeader from "@/components/BackHeader";
 import { useUserStore } from "@/stores/userStore";
 import ReadContentHeader from "@/components/ReadContentHeader";
+import LoadingScreen from "@/components/LoadingScreen";
+import LoadingScreenForm from "@/components/LoadingScreenForm";
 
 export default function Read() {
   const { width } = useWindowDimensions();
   const selectedContent = useReadingContentStore(
-    (state) => state.selectedContent,
+    (state) => state.selectedContent
   );
   const fontSize = useReadingContentStore((state) => state.fontSize);
 
@@ -73,17 +74,17 @@ export default function Read() {
 
   const getTranslation = useTranslationStore((state) => state.getTranslation);
   const storeTranslation = useTranslationStore(
-    (state) => state.storeTranslation,
+    (state) => state.storeTranslation
   );
 
   const setCurrentSession = useReadingSessionStore(
-    (state) => state.setCurrentSession,
+    (state) => state.setCurrentSession
   );
   const getPastSession = useReadingSessionStore(
-    (state) => state.getPastSession,
+    (state) => state.getPastSession
   );
   const updateReadingSessionProgress = useReadingSessionStore(
-    (state) => state.updateReadingSessionProgress,
+    (state) => state.updateReadingSessionProgress
   );
 
   const { mutateAsync: createReadingSession } = useCreateReadingSession();
@@ -123,7 +124,7 @@ export default function Read() {
 
     const backHandler = BackHandler.addEventListener(
       "hardwareBackPress",
-      backAction,
+      backAction
     );
 
     return () => {
@@ -134,7 +135,7 @@ export default function Read() {
   const handleBack = () => {
     updateReadingSessionProgress(
       currentSessionRef.current!!.id,
-      scrollPercentageRef.current,
+      scrollPercentageRef.current
     );
     setCurrentSession(null);
   };
@@ -160,7 +161,7 @@ export default function Read() {
           headers: {
             "Content-Type": "application/x-www-form-urlencoded",
           },
-        },
+        }
       );
       storeTranslation(word, data.result);
       setTranslation(data.result);
@@ -173,7 +174,7 @@ export default function Read() {
   const fetchDefinition = useCallback(async (word: string) => {
     try {
       const { data } = await axios.get(
-        `https://corsproxy.io/?url=https://googledictionary.freecollocation.com/meaning?word=${word}`,
+        `https://corsproxy.io/?url=https://googledictionary.freecollocation.com/meaning?word=${word}`
       );
       return data;
     } catch (error) {
@@ -243,7 +244,7 @@ export default function Read() {
         setIsDefinitionLoading(false);
       }
     },
-    [fetchDefinition, getDefinition, storeDefinition],
+    [fetchDefinition, getDefinition, storeDefinition]
   );
 
   const handleWordPress = useCallback(
@@ -253,7 +254,7 @@ export default function Read() {
       setDefinitionVisible(true);
       handleDisplayDefinition(cleanedWord);
     },
-    [handleDisplayDefinition],
+    [handleDisplayDefinition]
   );
 
   const handlePronounce = useCallback(() => {
@@ -293,14 +294,14 @@ export default function Read() {
           ))}
         </View>
       );
-    },
+    }
   );
 
   const renderParagraph = useCallback(
     ({ item }: { item: any }) => (
       <ParagraphItem words={item.words} fontSize={fontSize} />
     ),
-    [fontSize],
+    [fontSize]
   );
 
   const estimatedItemSize = useMemo(() => {
@@ -387,12 +388,12 @@ export default function Read() {
           title={selectedContent.title}
           handleBack={handleBack}
         />
-        {!isContentReady && (
-          <View className="flex-1 justify-center items-center absolute inset-0 z-50">
-            <ActivityIndicator size="large" color="#0000ff" />
-            <Text className="mt-2">Preparing content...</Text>
-          </View>
-        )}
+
+        <LoadingScreen
+          visible={!isContentReady}
+          overlay={true}
+          message="Getting content..."
+        ></LoadingScreen>
 
         <FlashList
           ref={flashListRef}
@@ -465,16 +466,11 @@ export default function Read() {
             </Pressable>
           </View>
 
-          {isDefinitionLoading ? (
-            <View className="flex-1 justify-center items-center">
-              <ActivityIndicator size="large" color="#0000ff" />
-              <Text className="mt-2">Loading definition...</Text>
-            </View>
-          ) : (
-            <ScrollView className="flex-1">
-              <RenderHtml contentWidth={width} source={{ html }} />
-            </ScrollView>
-          )}
+          <ScrollView className="flex-1">
+            <RenderHtml contentWidth={width} source={{ html }} />
+          </ScrollView>
+
+          <LoadingScreenForm visible={isDefinitionLoading} />
         </View>
       </Modal>
     </>

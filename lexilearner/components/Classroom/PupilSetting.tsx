@@ -6,6 +6,7 @@ import BackHeader from "@/components/BackHeader";
 import { router } from "expo-router";
 import ConfirmModal from "../Modal";
 import LoadingScreen from "../LoadingScreen";
+import LoadingScreenForm from "../LoadingScreenForm";
 
 type PupilSettingsProps = {
   selectedClassroom: any;
@@ -30,7 +31,7 @@ export default function PupilSetting({
           classroomId: selectedClassroom?.id,
         });
         setSelectedClassroom(null);
-        router.replace("/classroom");
+        router.replace("/home");
       } catch (error) {
         console.error("Error leaving classroom:", error);
       } finally {
@@ -70,11 +71,7 @@ export default function PupilSetting({
         icon="logout"
         highlightedText={selectedClassroom?.name}
       />
-      <LoadingScreen
-        visible={isLoading}
-        overlay={true}
-        message="Processing..."
-      />
+      <LoadingScreenForm visible={isLoading} />
     </View>
   );
 }
