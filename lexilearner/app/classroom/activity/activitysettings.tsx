@@ -49,6 +49,10 @@ export default function activitysettings() {
   useEffect(() => {
     if (selectedReadingAssignment) {
       setEditActivityForm(selectedReadingAssignment);
+      setSelectedMinigameType(
+        (selectedReadingAssignment.minigameType as MinigameType) ||
+          MinigameType.TwoTruthsOneLie
+      );
     }
   }, [selectedReadingAssignment]);
 

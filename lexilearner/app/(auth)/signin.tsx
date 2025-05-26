@@ -29,6 +29,7 @@ const SignIn = () => {
   const [showPassword, setShowPassword] = useState(false);
 
   const [form, setForm] = useState({
+<<<<<<< HEAD
     // kang angel guro ni
     // hak@g.com
     // Angel!123
@@ -36,6 +37,8 @@ const SignIn = () => {
     // deo accounts
     // mrekajojab@gmail.com
     // Maotka1!
+=======
+>>>>>>> c6e4146a1f3e2505958b53f7b170f63f56fa837d
     email: "mrekajojab@gmail.com",
     password: "Maotka1!",
   });

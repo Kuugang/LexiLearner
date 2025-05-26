@@ -6,11 +6,12 @@ import ClassroomHeader from "./ClassroomHeader";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { useQuery } from "@tanstack/react-query";
 import {
-    getLeaderboardByClassroomId as apiGetLeaderboardByClassroomId,
     Pupil,
+    useGetLeaderboardByClassroomId,
 } from "@/services/ClassroomService";
 import { useClassroomStore } from "@/stores/classroomStore";
-import { User } from "@/models/User";
+import { PupilInClassroom, User } from "@/models/User";
+import { CurrentTierName } from "../ProgressBar";
 
 // Default Avatar component using initials
 const DefaultAvatar = ({
@@ -71,11 +72,7 @@ export default function StudentsList() {
         (state) => state.selectedClassroom,
     );
 
-    const { data: students } = useQuery({
-        queryFn: () => apiGetLeaderboardByClassroomId(selectedClassroom!.id),
-        queryKey: ["leaderboard", selectedClassroom!.id],
-        enabled: !!selectedClassroom,
-    });
+    const { data: students, isLoading: isStudentsLoading, refetch: refetchLeaderboard } = useGetLeaderboardByClassroomId(selectedClassroom?.id || "");
 
     console.log("leaderboard ni studentlist:", students);
 
@@ -91,110 +88,112 @@ export default function StudentsList() {
     const [activeTab, setActiveTab] = useState("pupils");
 
     return (
-        <ScrollView className="bg-background flex-1">
-            <ClassroomHeader name={"Grade 6"} joinCode={""}></ClassroomHeader>
+      <ScrollView className="bg-background flex-1">
+        <ClassroomHeader name={"Grade 6"} joinCode={""}></ClassroomHeader>
 
-            {/* Tabs */}
-            <View className="flex-row p-4 border-b border-gray-200">
-                <TouchableOpacity
-                    onPress={() => setActiveTab("pupils")}
-                    className={`flex-1 py-2 ${activeTab === "pupils" ? "border-b-2 border-black" : ""
-                        }`}
+        {/* Tabs */}
+        <View className="flex-row p-4 border-b border-gray-200">
+          <TouchableOpacity
+            onPress={() => setActiveTab("pupils")}
+            className={`flex-1 py-2 ${
+              activeTab === "pupils" ? "border-b-2 border-black" : ""
+            }`}
+          >
+            <Text
+              className={`text-center font-semibold ${
+                activeTab === "pupils" ? "text-black" : "text-gray-500"
+              }`}
+            >
+              Pupils
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={() => setActiveTab("leaderboard")}
+            className={`flex-1 py-2 ${
+              activeTab === "leaderboard" ? "border-b-2 border-black" : ""
+            }`}
+          >
+            <Text
+              className={`text-center font-semibold ${
+                activeTab === "leaderboard" ? "text-black" : "text-gray-500"
+              }`}
+            >
+              Leaderboard
+            </Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* Content based on active tab */}
+        <View className="p-4">
+          {activeTab === "pupils"
+            ? // Pupils tab content
+              students &&
+              students.map(
+                (
+                  student: PupilInClassroom // changed Pupil to User type
+                ) => (
+                  <TouchableOpacity
+                    key={student.id}
+                    className="flex-row items-center bg-white rounded-lg p-4 mb-3 shadow-sm"
+                  >
+                    {/* Use DefaultAvatar for all students */}
+                    <View className="mr-4">
+                      <DefaultAvatar name={`${student.firstName}`} size={12} />
+                    </View>
+
+                    <View className="flex-1">
+                      <Text className="font-semibold text-base">
+                        {`${student.firstName} ${student.lastName}`}
+                      </Text>
+                    </View>
+
+                    <View className="flex-row items-center">
+                      <MaterialIcons
+                        name="bar-chart"
+                        size={22}
+                        color="#666"
+                        style={{ marginRight: 16 }}
+                      />
+                      <FontAwesome name="trash-o" size={20} color="#FF6B6B" />
+                    </View>
+                  </TouchableOpacity>
+                )
+              )
+            : // Leaderboard tab content - hardcoded without navigation
+              students &&
+              students.map((student: PupilInClassroom, index: number) => (
+                <View
+                  key={student.id}
+                  className="flex-row items-center bg-white rounded-lg p-4 mb-3 shadow-sm"
                 >
-                    <Text
-                        className={`text-center font-semibold ${activeTab === "pupils" ? "text-black" : "text-gray-500"
-                            }`}
-                    >
-                        Pupils
+                  {index === 0 ? (
+                    <View className="w-8 h-8 items-center justify-center mr-3">
+                      <FontAwesome5 name="crown" size={22} color="#FFD700" />
+                    </View>
+                  ) : (
+                    <View className="w-8 h-8 rounded-full bg-gray-300 items-center justify-center mr-3">
+                      <Text className="font-bold text-black">{index + 1}</Text>
+                    </View>
+                  )}
+
+                  {/* Avatar */}
+                  <View className="mr-3">
+                    <DefaultAvatar name={`${student.firstName}`} size={12} />
+                  </View>
+
+                  {/* Name */}
+                  <View className="flex-1">
+                    <Text className="font-semibold text-base">
+                      {`${student.firstName} ${student.lastName}`}
                     </Text>
-                </TouchableOpacity>
+                  </View>
 
-                <TouchableOpacity
-                    onPress={() => setActiveTab("leaderboard")}
-                    className={`flex-1 py-2 ${activeTab === "leaderboard" ? "border-b-2 border-black" : ""
-                        }`}
-                >
-                    <Text
-                        className={`text-center font-semibold ${activeTab === "leaderboard" ? "text-black" : "text-gray-500"
-                            }`}
-                    >
-                        Leaderboard
-                    </Text>
-                </TouchableOpacity>
-            </View>
-
-            {/* Content based on active tab */}
-            <View className="p-4">
-                {activeTab === "pupils"
-                    ? // Pupils tab content
-                    students &&
-                    students.map(
-                        (
-                            student: User, // changed Pupil to User type
-                        ) => (
-                            <TouchableOpacity
-                                key={student.id}
-                                className="flex-row items-center bg-white rounded-lg p-4 mb-3 shadow-sm"
-                            >
-                                {/* Use DefaultAvatar for all students */}
-                                <View className="mr-4">
-                                    <DefaultAvatar name={`${student.firstName}`} size={12} />
-                                </View>
-
-                                <View className="flex-1">
-                                    <Text className="font-semibold text-base">
-                                        {`${student.firstName} ${student.lastName}`}
-                                    </Text>
-                                </View>
-
-                                <View className="flex-row items-center">
-                                    <MaterialIcons
-                                        name="bar-chart"
-                                        size={22}
-                                        color="#666"
-                                        style={{ marginRight: 16 }}
-                                    />
-                                    <FontAwesome name="trash-o" size={20} color="#FF6B6B" />
-                                </View>
-                            </TouchableOpacity>
-                        ),
-                    )
-                    : // Leaderboard tab content - hardcoded without navigation
-                    students &&
-                    students.map((student: User, index: number) => (
-                        <View
-                            key={student.id}
-                            className="flex-row items-center bg-white rounded-lg p-4 mb-3 shadow-sm"
-                        >
-                            {index === 0 ? (
-                                <View className="w-8 h-8 items-center justify-center mr-3">
-                                    <FontAwesome5 name="crown" size={22} color="#FFD700" />
-                                </View>
-                            ) : (
-                                <View className="w-8 h-8 rounded-full bg-gray-300 items-center justify-center mr-3">
-                                    <Text className="font-bold text-black">{index + 1}</Text>
-                                </View>
-                            )}
-
-                            {/* Avatar */}
-                            <View className="mr-3">
-                                <DefaultAvatar name={`${student.firstName}`} size={12} />
-                            </View>
-
-                            {/* Name */}
-                            <View className="flex-1">
-                                <Text className="font-semibold text-base">
-                                    {`${student.firstName} ${student.lastName}`}
-                                </Text>
-                            </View>
-
-                            {/* Level */}
-                            <Text className="font-bold text-lg">
-                                {student.pupil?.level} Lvl
-                            </Text>
-                        </View>
-                    ))}
-            </View>
-        </ScrollView>
+                  {/* Level */}
+                  <Text className="font-bold text-lg">{student.level} Lvl</Text>
+                </View>
+              ))}
+        </View>
+      </ScrollView>
     );
 }

@@ -43,6 +43,7 @@ function AssignmentCard({ assignment }: AssignmentCardProps) {
           onPress={() => {
             setSelectedReadingAssignment(assignment);
 
+            console.log("Selected assignment:", assignment);
             const routePath =
               user?.role === "Teacher"
                 ? "/classroom/activity/teacherside"
