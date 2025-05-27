@@ -4,6 +4,7 @@ namespace LexiLearner.Interfaces
     public interface IUserRepository
     {
         Task<User?> GetUserByIdAsync(string userId);
+        Task<User?> GetUserByIdTrackedAsync(string userId);
         Task<User?> GetUserByEmail(string email);
         Task<User?> GetUserByUsername(string username);
         Task<User> Create(User user, string password);

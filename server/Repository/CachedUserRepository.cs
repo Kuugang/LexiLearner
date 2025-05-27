@@ -53,6 +53,11 @@ namespace LexiLearner.Repository
 
             return user;
         }
+        
+        public Task<User?> GetUserByIdTrackedAsync(string userId)
+        {
+            return _decorated.GetUserByIdTrackedAsync(userId);
+        }
 
         public async Task<User?> GetUserByEmail(string email)
         {

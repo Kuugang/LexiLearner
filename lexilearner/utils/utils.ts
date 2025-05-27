@@ -61,7 +61,7 @@ export const validateField = (
       return ""; // No error
 
     case "confirmPassword":
-      if (value !== form.password) return "Passwords no not match.";
+      if (value !== form.password) return "Passwords do not match.";
       return "";
 
     default:

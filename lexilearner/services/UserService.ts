@@ -27,7 +27,13 @@ export const updateProfile = async (updateProfileForm: Record<string, any>) => {
     null
   );
 
-  return await response.json();
+  const result = await response.json();
+
+  if (response.status !== 200 && response.status !== 201) {
+    throw new Error(result.message);
+  }
+
+  return result;
 };
 
 export const checkUserExist = async (fieldType: string, fieldValue: string) => {
@@ -47,6 +53,11 @@ export const checkUserExist = async (fieldType: string, fieldValue: string) => {
 
 export const deleteAccount = async () => {
   const response = await axiosInstance.delete(`/users/me`);
+
+  if (response.status !== 200 && response.status !== 204) {
+    throw new Error(response.data.message);
+  }
+
   return response.data;
 };
 

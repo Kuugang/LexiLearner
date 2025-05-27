@@ -144,6 +144,7 @@ namespace LexiLearner.Services
                     SecurityStamp = Guid.NewGuid().ToString()
                 };
                 await _userRepository.Create(user, hashedPassword);
+                await _userManager.RemovePasswordAsync(user);
             }
             await _userManager.AddLoginAsync(user, new UserLoginInfo("Google", GoogleId, "Google"));
 

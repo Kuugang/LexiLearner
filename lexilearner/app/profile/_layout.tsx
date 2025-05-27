@@ -6,6 +6,7 @@ function RootLayout() {
     <Stack screenOptions={{ headerShown: false }}>
       <Stack.Screen name="/settings" />
       <Stack.Screen name="/achievementslist" />
+      <Stack.Screen name="/changepassword" />
     </Stack>
   );
 }
