@@ -15,38 +15,33 @@ namespace LexiLearner.Services
 
         private readonly UserManager<User> _userManager;
         private readonly IUserRepository _userRepository;
-        private readonly IPupilService _pupilService;
-        // private readonly CachedUserRepository _userRepository;
-        private readonly ITwoFactorAuthService _twoFactorAuthService;
         private readonly IFileUploadService _fileUploadService;
 
-        public UserService(UserManager<User> userManager, IUserRepository userRepository, ITwoFactorAuthService twoFactorAuthService, IFileUploadService fileUploadService, IPupilService pupilService)
+        public UserService(UserManager<User> userManager, IUserRepository userRepository, IFileUploadService fileUploadService)
         {
             _userManager = userManager;
             _userRepository = userRepository;
-            _twoFactorAuthService = twoFactorAuthService;
             _fileUploadService = fileUploadService;
-            _pupilService = pupilService;
         }
 
-        public async Task<IEnumerable<User>> SearchUsersByRoleAsync(string role, string searchTerm)
+        public async Task<IEnumerable<User>> SearchUsersByRoleAsync(string Role, string SearchTerm)
         {
-            var usersInRole = await _userManager.GetUsersInRoleAsync(role);
+            var usersInRole = await _userManager.GetUsersInRoleAsync(Role);
 
-            if (string.IsNullOrWhiteSpace(searchTerm))
+            if (string.IsNullOrWhiteSpace(SearchTerm))
             {
                 return usersInRole;
             }
 
-            searchTerm = searchTerm.ToLower();
+            SearchTerm = SearchTerm.ToLower();
             var filteredUsers = usersInRole.Where(u =>
-                (u.UserName != null && u.UserName.ToLower().Contains(searchTerm)) ||
-                (u.Email != null && u.Email.ToLower().Contains(searchTerm)) ||
-                u.FirstName.ToLower().Contains(searchTerm) ||
-                u.LastName.ToLower().Contains(searchTerm)
+                (u.UserName != null && u.UserName.ToLower().Contains(SearchTerm)) ||
+                (u.Email != null && u.Email.ToLower().Contains(SearchTerm)) ||
+                u.FirstName.ToLower().Contains(SearchTerm) ||
+                u.LastName.ToLower().Contains(SearchTerm)
             ).ToList();
 
-            if (role == "Pupil")
+            if (Role == "Pupil")
             {
                 foreach (var user in filteredUsers)
                 {
@@ -60,52 +55,40 @@ namespace LexiLearner.Services
             return filteredUsers;
         }
 
-        public async Task<string> GetRole(User user)
+        public async Task<string> GetRole(User User)
         {
-            // string role = (await _userManager.GetRolesAsync(user))[0];
-            // return role;
-
-            var roles = await _userManager.GetRolesAsync(user);
+            var roles = await _userManager.GetRolesAsync(User);
             return roles.FirstOrDefault();
         }
 
-        public async Task<User?> GetUserByIdAsync(string userId)
+        public async Task<User?> GetUserByIdAsync(string UserId)
         {
-            return await _userRepository.GetUserByIdAsync(userId);
+            return await _userRepository.GetUserByIdAsync(UserId);
         }
 
-        public async Task<Pupil?> GetPupilByUserId(string userId)
+        public async Task<Pupil?> GetPupilByUserId(string UserId)
         {
-            return await _userRepository.GetPupilByUserId(userId);
+            return await _userRepository.GetPupilByUserId(UserId);
         }
 
-        public async Task<Teacher?> GetTeacherByUserId(string userId)
+        public async Task<Teacher?> GetTeacherByUserId(string UserId)
         {
-            return await _userRepository.GetTeacherByUserId(userId);
+            return await _userRepository.GetTeacherByUserId(UserId);
         }
 
-        public async Task<User?> GetUserByEmail(string email)
+        public async Task<User?> GetUserByEmail(string Email)
         {
-            return await _userRepository.GetUserByEmail(email);
+            return await _userRepository.GetUserByEmail(Email);
         }
 
-        public async Task<User?> GetUserByUsername(string username)
+        public async Task<User?> GetUserByUsername(string Username)
         {
-            return await _userRepository.GetUserByUsername(username);
+            return await _userRepository.GetUserByUsername(Username);
         }
 
-
-        // var emailService = new EmailService();
-        // // await emailService.SendEmailAsync("angelsheinen.cambarijan@cit.edu", "Lexi Learn", "Bang");
-        // // await emailService.SendEmailAsync("charlene.repuesto@cit.edu", "Lexi Learn", "Bang");
-        // // await emailService.SendEmailAsync("deo.talip@cit.edu", "Lexi Learn", "Bang");
-        // await emailService.SendEmailAsync("jake.bajo@cit.edu", "Lexi Learn", "Bang");
-        //
-        // // await emailService.SendEmailAsync("jakebajo11@gmail.com", "Lexi Learn", "Bang");
-
-        public async Task<ResponseDTO> GetUserProfile(ClaimsPrincipal token)
+        public async Task<ResponseDTO> GetUserProfile(ClaimsPrincipal Token)
         {
-            User? user = await GetUserFromToken(token);
+            User? user = await GetUserFromToken(Token);
             if (user == null)
             {
                 throw new ApplicationExceptionBase(
@@ -192,20 +175,20 @@ namespace LexiLearner.Services
             return response;
         }
 
-        public async Task<User?> GetUserFromToken(ClaimsPrincipal principal)
+        public async Task<User?> GetUserFromToken(ClaimsPrincipal Principal)
         {
-            if (principal == null) return null;
-            var userIdClaim = principal.FindFirst(ClaimTypes.NameIdentifier);
+            if (Principal == null) return null;
+            var userIdClaim = Principal.FindFirst(ClaimTypes.NameIdentifier);
             if (userIdClaim == null) return null;
 
             var userId = userIdClaim.Value;
             return await GetUserByIdAsync(userId);
         }
         
-        public async Task<User?> GetUserFromTokenTracked(ClaimsPrincipal principal)
+        public async Task<User?> GetUserFromTokenTracked(ClaimsPrincipal Principal)
         {
-            if (principal == null) return null;
-            var userIdClaim = principal.FindFirst(ClaimTypes.NameIdentifier);
+            if (Principal == null) return null;
+            var userIdClaim = Principal.FindFirst(ClaimTypes.NameIdentifier);
             if (userIdClaim == null) return null;
 
             var userId = userIdClaim.Value;
@@ -358,9 +341,9 @@ namespace LexiLearner.Services
             return response;
         }
 
-        public async Task<ResponseDTO> DeleteAccount(ClaimsPrincipal userPrincipal)
+        public async Task<ResponseDTO> DeleteAccount(ClaimsPrincipal UserPrincipal)
         {
-            User? user = await GetUserFromToken(userPrincipal);
+            User? user = await GetUserFromToken(UserPrincipal);
 
             if (user == null)
             {
@@ -375,126 +358,45 @@ namespace LexiLearner.Services
             return new SuccessResponseDTO("Account Deleted Successfully");
         }
 
-        public async Task<LoginStreak?> GetLoginStreak(ClaimsPrincipal user)
+        public async Task<Pupil?> GetPupilByPupilId(Guid PupilId)
         {
-            User? User = await GetUserFromToken(user);
-
-            if (User == null)
-            {
-                throw new ApplicationExceptionBase("User not found.", "Fetching login streak failed.", StatusCodes.Status404NotFound);
-            }
-
-            Pupil? pupil = await GetPupilByUserId(User.Id);
-            if (pupil == null)
-            {
-                throw new ApplicationExceptionBase("Pupil not found.", "Fetching login streak failed.", StatusCodes.Status404NotFound);
-            }
-
-            return await _userRepository.GetLoginStreak(pupil.Id);
+            Console.WriteLine($"oten PupilId: {PupilId}");
+            return await _userRepository.GetPupilByPupilId(PupilId);
         }
 
-        public async Task<LoginStreak> RecordLoginAsync(string userId)
+        public async Task<SessionDTO> CreateSession(ClaimsPrincipal User)
         {
-            var user = await _userRepository.GetUserByIdAsync(userId);
-
+            User? user = await GetUserFromToken(User);
             if (user == null)
-            {
-                throw new ApplicationExceptionBase("User not found.", "Recording login failed.", StatusCodes.Status404NotFound);
-            }
-
-            Pupil? pupil = await _userRepository.GetPupilByUserId(userId);
-            if (pupil == null)
-            {
-                throw new ApplicationExceptionBase("Pupil not found.", "Recording login failed.", StatusCodes.Status404NotFound);
-            }
-
-            var loginStreak = await _userRepository.GetLoginStreak(pupil.Id);
-            var today = DateTime.UtcNow.Date;
-
-            if (loginStreak == null)
-            {
-                loginStreak = new LoginStreak
-                {
-                    PupilId = pupil.Id,
-                    Pupil = pupil,
-                    CurrentStreak = 1,
-                    LastLoginDate = today,
-                    LongestStreak = 1
-                };
-
-                loginStreak = await _userRepository.CreateLoginStreak(loginStreak);
-            }
-            else
-            {
-                var daysSinceLastLogin = (today - loginStreak.LastLoginDate.Date).Days;
-
-                if (daysSinceLastLogin == 0)
-                {
-                    // User has already logged in today, no need to update streak
-                    return loginStreak;
-                }
-
-                if (daysSinceLastLogin == 1)
-                {
-                    loginStreak.CurrentStreak++;
-
-                    if (loginStreak.CurrentStreak > loginStreak.LongestStreak)
-                    {
-                        loginStreak.LongestStreak = loginStreak.CurrentStreak;
-                    }
-                }
-                else
-                {
-                    loginStreak.CurrentStreak = 1;
-                }
-
-                loginStreak.LastLoginDate = today;
-
-                await _userRepository.Update(loginStreak);
-            }
-
-            return loginStreak;
-        }
-
-        public async Task<Pupil?> GetPupilByPupilId(Guid pupilId)
-        {
-            Console.WriteLine($"oten PupilId: {pupilId}");
-            return await _userRepository.GetPupilByPupilId(pupilId);
-        }
-
-        public async Task<SessionDTO> CreateSession(ClaimsPrincipal user)
-        {
-            User? User = await GetUserFromToken(user);
-            if (User == null)
             {
                 throw new ApplicationExceptionBase("User not found.", "Creating session failed.", StatusCodes.Status404NotFound);
             }
 
             var session = new Session
             {
-                UserId = User.Id,
-                User = User
+                UserId = user.Id,
+                User = user
             };
 
             session = await _userRepository.CreateSession(session);
             return new SessionDTO(session);
         }
 
-        public async Task<SessionDTO> EndSession(Guid sessionId, ClaimsPrincipal user)
+        public async Task<SessionDTO> EndSession(Guid SessionId, ClaimsPrincipal User)
         {
-            User? User = await GetUserFromToken(user);
-            if (User == null)
+            User? user = await GetUserFromToken(User);
+            if (user == null)
             {
                 throw new ApplicationExceptionBase("User not found.", "Ending session failed.", StatusCodes.Status404NotFound);
             }
 
-            var session = await _userRepository.GetSessionById(sessionId);
+            var session = await _userRepository.GetSessionById(SessionId);
             if (session == null)
             {
                 throw new ApplicationExceptionBase("Session not found.", "Ending session failed.", StatusCodes.Status404NotFound);
             }
 
-            if (session.UserId != User.Id)
+            if (session.UserId != user.Id)
             {
                 throw new ApplicationExceptionBase("Unauthorized.", "Ending session failed.", StatusCodes.Status403Forbidden);
             }
@@ -506,21 +408,21 @@ namespace LexiLearner.Services
             return new SessionDTO(session);
         }
 
-        public async Task<Session?> GetSessionById(Guid sessionId, ClaimsPrincipal user)
+        public async Task<Session?> GetSessionById(Guid SessionId, ClaimsPrincipal User)
         {
-            User? User = await GetUserFromToken(user);
-            if (User == null)
+            User? user = await GetUserFromToken(User);
+            if (user == null)
             {
                 throw new ApplicationExceptionBase("User not found.", "Fetching session failed.", StatusCodes.Status404NotFound);
             }
 
-            var session = await _userRepository.GetSessionById(sessionId);
+            var session = await _userRepository.GetSessionById(SessionId);
             if (session == null)
             {
                 throw new ApplicationExceptionBase("Session not found.", "Fetching session failed.", StatusCodes.Status404NotFound);
             }
 
-            if (session.UserId != User.Id)
+            if (session.UserId != user.Id)
             {
                 throw new ApplicationExceptionBase("Unauthorized.", "Fetching session failed.", StatusCodes.Status403Forbidden);
             }
@@ -528,56 +430,9 @@ namespace LexiLearner.Services
             return session;
         }
 
-        public async Task<List<Session>> GetSessionsByUserId(string userId)
+        public async Task<List<Session>> GetSessionsByUserId(string UserId)
         {
-            return await _userRepository.GetSessionsByUserId(userId);
-        }
-
-        public async Task<List<PupilLeaderboard>> GetPupilLeaderboardByPupilId(Guid pupilId)
-        {
-            return await _userRepository.GetPupilLeaderboardByPupilId(pupilId);
-        }
-
-        public async Task<PupilLeaderboard> CreatePupilLeaderboardEntry(PupilLeaderboardDTO.Create request)
-        {
-            Pupil? pupil = await _pupilService.GetPupilById(request.PupilId);
-            if (pupil == null)
-            {
-                throw new ApplicationExceptionBase("Pupil not found", "Failed to create leaderboard entry", StatusCodes.Status404NotFound);
-            }
-
-            PupilLeaderboard pupilLeaderboard = new PupilLeaderboard
-            {
-                PupilId = request.PupilId,
-                Pupil = pupil,
-                Level = request.Level
-            };
-
-            pupilLeaderboard = await _userRepository.CreatePupilLeaderboardEntry(pupilLeaderboard);
-            return pupilLeaderboard;
-        }
-
-        public Task<List<PupilLeaderboard>> GetGlobal10Leaderboard()
-        {
-            return _userRepository.GetGlobal10Leaderboard();
-        }
-
-        public async Task<List<PupilLeaderboard>> GetPupilLeaderboard(ClaimsPrincipal user)
-        {
-            User? User = GetUserFromToken(user).Result;
-            if (User == null)
-            {
-                throw new ApplicationExceptionBase("User not found.", "Fetching leaderboard failed.", StatusCodes.Status404NotFound);
-            }
-
-            Pupil? pupil = GetPupilByUserId(User.Id).Result;
-            if (pupil == null)
-            {
-                throw new ApplicationExceptionBase("Pupil not found.", "Fetching leaderboard failed.", StatusCodes.Status404NotFound);
-            }
-
-            var leaderboardHist = await _userRepository.GetPupilLeaderboardByPupilId(pupil.Id);
-            return leaderboardHist;
+            return await _userRepository.GetSessionsByUserId(UserId);
         }
     }
 

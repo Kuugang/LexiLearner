@@ -164,38 +164,9 @@ namespace LexiLearner.Repository
         {
             User deletedUser = await _decorated.DeleteAccount(user);
 
-            // Invalidate related cache entries 
-
-            // comment lng sa basin kani nakapaguba ni profile user DDD:
-            // await InvalidateCacheAsync($"User_{user.Id}");
-            // await InvalidateCacheAsync($"User_Email_{user.Email}");
-            // await InvalidateCacheAsync($"User_Username_{user.UserName}");
-
             return deletedUser;
         }
 
-        public async Task<LoginStreak?> GetLoginStreak(Guid pupilId)
-        {
-            var cacheKey = $"LoginStreak_{pupilId}";
-            var streak = await GetFromCacheAsync<LoginStreak>(cacheKey);
-
-            if (streak is null)
-            {
-                streak = await _decorated.GetLoginStreak(pupilId);
-                if (streak is not null)
-                {
-                    await SetCacheAsync(cacheKey, streak, TimeSpan.FromMinutes(30));
-                }
-            }
-
-            return streak;
-        }
-
-        public async Task<LoginStreak> CreateLoginStreak(LoginStreak streak)
-        {
-            return await _decorated.CreateLoginStreak(streak);
-        }
-        
         public async Task<Pupil?> GetPupilByPupilId(Guid pupilId)
         {
             var cacheKey = $"Pupil_{pupilId}";
@@ -250,43 +221,6 @@ namespace LexiLearner.Repository
             }
 
             return sessions ?? new List<Session>();
-        }
-
-        public async Task<List<PupilLeaderboard>> GetPupilLeaderboardByPupilId(Guid pupilId)
-        {
-            var cacheKey = $"PupilLeaderboard_{pupilId}";
-            var pupilLeaderboard = await GetFromCacheAsync<List<PupilLeaderboard>>(cacheKey);
-            if (pupilLeaderboard is null)
-            {
-                pupilLeaderboard = await _decorated.GetPupilLeaderboardByPupilId(pupilId);
-                if (pupilLeaderboard is not null)
-                {
-                    await SetCacheAsync(cacheKey, pupilLeaderboard, TimeSpan.FromMinutes(30));
-                }
-            }
-            
-            return pupilLeaderboard ?? new List<PupilLeaderboard>();
-        }
-
-        public async Task<List<PupilLeaderboard>> GetGlobal10Leaderboard()
-        {
-            var cacheKey = $"Global10Leaderboard";
-            var global10Leaderboard = await GetFromCacheAsync<List<PupilLeaderboard>>(cacheKey);
-            if (global10Leaderboard is null)
-            {
-                global10Leaderboard = await _decorated.GetGlobal10Leaderboard();
-                if (global10Leaderboard is not null)
-                {
-                    await SetCacheAsync(cacheKey, global10Leaderboard, TimeSpan.FromMinutes(30));
-                }
-            }
-
-            return global10Leaderboard ?? new List<PupilLeaderboard>();
-        }
-
-        public Task<PupilLeaderboard> CreatePupilLeaderboardEntry(PupilLeaderboard pupilLeaderboard)
-        {
-            return _decorated.CreatePupilLeaderboardEntry(pupilLeaderboard);
         }
     }
 }
