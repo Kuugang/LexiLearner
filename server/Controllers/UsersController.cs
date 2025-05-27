@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using LexiLearner.Models.DTO;
 using LexiLearner.Interfaces;
 using LexiLearner.Models;
+using LexiLearner.Services;
 
 [ApiController]
 [Route("api/users")]
@@ -11,10 +12,12 @@ using LexiLearner.Models;
 public class UsersController : ControllerBase
 {
     private readonly IUserService _userService;
+    private readonly IPupilService _pupilService;
 
-    public UsersController(IUserService userService)
+    public UsersController(IUserService userService, IPupilService pupilService)
     {
         _userService = userService;
+        _pupilService = pupilService;
     }
 
     [HttpGet("me")]
@@ -88,7 +91,7 @@ public class UsersController : ControllerBase
             return StatusCode(StatusCodes.Status404NotFound, new ErrorResponseDTO("User not found.", StatusCodes.Status404NotFound));
         }
 
-        var loginStreak = await _userService.RecordLoginAsync(user.Id);
+        var loginStreak = await _pupilService.RecordLoginAsync(user.Id);
 
         return StatusCode(StatusCodes.Status200OK,
           new SuccessResponseDTO("Login streak recorded successfully.", new LoginStreakDTO(loginStreak)));
@@ -98,7 +101,7 @@ public class UsersController : ControllerBase
     [Authorize]
     public async Task<IActionResult> GetLoginStreak()
     {
-        var loginStreak = await _userService.GetLoginStreak(User);
+        var loginStreak = await _pupilService.GetLoginStreak(User);
 
         return StatusCode(StatusCodes.Status200OK,
           new SuccessResponseDTO("Login streak fetched successfully.", new LoginStreakDTO(loginStreak)));
@@ -108,7 +111,7 @@ public class UsersController : ControllerBase
     [Authorize]
     public async Task<IActionResult> GetLeaderBoard()
     {
-        var pupilLeaderboards = await _userService.GetPupilLeaderboard(User);
+        var pupilLeaderboards = await _pupilService.GetPupilLeaderboard(User);
 
         return StatusCode(StatusCodes.Status200OK,
           new SuccessResponseDTO("Leaderboard fetched successfully.", new PupilLeaderboardDTO(pupilLeaderboards.First())));
@@ -118,7 +121,7 @@ public class UsersController : ControllerBase
     [Authorize]
     public async Task<IActionResult> GetLeaderBoardHistory()
     {
-        var pupilLeaderboards = await _userService.GetPupilLeaderboard(User);
+        var pupilLeaderboards = await _pupilService.GetPupilLeaderboard(User);
 
         return StatusCode(StatusCodes.Status200OK,
           new SuccessResponseDTO("Leaderboard history fetched successfully.", pupilLeaderboards.Select(l => new PupilLeaderboardDTO(l)).ToList()));
@@ -206,7 +209,7 @@ public class UsersController : ControllerBase
     [Authorize]
     public async Task<IActionResult> GetGlobal10Leaderboard()
     {
-        var leaderboards = await _userService.GetGlobal10Leaderboard();
+        var leaderboards = await _pupilService.GetGlobal10Leaderboard();
 
         return StatusCode(StatusCodes.Status200OK,
           new SuccessResponseDTO("Top 10 Leaderboard fetched successfully.",
@@ -218,7 +221,7 @@ public class UsersController : ControllerBase
     [Authorize]
     public async Task<IActionResult> GetPupilLeaderboardByPupilId(Guid pupilId)
     {
-        var pupilLeaderboards = await _userService.GetPupilLeaderboardByPupilId(pupilId);
+        var pupilLeaderboards = await _pupilService.GetPupilLeaderboardByPupilId(pupilId);
 
         return StatusCode(StatusCodes.Status200OK,
           new SuccessResponseDTO("Leaderboard fetched successfully.", new PupilLeaderboardDTO(pupilLeaderboards.First())));
@@ -228,7 +231,7 @@ public class UsersController : ControllerBase
     [Authorize]
     public async Task<IActionResult> GetPupilLeaderboardHistoryByPupilId(Guid pupilId)
     {
-        var pupilLeaderboards = await _userService.GetPupilLeaderboardByPupilId(pupilId);
+        var pupilLeaderboards = await _pupilService.GetPupilLeaderboardByPupilId(pupilId);
 
         return StatusCode(StatusCodes.Status200OK,
           new SuccessResponseDTO("Leaderboard history fetched successfully.", pupilLeaderboards.Select(l => new PupilLeaderboardDTO(l)).ToList()));
