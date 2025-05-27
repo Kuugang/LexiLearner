@@ -17,12 +17,16 @@ namespace LexiLearner.Services
         // private readonly CachedUserRepository _cachedUserRepository;
         private readonly IUserRepository _userRepository;
         private readonly IUserService _userService;
+        private readonly IPupilRepository _pupilRepository;
+        private readonly IPupilService _pupilService;
         private readonly UserManager<User> _userManager;
         private readonly IJWTService _jwtService;
         private readonly IMemoryCache _memoryCache;
 
-        public AuthService(HttpClient httpClient, IUserRepository userRepository, IUserService userService, UserManager<User> userManager, IJWTService jwtService, IConfiguration configuration, IMemoryCache memoryCache)
+        public AuthService(HttpClient httpClient, IUserRepository userRepository, IUserService userService, IPupilRepository pupilRepository, IPupilService pupilService, UserManager<User> userManager, IJWTService jwtService, IConfiguration configuration, IMemoryCache memoryCache)
         {
+            _pupilService = pupilService;
+            _pupilRepository = pupilRepository;
             _userService = userService;
             _userManager = userManager;
             _httpClient = httpClient;
@@ -101,7 +105,7 @@ namespace LexiLearner.Services
                         Level = pupil.Level // Default level (e.g., 0)
                     };
 
-                    await _userRepository.CreatePupilLeaderboardEntry(leaderboardEntry);
+                    await _pupilRepository.CreatePupilLeaderboardEntry(leaderboardEntry);
                 }
             }
 

@@ -3,26 +3,19 @@ namespace LexiLearner.Interfaces
 {
     public interface IUserRepository
     {
-        Task<User?> GetUserByIdAsync(string userId);
-        Task<User?> GetUserByIdTrackedAsync(string userId);
-        Task<User?> GetUserByEmail(string email);
-        Task<User?> GetUserByUsername(string username);
-        Task<User> Create(User user, string password);
-        Task CreateProfile(User user, string role);
-        Task<User> DeleteAccount(User user);
-
+        Task<User?> GetUserByIdAsync(string UserId);
+        Task<User?> GetUserByIdTrackedAsync(string UserId);
+        Task<User?> GetUserByEmail(string Email);
+        Task<User?> GetUserByUsername(string Username);
+        Task<User> Create(User User, string Password);
+        Task CreateProfile(User User, string Role);
+        Task Update<T>(T entity) where T : class;
+        Task<User> DeleteAccount(User User);
         Task<Pupil?> GetPupilByUserId(string UserId);
         Task<Teacher?> GetTeacherByUserId(string UserId);
-
-        Task Update<T>(T entity) where T : class;
-        Task<LoginStreak?> GetLoginStreak(Guid pupilId);
-        Task<LoginStreak> CreateLoginStreak(LoginStreak streak);
-        Task<Pupil?> GetPupilByPupilId(Guid pupilId);
-        Task<Session> CreateSession(Session session);
-        Task<Session?> GetSessionById(Guid sessionId);
-        Task<List<Session>> GetSessionsByUserId(string userId);
-        Task<List<PupilLeaderboard>> GetPupilLeaderboardByPupilId(Guid pupilId);
-        Task<List<PupilLeaderboard>> GetGlobal10Leaderboard();
-        Task<PupilLeaderboard> CreatePupilLeaderboardEntry(PupilLeaderboard pupilLeaderboard);
+        Task<Pupil?> GetPupilByPupilId(Guid PupilId);
+        Task<Session> CreateSession(Session Session);
+        Task<Session?> GetSessionById(Guid SessionId);
+        Task<List<Session>> GetSessionsByUserId(string UserId);  
 	}
 }

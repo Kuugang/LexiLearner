@@ -19,27 +19,27 @@ namespace LexiLearner.Repository
             _userManager = userManager;
         }
 
-        public async Task<User?> GetUserByIdAsync(string userId)
+        public async Task<User?> GetUserByIdAsync(string UserId)
         {
-            return await _userManager.Users.AsNoTracking().FirstOrDefaultAsync(u => u.Id == userId);
+            return await _userManager.Users.AsNoTracking().FirstOrDefaultAsync(u => u.Id == UserId);
         }
-        public async Task<User?> GetUserByIdTrackedAsync(string userId)
+        public async Task<User?> GetUserByIdTrackedAsync(string UserId)
         {
-            return await _userManager.Users.FirstOrDefaultAsync(u => u.Id == userId);
+            return await _userManager.Users.FirstOrDefaultAsync(u => u.Id == UserId);
         }
-        public async Task<User?> GetUserByEmail(string email)
+        public async Task<User?> GetUserByEmail(string Email)
         {
-            return await _userManager.FindByEmailAsync(email);
-        }
-
-        public async Task<User?> GetUserByUsername(string username)
-        {
-            return await _userManager.FindByNameAsync(username);
+            return await _userManager.FindByEmailAsync(Email);
         }
 
-        public async Task<User> Create(User user, string password)
+        public async Task<User?> GetUserByUsername(string Username)
         {
-            var result = await _userManager.CreateAsync(user, password);
+            return await _userManager.FindByNameAsync(Username);
+        }
+
+        public async Task<User> Create(User User, string Password)
+        {
+            var result = await _userManager.CreateAsync(User, Password);
 
             if (!result.Succeeded)
             {
@@ -51,24 +51,24 @@ namespace LexiLearner.Repository
             }
 
             await _context.SaveChangesAsync();
-            return user;
+            return User;
         }
 
-        public async Task<User> DeleteAccount(User user)
+        public async Task<User> DeleteAccount(User User)
         {
-            _context.Users.Remove(user);
+            _context.Users.Remove(User);
             await _context.SaveChangesAsync();
-            return user;
+            return User;
         }
 
-        public async Task CreateProfile(User user, string role)
+        public async Task CreateProfile(User User, string Role)
         {
             //TODO: FIX
-            user = await _userManager.FindByIdAsync(user.Id);
+            User = await _userManager.FindByIdAsync(User.Id);
             //user = JsonSerializer.Deserialize<User>(JsonSerializer.Serialize(user));
-            await _userManager.AddToRoleAsync(user, role);
+            await _userManager.AddToRoleAsync(User, Role);
 
-            switch (role)
+            switch (Role)
             {
                 case "Pupil":
                     Pupil pupil = new Pupil
@@ -76,8 +76,8 @@ namespace LexiLearner.Repository
                         // UserId = trackedUser.Id,
                         // User = trackedUser, //
 
-                        UserId = user.Id,
-                        User = user, //
+                        UserId = User.Id,
+                        User = User, //
                     };
                     await _context.Pupil.AddAsync(pupil);
                     break;
@@ -87,15 +87,15 @@ namespace LexiLearner.Repository
                         // UserId = trackedUser.Id,
                         // User = trackedUser, //
 
-                        UserId = user.Id,
-                        User = user, //
+                        UserId = User.Id,
+                        User = User, //
                     };
                     await _context.Teacher.AddAsync(teacher);
                     break;
             }
 
             await _context.SaveChangesAsync();
-            _context.Entry(user).State = EntityState.Detached;
+            _context.Entry(User).State = EntityState.Detached;
         }
 
         public async Task<Pupil?> GetPupilByUserId(string UserId)
@@ -118,76 +118,34 @@ namespace LexiLearner.Repository
             await _context.SaveChangesAsync();
         }
 
-        public async Task<LoginStreak?> GetLoginStreak(Guid pupilId)
+        public async Task<Pupil?> GetPupilByPupilId(Guid PupilId)
         {
-            return await _context.LoginStreak.AsNoTracking().FirstOrDefaultAsync(l => l.PupilId == pupilId);
+            return await _context.Pupil.FirstOrDefaultAsync(p => p.Id == PupilId);
         }
 
-
-        public async Task<LoginStreak> CreateLoginStreak(LoginStreak streak)
+        public async Task<Session> CreateSession(Session Session)
         {
-            _context.Attach(streak.Pupil);
-            await _context.LoginStreak.AddAsync(streak);
+            _context.Attach(Session.User);
+            await _context.Session.AddAsync(Session);
             await _context.SaveChangesAsync();
-
-            return streak;
+            return Session;
         }
 
-        public async Task<Pupil?> GetPupilByPupilId(Guid pupilId)
-        {
-            return await _context.Pupil.FirstOrDefaultAsync(p => p.Id == pupilId);
-        }
-
-        public async Task<Session> CreateSession(Session session)
-        {
-            _context.Attach(session.User);
-            await _context.Session.AddAsync(session);
-            await _context.SaveChangesAsync();
-            return session;
-        }
-
-        public async Task<Session?> GetSessionById(Guid sessionId)
+        public async Task<Session?> GetSessionById(Guid SessionId)
         {
             return await _context.Session
                 .AsNoTracking()
                 .Include(s => s.User)
-                .FirstOrDefaultAsync(s => s.Id == sessionId);
+                .FirstOrDefaultAsync(s => s.Id == SessionId);
         }
 
-        public async Task<List<Session>> GetSessionsByUserId(string userId)
+        public async Task<List<Session>> GetSessionsByUserId(string UserId)
         {
             return await _context.Session
                 .AsNoTracking()
                 .Include(s => s.User)
-                .Where(s => s.UserId == userId)
+                .Where(s => s.UserId == UserId)
                 .ToListAsync();
-        }
-
-        public async Task<List<PupilLeaderboard>> GetPupilLeaderboardByPupilId(Guid pupilId)
-        {
-            return await _context.PupilLeaderboard
-                .Where(pl => pl.PupilId == pupilId)
-                .OrderByDescending(pl => pl.Level)
-                .ToListAsync();
-        }
-
-        public async Task<PupilLeaderboard> CreatePupilLeaderboardEntry(PupilLeaderboard pupilLeaderboard)
-        {
-            _context.Attach(pupilLeaderboard.Pupil);
-            await _context.PupilLeaderboard.AddAsync(pupilLeaderboard);
-            await _context.SaveChangesAsync();
-            return pupilLeaderboard;
-        }
-
-        public async Task<List<PupilLeaderboard>> GetGlobal10Leaderboard()
-        {
-            var allLeaderboards = await _context.PupilLeaderboard.AsNoTracking().ToListAsync();
-            return allLeaderboards
-                .GroupBy(pl => pl.PupilId)
-                .Select(g => g.OrderByDescending(pl => pl.Level).First())
-                .OrderByDescending(pl => pl.Level)
-                .Take(10)
-                .ToList();
         }
     }
 }
