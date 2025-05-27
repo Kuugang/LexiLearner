@@ -20,16 +20,14 @@ namespace LexiLearner.Services
         private readonly DataContext _context;
         private readonly IMinigameRepository _minigameRepository;
         private readonly IReadingMaterialRepository _readingMaterialRepository;
-        private readonly IReadingAssignmentService _readingAssignmentService;
 
-        public ClassroomService(IClassroomRepository classroomRepository, IUserService userService, IUserRepository userRepository, DataContext context, IMinigameRepository minigameRepository, IReadingMaterialRepository readingMaterialRepository, IReadingAssignmentService readingAssignmentService)
+        public ClassroomService(IClassroomRepository classroomRepository, IUserService userService, IUserRepository userRepository, DataContext context, IMinigameRepository minigameRepository, IReadingMaterialRepository readingMaterialRepository)
         {
             _classroomRepository = classroomRepository;
             _userService = userService;
             _userRepository = userRepository;
             _readingMaterialRepository = readingMaterialRepository;
             _minigameRepository = minigameRepository;
-            _readingAssignmentService = readingAssignmentService;
             _context = context;
         }
 
