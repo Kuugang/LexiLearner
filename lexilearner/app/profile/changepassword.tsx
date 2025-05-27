@@ -11,11 +11,11 @@ import { Eye, EyeOff, KeyRound } from "lucide-react-native";
 import { Input } from "@/components/ui/input";
 import { useUserStore } from "@/stores/userStore";
 import { router } from "expo-router";
-// Removed incorrect import of profile component
+import LoadingScreenForm from "@/components/LoadingScreenForm";
 
 export default function ChangePassword() {
   const setIsLoading = useGlobalStore((state) => state.setIsLoading);
-
+  const isLoading = useGlobalStore((state) => state.isLoading);
   // Add local state for form and formErrors
   const [form, setForm] = useState({
     currentPassword: "",
@@ -38,13 +38,9 @@ export default function ChangePassword() {
         newErrors[field] = error;
       });
 
-    //   if (form.currentPassword === "") {
-    //     newErrors.currentPassword = "Current password is required";
-    //   }
-
       setFormErrors(newErrors);
       if (Object.keys(newErrors).length > 0) return;
-  
+
       await updateProfile(form);
       Toast.show({
         type: "success",
@@ -64,158 +60,162 @@ export default function ChangePassword() {
   };
 
   return (
-    <ScrollView className="bg-white">
-      <View className="flex-1 gap-10 p-8 h-full justify-around">
-        <BackHeader />
-        <Text className="font-black text-2xl">Change your password</Text>
-        <View className="flex gap-3 justify-around">
-          <View className="flex gap-2">
-            <View>
-              <View className="relative">
-                <KeyRound
-                  size={20}
-                  color="#888"
-                  style={{
-                    position: "absolute",
-                    left: 10,
-                    top: 12,
-                    zIndex: 1,
-                  }}
-                />
+    <>
+      <ScrollView className="bg-white">
+        <View className="flex-1 gap-10 p-8 h-full justify-around">
+          <BackHeader />
+          <Text className="font-black text-2xl">Change your password</Text>
+          <View className="flex gap-3 justify-around">
+            <View className="flex gap-2">
+              <View>
+                <View className="relative">
+                  <KeyRound
+                    size={20}
+                    color="#888"
+                    style={{
+                      position: "absolute",
+                      left: 10,
+                      top: 12,
+                      zIndex: 1,
+                    }}
+                  />
 
-                <Input
-                  className="pl-10 py-2 rounded-xl shadow-xl"
-                  placeholder="Current Password"
-                  value={form.currentPassword}
-                  secureTextEntry={showCurrentPassword ? false : true}
-                  onChangeText={(value: string) =>
-                    setForm({ ...form, currentPassword: value })
-                  }
-                  aria-labelledby="inputLabel"
-                  aria-errormessage="inputError"
-                />
+                  <Input
+                    className="pl-10 py-2 rounded-xl shadow-xl"
+                    placeholder="Current Password"
+                    value={form.currentPassword}
+                    secureTextEntry={showCurrentPassword ? false : true}
+                    onChangeText={(value: string) =>
+                      setForm({ ...form, currentPassword: value })
+                    }
+                    aria-labelledby="inputLabel"
+                    aria-errormessage="inputError"
+                  />
+                </View>
+
+                <TouchableOpacity
+                  onPress={() => setShowCurrentPassword((prev) => !prev)}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 h-6 w-6 p-0 text-muted-foreground"
+                >
+                  {showCurrentPassword ? (
+                    <EyeOff size={20} color="#888" />
+                  ) : (
+                    <Eye size={20} color="#888" />
+                  )}
+                </TouchableOpacity>
               </View>
-
-              <TouchableOpacity
-                onPress={() => setShowCurrentPassword((prev) => !prev)}
-                className="absolute right-2 top-1/2 -translate-y-1/2 h-6 w-6 p-0 text-muted-foreground"
-              >
-                {showCurrentPassword ? (
-                  <EyeOff size={20} color="#888" />
-                ) : (
-                  <Eye size={20} color="#888" />
-                )}
-              </TouchableOpacity>
+              {formErrors.currentPassword && (
+                <Text className="text-destructive">
+                  {formErrors.currentPassword}
+                </Text>
+              )}
             </View>
-            {formErrors.currentPassword && (
-              <Text className="text-destructive">
-                {formErrors.currentPassword}
-              </Text>
-            )}
           </View>
-        </View>
 
-        <View className="flex gap-3 justify-around">
-          <View className="flex gap-2">
-            <View>
-              <View className="relative">
-                <KeyRound
-                  size={20}
-                  color="#888"
-                  style={{
-                    position: "absolute",
-                    left: 10,
-                    top: 12,
-                    zIndex: 1,
-                  }}
-                />
+          <View className="flex gap-3 justify-around">
+            <View className="flex gap-2">
+              <View>
+                <View className="relative">
+                  <KeyRound
+                    size={20}
+                    color="#888"
+                    style={{
+                      position: "absolute",
+                      left: 10,
+                      top: 12,
+                      zIndex: 1,
+                    }}
+                  />
 
-                <Input
-                  className="pl-10 py-2 rounded-xl shadow-xl"
-                  placeholder="New Password"
-                  value={form.password}
-                  secureTextEntry={showNewPassword ? false : true}
-                  onChangeText={(value: string) =>
-                    setForm({ ...form, password: value })
-                  }
-                  aria-labelledby="inputLabel"
-                  aria-errormessage="inputError"
-                />
+                  <Input
+                    className="pl-10 py-2 rounded-xl shadow-xl"
+                    placeholder="New Password"
+                    value={form.password}
+                    secureTextEntry={showNewPassword ? false : true}
+                    onChangeText={(value: string) =>
+                      setForm({ ...form, password: value })
+                    }
+                    aria-labelledby="inputLabel"
+                    aria-errormessage="inputError"
+                  />
+                </View>
+
+                <TouchableOpacity
+                  onPress={() => setShowNewPassword((prev) => !prev)}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 h-6 w-6 p-0 text-muted-foreground"
+                >
+                  {showNewPassword ? (
+                    <EyeOff size={20} color="#888" />
+                  ) : (
+                    <Eye size={20} color="#888" />
+                  )}
+                </TouchableOpacity>
               </View>
-
-              <TouchableOpacity
-                onPress={() => setShowNewPassword((prev) => !prev)}
-                className="absolute right-2 top-1/2 -translate-y-1/2 h-6 w-6 p-0 text-muted-foreground"
-              >
-                {showNewPassword ? (
-                  <EyeOff size={20} color="#888" />
-                ) : (
-                  <Eye size={20} color="#888" />
-                )}
-              </TouchableOpacity>
+              {formErrors.password && (
+                <Text className="text-destructive">{formErrors.password}</Text>
+              )}
             </View>
-            {formErrors.password && (
-              <Text className="text-destructive">{formErrors.password}</Text>
-            )}
           </View>
-        </View>
 
-        <View className="flex gap-3 justify-around">
-          <View className="flex gap-2">
-            <View>
-              <View className="relative">
-                <KeyRound
-                  size={20}
-                  color="#888"
-                  style={{
-                    position: "absolute",
-                    left: 10,
-                    top: 12,
-                    zIndex: 1,
-                  }}
-                />
+          <View className="flex gap-3 justify-around">
+            <View className="flex gap-2">
+              <View>
+                <View className="relative">
+                  <KeyRound
+                    size={20}
+                    color="#888"
+                    style={{
+                      position: "absolute",
+                      left: 10,
+                      top: 12,
+                      zIndex: 1,
+                    }}
+                  />
 
-                <Input
-                  className="pl-10 py-2 rounded-xl shadow-xl"
-                  placeholder="Confirm Password"
-                  value={form.confirmPassword}
-                  secureTextEntry={showConfirmPassword ? false : true}
-                  onChangeText={(value: string) =>
-                    setForm({ ...form, confirmPassword: value })
-                  }
-                  aria-labelledby="inputLabel"
-                  aria-errormessage="inputError"
-                />
+                  <Input
+                    className="pl-10 py-2 rounded-xl shadow-xl"
+                    placeholder="Confirm Password"
+                    value={form.confirmPassword}
+                    secureTextEntry={showConfirmPassword ? false : true}
+                    onChangeText={(value: string) =>
+                      setForm({ ...form, confirmPassword: value })
+                    }
+                    aria-labelledby="inputLabel"
+                    aria-errormessage="inputError"
+                  />
+                </View>
+
+                <TouchableOpacity
+                  onPress={() => setShowConfirmPassword((prev) => !prev)}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 h-6 w-6 p-0 text-muted-foreground"
+                >
+                  {showConfirmPassword ? (
+                    <EyeOff size={20} color="#888" />
+                  ) : (
+                    <Eye size={20} color="#888" />
+                  )}
+                </TouchableOpacity>
               </View>
-
-              <TouchableOpacity
-                onPress={() => setShowConfirmPassword((prev) => !prev)}
-                className="absolute right-2 top-1/2 -translate-y-1/2 h-6 w-6 p-0 text-muted-foreground"
-              >
-                {showConfirmPassword ? (
-                  <EyeOff size={20} color="#888" />
-                ) : (
-                  <Eye size={20} color="#888" />
-                )}
-              </TouchableOpacity>
+              {formErrors.confirmPassword && (
+                <Text className="text-destructive">
+                  {formErrors.confirmPassword}
+                </Text>
+              )}
             </View>
-            {formErrors.confirmPassword && (
-              <Text className="text-destructive">
-                {formErrors.confirmPassword}
-              </Text>
-            )}
           </View>
-        </View>
 
-        <Button
-          variant="dropshadow"
-          size={null}
-          onPress={() => handleChangePassword()}
-          className="my-2 bg-yellowOrange"
-        >
-          <Text>Save</Text>
-        </Button>
-      </View>
-    </ScrollView>
+          <Button
+            variant="dropshadow"
+            size={null}
+            onPress={() => handleChangePassword()}
+            className="my-2 bg-yellowOrange"
+          >
+            <Text>Save</Text>
+          </Button>
+        </View>
+      </ScrollView>
+
+      <LoadingScreenForm visible={isLoading} />
+    </>
   );
 }
