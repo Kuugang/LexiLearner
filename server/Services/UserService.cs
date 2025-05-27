@@ -201,10 +201,20 @@ namespace LexiLearner.Services
             var userId = userIdClaim.Value;
             return await GetUserByIdAsync(userId);
         }
+        
+        public async Task<User?> GetUserFromTokenTracked(ClaimsPrincipal principal)
+        {
+            if (principal == null) return null;
+            var userIdClaim = principal.FindFirst(ClaimTypes.NameIdentifier);
+            if (userIdClaim == null) return null;
+
+            var userId = userIdClaim.Value;
+            return await _userRepository.GetUserByIdTrackedAsync(userId);
+        }
 
         public async Task<ResponseDTO> UpdateProfile(UpdateProfileDTO UpdateProfileDTO, ClaimsPrincipal User)
         {
-            User? user = await GetUserFromToken(User);
+            User? user = await GetUserFromTokenTracked(User);
 
             if (user == null)
             {
@@ -250,6 +260,41 @@ namespace LexiLearner.Services
             if (UpdateProfileDTO.Avatar != null)
             {
                 user.Avatar = _fileUploadService.Upload(UpdateProfileDTO.Avatar, "Avatar\\");
+                update = true;
+            }
+            
+            if (!string.IsNullOrEmpty(UpdateProfileDTO.Password))
+            {
+                IdentityResult passwordResult;
+
+                if (!string.IsNullOrEmpty(UpdateProfileDTO.CurrentPassword))
+                {
+                    passwordResult = await _userManager.ChangePasswordAsync(user, UpdateProfileDTO.CurrentPassword, UpdateProfileDTO.Password);
+                }
+                else
+                {
+                    if (await _userManager.HasPasswordAsync(user))
+                    {
+                        throw new ApplicationExceptionBase(
+                            "Current password is required to change password.",
+                            "Password Update Failed",
+                            StatusCodes.Status400BadRequest
+                        );
+                    }
+
+                    passwordResult = await _userManager.AddPasswordAsync(user, UpdateProfileDTO.Password);
+                }
+
+                if (!passwordResult.Succeeded)
+                {
+                    string errors = string.Join("; ", passwordResult.Errors.Select(e => e.Description));
+                    throw new ApplicationExceptionBase(
+                        errors,
+                        "Password Update Failed",
+                        StatusCodes.Status400BadRequest
+                    );
+                }
+
                 update = true;
             }
 

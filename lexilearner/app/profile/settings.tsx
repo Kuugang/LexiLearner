@@ -12,7 +12,7 @@ import { useAuthStore } from "@/stores/authStore";
 import * as ImagePicker from "expo-image-picker";
 
 //Components
-import { View, ScrollView, Image, Pressable } from "react-native";
+import { View, ScrollView, Image, Pressable, TouchableOpacity, TextInput } from "react-native";
 import { Text } from "@/components/ui/text";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -234,10 +234,6 @@ export default function Settings() {
             ></Input>
           </View>
 
-          <View className="py-1">
-            <Text className="font-bold">Password</Text>
-            <Input placeholder="******"></Input>
-          </View>
           <View className="m-5"></View>
           {isProfileChanged && (
             <Button
@@ -253,6 +249,15 @@ export default function Settings() {
           <Button
             variant="dropshadow"
             size={null}
+            onPress={() => router.push("/profile/changepassword")}
+            className="bg-gray"
+          >
+            <Text className="font-bold text-white">Change Password</Text>
+          </Button>
+
+          <Button
+            variant="dropshadow"
+            size={null}
             onPress={() => setDeleteAccountModalVisible(true)}
             className="bg-orange"
           >
@@ -262,7 +267,11 @@ export default function Settings() {
           <Button
             variant="dropshadow"
             size={null}
-            onPress={() => setLogoutModalVisible(true)}
+            onPress={() => {
+              console.log("logging out..");
+              setLogoutModalVisible(true);
+              console.log(logoutModalVisible);
+            }}
             className="bg-yellowOrange mb-16"
           >
             <Text className="font-bold">Log Out</Text>

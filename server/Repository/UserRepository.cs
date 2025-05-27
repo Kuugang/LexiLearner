@@ -23,6 +23,10 @@ namespace LexiLearner.Repository
         {
             return await _userManager.Users.AsNoTracking().FirstOrDefaultAsync(u => u.Id == userId);
         }
+        public async Task<User?> GetUserByIdTrackedAsync(string userId)
+        {
+            return await _userManager.Users.FirstOrDefaultAsync(u => u.Id == userId);
+        }
         public async Task<User?> GetUserByEmail(string email)
         {
             return await _userManager.FindByEmailAsync(email);

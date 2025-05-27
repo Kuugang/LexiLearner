@@ -10,7 +10,11 @@ namespace LexiLearner.Models.DTO
         public int? Age { get; set; }
         public int? GradeLevel { get; set; }
         public bool? TwoFactorEnabled { get; set; }
-
+        
+        // for password change
+        public string? CurrentPassword { get; set; }
+        public string? Password { get; set; }
+        
         //Can only be used when role is initially null
         public Roles? Role { get; set; }
     }
