@@ -12,7 +12,7 @@ import FillInTheBlank from "./fillintheblanks";
 import SentenceArrangement from "./sentencearrangement";
 import { Minigame, MinigameType } from "@/models/Minigame";
 import WordHunt from "./wordhunt";
-import TwoTruthsOneLie from "./twotruthsoneLie";
+import TwoTruthsOneLie from "./twotruthsonelie";
 import { View, Text, ActivityIndicator } from "react-native";
 import { useReadingSessionStore } from "@/stores/readingSessionStore";
 import { useReadingAssignmentStore } from "@/stores/readingAssignmentStore";
@@ -32,11 +32,11 @@ const { width } = Dimensions.get("window");
 
 function Play() {
   const selectedReadingAssignment = useReadingAssignmentStore(
-    (state) => state.selectedReadingAssignment
+    (state) => state.selectedReadingAssignment,
   );
 
   const selectedReadingContent = useReadingContentStore(
-    (state) => state.selectedContent
+    (state) => state.selectedContent,
   );
 
   const { mutateAsync: CreateAssignmentLog } = useCreateAssignmentLog();
@@ -46,7 +46,7 @@ function Play() {
   const userRole = useUserStore((state) => state.user?.role);
 
   const currentReadingSession = useReadingSessionStore(
-    (state) => state.currentSession
+    (state) => state.currentSession,
   );
 
   const {
@@ -81,7 +81,7 @@ function Play() {
     selectedReadingAssignment != null
       ? useGetMinigameLogByMIDRSID(
           selectedReadingAssignment?.minigameId ?? "",
-          currentReadingSession?.id
+          currentReadingSession?.id,
         )
       : { refetch: async () => undefined };
 
