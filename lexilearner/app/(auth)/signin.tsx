@@ -30,15 +30,12 @@ const SignIn = () => {
 
   const [form, setForm] = useState({
     // kang angel guro ni
-    email: "jel@g.com",
-    password: "Angel!123",
+    // email: "jel@g.com",
+    // password: "Angel!123",
 
     // deo accounts
-    // mrekajojab@gmail.com
-    // Maotka1!
-
-    // email: "mrekajojab@gmail.com",
-    // password: "Maotka1!",
+    email: "mrekajojab@gmail.com",
+    password: "Maotka1!",
   });
 
   const [formErrors, setFormErrors] = useState({

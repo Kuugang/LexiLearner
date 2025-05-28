@@ -114,7 +114,7 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 17,
     fontWeight: "600",
-    color: "#000",
+    color: "#101010",
     textAlign: "center",
   },
   cancelButtonContainer: {
@@ -123,7 +123,7 @@ const styles = StyleSheet.create({
   },
   cancelButton: {
     fontSize: 16,
-    color: "#007AFF",
+    color: "#2e1e39",
   },
   addButtonContainer: {
     minWidth: 50,
@@ -131,7 +131,7 @@ const styles = StyleSheet.create({
   },
   addButton: {
     fontSize: 16,
-    color: "#000",
+    color: "#2e1e39",
     fontWeight: "600",
   },
   searchContainer: {
@@ -366,7 +366,7 @@ export default function AddPupilModal({
           </TouchableOpacity>
 
           <View style={styles.headerTitleContainer}>
-            <Text style={styles.headerTitle}>Choose pupil</Text>
+            <Text style={styles.headerTitle}>Choose Pupil</Text>
           </View>
 
           <View style={styles.addButtonContainer}>
