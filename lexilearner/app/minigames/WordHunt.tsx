@@ -55,8 +55,8 @@ function WordHuntBtn({
                             : "bg-white"
                     }`}
                 style={{
-                    width: 100,
-                    height: 100,
+                    width: 92,
+                    height: 92,
                 }}
             >
                 <Text
@@ -200,7 +200,7 @@ export default function WordHunt({
                         Find words that have appeared in the reading material!
                     </Text>
                 </View>
-                <View className="flex-row flex-wrap justify-center gap-4 mt-6 px-2">
+                <View className="flex-row flex-wrap justify-center gap-2 mt-6">
                     {shuffledWords.map((word, i) => (
                         <WordHuntBtn
                             key={i}
