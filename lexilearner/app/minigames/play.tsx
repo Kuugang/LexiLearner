@@ -12,7 +12,7 @@ import FillInTheBlank from "./fillintheblanks";
 import SentenceArrangement from "./sentencearrangement";
 import { Minigame, MinigameType } from "@/models/Minigame";
 import WordHunt from "./wordhunt";
-import TwoTruthsOneLie from "./twotruthsonelie";
+import TwoTruthsOneLie from "./twotruthsoneLie";
 import { View, Text, ActivityIndicator } from "react-native";
 import { useReadingSessionStore } from "@/stores/readingSessionStore";
 import { useReadingAssignmentStore } from "@/stores/readingAssignmentStore";
