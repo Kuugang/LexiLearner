@@ -93,7 +93,7 @@ export default function Profile() {
                   ? {
                       uri: `${API_URL.replace(
                         /\/api\/?$/,
-                        "/"
+                        "/",
                       )}${user.avatar.replace(/^\/+/, "")}`,
                     }
                   : require("@/assets/images/default_pfp.png")
@@ -192,7 +192,7 @@ export default function Profile() {
                   {achievementsQuery.data.map(
                     (a: Achievement, index: number) => (
                       <AwardIcon badge={`${a.badge}`} key={index} />
-                    )
+                    ),
                   )}
                 </View>
               </View>

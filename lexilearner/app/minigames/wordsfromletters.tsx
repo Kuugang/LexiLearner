@@ -10,7 +10,7 @@ import { useMiniGameStore } from "@/stores/miniGameStore";
 import { View, ScrollView, TouchableOpacity, BackHandler } from "react-native";
 import { Text } from "~/components/ui/text";
 import { Heart, Shuffle } from "lucide-react-native";
-import { CorrectSound } from "@/utils/sounds";
+import { CorrectSound, IncorrectSound } from "@/utils/sounds";
 import { Progress } from "@/components/ui/progress";
 import { Minigame, MinigameType } from "@/models/Minigame";
 import { useCreateMinigameLog } from "@/services/minigameService";
@@ -81,6 +81,7 @@ export default function WordsFromLetters({
 
         setTimeout(resetGuess, 500);
       } else {
+        IncorrectSound.play();
         addIncorrectAnswer(word);
         resetStreak();
         decrementLives();

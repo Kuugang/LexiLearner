@@ -7,6 +7,7 @@ import Animated, {
   withSequence,
   withTiming,
 } from "react-native-reanimated";
+import { CorrectSound, IncorrectSound } from "@/utils/sounds";
 import { Progress } from "@/components/ui/progress";
 import { Heart } from "lucide-react-native";
 import { useWordHuntMinigameStore } from "@/stores/miniGameStore";
@@ -126,9 +127,11 @@ export default function WordHunt({
   const onPress = useCallback(
     (word: string) => {
       if (correctAnswers.includes(word) && lives > 0) {
+        CorrectSound.play();
         incrementStreak();
         addCorrectAttempt(word);
       } else {
+        IncorrectSound.play();
         addIncorrectAttempt(word);
         decrementLives();
         resetStreak();

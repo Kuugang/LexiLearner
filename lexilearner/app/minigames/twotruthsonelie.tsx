@@ -10,6 +10,7 @@ import {
   useTwoTruthsOneLieGameStore,
   useMiniGameStore,
 } from "@/stores/miniGameStore";
+import { CorrectSound, IncorrectSound } from "@/utils/sounds";
 import { Minigame, MinigameType } from "@/models/Minigame";
 import { useCreateMinigameLog } from "@/services/minigameService";
 import { useUserStore } from "@/stores/userStore";
@@ -45,23 +46,26 @@ export default function TwoTruthsOneLie({
     if (answered) return;
     setAnswered(true);
 
+    if (answer) {
+      IncorrectSound.play();
+    } else {
+      CorrectSound.play();
+    }
     try {
       let score = answer === true ? 0 : 1;
       console.log("Two Truths 1 Lie Game Over");
       if (userRole === "Pupil") {
-        
+        const minigameLog = gameOver({ score });
 
-      const minigameLog = gameOver({ score });
+        if (!minigameLog) {
+          throw Error("Minigame Log is null");
+        }
 
-      if (!minigameLog) {
-        throw Error("Minigame Log is null");
+        triggerCreateMinigameLog({
+          minigameLog,
+          type: MinigameType.TwoTruthsOneLie,
+        });
       }
-
-      triggerCreateMinigameLog({
-        minigameLog,
-        type: MinigameType.TwoTruthsOneLie,
-      });
-    }
       setTimeout(() => {
         nextGame();
         resetGameState();

@@ -9,6 +9,7 @@ import Animated, {
 } from "react-native-reanimated";
 import { useSentenceRearrangementMiniGameStore } from "@/stores/miniGameStore";
 import { useMiniGameStore } from "@/stores/miniGameStore";
+import { CorrectSound, IncorrectSound } from "@/utils/sounds";
 import { View, ScrollView, TouchableOpacity, BackHandler } from "react-native";
 import { Text } from "~/components/ui/text";
 import { Heart } from "lucide-react-native";
@@ -182,17 +183,17 @@ export default function SentenceArrangement({
 
         console.log("Sentence Rearrangement Game Over");
         if (userRole === "Pupil") {
+          const minigameLog = gameOver({ answers, score });
 
-        const minigameLog = gameOver({ answers, score });
+          if (!minigameLog) {
+            throw Error("Minigame Log is null");
+          }
 
-        if (!minigameLog) {
-          throw Error("Minigame Log is null");
+          triggerCreateMinigameLog({
+            minigameLog,
+            type: MinigameType.SentenceRearrangement,
+          });
         }
-
-        triggerCreateMinigameLog({
-          minigameLog,
-          type: MinigameType.SentenceRearrangement,
-        });}
 
         setTimeout(() => {
           nextGame();
@@ -235,10 +236,12 @@ export default function SentenceArrangement({
         addAnswer(newAnswer);
 
         if (JSON.stringify(newAnswer) === JSON.stringify(correctAnswer)) {
+          CorrectSound.play();
           setFeedback("Correct! Great job!");
           setIsCorrect(true);
           await new Promise((res) => setTimeout(res, 500));
         } else {
+          IncorrectSound.play();
           setFeedback("Try again!");
           setIsCorrect(false);
           await new Promise((res) => setTimeout(res, 500));
