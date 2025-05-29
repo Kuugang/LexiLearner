@@ -12,12 +12,12 @@ export default function choosebook() {
   const { selectedContent } = useReadingContentStore();
 
   return (
-    <View className="flex-1">
+    <View className="flex-1 pb-12">
       <ScrollView>
         <View className="p-8">
           <BackHeader />
           {isStoriesLoading && <Text>Loading stories...</Text>}
-          <View className="flex flex-row flex-wrap gap-4">
+          <View className="flex flex-row flex-wrap justify-around gap-4">
             {!isStoriesLoading && Array.isArray(stories) && stories.length > 0
               ? stories.map((item) => (
                   <BookCard

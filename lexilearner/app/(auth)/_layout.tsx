@@ -19,7 +19,7 @@ export function useRegisterFormContext() {
   const context = useContext(RegisterFormContext);
   if (!context) {
     throw new Error(
-      "useRegisterFormContext must be used within a RegisterFormProvider",
+      "useRegisterFormContext must be used within a RegisterFormProvider"
     );
   }
   return context;
@@ -27,12 +27,12 @@ export function useRegisterFormContext() {
 
 export default function AuthLayout() {
   const [registerForm, setRegisterForm] = useState<Record<string, any>>({
-    username: "kuugang",
-    email: "mrekajojab@gmail.com",
-    password: "Maotka1!",
-    confirmPassword: "Maotka1!",
-    firstName: "Jake",
-    lastName: "Bajo",
+    username: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+    firstName: "",
+    lastName: "",
     role: "",
   });
 
