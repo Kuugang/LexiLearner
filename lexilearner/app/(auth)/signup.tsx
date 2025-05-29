@@ -47,6 +47,7 @@ export default function Step1() {
 
     // Process all fields and collect errors
     Object.keys(registerForm).forEach((field) => {
+      if (field === "firstName" || field === "lastName") return;
       // Type assertion to handle index access
       const fieldKey = field as keyof typeof registerForm;
       const error = validateField(field, registerForm[fieldKey], registerForm);

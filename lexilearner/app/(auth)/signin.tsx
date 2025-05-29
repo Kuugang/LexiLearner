@@ -34,8 +34,8 @@ const SignIn = () => {
     // password: "Angel!123",
 
     // deo accounts
-    email: "mrekajojab@gmail.com",
-    password: "Maotka1!",
+    email: "",
+    password: "",
   });
 
   const [formErrors, setFormErrors] = useState({

@@ -48,7 +48,7 @@ import LoadingScreenForm from "@/components/LoadingScreenForm";
 export default function Read() {
   const { width } = useWindowDimensions();
   const selectedContent = useReadingContentStore(
-    (state) => state.selectedContent,
+    (state) => state.selectedContent
   );
   const fontSize = useReadingContentStore((state) => state.fontSize);
 
@@ -74,17 +74,17 @@ export default function Read() {
 
   const getTranslation = useTranslationStore((state) => state.getTranslation);
   const storeTranslation = useTranslationStore(
-    (state) => state.storeTranslation,
+    (state) => state.storeTranslation
   );
 
   const setCurrentSession = useReadingSessionStore(
-    (state) => state.setCurrentSession,
+    (state) => state.setCurrentSession
   );
   const getPastSession = useReadingSessionStore(
-    (state) => state.getPastSession,
+    (state) => state.getPastSession
   );
   const updateReadingSessionProgress = useReadingSessionStore(
-    (state) => state.updateReadingSessionProgress,
+    (state) => state.updateReadingSessionProgress
   );
 
   const { mutateAsync: createReadingSession } = useCreateReadingSession();
@@ -124,7 +124,7 @@ export default function Read() {
 
     const backHandler = BackHandler.addEventListener(
       "hardwareBackPress",
-      backAction,
+      backAction
     );
 
     return () => {
@@ -135,7 +135,7 @@ export default function Read() {
   const handleBack = () => {
     updateReadingSessionProgress(
       currentSessionRef.current!!.id,
-      scrollPercentageRef.current,
+      scrollPercentageRef.current
     );
     setCurrentSession(null);
   };
@@ -161,7 +161,7 @@ export default function Read() {
           headers: {
             "Content-Type": "application/x-www-form-urlencoded",
           },
-        },
+        }
       );
       storeTranslation(word, data.result);
       setTranslation(data.result);
@@ -174,8 +174,9 @@ export default function Read() {
   const fetchDefinition = useCallback(async (word: string) => {
     try {
       const { data } = await axios.get(
-        `https://corsproxy.io/?url=https://googledictionary.freecollocation.com/meaning?word=${word}`,
+        `https://corsproxy.io/?url=https://googledictionary.freecollocation.com/meaning?word=${word}`
       );
+      console.log(data);
       return data;
     } catch (error) {
       console.error("Definition error:", error);
@@ -244,7 +245,7 @@ export default function Read() {
         setIsDefinitionLoading(false);
       }
     },
-    [fetchDefinition, getDefinition, storeDefinition],
+    [fetchDefinition, getDefinition, storeDefinition]
   );
 
   const handleWordPress = useCallback(
@@ -254,7 +255,7 @@ export default function Read() {
       setDefinitionVisible(true);
       handleDisplayDefinition(cleanedWord);
     },
-    [handleDisplayDefinition],
+    [handleDisplayDefinition]
   );
 
   const handlePronounce = useCallback(() => {
@@ -294,14 +295,14 @@ export default function Read() {
           ))}
         </View>
       );
-    },
+    }
   );
 
   const renderParagraph = useCallback(
     ({ item }: { item: any }) => (
       <ParagraphItem words={item.words} fontSize={fontSize} />
     ),
-    [fontSize],
+    [fontSize]
   );
 
   const estimatedItemSize = useMemo(() => {

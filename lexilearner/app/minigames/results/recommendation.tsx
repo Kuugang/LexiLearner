@@ -48,7 +48,7 @@ export default function Recommendation() {
 
       <View className="p-5">
         <Button
-          className="bg-blue m-5 mb-24 shadow-main"
+          className="bg-difficultyBlue m-5 mb-24 shadow-main"
           onPress={() => router.replace("/home")}
         >
           <Text>Finish</Text>
