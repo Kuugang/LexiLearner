@@ -93,10 +93,10 @@ function ContentIndex() {
             {selectedContent.description}
           </Text>
         )}
-        <View className="mt-4 flex-row justify-between">
+        {/* <View className="mt-4 flex-row justify-between">
           <Text>Genre: {selectedContent.genres}</Text>
           <Text>Difficulty: {selectedContent.difficulty}</Text>
-        </View>
+        </View> */}
       </ScrollView>
     </>
   );

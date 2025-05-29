@@ -19,3 +19,5 @@ export const API_URL = "http://192.168.113.161:5144/api";
 
 // CHARLENE
 // export const API_URL = "http://192.168.100.35:5144/api";
+
+export const API_URL = "http://192.168.113.170:5144/api";
