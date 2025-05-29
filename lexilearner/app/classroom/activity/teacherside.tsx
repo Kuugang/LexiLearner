@@ -1,7 +1,7 @@
 import ClassroomHeader from "@/components/Classroom/ClassroomHeader";
 import { ReadingAssignmentOverview } from "@/models/ReadingMaterialAssignment";
 import { useClassroomStore } from "@/stores/classroomStore";
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useUserStore } from "@/stores/userStore";
 import { View, Text, Image, TouchableOpacity, ScrollView } from "react-native";
 import { useReadingAssignmentStore } from "@/stores/readingAssignmentStore";
@@ -28,8 +28,8 @@ export default function activity() {
   const selectedContent: ReadingContentType | undefined = contents?.find(
     (content) => content.id === selectedReadingAssignment?.readingMaterialId
   );
-
-  const imageUrl = useGetCoverFromGDrive(selectedReadingAssignment!.cover);
+  // const [imageUrl, setImageUrl] = useState("");
+  var imageUrl = useGetCoverFromGDrive(selectedContent!.cover);
 
   useEffect(() => {
     if (selectedReadingAssignment && contents) {
@@ -51,6 +51,8 @@ export default function activity() {
         );
         if (selectedContent) {
           setSelectedContent(selectedContent);
+          // setImageUrl(selectedContent.cover);
+          imageUrl = useGetCoverFromGDrive(selectedContent!.cover);
         }
       }
     }, [selectedReadingAssignment, contents, setSelectedContent])
