@@ -8,6 +8,7 @@ import ReadingContent from "@/components/ReadingContent";
 import { useGetReadingAssignmentLogs } from "@/services/ClassroomService";
 import InteractionBlocker from "@/components/ui/interactionblocker";
 import { useFocusEffect } from "expo-router";
+import { useGetCoverFromGDrive } from "@/hooks/useExtractDriveFileId";
 
 type ResultData = { score: number; duration: number };
 export default function activity() {
@@ -34,6 +35,8 @@ export default function activity() {
     refetch: refetchAssignmentLogs,
   } = useGetReadingAssignmentLogs(selectedReadingAssignment?.id ?? "");
 
+  var imageUrl = useGetCoverFromGDrive(selectedReadingAssignment!.cover);
+
   useFocusEffect(
     useCallback(() => {
       refetchAssignmentLogs();
@@ -50,7 +53,7 @@ export default function activity() {
         <View className="p-8">
           <View className="flex flex-row gap-5">
             <Image
-              source={require("@/assets/images/land-of-stories.png")}
+              source={{ uri: imageUrl }}
               className="rounded-lg"
               style={{ width: 100, height: 140 }}
               resizeMode="contain"
