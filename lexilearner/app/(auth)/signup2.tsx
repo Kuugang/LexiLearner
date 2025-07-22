@@ -63,7 +63,7 @@ export default function Step2() {
   };
 
   return (
-    <ScrollView className="bg-yellowOrange">
+    <ScrollView className="bg-white">
       <View className="flex-1 gap-36 p-8 h-full justify-around">
         <BackHeader />
 

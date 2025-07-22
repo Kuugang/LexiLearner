@@ -85,6 +85,14 @@ module.exports = {
       fontFamily: {
         poppins: "Poppins-Regular",
       },
+      fontSize: {
+        sm: 14,
+        base: 16,
+        lg: 18,
+        xl: 22,
+        "2xl": 24,
+        "3xl": 30,
+      },
     },
   },
   plugins: [require("tailwindcss-animate")],

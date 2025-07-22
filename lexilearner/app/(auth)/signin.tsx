@@ -30,8 +30,8 @@ const SignIn = () => {
 
   const [form, setForm] = useState({
     // kang angel guro ni
-    // email: "jel@g.com",
-    // password: "Angel!123",
+    // email: "ang@g.com",
+    // password: "Angel123!",
 
     // deo accounts
     email: "",
@@ -95,7 +95,7 @@ const SignIn = () => {
   };
 
   return (
-    <ScrollView className="bg-yellowOrange">
+    <ScrollView className="bg-white">
       <View className="flex-1 gap-36 p-8 h-full justify-around">
         <BackHeader />
 
@@ -176,12 +176,23 @@ const SignIn = () => {
 
         <View>
           <TouchableOpacity
-            className="bg-orange border border-dropShadowColor rounded-xl border-b-4 p-3 items-center"
+            className="bg-yellowOrange border border-dropShadowColor rounded-xl border-b-4 p-3 items-center"
             onPress={() => {
               handleLogin();
             }}
           >
-            <Text className="text-white text-md font-bold">Log In</Text>
+            <Text className="text-black text-md font-bold">Log In</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            className="justify-center items-center p-4"
+            onPress={() => router.push("/(auth)/signup")}
+          >
+            <View className="flex flex-row">
+              <Text>Don't have an account?</Text>
+              <Text className="color-orange underline font-bold px-2">
+                Sign Up
+              </Text>
+            </View>
           </TouchableOpacity>
 
           <View className="flex gap-3">

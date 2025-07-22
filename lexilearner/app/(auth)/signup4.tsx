@@ -66,7 +66,7 @@ export default function Step4() {
   };
 
   return (
-    <ScrollView className="bg-yellowOrange">
+    <ScrollView className="bg-white">
       <View className="flex-1 gap-14 p-8 h-full justify-around items-center">
         <View className="flex-1 gap-6 p-8 h-full justify-around items-center">
           <Image
@@ -117,12 +117,12 @@ export default function Step4() {
         )}
 
         <TouchableOpacity
-          className="bg-orange border border-dropShadowColor w-full rounded-xl border-b-4 p-3 items-center"
+          className="bg-yellowOrange border border-dropShadowColor w-full rounded-xl border-b-4 p-3 items-center"
           onPress={() => {
             handleStep();
           }}
         >
-          <Text className="text-white text-md font-bold">Finish</Text>
+          <Text className="text-black text-base font-bold">Finish</Text>
         </TouchableOpacity>
       </View>
     </ScrollView>

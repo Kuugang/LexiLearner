@@ -67,13 +67,21 @@ export default function Step3() {
   };
 
   return (
-    <ScrollView className="bg-yellowOrange">
+    <ScrollView className="bg-white">
       <View className="flex-1 gap-2 p-8 h-full justify-around">
         <BackHeader />
+        <View>
+          <Text className="text-3xl font-bold">What role are you?</Text>
+        </View>
 
-        <View className="flex items-center gap-8">
+        <View className="flex gap-6">
           <TouchableOpacity
-            className="flex flex-col gap-4 items-center justify-center"
+            className={`flex flex-col gap-4 items-center justify-center py-4 rounded-xl ${
+              registerForm.role === "Teacher" ||
+              providerRegisterForm.role === "Teacher"
+                ? "border-yellowOrange border-4 border-b-8"
+                : "border-lightGray border-2"
+            } border-b-4`}
             onPress={() => {
               if (fromProviderAuth) {
                 setProviderRegisterForm({
@@ -85,30 +93,22 @@ export default function Step3() {
               }
             }}
           >
-            <View
-              className={`h-60 w-60 p-2 rounded-full ${
-                registerForm.role === "Teacher" ||
-                providerRegisterForm.role === "Teacher"
-                  ? "bg-orange scale-105"
-                  : ""
-              }}`}
-            >
-              <Image
-                source={require("@/assets/images/role-teacher.png")}
-                style={{ width: "100%", height: "100%" }}
-                resizeMode="contain"
-                alt=""
-              />
-            </View>
+            <Image
+              source={require("@/assets/images/roles/teacher.png")}
+              // style={{ width: "100%", height: "100%" }}
+              resizeMode="contain"
+              alt=""
+            />
             <Text className="text-xl font-bold">Teacher</Text>
           </TouchableOpacity>
 
-          <View>
-            <Text className="text-4xl font-bold">Are you?</Text>
-          </View>
-
           <TouchableOpacity
-            className="flex flex-col gap-4 items-center justify-center"
+            className={`flex flex-col gap-4 items-center justify-center py-4 rounded-xl ${
+              registerForm.role === "Pupil" ||
+              providerRegisterForm.role === "Pupil"
+                ? "border-yellowOrange border-4 border-b-8"
+                : "border-lightGray border-2"
+            } border-b-4`}
             onPress={() => {
               if (fromProviderAuth) {
                 setProviderRegisterForm({
@@ -120,22 +120,21 @@ export default function Step3() {
               }
             }}
           >
-            <View
-              className={`h-60 w-60 p-2 rounded-full ${
-                registerForm.role === "Pupil" ||
-                providerRegisterForm.role === "Pupil"
-                  ? "bg-orange scale-105"
-                  : ""
-              }}`}
-            >
-              <Image
-                source={require("@/assets/images/role-pupil.png")}
-                style={{ width: "100%", height: "100%" }}
-                resizeMode="contain"
-                alt=""
-              />
-            </View>
+            <Image
+              source={require("@/assets/images/roles/student.png")}
+              // style={{ width: "100%", height: "100%" }}
+              resizeMode="contain"
+              alt=""
+            />
             <Text className="text-xl font-bold">Pupil</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            className="bg-yellowOrange border border-dropShadowColor rounded-xl border-b-4 p-3 items-center"
+            onPress={() => {
+              handleStep();
+            }}
+          >
+            <Text className="text-black text-base font-bold">Continue</Text>
           </TouchableOpacity>
         </View>
         {isInvalid && (
@@ -143,15 +142,6 @@ export default function Step3() {
             Please select a role
           </Text>
         )}
-
-        <TouchableOpacity
-          className="bg-orange border border-dropShadowColor rounded-xl border-b-4 p-3 items-center"
-          onPress={() => {
-            handleStep();
-          }}
-        >
-          <Text className="text-white text-md font-bold">Continue</Text>
-        </TouchableOpacity>
       </View>
     </ScrollView>
   );

@@ -146,7 +146,7 @@ export default function Step1() {
   };
 
   return (
-    <ScrollView className="bg-yellowOrange">
+    <ScrollView className="bg-white">
       <View className="flex-1 gap-12 p-8 h-full justify-around">
         <BackHeader />
 
@@ -301,12 +301,12 @@ export default function Step1() {
 
         <View>
           <TouchableOpacity
-            className="bg-orange border border-dropShadowColor rounded-xl border-b-4 border-l border-r-1 p-3 items-center"
+            className="bg-yellowOrange border border-dropShadowColor rounded-xl border-b-4 border-l border-r-1 p-3 items-center"
             onPress={() => {
               handleStep();
             }}
           >
-            <Text className="text-white text-md font-bold">Sign Up</Text>
+            <Text className="text-black text-base font-bold">Sign Up</Text>
           </TouchableOpacity>
 
           <View className="flex gap-3">

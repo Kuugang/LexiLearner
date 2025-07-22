@@ -9,10 +9,10 @@
 // export const API_URL = "http://192.168.1.28:5144/api";
 
 // ANGEL
-// export const API_URL = "http://192.168.68.102:5144/api";
+export const API_URL = "http://192.168.68.100:5144/api";
 
 //JAKE
-export const API_URL = "http://192.168.253.85:5144/api";
+// export const API_URL = "http://192.168.253.85:5144/api";
 
 // DEO WIL2025!
 //export const API_URL = "http://192.168.1.3:5144/api";
