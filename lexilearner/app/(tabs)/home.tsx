@@ -16,6 +16,7 @@ import {
   ScrollView,
   TouchableOpacity,
   View,
+  Pressable,
 } from "react-native";
 import { Text } from "~/components/ui/text";
 
@@ -274,6 +275,10 @@ function HomeScreen() {
                 resizeMode="contain"
               />
             </View>
+
+            <Pressable onPress={() => router.push("/(content)")}>
+              <Text>test new reading flow </Text>
+            </Pressable>
 
             {user?.role === "Pupil" && (
               <View className="flex-1  w-full h-60 p-4">

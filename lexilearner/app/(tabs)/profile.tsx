@@ -27,11 +27,16 @@ import { Achievement } from "@/models/Achievement";
 import { ActivityIndicator } from "react-native-paper";
 import { ProgressBar, CurrentTierName } from "@/components/ProgressBar";
 import { StreakIcon } from "@/components/Streak";
+import { useState } from "react";
+import { useAuthStore } from "@/stores/authStore";
+import ConfirmModal from "@/components/Modal";
 const STREAK_COLOR = "#FF663E";
 
 export default function Profile() {
   const user = useUserStore((state) => state.user);
   const setAchievements = useMiniGameStore((state) => state.setAchievements);
+  const [logoutModalVisible, setLogoutModalVisible] = useState<boolean>(false);
+  const logout = useAuthStore((state) => state.logout);
   const isPupil = user?.role === "Pupil";
 
   const [
@@ -64,6 +69,12 @@ export default function Profile() {
     return `${hours}h ${remainingMinutes}m`;
   };
 
+  const handleLogout = () => {
+    logout();
+    router.dismissAll();
+    router.replace("/");
+  };
+
   return (
     <ScrollView className="bg-background">
       <View className="h-[150px] w-full rounded-bl-[40px] bg-yellowOrange p-4 rounded-xl border-lightGray border-b-4">
@@ -93,7 +104,7 @@ export default function Profile() {
                   ? {
                       uri: `${API_URL.replace(
                         /\/api\/?$/,
-                        "/",
+                        "/"
                       )}${user.avatar.replace(/^\/+/, "")}`,
                     }
                   : require("@/assets/images/default_pfp.png")
@@ -139,7 +150,7 @@ export default function Profile() {
               )}
             </View>
           </View>
-          {user?.role === "Pupil" && (
+          {user?.role === "Pupil" ? (
             <>
               <ProgressBar level={user!.pupil!.level!} />
               <Text className="text-xl font-bold">Overview</Text>
@@ -192,14 +203,46 @@ export default function Profile() {
                   {achievementsQuery.data.map(
                     (a: Achievement, index: number) => (
                       <AwardIcon badge={`${a.badge}`} key={index} />
-                    ),
+                    )
                   )}
                 </View>
               </View>
             </>
+          ) : (
+            <View className="items-center p-4">
+              <Image
+                source={require("assets/images/teacher-profile.png")}
+                resizeMode="contain"
+              />
+              <Text className="p-2 py-6">This user is a teacher!</Text>
+            </View>
           )}
         </View>
+        <Button
+          variant="dropshadow"
+          size={null}
+          onPress={() => {
+            console.log("logging out..");
+            setLogoutModalVisible(true);
+            console.log(logoutModalVisible);
+          }}
+          className="bg-yellowOrange mb-16"
+        >
+          <Text className="font-bold">Log Out</Text>
+        </Button>
       </View>
+
+      <ConfirmModal
+        visible={logoutModalVisible}
+        title="Log Out"
+        message="Are you sure you want to log out of your account?"
+        confirmText="Log Out"
+        cancelText="Cancel"
+        onConfirm={handleLogout}
+        onCancel={() => setLogoutModalVisible(false)}
+        icon="logout"
+        highlightedText=""
+      />
     </ScrollView>
   );
 }

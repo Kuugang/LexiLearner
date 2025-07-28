@@ -1,6 +1,7 @@
 import React from "react";
 import { View, Text, Image } from "react-native";
 import BackHeader from "../BackHeader";
+
 interface ClassroomDetailsProp {
   name: string;
   joinCode: string;
@@ -16,7 +17,7 @@ export default function ClassroomHeader({
         <BackHeader />
         <View>
           <Text className="text-[22px] font-bold leading-tight">{name}</Text>
-          <Text>{joinCode}</Text>
+          <Text selectable={true}>{joinCode}</Text>
         </View>
         <Image
           source={require("@/assets/images/Juicy/Office-desk.png")}

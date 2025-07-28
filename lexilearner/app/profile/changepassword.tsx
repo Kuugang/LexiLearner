@@ -62,7 +62,7 @@ export default function ChangePassword() {
   return (
     <>
       <ScrollView className="bg-white">
-        <View className="flex-1 gap-10 p-8 h-full justify-around">
+        <View className="flex-1 gap-8 p-8 h-full justify-around">
           <BackHeader />
           <Text className="font-black text-2xl">Change your password</Text>
           <View className="flex gap-3 justify-around">
@@ -81,7 +81,7 @@ export default function ChangePassword() {
                   />
 
                   <Input
-                    className="pl-10 py-2 rounded-xl shadow-xl"
+                    className="pl-10 rounded-xl shadow-xl"
                     placeholder="Current Password"
                     value={form.currentPassword}
                     secureTextEntry={showCurrentPassword ? false : true}
@@ -128,7 +128,7 @@ export default function ChangePassword() {
                   />
 
                   <Input
-                    className="pl-10 py-2 rounded-xl shadow-xl"
+                    className="pl-10 rounded-xl shadow-xl"
                     placeholder="New Password"
                     value={form.password}
                     secureTextEntry={showNewPassword ? false : true}

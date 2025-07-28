@@ -12,7 +12,14 @@ import { useAuthStore } from "@/stores/authStore";
 import * as ImagePicker from "expo-image-picker";
 
 //Components
-import { View, ScrollView, Image, Pressable, TouchableOpacity, TextInput } from "react-native";
+import {
+  View,
+  ScrollView,
+  Image,
+  Pressable,
+  TouchableOpacity,
+  TextInput,
+} from "react-native";
 import { Text } from "@/components/ui/text";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -26,14 +33,11 @@ import { SafeAreaView } from "react-native-safe-area-context";
 export default function Settings() {
   const [deleteAccountModalVisible, setDeleteAccountModalVisible] =
     useState<boolean>(false);
-  const [logoutModalVisible, setLogoutModalVisible] = useState<boolean>(false);
   const [isProfileChanged, setIsProfileChanged] = useState(false);
   const [avatarFile, setAvatarFile] = useState<any>(null);
   const setIsLoading = useGlobalStore((state) => state.setIsLoading);
   const updateProfile = useUserStore((state) => state.updateProfile);
   const deleteAccount = useUserStore((state) => state.deleteAccount);
-
-  const logout = useAuthStore((state) => state.logout);
 
   const user = useUserStore((state) => state.user);
 
@@ -128,12 +132,6 @@ export default function Settings() {
     } finally {
       setIsLoading(false);
     }
-  };
-
-  const handleLogout = () => {
-    logout();
-    router.dismissAll();
-    router.replace("/");
   };
 
   const openImagePicker = async () => {
@@ -234,6 +232,19 @@ export default function Settings() {
             ></Input>
           </View>
 
+          <TouchableOpacity
+            className="py-1"
+            onPress={() => router.push("/profile/changepassword")}
+          >
+            <Text className="font-bold">Password</Text>
+
+            <Input
+              editable={false}
+              placeholder={user?.email}
+              value="*****"
+            ></Input>
+          </TouchableOpacity>
+
           <View className="m-5"></View>
           {isProfileChanged && (
             <Button
@@ -249,32 +260,10 @@ export default function Settings() {
           <Button
             variant="dropshadow"
             size={null}
-            onPress={() => router.push("/profile/changepassword")}
-            className="bg-gray"
-          >
-            <Text className="font-bold text-white">Change Password</Text>
-          </Button>
-
-          <Button
-            variant="dropshadow"
-            size={null}
             onPress={() => setDeleteAccountModalVisible(true)}
             className="bg-orange"
           >
             <Text className="font-bold text-white">Delete Account</Text>
-          </Button>
-
-          <Button
-            variant="dropshadow"
-            size={null}
-            onPress={() => {
-              console.log("logging out..");
-              setLogoutModalVisible(true);
-              console.log(logoutModalVisible);
-            }}
-            className="bg-yellowOrange mb-16"
-          >
-            <Text className="font-bold">Log Out</Text>
           </Button>
         </View>
       </ScrollView>
@@ -289,18 +278,6 @@ export default function Settings() {
         onCancel={() => setDeleteAccountModalVisible(false)}
         icon="close"
         highlightedText="permanently"
-      />
-
-      <ConfirmModal
-        visible={logoutModalVisible}
-        title="Log Out"
-        message="Are you sure you want to log out of your account?"
-        confirmText="Log Out"
-        cancelText="Cancel"
-        onConfirm={handleLogout}
-        onCancel={() => setLogoutModalVisible(false)}
-        icon="logout"
-        highlightedText=""
       />
     </SafeAreaView>
   );
