@@ -55,7 +55,7 @@ export default function achievements() {
         </View>
 
         <Button
-          className="w-full bg-background border-appBlue border-b-4 rounded-xl"
+          className="w-full bg-background border-accentBlue border-b-4 rounded-xl"
           onPress={() => {
             router.replace({
               pathname: "/minigames/results/levelup",

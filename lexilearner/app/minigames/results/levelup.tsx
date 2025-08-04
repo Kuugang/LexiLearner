@@ -110,7 +110,7 @@ export default function levelup() {
       </ScrollView>
       <View className="p-5">
         <Button
-          className="w-full bg-background border-appBlue border-b-4 rounded-xl"
+          className="w-full bg-background border-accentBlue border-b-4 rounded-xl"
           onPress={() => {
             if (selectedReadingAssignment != null) {
               router.dismiss();
