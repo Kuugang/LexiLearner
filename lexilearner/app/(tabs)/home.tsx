@@ -275,11 +275,6 @@ function HomeScreen() {
                 resizeMode="contain"
               />
             </View>
-
-            <Pressable onPress={() => router.push("/(content)")}>
-              <Text>test new reading flow </Text>
-            </Pressable>
-
             {user?.role === "Pupil" && (
               <View className="flex-1  w-full h-60 p-4">
                 <Text className="text-2xl px-4 font-bold">Recommended</Text>

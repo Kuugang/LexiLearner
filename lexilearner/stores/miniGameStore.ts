@@ -6,7 +6,6 @@ import { MinigameLog } from "@/models/MinigameLog";
 import { useReadingSessionStore } from "./readingSessionStore";
 import { useUserStore } from "./userStore";
 import { Achievement } from "@/models/Achievement";
-import achievements from "@/app/minigames/results/achievements";
 
 interface MiniGameStore {
   currentMinigame: Minigame | null;
@@ -135,7 +134,7 @@ export const useMiniGameStore = create<MiniGameStore>()(
   )
 );
 
-type Choice = { choice: string; answer: boolean };
+export type Choice = { choice: string; answer: boolean };
 interface TwoTruthsOneLieGameState {
   choices: Choice[];
   score: number;
