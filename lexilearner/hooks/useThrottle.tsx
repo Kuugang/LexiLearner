@@ -3,7 +3,7 @@ import { useRef, useEffect, useMemo } from "react";
 
 export function useThrottle<T extends (...args: any[]) => void>(
   callback: T,
-  delay = 2000
+  delay = 500
 ): (...args: Parameters<T>) => void {
   const callbackRef = useRef(callback);
 

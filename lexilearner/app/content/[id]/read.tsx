@@ -3,6 +3,7 @@ import SentenceArrangementBubble from "@/app/(minigames)/sentencearrangement";
 import ReadContentHeader from "@/components/ReadContentHeader";
 import ChatBubble from "@/components/Reading/ChatBubble";
 import { Button } from "@/components/ui/button";
+import { useThrottle } from "@/hooks/useThrottle";
 import { useDictionary } from "@/services/DictionaryService";
 import { useReadingContentStore } from "@/stores/readingContentStore";
 import { useTranslationStore } from "@/stores/translationStore";
@@ -126,17 +127,17 @@ const Read = () => {
     }
   }, [data, isLoading]);
 
-  const onPress = () => {
+  const onPress = useThrottle(() => {
     if (chunkIndex < parsedBubbles!.length) {
       const newMessage = parsedBubbles[chunkIndex];
       setMessages((prev) => [...prev, newMessage]);
       setChunkIndex((prev) => prev + 1);
     }
 
-    if (chunkIndex >= parsedBubbles.length) {
+    if (chunkIndex == parsedBubbles.length) {
       setIsFinished(true);
     }
-  };
+  });
 
   const defineWord = (word: string) => {
     if (word.length < 2) return;

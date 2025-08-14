@@ -68,8 +68,8 @@ const SentenceArrangementBubble = ({
     }
   }, [currentAnswer]);
 
-  // console.log("parts", parts);
-  // console.log("current", currentAnswer);
+  console.log("parts", parts);
+  console.log("current", currentAnswer);
   return (
     <View>
       {/* answers bubble */}
