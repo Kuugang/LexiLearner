@@ -1,11 +1,15 @@
 import ChoicesBubble from "@/app/(minigames)/choices";
+import SentenceArrangementBubble from "@/app/(minigames)/sentencearrangement";
 import ReadContentHeader from "@/components/ReadContentHeader";
 import ChatBubble from "@/components/Reading/ChatBubble";
 import { Button } from "@/components/ui/button";
 import { useDictionary } from "@/services/DictionaryService";
 import { useReadingContentStore } from "@/stores/readingContentStore";
-import { bubble, choice } from "@/types/bubble";
-import { personEnum } from "@/types/enum";
+import { useTranslationStore } from "@/stores/translationStore";
+import { arrange, bubble, choice } from "@/types/bubble";
+import { MessageTypeEnum, personEnum } from "@/types/enum";
+import { makeBubble } from "@/utils/makeBubble";
+import axios from "axios";
 import { router } from "expo-router";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { View, Text, ScrollView, useWindowDimensions } from "react-native";
@@ -18,17 +22,14 @@ const iconMap: Record<string, any> = {
   g2: require("@/assets/images/storyIcons/g2.png"),
 };
 
-enum MessageTypeEnum {
-  STORY = "story",
-  CHOICES = "mg_choices",
-  REARRANGE = "mg_rearrange",
-  IMAGE = "image",
+export function getIconSource(icon: string) {
+  return iconMap[icon] || iconMap["Story"];
 }
 
 type Message = {
   id: number;
   type: MessageTypeEnum;
-  payload: bubble | choice;
+  payload: bubble | choice | arrange;
 };
 
 const Read = () => {
@@ -43,13 +44,14 @@ const Read = () => {
     (state) => state.selectedContent
   );
 
+  const [isFinished, setIsFinished] = useState(false);
+
   useEffect(() => {
     scrollViewRef.current?.scrollToEnd({ animated: false });
   }, [messages]);
 
   // parse each chunk into (chat/story) bubble type with props
-
-  // TODO: izustand nlng nis Message[] para makaaccess sa mga minigames na bubbles and add bubbles
+  // TODO: i think better nay middle layer paras minigames TTOTT
   const parsedBubbles = useMemo<Message[]>(() => {
     if (!selectedContent?.content) return [];
 
@@ -73,6 +75,17 @@ const Read = () => {
                 { choice: "BAWAL", answer: false },
                 { choice: "duka nako", answer: false },
               ],
+              explanation: "taysa",
+            },
+          } satisfies Message;
+        } else if (chunk.includes("$ARRANGE$")) {
+          return {
+            id: bubbleCount.current++,
+            type: MessageTypeEnum.ARRANGE,
+            payload: {
+              correctAnswer: ["The spiders", "were busy", "last night frfr."],
+              parts: ["last night frfr.", "The spiders", "were busy"],
+              explanation: "hwaw",
             },
           } satisfies Message;
         }
@@ -80,11 +93,7 @@ const Read = () => {
         return {
           id: bubbleCount.current++,
           type: MessageTypeEnum.STORY,
-          payload: {
-            text: text.trim(),
-            person: person || "Story",
-            type: personEnum.Story,
-          },
+          payload: makeBubble(text.trim(), person || "Story", personEnum.Story),
         } satisfies Message;
       })
       .filter((b): b is Message => b !== null);
@@ -123,11 +132,14 @@ const Read = () => {
       setMessages((prev) => [...prev, newMessage]);
       setChunkIndex((prev) => prev + 1);
     }
+
+    if (chunkIndex >= parsedBubbles.length) {
+      setIsFinished(true);
+    }
   };
 
   const defineWord = (word: string) => {
     if (word.length < 2) return;
-    // if (!word) return;
     setWord(word);
   };
 
@@ -135,17 +147,27 @@ const Read = () => {
     setMessages((prev) => prev.filter((msg) => msg.id !== id));
   };
 
-  function getIconSource(icon: string) {
-    return iconMap[icon] || iconMap["Story"];
-  }
-
-  const addStoryMessage = (msg: bubble) => {
+  const addStoryMessage = (msg: bubble, msgType: MessageTypeEnum) => {
     const newMsg: Message = {
       id: bubbleCount.current++,
-      type: MessageTypeEnum.STORY,
+      type: msgType,
       payload: msg,
     };
     setMessages((prev) => [...prev, newMsg]);
+  };
+
+  const isNextDisabled = () => {
+    const bubble = messages[messages.length - 1];
+    if (bubble) {
+      if (
+        bubble.type === MessageTypeEnum.ARRANGE ||
+        bubble.type === MessageTypeEnum.CHOICES
+      ) {
+        return true;
+      }
+    }
+
+    return false;
   };
 
   return (
@@ -187,7 +209,8 @@ const Read = () => {
                         />
                       );
                     })()
-                  : msg.type === MessageTypeEnum.CHOICES
+                  : // feel nako better ba naay minigame middle layer somewhere here??
+                  msg.type === MessageTypeEnum.CHOICES
                   ? (() => {
                       const choicesPayload = msg.payload as choice;
 
@@ -199,22 +222,47 @@ const Read = () => {
                         />
                       );
                     })()
+                  : msg.type === MessageTypeEnum.ARRANGE
+                  ? (() => {
+                      const arrangePayload = msg.payload as arrange;
+
+                      return (
+                        <SentenceArrangementBubble
+                          correctAnswer={arrangePayload.correctAnswer.join("")}
+                          partsblocks={arrangePayload.parts}
+                          explanation={arrangePayload.explanation}
+                          onPress={addStoryMessage}
+                        />
+                      );
+                    })()
                   : null}
               </View>
             ))}
-
-            <View className="py-4">
+          </View>
+          <View className="py-4">
+            {!isFinished ? (
               <Button
-                onPress={onPress}
-                disabled={chunkIndex >= parsedBubbles!.length}
+                onPress={() => {
+                  onPress();
+                }}
+                disabled={isNextDisabled()}
               >
-                <Text className="font-bold text-black">
-                  {chunkIndex >= parsedBubbles!.length
-                    ? "Story Complete"
-                    : "Next"}
-                </Text>
+                <Text className="font-bold text-black">Next</Text>
               </Button>
-            </View>
+            ) : (
+              <View className="items-center">
+                <Text className="py-4">End of Story</Text>
+                <Button
+                  variant="secondary"
+                  className="flex-1"
+                  onPress={() => {
+                    router.push("/(minigames)/test");
+                  }}
+                >
+                  <Text className="font-bold text-black">Story Completed</Text>
+                </Button>
+              </View>
+            )}
           </View>
         </ScrollView>
       </View>

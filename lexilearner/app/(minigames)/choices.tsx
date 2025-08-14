@@ -1,8 +1,9 @@
 import { Choice, useTwoTruthsOneLieGameStore } from "@/stores/miniGameStore";
 import { bubble, choice } from "@/types/bubble";
-import { personEnum } from "@/types/enum";
+import { MessageTypeEnum, personEnum } from "@/types/enum";
 import React, { useState } from "react";
 import { View, Text, TouchableOpacity, Image } from "react-native";
+import { makeBubble } from "@/utils/makeBubble";
 
 const ChoicesBubble = ({
   question,
@@ -11,26 +12,17 @@ const ChoicesBubble = ({
 }: {
   question: string;
   choices: Choice[];
-  onPress: (msg: bubble) => void;
+  onPress: (msg: bubble, msgType: MessageTypeEnum) => void;
 }) => {
   const [isPressed, setIsPressed] = useState(false);
   const onBtnPress = (ans: Choice) => {
-    const bubble: bubble = {
-      text: ans.choice,
-      person: "",
-      type: personEnum.Self,
-    };
-
-    onPress(bubble);
-
     const answer = ans.answer ? "That's correct!" : "Aww, try again next time!";
-    const responseBubble: bubble = {
-      text: answer,
-      person: "Story",
-      type: personEnum.Game,
-    };
 
-    setTimeout(() => onPress(responseBubble), 500);
+    const bubble = makeBubble(ans.choice, "", personEnum.Self);
+    const responseBubble = makeBubble(answer, "Story", personEnum.Game);
+
+    onPress(bubble, MessageTypeEnum.STORY);
+    setTimeout(() => onPress(responseBubble, MessageTypeEnum.STORY), 500);
   };
   return (
     <View className="flex flex-row gap-2 items-end">
@@ -42,8 +34,9 @@ const ChoicesBubble = ({
       />
       <View className="flex-1 border-2 border-accentBlue border-b-4 rounded-md p-3 bg-vibrantBlue">
         <Text>{question}</Text>
-        {choices.map((choice) => (
+        {choices.map((choice, index) => (
           <TouchableOpacity
+            key={index}
             className="bg-white p-1 rounded-md justify-center items-center my-1"
             onPress={() => {
               onBtnPress(choice);

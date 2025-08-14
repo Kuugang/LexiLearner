@@ -14,4 +14,11 @@ export type bubble = {
 export type choice = {
   question: string;
   choices: Choice[];
+  explanation: string;
+};
+
+export type arrange = {
+  correctAnswer: string[];
+  parts: string[];
+  explanation: string;
 };

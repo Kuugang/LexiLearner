@@ -1,5 +1,7 @@
+import { useTranslationStore } from "@/stores/translationStore";
 import { bubble } from "@/types/bubble";
 import { personEnum } from "@/types/enum";
+import axios from "axios";
 import { CircleIcon, Volume2, Volume2Icon, X } from "lucide-react-native";
 import React, { useCallback, useState } from "react";
 import { Pressable, Text, View, Image } from "react-native";
@@ -18,6 +20,12 @@ const ChatBubble = ({
   onClosePress: () => void;
   onWordPress: (word: string) => void;
 }) => {
+  const [translation, setTranslation] = useState("");
+  const getTranslation = useTranslationStore((state) => state.getTranslation);
+  const storeTranslation = useTranslationStore(
+    (state) => state.storeTranslation
+  );
+
   const words = bubble.text.split(" ").map((word) => {
     const clean = word.replace(/^[^\p{L}]+|[^\p{L}]+$/gu, ""); // for lookup
     return { original: word, clean };
@@ -25,6 +33,37 @@ const ChatBubble = ({
 
   const onAudioPress = (word: string) => {
     Tts.speak(word);
+  };
+
+  const fetchTranslation = async (word: string) => {
+    const existingTranslation = getTranslation(word);
+    if (existingTranslation !== undefined) {
+      setTranslation(existingTranslation);
+      return;
+    }
+
+    try {
+      const formData = new URLSearchParams();
+      formData.append("from", "en_US");
+      formData.append("to", "ceb_PH");
+      formData.append("text", word);
+      formData.append("platform", "dp");
+
+      const { data } = await axios.post(
+        "https://corsproxy.io/?url=https://lingvanex.com/translation/translate",
+        formData,
+        {
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+        }
+      );
+      storeTranslation(word, data.result);
+      setTranslation(data.result);
+    } catch (error) {
+      console.error("Translation error:", error);
+      setTranslation("Translation failed");
+    }
   };
 
   return (
@@ -54,6 +93,8 @@ const ChatBubble = ({
                 key={index}
                 onPress={() => {
                   onWordPress(word.clean);
+                  console.log(word.clean);
+                  fetchTranslation(word.clean);
                 }}
               >
                 <Text className="text-base leading-5 px-0.5">
@@ -74,7 +115,7 @@ const ChatBubble = ({
             </View>
             <X color={"black"} onPress={onClosePress} />
           </View>
-          <Text className="italic">(bisaya translation frfr)</Text>
+          <Text className="italic">({translation})</Text>
           <Text className="flex-row flex-wrap flex-shrink">
             {bubble.definition}
           </Text>
